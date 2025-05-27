@@ -45,6 +45,13 @@ def profile(request):
         
         if form_type == 'user_profile':
             form = UserProfileForm(request.POST, request.FILES, instance=user_profile)
+            
+            # Handle profile picture update for candidates
+            profile_picture = request.FILES.get('profile_picture')
+            if profile_picture:
+                user_profile.profile_picture = profile_picture
+                user_profile.save()
+            
             if form.is_valid():
                 form.save()
                 if is_ajax:

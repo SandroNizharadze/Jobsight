@@ -64,7 +64,67 @@
     });
   }
 
+  // Find and attach event to profile picture input
   document.addEventListener('DOMContentLoaded', function() {
+    // Find all profile picture inputs (different templates may have different IDs)
+    const profilePictureInputs = document.querySelectorAll('input[type="file"][name="profile_picture"]');
+    
+    profilePictureInputs.forEach(input => {
+      if (!input.hasEventListener) {  // Prevent duplicate event listeners
+        input.addEventListener('change', function(e) {
+          if (this.files && this.files[0]) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+              const container = input.closest('.relative');
+              if (container) {
+                const imgContainer = container.querySelector('.w-24') || container.querySelector('.rounded-full');
+                
+                if (imgContainer) {
+                  // Replace image
+                  const existingImg = imgContainer.querySelector('img');
+                  if (existingImg) {
+                    existingImg.src = e.target.result;
+                  } else {
+                    const svg = imgContainer.querySelector('svg');
+                    if (svg) svg.remove();
+                    
+                    imgContainer.innerHTML = `
+                      <img src="${e.target.result}" alt="Profile Picture" class="w-full h-full object-cover">
+                    `;
+                  }
+                }
+                
+                // Display loading indicator
+                const existingIndicator = container.querySelector('.animate-spin');
+                if (!existingIndicator) {
+                  const loadingIndicator = document.createElement('div');
+                  loadingIndicator.className = 'absolute inset-0 flex items-center justify-center bg-black bg-opacity-40 rounded-full';
+                  loadingIndicator.innerHTML = `
+                    <svg class="animate-spin h-8 w-8 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                      <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                      <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                  `;
+                  container.appendChild(loadingIndicator);
+                }
+              }
+              
+              // Auto-submit the form
+              const form = input.closest('form');
+              if (form) {
+                console.log("Submitting form", form.id);
+                setTimeout(() => {
+                  form.submit();
+                }, 500); // Small delay to show preview first
+              }
+            };
+            reader.readAsDataURL(this.files[0]);
+          }
+        });
+        input.hasEventListener = true;
+      }
+    });
+    
     // Custom tab implementation for Tailwind
     const setupTabs = () => {
       const tabButtons = document.querySelectorAll('[data-tab-toggle="tab"]');
