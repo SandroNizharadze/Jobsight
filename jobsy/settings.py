@@ -66,7 +66,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'jobsy.wsgi.application'
 
-# Database
+# Database - Default to local PostgreSQL for development
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
@@ -83,10 +83,15 @@ DATABASE_URL = os.environ.get('DATABASE_URL')
 if DATABASE_URL:
     DATABASES["default"] = dj_database_url.parse(DATABASE_URL)
 
-# Use Supabase if enabled
-USE_SUPABASE = os.environ.get('USE_SUPABASE', 'True') == 'True'
+# Use Supabase only if explicitly enabled and we're not in development
+# For development, default to False to use local PostgreSQL
+# For production (Render), this will be True to use Supabase
+USE_SUPABASE = os.environ.get('USE_SUPABASE', 'False') == 'True'
 if USE_SUPABASE:
     from .supabase_settings import DATABASES
+    print("Using Supabase database")
+else:
+    print("Using local PostgreSQL database")
 
 # Authentication
 AUTHENTICATION_BACKENDS = [

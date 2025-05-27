@@ -10,7 +10,7 @@ SECRET_KEY = os.environ.get('SECRET_KEY', 'placeholder-secret-key-do-not-use-in-
 # SECURITY WARNING: update this with your production domain
 ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', 'jobsy-uoul.onrender.com,localhost,127.0.0.1').split(',')
 
-# Database
+# Database - Production always uses Supabase
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
@@ -28,10 +28,10 @@ if DATABASE_URL:
     import dj_database_url
     DATABASES["default"] = dj_database_url.parse(DATABASE_URL)
 
-# Use Supabase if enabled - this must be after the DATABASE settings
-USE_SUPABASE = os.environ.get('USE_SUPABASE', 'True') == 'True'
-if USE_SUPABASE:
-    from .supabase_settings import DATABASES
+# Always use Supabase in production
+USE_SUPABASE = True
+from .supabase_settings import DATABASES
+print("Production environment: Using Supabase database")
 
 # Enable S3 storage in production
 USE_S3 = os.environ.get('USE_S3', 'True') == 'True'
