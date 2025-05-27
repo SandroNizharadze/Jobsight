@@ -1,0 +1,151 @@
+{% extends 'core/base.html' %}
+{% load i18n %}
+{% load core_tags %}
+
+{% block title %}{% trans "CV Database" %} | Jobsy{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8 sm:px-6 lg:px-8">
+  <!-- Header Section -->
+  <div class="flex flex-col sm:flex-row justify-between items-center mb-8">
+    <h1 class="text-2xl font-bold text-gray-900 mb-4 sm:mb-0">{% trans "CV Database" %}</h1>
+    <div class="flex gap-3">
+      <a href="{% url 'employer_dashboard' %}" class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+        <svg class="h-5 w-5 mr-2 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
+        </svg>
+        {% trans "Dashboard" %}
+      </a>
+    </div>
+  </div>
+
+  <!-- Filters Section -->
+  <div class="bg-white rounded-xl shadow-md overflow-hidden mb-8">
+    <div class="px-6 py-5 bg-gray-50 border-b border-gray-200">
+      <h2 class="text-lg font-medium text-gray-900">{% trans "Filter CVs" %}</h2>
+    </div>
+    <div class="p-6">
+      <form method="get" class="grid grid-cols-1 gap-6 sm:grid-cols-2">
+        <!-- Field Filter -->
+        <div>
+          <label for="field" class="block text-sm font-medium text-gray-700 mb-1">
+            {% trans "სფერო" %}
+          </label>
+          <select id="field" name="field" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md">
+            <option value="">{% trans "ყველა სფერო" %}</option>
+            {% for value, label in field_choices.items %}
+              <option value="{{ value }}" {% if field_filter == value %}selected{% endif %}>
+                {{ label }}
+              </option>
+            {% endfor %}
+          </select>
+        </div>
+        
+        <!-- Experience Filter -->
+        <div>
+          <label for="experience" class="block text-sm font-medium text-gray-700 mb-1">
+            {% trans "გამოცდილება" %}
+          </label>
+          <select id="experience" name="experience" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md">
+            <option value="">{% trans "ყველა დონე" %}</option>
+            {% for value, label in experience_choices.items %}
+              <option value="{{ value }}" {% if experience_filter == value %}selected{% endif %}>
+                {{ label }}
+              </option>
+            {% endfor %}
+          </select>
+        </div>
+        
+        <!-- Filter Buttons -->
+        <div class="sm:col-span-2 flex justify-end space-x-3">
+          <a href="{% url 'cv_database' %}" class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+            {% trans "გაასუფთავე ფილტრები" %}
+          </a>
+          <button type="submit" class="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+            <svg class="h-5 w-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"></path>
+            </svg>
+            {% trans "გაფილტვრა" %}
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- CV Cards Section -->
+  <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+    {% if profiles %}
+      {% for profile in profiles %}
+        <div class="bg-white rounded-xl shadow-md overflow-hidden">
+          <div class="px-6 py-5 bg-gray-50 border-b border-gray-200">
+            <div class="flex items-center">
+              <div class="flex-shrink-0">
+                {% if profile.profile_picture %}
+                  <img src="{{ profile.profile_picture.url }}" alt="Profile Picture" class="h-12 w-12 rounded-full object-cover">
+                {% else %}
+                  <svg class="h-12 w-12 text-gray-400 rounded-full bg-gray-100 p-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                    <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"></path>
+                  </svg>
+                {% endif %}
+              </div>
+              <div class="ml-4">
+                <h3 class="text-lg font-medium text-gray-900">{{ profile.user.get_full_name|default:profile.user.username }}</h3>
+                <p class="text-sm text-gray-500">{% trans "კანდიდატი" %}</p>
+              </div>
+            </div>
+          </div>
+          <div class="px-6 py-4">
+            {% if profile.desired_field %}
+              <div class="mb-2">
+                <span class="text-sm font-medium text-gray-500">{% trans "სასურველი სფერო:" %}</span>
+                <span class="ml-2 text-sm text-gray-900">{{ field_choices|get_item:profile.desired_field|default:profile.desired_field }}</span>
+              </div>
+            {% endif %}
+            
+            {% if profile.field_experience %}
+              <div class="mb-2">
+                <span class="text-sm font-medium text-gray-500">{% trans "გამოცდილება:" %}</span>
+                <span class="ml-2 text-sm text-gray-900">{{ experience_choices|get_item:profile.field_experience|default:profile.field_experience }}</span>
+              </div>
+            {% endif %}
+            
+            <div class="mt-4">
+              <a href="{% url 'view_cv_employer' profile.id %}" target="_blank" class="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 w-full justify-center">
+                <svg class="h-5 w-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                </svg>
+                {% trans "CV-ის ნახვა" %}
+              </a>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    {% else %}
+      <div class="col-span-full text-center py-12">
+        <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+        </svg>
+        <h3 class="mt-2 text-sm font-medium text-gray-900">{% trans "CV-ები არ მოიძებნა" %}</h3>
+        <p class="mt-1 text-sm text-gray-500">{% trans "არცერთი კანდიდატი არ არის ხელმისაწვდომი მოცემული ფილტრებით." %}</p>
+        <p class="mt-1 text-sm text-gray-500">{% trans "კანდიდატებმა უნდა ატვირთონ CV და ჩართონ 'ხილვადია დამსაქმებლისთვის' პარამეტრი მათ პროფილზე." %}</p>
+      </div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  // Auto-submit form when filters change
+  document.addEventListener('DOMContentLoaded', function() {
+    const filterForm = document.querySelector('form');
+    const filterSelects = filterForm.querySelectorAll('select');
+    
+    filterSelects.forEach(function(select) {
+      select.addEventListener('change', function() {
+        filterForm.submit();
+      });
+    });
+  });
+</script>
+{% endblock %} 

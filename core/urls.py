@@ -1,0 +1,52 @@
+from django.urls import path
+from .views import main
+from .views.job_views import save_job, unsave_job
+from .views.file_views import serve_cv_file
+from .views.profile_views import get_application_rejection_reasons, view_cv_employer
+from .views.employer_views import company_profile, application_detail, cv_database
+from django.views.generic.base import RedirectView
+
+urlpatterns = [
+    path('', main.home_redirect, name='home_redirect'),
+    path('jobs/', main.job_list, name='job_list'),
+    path('login/', main.login_view, name='login'),
+    path('logout/', main.logout_view, name='logout'),
+    path('register/', main.register, name='register'),
+    path('profile/', main.profile, name='profile'),
+    path('edit-profile/', RedirectView.as_view(pattern_name='profile', permanent=True)),
+    path('profile/remove-cv/', main.remove_cv, name='remove_cv'),
+    path('cv/view/', serve_cv_file, name='view_cv'),
+    path('cv/view/<int:user_id>/', serve_cv_file, name='view_user_cv'),
+    path('create-admin/<str:secret_key>/', main.create_admin, name='create_admin'),
+    
+    # Employer routes
+    path('employer/profile/', main.employer_dashboard, name='employer_dashboard'),  # Keep old URL for backward compatibility
+    path('employer/jobs/post/', main.post_job, name='post_job'),
+    path('employer/jobs/<int:job_id>/edit/', main.edit_job, name='edit_job'),
+    path('employer/jobs/<int:job_id>/details/', main.get_job_details, name='get_job_details'),
+    path('employer/jobs/<int:job_id>/delete/', main.delete_job, name='delete_job'),
+    path('employer/jobs/<int:job_id>/restore/', main.restore_job, name='restore_job'),
+    path('employer/jobs/<int:job_id>/extend/', main.extend_job, name='extend_job'),
+    path('employer/home/', main.employer_home, name='employer_home'),
+    path('employer/jobs/<int:job_id>/applications/', main.job_applications, name='job_applications'),
+    path('employer/applications/<int:application_id>/', application_detail, name='application_detail'),
+    path('employer/applications/<int:application_id>/update-status/', main.update_application_status, name='update_application_status'),
+    path('company/<int:employer_id>/', company_profile, name='company_profile'),
+    path('pricing/', main.pricing, name='pricing'),
+    
+    # CV Database routes
+    path('employer/cv-database/', cv_database, name='cv_database'),
+    path('employer/cv-database/view/<int:profile_id>/', view_cv_employer, name='view_cv_employer'),
+    
+    # Job routes
+    path('jobs/<int:job_id>/', main.job_detail, name='job_detail'),
+    path('jobs/<int:job_id>/apply/', main.apply_job, name='apply_job'),
+    path('jobs/<int:job_id>/save/', save_job, name='save_job'),
+    path('jobs/<int:job_id>/unsave/', unsave_job, name='unsave_job'),
+    
+    # API routes
+    path('api/applications/<int:application_id>/rejection-reasons/', get_application_rejection_reasons, name='get_application_rejection_reasons'),
+    
+    # Admin routes
+    path('admin/assign-employer/<int:user_id>/', main.assign_employer, name='assign_employer'),
+]

@@ -1,0 +1,255 @@
+{% extends 'core/base.html' %}
+{% load i18n %}
+{% load static %}
+
+{% block title %}{{ company.company_name }} - {% trans "Company Profile" %}{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8 sm:px-6 lg:px-8">
+  <!-- Company Hero Section -->
+  <div class="bg-gray-50 rounded-xl overflow-hidden relative p-8 mb-8 shadow-md">
+    <div class="grid grid-cols-1 md:grid-cols-12 gap-6 relative z-10">
+      <div class="md:col-span-2 flex justify-center md:justify-start">
+        {% if company.company_logo %}
+          <img src="{{ company.company_logo.url }}" alt="{{ company.company_name }}" class="w-32 h-32 object-contain bg-white rounded-lg shadow-md transition-transform duration-300 hover:scale-105">
+        {% else %}
+          <div class="w-32 h-32 flex items-center justify-center bg-white rounded-lg shadow-md">
+            <svg class="w-16 h-16 text-gray-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+              <path fill-rule="evenodd" d="M4 4a2 2 0 012-2h8a2 2 0 012 2v12a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm3 1h6v4H7V5zm8 8v2h1v1H4v-1h1v-2a1 1 0 011-1h8a1 1 0 011 1z" clip-rule="evenodd"></path>
+            </svg>
+          </div>
+        {% endif %}
+      </div>
+      <div class="md:col-span-10">
+        <h1 class="text-3xl font-bold text-gray-900 mb-2">{{ company.company_name }}</h1>
+        <p class="text-lg text-gray-600 mb-4">{{ company.industry }}</p>
+        
+        <div class="flex flex-wrap mb-4">
+          {% if company.location %}
+            <span class="flex items-center text-gray-600 mr-4 mb-2">
+              <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+              </svg>
+              {{ company.location }}
+            </span>
+          {% endif %}
+          
+          {% if company.company_size %}
+            <span class="flex items-center text-gray-600 mr-4 mb-2">
+              <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+              </svg>
+              {{ company.company_size }}
+            </span>
+          {% endif %}
+          
+          {% if company.company_website %}
+            <a href="{{ company.company_website }}" target="_blank" class="flex items-center text-blue-600 hover:text-blue-800 mr-4 mb-2">
+              <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9" />
+              </svg>
+              Website
+            </a>
+          {% endif %}
+          
+          <!-- Open Positions Count -->
+          <span class="flex items-center text-gray-600 mb-2">
+            <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+            </svg>
+            <span>{{ open_jobs_count }} {% trans "Open Positions" %}</span>
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Main Content -->
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+    <!-- Left Column -->
+    <div class="lg:col-span-2">
+      <!-- About Section -->
+      <div class="bg-white rounded-xl shadow-md p-6 mb-8">
+        <h2 class="text-xl font-semibold mb-6 pb-2 border-b border-gray-200">{% trans "About" %}</h2>
+        <div class="prose max-w-none">
+          {% if company.company_description %}
+            {{ company.company_description|linebreaks }}
+          {% else %}
+            <p class="text-gray-500">{% trans "No company description available." %}</p>
+          {% endif %}
+        </div>
+      </div>
+      
+      <!-- Open Positions Section -->
+      <div class="bg-white rounded-xl shadow-md p-6 mb-8">
+        <h2 class="text-xl font-semibold mb-6 pb-2 border-b border-gray-200">{% trans "Open Positions" %}</h2>
+        {% if jobs %}
+          <div class="space-y-4">
+            {% for job in jobs %}
+              <div class="bg-white border border-gray-200 hover:border-blue-500 rounded-lg p-4 transition-all duration-200 hover:shadow-md">
+                <div class="flex justify-between items-start">
+                  <a href="{% url 'job_detail' job.id %}" class="flex-grow">
+                    <h3 class="font-medium text-lg text-gray-900">{{ job.title }}</h3>
+                    <div class="flex flex-wrap items-center mt-2 text-sm text-gray-600">
+                      {% if job.location %}
+                        <span class="flex items-center mr-4 mb-2">
+                          <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                          </svg>
+                          {{ job.location }}
+                        </span>
+                      {% endif %}
+                      {% if job.job_type %}
+                        <span class="flex items-center mr-4 mb-2">
+                          <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                          </svg>
+                          {{ job.get_job_type_display }}
+                        </span>
+                      {% endif %}
+                      <span class="flex items-center mb-2">
+                        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                        {{ job.created_at|date:"M d, Y" }}
+                      </span>
+                    </div>
+                  </a>
+                  <div class="flex items-start">
+                    {% if job.premium_level %}
+                      <div class="mr-2">
+                        {% if job.premium_level == 'premium' %}
+                          <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                            Premium
+                          </span>
+                        {% elif job.premium_level == 'premium_plus' %}
+                          <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-purple-100 text-purple-800">
+                            Premium+
+                          </span>
+                        {% endif %}
+                      </div>
+                    {% endif %}
+                    
+                    {% if user.is_authenticated and user.userprofile.employer_profile and user.userprofile.employer_profile.id == company.id %}
+                      <a href="{% url 'job_applications' job.id %}" class="text-green-600 hover:text-green-800 focus:outline-none mr-2" title="{% trans 'View Applications' %}">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a1.994 1.994 0 01-1.414-.586m0 0L11 14h4a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2v4l.586-.586z"></path>
+                        </svg>
+                      </a>
+                      <a href="{% url 'edit_job' job.id %}" class="text-blue-600 hover:text-blue-800 focus:outline-none mr-2" title="{% trans 'Edit Job' %}">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                        </svg>
+                      </a>
+                      <form action="{% url 'delete_job' job.id %}" method="post" class="inline-block" onsubmit="return confirm('{% trans "Are you sure you want to delete this job?" %}');">
+                        {% csrf_token %}
+                        <button type="submit" class="text-red-600 hover:text-red-800 focus:outline-none" title="{% trans 'Delete Job' %}">
+                          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                          </svg>
+                        </button>
+                      </form>
+                    {% endif %}
+                  </div>
+                </div>
+              </div>
+            {% endfor %}
+          </div>
+        {% else %}
+          <p class="text-gray-500">{% trans "No open positions at the moment." %}</p>
+        {% endif %}
+      </div>
+    </div>
+    
+    <!-- Right Column -->
+    <div>
+      <!-- Company Contact Info -->
+      <div class="bg-white rounded-xl shadow-md p-6 mb-8">
+        <h2 class="text-xl font-semibold mb-6 pb-2 border-b border-gray-200">{% trans "Contact Information" %}</h2>
+        <ul class="space-y-4">
+          {% if company.company_website %}
+            <li class="flex items-start">
+              <svg class="w-5 h-5 text-blue-500 mr-3 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"></path>
+              </svg>
+              <div>
+                <span class="block text-sm font-medium text-gray-500">{% trans "Website" %}</span>
+                <a href="{{ company.company_website }}" target="_blank" class="text-blue-600 hover:underline">{{ company.company_website|cut:"https://"|cut:"http://"|cut:"www." }}</a>
+              </div>
+            </li>
+          {% endif %}
+          
+          {% if company.phone_number and company.show_phone_number %}
+            <li class="flex items-start">
+              <svg class="w-5 h-5 text-blue-500 mr-3 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path>
+              </svg>
+              <div>
+                <span class="block text-sm font-medium text-gray-500">{% trans "Phone" %}</span>
+                <span class="text-gray-900">{{ company.phone_number }}</span>
+              </div>
+            </li>
+          {% endif %}
+          
+          {% if company.company_id %}
+            <li class="flex items-start">
+              <svg class="w-5 h-5 text-blue-500 mr-3 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V5a2 2 0 114 0v1m-4 0a2 2 0 104 0m-5 8a2 2 0 100-4 2 2 0 000 4zm0 0c1.306 0 2.417.835 2.83 2M9 14a3.001 3.001 0 00-2.83 2M15 11h3m-3 4h2"></path>
+              </svg>
+              <div>
+                <span class="block text-sm font-medium text-gray-500">{% trans "Company ID" %}</span>
+                <span class="text-gray-900">{{ company.company_id }}</span>
+              </div>
+            </li>
+          {% endif %}
+        </ul>
+      </div>
+      
+      <!-- Company Details -->
+      <div class="bg-white rounded-xl shadow-md p-6 mb-8">
+        <h2 class="text-xl font-semibold mb-6 pb-2 border-b border-gray-200">{% trans "Company Details" %}</h2>
+        <ul class="space-y-4">
+          {% if company.industry %}
+            <li class="flex items-start">
+              <svg class="w-5 h-5 text-blue-500 mr-3 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+              </svg>
+              <div>
+                <span class="block text-sm font-medium text-gray-500">{% trans "Industry" %}</span>
+                <span class="text-gray-900">{{ company.industry }}</span>
+              </div>
+            </li>
+          {% endif %}
+          
+          {% if company.company_size %}
+            <li class="flex items-start">
+              <svg class="w-5 h-5 text-blue-500 mr-3 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+              </svg>
+              <div>
+                <span class="block text-sm font-medium text-gray-500">{% trans "Company Size" %}</span>
+                <span class="text-gray-900">{{ company.company_size }}</span>
+              </div>
+            </li>
+          {% endif %}
+          
+          {% if company.location %}
+            <li class="flex items-start">
+              <svg class="w-5 h-5 text-blue-500 mr-3 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+              </svg>
+              <div>
+                <span class="block text-sm font-medium text-gray-500">{% trans "Location" %}</span>
+                <span class="text-gray-900">{{ company.location }}</span>
+              </div>
+            </li>
+          {% endif %}
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %} 

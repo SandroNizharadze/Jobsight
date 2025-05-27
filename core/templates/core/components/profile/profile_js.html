@@ -1,0 +1,404 @@
+{% load i18n %}
+
+<script>
+  // Form validation
+  (function () {
+    'use strict'
+    var forms = document.querySelectorAll('.needs-validation')
+    Array.prototype.slice.call(forms).forEach(function (form) {
+      form.addEventListener('submit', function (event) {
+        if (!form.checkValidity()) {
+          event.preventDefault()
+          event.stopPropagation()
+        }
+        form.classList.add('was-validated')
+      }, false)
+    })
+  })()
+
+  // Profile picture preview and auto-submit
+  const profilePictureInput = document.getElementById('id_profile_picture');
+  if (profilePictureInput) {
+    profilePictureInput.addEventListener('change', function(e) {
+      if (this.files && this.files[0]) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          const container = document.querySelector('.relative');
+          const imgContainer = container.querySelector('.w-24');
+          
+          // Replace image
+          imgContainer.innerHTML = `
+            <img src="${e.target.result}" alt="Profile Picture" class="w-full h-full object-cover">
+          `;
+          
+          // Display loading indicator
+          const loadingIndicator = document.createElement('div');
+          loadingIndicator.className = 'absolute inset-0 flex items-center justify-center bg-black bg-opacity-40 rounded-full';
+          loadingIndicator.innerHTML = `
+            <svg class="animate-spin h-8 w-8 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+          `;
+          container.appendChild(loadingIndicator);
+          
+          // Auto-submit the form
+          const userProfileForm = document.getElementById('profile-picture-form');
+          const employerProfileForm = document.getElementById('employer-profile-form');
+          const form = userProfileForm || employerProfileForm;
+          
+          if (form) {
+            // Set the form type based on which form is present
+            const formTypeInput = form.querySelector('input[name="form_type"]');
+            if (formTypeInput) {
+              formTypeInput.value = userProfileForm ? 'user_profile' : 'employer_form';
+            }
+            
+            setTimeout(() => {
+              form.submit();
+            }, 500); // Small delay to show preview first
+          }
+        }
+        reader.readAsDataURL(this.files[0]);
+      }
+    });
+  }
+
+  document.addEventListener('DOMContentLoaded', function() {
+    // Custom tab implementation for Tailwind
+    const setupTabs = () => {
+      const tabButtons = document.querySelectorAll('[data-tab-toggle="tab"]');
+      const tabPanes = document.querySelectorAll('.tab-pane');
+      
+      // Add click event to tab buttons
+      tabButtons.forEach(button => {
+        button.addEventListener('click', function() {
+          const targetId = this.getAttribute('data-tab-target');
+          const targetPane = document.querySelector(targetId);
+          
+          // Hide all panes
+          tabPanes.forEach(pane => {
+            pane.classList.add('hidden');
+            pane.classList.remove('block');
+          });
+          
+          // Show target pane
+          if (targetPane) {
+            targetPane.classList.remove('hidden');
+            targetPane.classList.add('block');
+            
+            // If this is the job activity tab, trigger display of applications content
+            if (targetId === '#job-activity-section') {
+              const applicationsButton = document.querySelector('[data-activity-tab="applications"]');
+              if (applicationsButton && !applicationsButton.classList.contains('bg-blue-500')) {
+                applicationsButton.click();
+              }
+            }
+          }
+          
+          // Update active state on buttons
+          tabButtons.forEach(btn => {
+            // Remove active styling
+            btn.classList.remove('border-blue-500', 'text-blue-600');
+            btn.classList.add('border-transparent', 'text-gray-500', 'hover:text-gray-700', 'hover:border-gray-300');
+          });
+          
+          // Add active styling to clicked button
+          this.classList.remove('border-transparent', 'text-gray-500', 'hover:text-gray-700', 'hover:border-gray-300');
+          this.classList.add('border-blue-500', 'text-blue-600');
+          
+          // Log for debugging
+          console.log(`Switched to tab: ${targetId}`);
+        });
+      });
+    };
+    
+    // Initialize tabs
+    setupTabs();
+    
+    // Check URL parameters to show correct tabs
+    const urlParams = new URLSearchParams(window.location.search);
+    const tabParam = urlParams.get('tab');
+    
+    // Activate main section tab if specified in URL
+    if (tabParam === 'applications') {
+      const jobActivityTab = document.getElementById('job-activity-tab');
+      if (jobActivityTab) {
+        jobActivityTab.click();
+      }
+    }
+
+    // Setup sub-tabs in job activity section
+    const activityTabButtons = document.querySelectorAll('[data-activity-tab]');
+    const activityPanes = document.querySelectorAll('[data-activity-pane]');
+
+    activityTabButtons.forEach(button => {
+      button.addEventListener('click', function() {
+        const targetId = this.getAttribute('data-activity-tab');
+        console.log(`Clicked activity tab: ${targetId}`);
+        
+        // Hide all activity panes
+        activityPanes.forEach(pane => {
+          pane.classList.add('hidden');
+        });
+        
+        // Show target pane
+        const targetPane = document.querySelector(`[data-activity-pane="${targetId}"]`);
+        if (targetPane) {
+          targetPane.classList.remove('hidden');
+          console.log(`Showing pane: ${targetId}`);
+        } else {
+          console.log(`Pane not found for: ${targetId}`);
+        }
+        
+        // Update active state
+        activityTabButtons.forEach(btn => {
+          btn.classList.remove('bg-blue-500', 'text-white');
+          btn.classList.add('bg-gray-100', 'text-gray-700');
+        });
+        
+        this.classList.remove('bg-gray-100', 'text-gray-700');
+        this.classList.add('bg-blue-500', 'text-white');
+      });
+    });
+
+    // Show CV upload form
+    const showCvFormBtn = document.getElementById('show-cv-form-btn');
+    const cvInitialBtn = document.getElementById('cv-initial-btn');
+    const cvUploadForm = document.getElementById('cv-upload-form');
+    const cancelCvFormBtn = document.getElementById('cancel-cv-form-btn');
+    const cvUploadFormElement = document.getElementById('cv-upload-form-element');
+    const cvRemoveForm = document.getElementById('cv-remove-form');
+
+    // Show the upload form when the Add/Upload CV button is clicked
+    if (showCvFormBtn) {
+      showCvFormBtn.addEventListener('click', function(e) {
+        console.log("Show CV form button clicked");
+        // Hide the button container
+        if (cvInitialBtn) {
+          cvInitialBtn.style.display = 'none';
+        }
+        // Show the form
+        if (cvUploadForm) {
+          cvUploadForm.style.display = 'block';
+        }
+      });
+    }
+
+    // Handle cancel button to hide form and show the Add/Upload button again
+    if (cancelCvFormBtn) {
+      cancelCvFormBtn.addEventListener('click', function() {
+        // Hide the form
+        if (cvUploadForm) {
+          cvUploadForm.style.display = 'none';
+        }
+        
+        // Show the button container again
+        if (cvInitialBtn) {
+          cvInitialBtn.style.display = 'block';
+        }
+      });
+    }
+
+    // Handle CV upload form submission
+    if (cvUploadFormElement) {
+      console.log("CV Upload form found, attaching submit event listener");
+      cvUploadFormElement.addEventListener('submit', function(e) {
+        e.preventDefault();
+        console.log("CV Upload form submitted");
+        
+        // Show a loading indicator
+        const submitBtn = this.querySelector('button[type="submit"]');
+        if (submitBtn) {
+          submitBtn.disabled = true;
+          const originalContent = submitBtn.innerHTML;
+          submitBtn.innerHTML = `
+            <svg class="animate-spin h-5 w-5 mr-2 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+            {% trans "Uploading..." %}
+          `;
+        }
+        
+        // Clear previous errors
+        const errorDiv = document.getElementById('cv-form-error');
+        errorDiv.textContent = '';
+        errorDiv.classList.add('hidden');
+        
+        // Get the file input
+        const fileInput = document.querySelector('input[name="cv"]');
+        if (!fileInput || !fileInput.files || fileInput.files.length === 0) {
+          console.error("No file selected");
+          errorDiv.textContent = 'Please select a file to upload.';
+          errorDiv.classList.remove('hidden');
+          
+          // Reset button
+          if (submitBtn) {
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = `
+              <svg class="h-5 w-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+              </svg>
+              {% trans "Save" %}
+            `;
+          }
+          return;
+        }
+        
+        const file = fileInput.files[0];
+        console.log("Selected file:", file.name, "Size:", file.size, "Type:", file.type);
+        
+        // Create a FormData object and append the file
+        const formData = new FormData();
+        
+        // Explicitly add the necessary fields
+        formData.append('cv', file);
+        formData.append('form_type', 'user_profile');
+        
+        // Add CSRF token
+        const csrfToken = document.querySelector('input[name="csrfmiddlewaretoken"]').value;
+        formData.append('csrfmiddlewaretoken', csrfToken);
+        
+        console.log("Sending CV upload request...");
+        fetch(window.location.href, {
+          method: 'POST',
+          body: formData,
+          headers: {
+            'X-Requested-With': 'XMLHttpRequest'
+          },
+          credentials: 'same-origin'
+        })
+        .then(response => {
+          console.log("Upload response status:", response.status);
+          if (!response.ok) {
+            throw new Error("Server error: " + response.status);
+          }
+          return response.json().catch(error => {
+            console.error("Error parsing JSON response:", error);
+            throw new Error("Invalid server response");
+          });
+        })
+        .then(data => {
+          console.log("Response data:", data);
+          if (data.success) {
+            console.log("CV uploaded successfully, reloading page");
+            window.location.reload();
+          } else {
+            console.error("Error uploading CV:", data.error);
+            errorDiv.textContent = data.error || 'An error occurred while uploading the CV.';
+            errorDiv.classList.remove('hidden');
+            
+            // Reset button
+            if (submitBtn) {
+              submitBtn.disabled = false;
+              submitBtn.innerHTML = `
+                <svg class="h-5 w-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                </svg>
+                {% trans "Save" %}
+              `;
+            }
+          }
+        })
+        .catch(error => {
+          console.error("Exception during CV upload:", error);
+          errorDiv.textContent = 'An error occurred while uploading the CV.';
+          errorDiv.classList.remove('hidden');
+          
+          // Reset button
+          if (submitBtn) {
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = `
+              <svg class="h-5 w-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+              </svg>
+              {% trans "Save" %}
+            `;
+          }
+        });
+      });
+    }
+
+    // Handle CV removal
+    if (cvRemoveForm) {
+      console.log("CV Remove form found, attaching event listener");
+      cvRemoveForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        console.log("CV Remove form submitted");
+        
+        if (confirm('{% trans "Are you sure you want to remove your CV?" %}')) {
+          console.log("Removal confirmed, sending request");
+          
+          const formData = new FormData(this);
+          
+          fetch(this.action, {
+            method: 'POST',
+            body: formData,
+            headers: {
+              'X-Requested-With': 'XMLHttpRequest'
+            },
+            credentials: 'same-origin'
+          })
+          .then(response => {
+            console.log("Response received:", response.status);
+            if (!response.ok) {
+              throw new Error("Server error: " + response.status);
+            }
+            return response.text().then(text => {
+              try {
+                return JSON.parse(text);
+              } catch (e) {
+                console.log("Response is not JSON:", text);
+                // If we got a non-JSON response but status is OK, consider it success
+                return { success: true, message: "CV removed successfully" };
+              }
+            });
+          })
+          .then(data => {
+            console.log("Response data:", data);
+            if (data.success) {
+              console.log("CV removed successfully, reloading page");
+              window.location.reload();
+            } else {
+              console.error("Error removing CV:", data.error);
+              alert('{% trans "An error occurred while removing the CV." %}' + (data.error ? ': ' + data.error : ''));
+            }
+          })
+          .catch(error => {
+            console.error("Exception during CV removal:", error);
+            // Even if there's an error, the CV might have been removed successfully
+            // So reload the page to check the current state
+            window.location.reload();
+          });
+        }
+      });
+    }
+    
+    // Debug tab structure
+    console.log("=== Tab Structure Debug ===");
+    console.log("Main tabs:", document.querySelectorAll('[data-tab-toggle="tab"]').length);
+    document.querySelectorAll('[data-tab-toggle="tab"]').forEach(tab => {
+      console.log(`Tab: ${tab.id}, Target: ${tab.getAttribute('data-tab-target')}`);
+      const target = document.querySelector(tab.getAttribute('data-tab-target'));
+      console.log(`Target exists: ${target !== null}, Display: ${target ? getComputedStyle(target).display : 'N/A'}`);
+    });
+    
+    console.log("Activity tabs:", document.querySelectorAll('[data-activity-tab]').length);
+    document.querySelectorAll('[data-activity-tab]').forEach(tab => {
+      const targetId = tab.getAttribute('data-activity-tab');
+      console.log(`Activity Tab: ${targetId}`);
+      const target = document.querySelector(`[data-activity-pane="${targetId}"]`);
+      console.log(`Target exists: ${target !== null}, Display: ${target ? getComputedStyle(target).display : 'N/A'}`);
+    });
+    
+    // Force the profile tab to be active on initial load if no tab parameter in URL
+    if (!urlParams.get('tab')) {
+      const profileTab = document.getElementById('profile-tab');
+      if (profileTab) {
+        console.log("Forcing profile tab to be active on initial load");
+        profileTab.click();
+      }
+    }
+  });
+</script> 

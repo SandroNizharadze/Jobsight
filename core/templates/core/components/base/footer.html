@@ -1,0 +1,63 @@
+{% load i18n %}
+
+<footer class="bg-gray-800 text-white py-10 mt-10">
+    <div class="container mx-auto px-4">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <!-- Company Info -->
+            <div>
+                <h3 class="text-lg font-bold mb-4">Jobsy.</h3>
+                <p class="text-gray-300 mb-4">{% trans "ჩვენ გთავაზობთ საუკეთესო სამსახურებს საქართველოში." %}</p>
+                <div class="flex space-x-4 mt-4">
+                    <a href="#" class="text-gray-300 hover:text-white">
+                        <i class="fab fa-facebook-f"></i>
+                    </a>
+                    <a href="#" class="text-gray-300 hover:text-white">
+                        <i class="fab fa-twitter"></i>
+                    </a>
+                    <a href="#" class="text-gray-300 hover:text-white">
+                        <i class="fab fa-linkedin-in"></i>
+                    </a>
+                    <a href="#" class="text-gray-300 hover:text-white">
+                        <i class="fab fa-instagram"></i>
+                    </a>
+                </div>
+            </div>
+            
+            <!-- Quick Links -->
+            <div>
+                <h3 class="text-lg font-bold mb-4">{% trans "სწრაფი ბმულები" %}</h3>
+                <ul class="space-y-2">
+                    <li><a href="{% url 'job_list' %}" class="text-gray-300 hover:text-white">{% trans "სამსახურები" %}</a></li>
+                    <li><a href="#" class="text-gray-300 hover:text-white">{% trans "ჩვენ შესახებ" %}</a></li>
+                    <li><a href="#" class="text-gray-300 hover:text-white">{% trans "კონტაქტი" %}</a></li>
+                    <li><a href="{% url 'pricing' %}" class="text-gray-300 hover:text-white">{% trans "ფასები" %}</a></li>
+                    <li><a href="#" class="text-gray-300 hover:text-white">{% trans "კონფიდენციალურობის პოლიტიკა" %}</a></li>
+                </ul>
+            </div>
+            
+            <!-- Contact Info -->
+            <div>
+                <h3 class="text-lg font-bold mb-4">{% trans "კონტაქტი" %}</h3>
+                <ul class="space-y-2">
+                    <li class="flex items-start">
+                        <i class="fas fa-map-marker-alt mt-1 mr-3 text-gray-400"></i>
+                        <span class="text-gray-300">{% trans "თბილისი, საქართველო" %}</span>
+                    </li>
+                    <li class="flex items-start">
+                        <i class="fas fa-envelope mt-1 mr-3 text-gray-400"></i>
+                        <span class="text-gray-300">info@jobsy.ge</span>
+                    </li>
+                    <li class="flex items-start">
+                        <i class="fas fa-phone-alt mt-1 mr-3 text-gray-400"></i>
+                        <span class="text-gray-300">+995 599 123 456</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        
+        <!-- Copyright -->
+        <div class="border-t border-gray-700 mt-8 pt-6 text-center text-gray-400">
+            <p>&copy; {% now "Y" %} Jobsy. {% trans "ყველა უფლება დაცულია." %}</p>
+        </div>
+    </div>
+</footer> 

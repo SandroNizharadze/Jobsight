@@ -1,0 +1,523 @@
+{% extends 'core/base.html' %}
+{% load i18n %} 
+
+{% block title %}Jobsy - {% trans "დამსაქმებლის პანელი" %}{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8 sm:px-6 lg:px-8">
+  <div class="mb-8">
+    <h1 class="text-2xl font-bold text-gray-900">{% trans "დამსაქმებლის პანელი" %}</h1>
+    <p class="mt-2 text-gray-600">{% trans "მართეთ თქვენი ვაკანსიები და კომპანიის პროფილი" %}</p>
+  </div>
+  
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+    <!-- Left Column -->
+    <div class="lg:col-span-1">
+      <!-- Company Profile Card -->
+      <div class="bg-white rounded-xl shadow-md overflow-hidden mb-6">
+        <div class="px-6 py-4 bg-gray-50 border-b border-gray-200">
+          <h2 class="text-lg font-semibold text-gray-900">{% trans "კომპანიის პროფილი" %}</h2>
+        </div>
+        
+        <div class="p-6">
+          <div class="flex items-center mb-4">
+            {% if employer_profile.company_logo %}
+              <img src="{{ employer_profile.company_logo.url }}" alt="{{ employer_profile.company_name }}" class="w-16 h-16 object-contain bg-white rounded-lg shadow-sm mr-4">
+            {% else %}
+              <div class="w-16 h-16 flex items-center justify-center bg-gray-100 rounded-lg shadow-sm mr-4">
+                <svg class="w-8 h-8 text-gray-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                  <path fill-rule="evenodd" d="M4 4a2 2 0 012-2h8a2 2 0 012 2v12a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm3 1h6v4H7V5zm8 8v2h1v1H4v-1h1v-2a1 1 0 011-1h8a1 1 0 011 1z" clip-rule="evenodd"></path>
+                </svg>
+              </div>
+            {% endif %}
+            <div>
+              <h3 class="font-medium text-gray-900">{{ employer_profile.company_name }}</h3>
+              <p class="text-sm text-gray-500">{{ employer_profile.industry }}</p>
+            </div>
+          </div>
+          
+          <div class="space-y-3 mb-6">
+            {% if employer_profile.location %}
+              <div class="flex items-center text-sm">
+                <svg class="w-4 h-4 text-gray-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                </svg>
+                <span>{{ employer_profile.location }}</span>
+              </div>
+            {% endif %}
+            
+            {% if employer_profile.website %}
+              <div class="flex items-center text-sm">
+                <svg class="w-4 h-4 text-gray-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"></path>
+                </svg>
+                <a href="{{ employer_profile.website }}" target="_blank" class="text-blue-600 hover:underline">{{ employer_profile.website|cut:"https://"|cut:"http://"|cut:"www." }}</a>
+              </div>
+            {% endif %}
+          </div>
+          
+          <a href="{% url 'profile' %}?template=employer" class="w-full flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+            {% trans "პროფილის რედაქტირება" %}
+          </a>
+        </div>
+      </div>
+      
+      <!-- Post New Job Card -->
+      <div class="bg-white rounded-xl shadow-md overflow-hidden">
+        <div class="px-6 py-4 bg-gray-50 border-b border-gray-200">
+          <h2 class="text-lg font-semibold text-gray-900">{% trans "ახალი ვაკანსია" %}</h2>
+        </div>
+        
+        <div class="p-6">
+          <p class="text-gray-600 mb-6">{% trans "აირჩიეთ პაკეტი ახალი ვაკანსიის გამოსაქვეყნებლად" %}</p>
+          
+          <div class="space-y-4">
+            <!-- Standard Package -->
+            <a href="{% url 'post_job' %}?premium_level=standard" class="block border border-gray-200 rounded-lg p-4 hover:border-blue-500 hover:shadow-md transition-all duration-200">
+              <div class="flex items-center">
+                <div class="bg-blue-100 rounded-full p-2 mr-3">
+                  <svg class="h-5 w-5 text-blue-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                  </svg>
+                </div>
+                <div>
+                  <h3 class="font-medium text-gray-900">{% trans "სტანდარტული" %}</h3>
+                  <p class="text-sm text-gray-500">{% trans "ძირითადი ფუნქციები" %}</p>
+                </div>
+              </div>
+            </a>
+            
+            <!-- Premium Package -->
+            <a href="{% url 'post_job' %}?premium_level=premium" class="block border border-gray-200 rounded-lg p-4 hover:border-blue-500 hover:shadow-md transition-all duration-200">
+              <div class="flex items-center">
+                <div class="bg-blue-100 rounded-full p-2 mr-3">
+                  <svg class="h-5 w-5 text-blue-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                  </svg>
+                </div>
+                <div>
+                  <h3 class="font-medium text-gray-900">{% trans "პრემიუმი" %}</h3>
+                  <p class="text-sm text-gray-500">{% trans "მეტი ხილვადობა" %}</p>
+                </div>
+              </div>
+            </a>
+            
+            <!-- Premium+ Package -->
+            <a href="{% url 'post_job' %}?premium_level=premium_plus" class="block border border-gray-200 rounded-lg p-4 hover:border-purple-500 hover:shadow-md transition-all duration-200">
+              <div class="flex items-center">
+                <div class="bg-purple-100 rounded-full p-2 mr-3">
+                  <svg class="h-5 w-5 text-purple-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
+                  </svg>
+                </div>
+                <div>
+                  <h3 class="font-medium text-gray-900">{% trans "პრემიუმ+" %}</h3>
+                  <p class="text-sm text-gray-500">{% trans "მაქსიმალური ხილვადობა" %}</p>
+                </div>
+              </div>
+            </a>
+          </div>
+          
+          <div class="mt-4 text-center">
+            <a href="{% url 'pricing' %}" class="text-sm text-blue-600 hover:text-blue-800">
+              {% trans "შეადარეთ პაკეტები" %} →
+            </a>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Expiring Jobs Card -->
+      {% if jobs_expiring_soon > 0 %}
+      <div class="bg-white rounded-xl shadow-md overflow-hidden mt-6">
+        <div class="px-6 py-4 bg-amber-50 border-b border-amber-200">
+          <h2 class="text-lg font-semibold text-amber-800">{% trans "ვაკანსიები ვადის გასვლამდე" %}</h2>
+        </div>
+        
+        <div class="p-6">
+          <div class="flex items-center">
+            <div class="bg-amber-100 rounded-full p-3 mr-4">
+              <svg class="h-6 w-6 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+              </svg>
+            </div>
+            <div>
+              <p class="text-gray-700">
+                {% blocktrans with count=jobs_expiring_soon %}
+                  <span class="font-medium">{{ count }}</span> job{{ count|pluralize }} will expire within the next 7 days.
+                {% endblocktrans %}
+              </p>
+              <p class="text-sm text-gray-600 mt-1">
+                {% trans "Review your job listings and extend expiration dates if needed." %}
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+      {% endif %}
+      
+      <!-- Expired Jobs Card -->
+      {% if expired_jobs_count > 0 %}
+      <div class="bg-white rounded-xl shadow-md overflow-hidden mt-6">
+        <div class="px-6 py-4 bg-red-50 border-b border-red-200">
+          <h2 class="text-lg font-semibold text-red-800">{% trans "ვადაგასული ვაკანსიები" %}</h2>
+        </div>
+        
+        <div class="p-6">
+          <div class="flex items-center">
+            <div class="bg-red-100 rounded-full p-3 mr-4">
+              <svg class="h-6 w-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+              </svg>
+            </div>
+            <div>
+              <p class="text-gray-700">
+                {% blocktrans with count=expired_jobs_count %}
+                  <span class="font-medium">{{ count }}</span> job{{ count|pluralize }} has expired and is no longer visible to job seekers.
+                {% endblocktrans %}
+              </p>
+              <p class="text-sm text-gray-600 mt-1">
+                {% trans "Click the extend button next to expired jobs to submit them for review." %}
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+      {% endif %}
+      
+      <!-- Deleted Jobs Card -->
+      {% if deleted_jobs_count > 0 %}
+      <div class="bg-white rounded-xl shadow-md overflow-hidden mt-6">
+        <div class="px-6 py-4 bg-gray-50 border-b border-gray-200">
+          <h2 class="text-lg font-semibold text-gray-800">{% trans "წაშლილი ვაკანსიები" %}</h2>
+        </div>
+        
+        <div class="p-6">
+          <div class="flex items-center">
+            <div class="bg-gray-100 rounded-full p-3 mr-4">
+              <svg class="h-6 w-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+              </svg>
+            </div>
+            <div>
+              <p class="text-gray-700">
+                {% blocktrans with count=deleted_jobs_count %}
+                  <span class="font-medium">{{ count }}</span> job{{ count|pluralize }} has been deleted.
+                {% endblocktrans %}
+              </p>
+              <p class="text-sm text-gray-600 mt-1">
+                {% trans "Click the restore button next to deleted jobs to restore them. Restored jobs will be set to pending review status." %}
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+      {% endif %}
+    </div>
+    
+    <!-- Right Column -->
+    <div class="lg:col-span-2">
+      <!-- Job Listings Card -->
+      <div class="bg-white rounded-xl shadow-md overflow-hidden">
+        <div class="px-6 py-4 bg-gray-50 border-b border-gray-200">
+          <h2 class="text-lg font-semibold text-gray-900">{% trans "ჩემი ვაკანსიები" %}</h2>
+        </div>
+        
+        <div class="p-6">
+          {% if all_jobs %}
+            <div class="overflow-x-auto">
+              <table class="min-w-full divide-y divide-gray-200">
+                <thead class="bg-gray-50">
+                  <tr>
+                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      {% trans "Job Title" %}
+                    </th>
+                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      {% trans "Status" %}
+                    </th>
+                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      {% trans "Posted" %}
+                    </th>
+                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      {% trans "Applications" %}
+                    </th>
+                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      {% trans "Views" %}
+                    </th>
+                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      {% trans "Expiration" %}
+                    </th>
+                    <th scope="col" class="relative px-6 py-3">
+                      <span class="sr-only">{% trans "Actions" %}</span>
+                    </th>
+                  </tr>
+                </thead>
+                <tbody class="bg-white divide-y divide-gray-200">
+                  {% for job in all_jobs %}
+                    <tr>
+                      <td class="px-6 py-4 whitespace-nowrap">
+                        <div class="flex items-center">
+                          <div class="ml-4">
+                            <div class="text-sm font-medium text-gray-900">
+                              {{ job.title }}
+                            </div>
+                            <div class="text-sm text-gray-500">
+                              {{ job.location }}
+                            </div>
+                          </div>
+                        </div>
+                      </td>
+                      <td class="px-6 py-4 whitespace-nowrap">
+                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
+                          {% if job.is_deleted %}bg-gray-100 text-gray-800
+                          {% elif job.status == 'approved' %}bg-green-100 text-green-800
+                          {% elif job.status == 'pending_review' %}bg-yellow-100 text-yellow-800
+                          {% elif job.status == 'rejected' %}bg-red-100 text-red-800
+                          {% elif job.status == 'expired' %}bg-orange-100 text-orange-800
+                          {% else %}bg-gray-100 text-gray-800{% endif %}">
+                          {% if job.is_deleted %}{% trans "Deleted" %}{% else %}{{ job.get_status_display }}{% endif %}
+                        </span>
+                      </td>
+                      <td class="px-6 py-4 whitespace-nowrap">
+                        <div class="text-sm text-gray-900">{{ job.posted_at|date:"M d, Y" }}</div>
+                      </td>
+                      <td class="px-6 py-4 whitespace-nowrap">
+                        <div class="text-sm text-gray-900">
+                          {{ job.applications_count }}
+                          {% if job.unread_applications_count > 0 %}
+                            <span class="ml-2 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
+                              {{ job.unread_applications_count }} {% trans "new" %}
+                            </span>
+                          {% endif %}
+                        </div>
+                      </td>
+                      <td class="px-6 py-4 whitespace-nowrap">
+                        <div class="text-sm text-gray-900">{{ job.view_count }}</div>
+                      </td>
+                      <td class="px-6 py-4 whitespace-nowrap">
+                        {% if job.expires_at %}
+                          <div class="text-sm">
+                            {% if job.is_expired_status %}
+                              <span class="text-red-600 font-medium">{% trans "Expired" %}</span>
+                            {% elif job.days_until_expiration_value <= 7 %}
+                              <span class="text-amber-600 font-medium">{{ job.days_until_expiration_value }} {% trans "days left" %}</span>
+                            {% else %}
+                              <span class="text-gray-900">{{ job.days_until_expiration_value }} {% trans "days left" %}</span>
+                            {% endif %}
+                            <div class="text-xs text-gray-500 mt-1">{{ job.expires_at|date:"M d, Y" }}</div>
+                          </div>
+                        {% else %}
+                          <div class="text-sm text-gray-500">{% trans "No expiration" %}</div>
+                        {% endif %}
+                      </td>
+                      <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                        <div class="flex items-center justify-end space-x-3">
+                          <!-- View Applications Icon -->
+                          {% if not job.is_deleted %}
+                          <a href="{% url 'job_applications' job.id %}" class="text-blue-600 hover:text-blue-900" title="{% trans 'View Applications' %}">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a1.994 1.994 0 01-1.414-.586m0 0L11 14h4a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2v4l.586-.586z"></path>
+                            </svg>
+                          </a>
+                          {% else %}
+                          <span class="text-gray-400 cursor-not-allowed" title="{% trans 'Cannot view applications (job deleted)' %}">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a1.994 1.994 0 01-1.414-.586m0 0L11 14h4a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2v4l.586-.586z"></path>
+                            </svg>
+                          </span>
+                          {% endif %}
+                          
+                          <!-- Edit Icon -->
+                          {% if not job.is_deleted %}
+                          <a href="{% url 'edit_job' job.id %}" class="text-gray-600 hover:text-gray-900" title="{% trans 'Edit' %}">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                            </svg>
+                          </a>
+                          {% else %}
+                          <span class="text-gray-400 cursor-not-allowed" title="{% trans 'Cannot edit (job deleted)' %}">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                            </svg>
+                          </span>
+                          {% endif %}
+                          
+                          <!-- Extend Expiration (if expiring soon or expired) -->
+                          {% if not job.is_deleted and job.status == 'approved' and job.expires_at and job.days_until_expiration_value <= 7 or not job.is_deleted and job.status == 'expired' %}
+                          <button type="button" 
+                                 class="text-green-600 hover:text-green-900" 
+                                 title="{% trans 'Extend by 30 days' %}"
+                                 onclick="openExtendModal('{{ job.id }}', '{{ job.title }}', '{{ job.premium_level }}', '{{ job.is_expired_status }}')">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                          </button>
+                          {% endif %}
+                          
+                          <!-- Delete Form or Restore Button -->
+                          {% if not job.is_deleted %}
+                          <form action="{% url 'delete_job' job.id %}" method="post" class="inline">
+                            {% csrf_token %}
+                            <button type="submit" class="text-red-600 hover:text-red-900" title="{% trans 'Delete' %}" onclick="return confirm('{% trans "Are you sure you want to delete this job? This action cannot be undone." %}')">
+                              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                              </svg>
+                            </button>
+                          </form>
+                          {% else %}
+                          <!-- Restore Button -->
+                          <form action="{% url 'restore_job' job.id %}" method="post" class="inline">
+                            {% csrf_token %}
+                            <button type="submit" class="text-blue-600 hover:text-blue-900" title="{% trans 'Restore' %}" onclick="return confirm('{% trans "Are you sure you want to restore this job? It will be set to pending review status." %}')">
+                              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+                              </svg>
+                            </button>
+                          </form>
+                          {% endif %}
+                        </div>
+                      </td>
+                    </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          {% else %}
+            <div class="text-center py-8">
+              <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
+              </svg>
+              <h3 class="mt-2 text-sm font-medium text-gray-900">{% trans "No job listings yet" %}</h3>
+              <p class="mt-1 text-sm text-gray-500">{% trans "Get started by posting your first job" %}</p>
+              <div class="mt-6">
+                <a href="{% url 'pricing' %}" class="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700">
+                  <svg class="-ml-1 mr-2 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                  </svg>
+                  {% trans "Post a Job" %}
+                </a>
+              </div>
+            </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<!-- Job Extension Modal -->
+<div id="extendJobModal" class="fixed inset-0 z-50 hidden overflow-y-auto">
+  <div class="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+    <!-- Background overlay -->
+    <div class="fixed inset-0 transition-opacity" aria-hidden="true">
+      <div class="absolute inset-0 bg-gray-500 opacity-75"></div>
+    </div>
+
+    <!-- Modal panel -->
+    <div class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
+      <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+        <div class="sm:flex sm:items-start">
+          <div class="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-blue-100 sm:mx-0 sm:h-10 sm:w-10">
+            <svg class="h-6 w-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+          </div>
+          <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
+            <h3 class="text-lg leading-6 font-medium text-gray-900" id="modal-title">
+              {% trans "Extend Job Listing" %}
+            </h3>
+            <div class="mt-2">
+              <p class="text-sm text-gray-500">
+                <span id="jobTitle"></span>
+              </p>
+              
+              <div class="mt-4">
+                <div id="expiredNotice" class="bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-4 hidden">
+                  <div class="flex">
+                    <div class="flex-shrink-0">
+                      <svg class="h-5 w-5 text-yellow-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
+                      </svg>
+                    </div>
+                    <div class="ml-3">
+                      <p class="text-sm text-yellow-700">
+                        {% trans "This job has expired. Extending it will submit it for admin review." %}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="bg-gray-50 rounded-lg p-4 mb-4">
+                  <h4 class="font-medium text-gray-800 mb-2">{% trans "Package Information" %}</h4>
+                  <div id="packageInfo">
+                    <div id="standard-package" class="package-info hidden">
+                      <p class="text-sm font-medium text-gray-700">{% trans "Standard Package" %}</p>
+                      <p class="text-sm text-gray-600">{% trans "Basic visibility with standard features" %}</p>
+                      <p class="text-sm font-bold mt-2">{% trans "Price:" %} 50 ₾</p>
+                    </div>
+                    <div id="premium-package" class="package-info hidden">
+                      <p class="text-sm font-medium text-gray-700">{% trans "Premium Package" %}</p>
+                      <p class="text-sm text-gray-600">{% trans "Enhanced visibility with premium features" %}</p>
+                      <p class="text-sm font-bold mt-2">{% trans "Price:" %} 100 ₾</p>
+                    </div>
+                    <div id="premium_plus-package" class="package-info hidden">
+                      <p class="text-sm font-medium text-gray-700">{% trans "Premium+ Package" %}</p>
+                      <p class="text-sm text-gray-600">{% trans "Maximum visibility with all premium features" %}</p>
+                      <p class="text-sm font-bold mt-2">{% trans "Price:" %} 150 ₾</p>
+                    </div>
+                  </div>
+                </div>
+                
+                <p class="text-sm text-gray-600">
+                  {% trans "Extending this job will keep it active for an additional 30 days." %}
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+        <form id="extendJobForm" action="" method="post">
+          {% csrf_token %}
+          <button type="submit" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-600 text-base font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:ml-3 sm:w-auto sm:text-sm">
+            {% trans "Extend Job" %}
+          </button>
+        </form>
+        <button type="button" onclick="closeExtendModal()" class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">
+          {% trans "Cancel" %}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  function openExtendModal(jobId, jobTitle, packageType, isExpired) {
+    // Set job title
+    document.getElementById('jobTitle').textContent = jobTitle;
+    
+    // Set form action
+    document.getElementById('extendJobForm').action = `/employer/jobs/${jobId}/extend/`;
+    
+    // Show appropriate package info
+    document.querySelectorAll('.package-info').forEach(el => el.classList.add('hidden'));
+    document.getElementById(`${packageType}-package`).classList.remove('hidden');
+    
+    // Show expired notice if applicable
+    if (isExpired === 'True') {
+      document.getElementById('expiredNotice').classList.remove('hidden');
+    } else {
+      document.getElementById('expiredNotice').classList.add('hidden');
+    }
+    
+    // Show modal
+    document.getElementById('extendJobModal').classList.remove('hidden');
+  }
+  
+  function closeExtendModal() {
+    document.getElementById('extendJobModal').classList.add('hidden');
+  }
+</script>
+{% endblock %} 
