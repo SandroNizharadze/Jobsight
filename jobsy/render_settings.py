@@ -22,6 +22,17 @@ DATABASES = {
     }
 }
 
+# Use DATABASE_URL if provided (for Render deployment)
+DATABASE_URL = os.environ.get('DATABASE_URL')
+if DATABASE_URL:
+    import dj_database_url
+    DATABASES["default"] = dj_database_url.parse(DATABASE_URL)
+
+# Use Supabase if enabled - this must be after the DATABASE settings
+USE_SUPABASE = os.environ.get('USE_SUPABASE', 'True') == 'True'
+if USE_SUPABASE:
+    from .supabase_settings import DATABASES
+
 # Enable S3 storage in production
 USE_S3 = os.environ.get('USE_S3', 'True') == 'True'
 
