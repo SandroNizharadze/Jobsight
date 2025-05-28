@@ -72,6 +72,9 @@ def register(request):
     if request.user.is_authenticated:
         return redirect('job_list')
     
+    # Check for user_type in the query parameters and set default form values
+    default_user_type = request.GET.get('user_type', 'candidate')
+    
     if request.method == 'POST':
         # Get user_type directly from POST data 
         user_type = request.POST.get('user_type', 'candidate')
@@ -223,5 +226,6 @@ def register(request):
     
     return render(request, 'core/register.html', {
         'form': form,
-        'employer_form': employer_form
+        'employer_form': employer_form,
+        'default_user_type': default_user_type
     }) 

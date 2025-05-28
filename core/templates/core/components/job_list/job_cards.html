@@ -1,5 +1,6 @@
 {% load i18n %}
 {% load static %}
+{% load core_extras %}
 
 <!-- Job listings container -->
 <div class="container mx-auto px-4 py-8">
@@ -47,11 +48,11 @@
                     <i class="fas fa-money-bill-wave mr-2 text-gray-400"></i>
                     <span>
                       {% if job.salary_min and job.salary_max %}
-                        {{ job.salary_min }} - {{ job.salary_max }} {{ job.get_salary_currency_display }}
+                        {{ job.salary_min|remove_trailing_zeros }} - {{ job.salary_max|remove_trailing_zeros }} {{ job.get_salary_currency_display }}
                       {% elif job.salary_min %}
-                        {% trans "From" %} {{ job.salary_min }} {{ job.get_salary_currency_display }}
+                        {% trans "From" %} {{ job.salary_min|remove_trailing_zeros }} {{ job.get_salary_currency_display }}
                       {% elif job.salary_max %}
-                        {% trans "Up to" %} {{ job.salary_max }} {{ job.get_salary_currency_display }}
+                        {% trans "Up to" %} {{ job.salary_max|remove_trailing_zeros }} {{ job.get_salary_currency_display }}
                       {% else %}
                         {% trans "შეთანხმებით" %}
                       {% endif %}
@@ -67,10 +68,11 @@
               
               <div class="mt-auto flex justify-between items-end">
                 <div class="text-xs text-gray-500">{{ job.created_at|date:"M j" }}</div>
+                <!-- Premium Plus Job Card Logo -->
                 {% if job.employer.company_logo %}
-                  <img src="{{ job.employer.company_logo.url }}" alt="{{ job.employer.company_name }}" class="w-12 h-12 object-cover rounded-full border-2 border-purple-200">
+                  <img src="{{ job.employer.company_logo.url }}" alt="{{ job.employer.company_name }}" class="w-16 h-16 object-cover rounded-full">
                 {% else %}
-                  <div class="w-12 h-12 bg-gray-200 rounded-full flex items-center justify-center border-2 border-purple-200">
+                  <div class="w-16 h-16 bg-gray-200 rounded-full flex items-center justify-center">
                     <i class="fas fa-building text-gray-400"></i>
                   </div>
                 {% endif %}
@@ -126,11 +128,11 @@
                     <i class="fas fa-money-bill-wave mr-2 text-gray-400"></i>
                     <span>
                       {% if job.salary_min and job.salary_max %}
-                        {{ job.salary_min }} - {{ job.salary_max }} {{ job.get_salary_currency_display }}
+                        {{ job.salary_min|remove_trailing_zeros }} - {{ job.salary_max|remove_trailing_zeros }} {{ job.get_salary_currency_display }}
                       {% elif job.salary_min %}
-                        {% trans "From" %} {{ job.salary_min }} {{ job.get_salary_currency_display }}
+                        {% trans "From" %} {{ job.salary_min|remove_trailing_zeros }} {{ job.get_salary_currency_display }}
                       {% elif job.salary_max %}
-                        {% trans "Up to" %} {{ job.salary_max }} {{ job.get_salary_currency_display }}
+                        {% trans "Up to" %} {{ job.salary_max|remove_trailing_zeros }} {{ job.get_salary_currency_display }}
                       {% else %}
                         {% trans "შეთანხმებით" %}
                       {% endif %}
@@ -146,10 +148,11 @@
               
               <div class="mt-auto flex justify-between items-end">
                 <div class="text-xs text-gray-500">{{ job.created_at|date:"M j" }}</div>
+                <!-- Premium Job Card Logo -->
                 {% if job.employer.company_logo %}
-                  <img src="{{ job.employer.company_logo.url }}" alt="{{ job.employer.company_name }}" class="w-12 h-12 object-cover rounded-full border-2 border-blue-200">
+                  <img src="{{ job.employer.company_logo.url }}" alt="{{ job.employer.company_name }}" class="w-16 h-16 object-cover rounded-full">
                 {% else %}
-                  <div class="w-12 h-12 bg-gray-200 rounded-full flex items-center justify-center border-2 border-blue-200">
+                  <div class="w-16 h-16 bg-gray-200 rounded-full flex items-center justify-center">
                     <i class="fas fa-building text-gray-400"></i>
                   </div>
                 {% endif %}
@@ -204,11 +207,11 @@
                     <i class="fas fa-money-bill-wave mr-2 text-gray-400"></i>
                     <span>
                       {% if job.salary_min and job.salary_max %}
-                        {{ job.salary_min }} - {{ job.salary_max }} {{ job.get_salary_currency_display }}
+                        {{ job.salary_min|remove_trailing_zeros }} - {{ job.salary_max|remove_trailing_zeros }} {{ job.get_salary_currency_display }}
                       {% elif job.salary_min %}
-                        {% trans "From" %} {{ job.salary_min }} {{ job.get_salary_currency_display }}
+                        {% trans "From" %} {{ job.salary_min|remove_trailing_zeros }} {{ job.get_salary_currency_display }}
                       {% elif job.salary_max %}
-                        {% trans "Up to" %} {{ job.salary_max }} {{ job.get_salary_currency_display }}
+                        {% trans "Up to" %} {{ job.salary_max|remove_trailing_zeros }} {{ job.get_salary_currency_display }}
                       {% else %}
                         {% trans "შეთანხმებით" %}
                       {% endif %}
@@ -224,10 +227,11 @@
               
               <div class="mt-auto flex justify-between items-end">
                 <div class="text-xs text-gray-500">{{ job.created_at|date:"M j" }}</div>
+                <!-- Standard Job Card Logo -->
                 {% if job.employer.company_logo %}
-                  <img src="{{ job.employer.company_logo.url }}" alt="{{ job.employer.company_name }}" class="w-12 h-12 object-cover rounded-full border-2 border-amber-200">
+                  <img src="{{ job.employer.company_logo.url }}" alt="{{ job.employer.company_name }}" class="w-16 h-16 object-cover rounded-full">
                 {% else %}
-                  <div class="w-12 h-12 bg-gray-200 rounded-full flex items-center justify-center border-2 border-amber-200">
+                  <div class="w-16 h-16 bg-gray-200 rounded-full flex items-center justify-center">
                     <i class="fas fa-building text-gray-400"></i>
                   </div>
                 {% endif %}

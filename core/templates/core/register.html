@@ -33,13 +33,13 @@
                             <label class="inline-flex items-center">
                                 <input type="radio" name="user_type" id="user_type_candidate" value="candidate" 
                                        class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300"
-                                       {% if form.user_type.value == 'candidate' or not form.user_type.value %}checked{% endif %}>
+                                       {% if default_user_type == 'candidate' %}checked{% endif %}>
                                 <span class="ml-2 text-gray-700">{% trans "Job Seeker" %}</span>
                             </label>
                             <label class="inline-flex items-center">
                                 <input type="radio" name="user_type" id="user_type_employer" value="employer" 
                                        class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300"
-                                       {% if form.user_type.value == 'employer' %}checked{% endif %}>
+                                       {% if default_user_type == 'employer' %}checked{% endif %}>
                                 <span class="ml-2 text-gray-700">{% trans "Employer" %}</span>
                             </label>
                         </div>

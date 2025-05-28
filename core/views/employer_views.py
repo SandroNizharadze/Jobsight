@@ -624,20 +624,21 @@ def cv_database(request):
     """
     Display a database of candidate CVs for employers
     Only shows CVs where user has opted in to be visible to employers
-    Only accessible to employers with at least one premium+ job
+    Only accessible to employers with at least one active non-expired premium+ job
     """
     employer_profile = request.user.userprofile.employer_profile
     
-    # Check if employer has at least one premium+ job
+    # Check if employer has at least one active non-expired premium+ job
     has_premium_plus = JobListing.objects.filter(
         employer=employer_profile,
         premium_level='premium_plus',
         status='approved',  # Only count approved jobs
-        deleted_at__isnull=True  # Don't count deleted jobs
+        deleted_at__isnull=True,  # Don't count deleted jobs
+        expires_at__gt=timezone.now()  # Only count non-expired jobs
     ).exists()
     
     if not has_premium_plus:
-        messages.error(request, "CV Database is only available for Premium+ employers. Please upgrade to Premium+ to access this feature.")
+        messages.error(request, "CV Database is only available for employers with active Premium+ job listings.")
         messages.info(request, "Visit our <a href='/pricing/' class='underline text-blue-600 hover:text-blue-800'>pricing page</a> to learn more about Premium+ benefits.", extra_tags='safe')
         return redirect('employer_dashboard')
     

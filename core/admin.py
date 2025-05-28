@@ -186,11 +186,16 @@ class JobListingAdmin(SoftDeletionAdmin):
 
     def salary_range(self, obj):
         if obj.salary_min and obj.salary_max:
-            return f"{obj.salary_min} - {obj.salary_max} ₾ {obj.salary_type}"
+            # Format values to remove trailing zeros
+            min_val = str(obj.salary_min).rstrip('0').rstrip('.') if '.' in str(obj.salary_min) else obj.salary_min
+            max_val = str(obj.salary_max).rstrip('0').rstrip('.') if '.' in str(obj.salary_max) else obj.salary_max
+            return f"{min_val} - {max_val} ₾ {obj.salary_type}"
         elif obj.salary_min:
-            return f"{obj.salary_min} ₾ {obj.salary_type}"
+            min_val = str(obj.salary_min).rstrip('0').rstrip('.') if '.' in str(obj.salary_min) else obj.salary_min
+            return f"{min_val} ₾ {obj.salary_type}"
         elif obj.salary_max:
-            return f"{obj.salary_max} ₾ {obj.salary_type}"
+            max_val = str(obj.salary_max).rstrip('0').rstrip('.') if '.' in str(obj.salary_max) else obj.salary_max
+            return f"{max_val} ₾ {obj.salary_type}"
         return '-'
     salary_range.short_description = 'Salary'
 

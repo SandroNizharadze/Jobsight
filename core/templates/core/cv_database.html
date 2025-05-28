@@ -21,7 +21,8 @@
             EXCLUSIVE
           </span>
         </div>
-        <p class="text-purple-100">{% trans "CV Database access is exclusively available to employers with active Premium+ job listings." %}</p>
+        <p class="text-purple-100">{% trans "CV Database access is exclusively available to employers with active, non-expired Premium+ job listings." %}</p>
+        <p class="text-purple-100 text-sm mt-1">{% trans "When your last Premium+ job expires, you will lose access to this feature until you post a new Premium+ job." %}</p>
       </div>
     </div>
   </div>
@@ -115,20 +116,32 @@
             </div>
           </div>
           <div class="px-6 py-4">
+            <!-- if fields or experience is empty have blank space, because we want to maintain the layout (cv-ის ნახვა button is shifting upwards otherwise)-->
+
             {% if profile.desired_field %}
               <div class="mb-2">
                 <span class="text-sm font-medium text-gray-500">{% trans "სასურველი სფერო:" %}</span>
                 <span class="ml-2 text-sm text-gray-900">{{ field_choices|get_item:profile.desired_field|default:profile.desired_field }}</span>
               </div>
+            {% else %}
+              <div class="mb-2">
+                <span class="text-sm font-medium text-gray-500">{% trans "სასურველი სფერო:" %}</span>
+                <span class="ml-2 text-sm text-gray-900">-</span>
+              </div>
             {% endif %}
-            
+
             {% if profile.field_experience %}
               <div class="mb-2">
                 <span class="text-sm font-medium text-gray-500">{% trans "გამოცდილება:" %}</span>
                 <span class="ml-2 text-sm text-gray-900">{{ experience_choices|get_item:profile.field_experience|default:profile.field_experience }}</span>
               </div>
+            {% else %}
+              <div class="mb-2">
+                <span class="text-sm font-medium text-gray-500">{% trans "გამოცდილება:" %}</span>
+                <span class="ml-2 text-sm text-gray-900">-</span>
+              </div>
             {% endif %}
-            
+
             <div class="mt-4">
               <a href="{% url 'view_cv_employer' profile.id %}" target="_blank" class="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 w-full justify-center">
                 <svg class="h-5 w-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">

@@ -280,33 +280,50 @@
         <input type="hidden" id="currentApplicationId" name="application_id" value="">
         <input type="hidden" id="isGuestApplication" name="is_guest" value="false">
         <div class="space-y-2">
-          <label class="block text-sm font-medium text-gray-700">{% trans "აირჩიეთ მიზეზები:" %}</label>
-          <div class="space-y-2">
+          <label class="block text-sm font-medium text-gray-700">{% trans "აირჩიეთ მიზეზები:" %} <span class="text-red-500">*</span></label>
+          <div id="reasonsContainer" class="space-y-2">
             <div class="flex items-center">
-              <input type="checkbox" name="rejection_reasons" value="არასაკმარისი_გამოცდილება" class="h-4 w-4 text-blue-600 rounded">
+              <input type="checkbox" name="rejection_reasons" value="ენის_ცოდნის_ნაკლებობა" class="h-4 w-4 text-blue-600 rounded rejection-reason-checkbox">
+              <label class="ml-2 text-sm text-gray-700">{% trans "ენის ცოდნის ნაკლებობა" %}</label>
+            </div>
+            <div class="flex items-center">
+              <input type="checkbox" name="rejection_reasons" value="არასაკმარისი_გამოცდილება" class="h-4 w-4 text-blue-600 rounded rejection-reason-checkbox">
               <label class="ml-2 text-sm text-gray-700">{% trans "არასაკმარისი გამოცდილება" %}</label>
             </div>
             <div class="flex items-center">
-              <input type="checkbox" name="rejection_reasons" value="უნარების_ნაკლებობა" class="h-4 w-4 text-blue-600 rounded">
+              <input type="checkbox" name="rejection_reasons" value="უნარების_ნაკლებობა" class="h-4 w-4 text-blue-600 rounded rejection-reason-checkbox">
               <label class="ml-2 text-sm text-gray-700">{% trans "უნარების ნაკლებობა" %}</label>
             </div>
             <div class="flex items-center">
-              <input type="checkbox" name="rejection_reasons" value="განათლების_შეუსაბამობა" class="h-4 w-4 text-blue-600 rounded">
+              <input type="checkbox" name="rejection_reasons" value="შეუსაბამო_საცხოვრებელი_ადგილი" class="h-4 w-4 text-blue-600 rounded rejection-reason-checkbox">
+              <label class="ml-2 text-sm text-gray-700">{% trans "შეუსაბამო საცხოვრებელი ადგილი" %}</label>
+            </div>
+            <div class="flex items-center">
+              <input type="checkbox" name="rejection_reasons" value="სივიში_არ_არის_საკმარისი_ინფორმაცია" class="h-4 w-4 text-blue-600 rounded rejection-reason-checkbox">
+              <label class="ml-2 text-sm text-gray-700">{% trans "სივიში არ არის საკმარისი ინფორმაცია" %}</label>
+            </div>
+            <div class="flex items-center">
+              <input type="checkbox" name="rejection_reasons" value="განათლების_შეუსაბამობა" class="h-4 w-4 text-blue-600 rounded rejection-reason-checkbox">
               <label class="ml-2 text-sm text-gray-700">{% trans "განათლების შეუსაბამობა" %}</label>
             </div>
             <div class="flex items-center">
-              <input type="checkbox" name="rejection_reasons" value="არარელევანტური_სამუშაო_ისტორია" class="h-4 w-4 text-blue-600 rounded">
+              <input type="checkbox" name="rejection_reasons" value="კარიერული_მიზნების_შეუსაბამობა" class="h-4 w-4 text-blue-600 rounded rejection-reason-checkbox">
+              <label class="ml-2 text-sm text-gray-700">{% trans "კარიერული მიზნების შეუსაბამობა" %}</label>
+            </div>
+            <div class="flex items-center">
+              <input type="checkbox" name="rejection_reasons" value="სივის_ფორმატის_სტრუქტურის_ხარვეზები" class="h-4 w-4 text-blue-600 rounded rejection-reason-checkbox">
+              <label class="ml-2 text-sm text-gray-700">{% trans "სივის ფორმატის/სტრუქტურის ხარვეზები" %}</label>
+            </div>
+            <div class="flex items-center">
+              <input type="checkbox" name="rejection_reasons" value="სერთიფიკატების_ლიცენზიების_ნაკლებობა" class="h-4 w-4 text-blue-600 rounded rejection-reason-checkbox">
+              <label class="ml-2 text-sm text-gray-700">{% trans "სერთიფიკატების/ლიცენზიების ნაკლებობა" %}</label>
+            </div>
+            <div class="flex items-center">
+              <input type="checkbox" name="rejection_reasons" value="არარელევანტური_სამუშაო_ისტორია" class="h-4 w-4 text-blue-600 rounded rejection-reason-checkbox">
               <label class="ml-2 text-sm text-gray-700">{% trans "არარელევანტური სამუშაო ისტორია" %}</label>
             </div>
-            <div class="flex items-center">
-              <input type="checkbox" name="rejection_reasons" value="ლოკაცია" class="h-4 w-4 text-blue-600 rounded">
-              <label class="ml-2 text-sm text-gray-700">{% trans "ლოკაცია" %}</label>
-            </div>
-            <div class="flex items-center">
-              <input type="checkbox" name="rejection_reasons" value="ენის_ცოდნის_ნაკლებობა" class="h-4 w-4 text-blue-600 rounded">
-              <label class="ml-2 text-sm text-gray-700">{% trans "ენის ცოდნის ნაკლებობა" %}</label>
-            </div>
           </div>
+          <div id="reasonError" class="text-red-500 text-sm hidden">{% trans "გთხოვთ აირჩიოთ მინიმუმ ერთი მიზეზი" %}</div>
         </div>
         <div id="feedbackSection" class="feedback-section">
           <label class="block text-sm font-medium text-gray-700 mb-1">{% trans "დამატებითი უკუკავშირი:" %}</label>
@@ -331,6 +348,7 @@
     const modal = document.getElementById('rejectionModal');
     const rejectionForm = document.getElementById('rejectionForm');
     const cancelButton = document.getElementById('cancelRejection');
+    const reasonError = document.getElementById('reasonError');
     let lastSelectedStatus = null;
     let lastSelectElement = null;
 
@@ -400,6 +418,7 @@
           document.getElementById('currentApplicationId').value = applicationId;
           document.getElementById('isGuestApplication').value = false;
           document.getElementById('feedbackSection').style.display = 'block';
+          reasonError.classList.add('hidden');
           modal.classList.remove('hidden');
           return;
         }
@@ -412,6 +431,14 @@
     // Handle modal form submission
     rejectionForm.addEventListener('submit', function(e) {
       e.preventDefault();
+      
+      // Validate at least one reason is selected
+      const checkedReasons = document.querySelectorAll('.rejection-reason-checkbox:checked');
+      if (checkedReasons.length === 0) {
+        reasonError.classList.remove('hidden');
+        return;
+      }
+      
       const applicationId = document.getElementById('currentApplicationId').value;
       const formData = new FormData(rejectionForm);
       formData.append('status', 'რეზერვი');
@@ -600,7 +627,7 @@
           }
         } else if (document.getElementById('no-search-results')) {
           document.getElementById('no-search-results').style.display = 'none';
-    }
+        }
       }
     }
     

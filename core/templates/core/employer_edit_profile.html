@@ -246,14 +246,17 @@
       }
     });
 
-    // Preview company logo
+    // Preview company logo - Fixed to properly find and update the preview container
     const companyLogoInput = document.getElementById('{{ employer_form.company_logo.id_for_label }}');
     companyLogoInput.addEventListener('change', function(e) {
       if (e.target.files.length > 0) {
         const file = e.target.files[0];
         const reader = new FileReader();
         reader.onload = function(e) {
-          const container = companyLogoInput.closest('div').querySelector('.w-32');
+          // Find the logo preview container more reliably
+          const container = document.querySelector('.w-32.h-32.border.border-gray-200.rounded-md');
+          if (!container) return;
+          
           const imgElement = container.querySelector('img');
           if (imgElement) {
             imgElement.src = e.target.result;
@@ -270,6 +273,24 @@
           }
         };
         reader.readAsDataURL(file);
+      }
+    });
+    
+    // Display filename after selection
+    companyLogoInput.addEventListener('change', function(e) {
+      if (e.target.files.length > 0) {
+        const fileName = e.target.files[0].name;
+        const fileNameElement = document.createElement('span');
+        fileNameElement.className = 'text-sm text-gray-600 ml-2';
+        fileNameElement.textContent = fileName;
+        
+        // Remove any previously shown filename
+        const prevFileName = companyLogoInput.parentElement.querySelector('.text-sm.text-gray-600');
+        if (prevFileName) {
+          prevFileName.remove();
+        }
+        
+        companyLogoInput.parentElement.appendChild(fileNameElement);
       }
     });
   });

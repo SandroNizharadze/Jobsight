@@ -110,6 +110,9 @@ SOCIAL_AUTH_GOOGLE_OAUTH2_AUTH_EXTRA_ARGUMENTS = {
 }
 SOCIAL_AUTH_GOOGLE_OAUTH2_SCOPE = ['email', 'profile']
 
+# Explicitly set redirect protocol based on DEBUG setting
+SOCIAL_AUTH_REDIRECT_IS_HTTPS = not DEBUG
+
 # Password validation
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -128,7 +131,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 # Internationalization
 LANGUAGE_CODE = 'ka'
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Tbilisi'
 USE_I18N = True
 USE_L10N = True
 USE_TZ = True
@@ -195,7 +198,18 @@ LOGGING = {
         },
         'social': {
             'handlers': ['console'],
-            'level': os.environ.get('SOCIAL_LOG_LEVEL', 'INFO'),
+            'level': 'DEBUG',
+            'propagate': False,
+        },
+        'social_core': {
+            'handlers': ['console'],
+            'level': 'DEBUG',
+            'propagate': False,
+        },
+        'social_django': {
+            'handlers': ['console'],
+            'level': 'DEBUG',
+            'propagate': False,
         },
     },
 } 

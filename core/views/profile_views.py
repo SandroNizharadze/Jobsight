@@ -15,6 +15,9 @@ from django.core.files.storage import default_storage
 from django.core.files.base import ContentFile
 from jobsy.storage_backends import PrivateMediaStorage, PublicMediaStorage
 import mimetypes
+import boto3
+from botocore.exceptions import ClientError
+from django.utils import timezone
 
 logger = logging.getLogger(__name__)
 
@@ -227,35 +230,63 @@ def get_application_rejection_reasons(request, application_id):
 @user_passes_test(lambda u: hasattr(u, 'userprofile') and u.userprofile.role == 'employer')
 def view_cv_employer(request, profile_id):
     """
-    Display a candidate's CV for employers - view only mode
+    Display a job seeker's CV to an employer
+    Requires employer to have an active premium+ job
     """
-    profile = get_object_or_404(UserProfile, id=profile_id, role='candidate', visible_to_employers=True, cv__isnull=False)
-    
-    if not profile.cv:
-        messages.error(request, "This candidate doesn't have a CV uploaded.")
-        return redirect('cv_database')
-    
     try:
-        # Get file from storage
-        file_path = profile.cv.name
+        # Verify premium+ access
+        employer_profile = request.user.userprofile.employer_profile
+        has_premium_plus = JobListing.objects.filter(
+            employer=employer_profile,
+            premium_level='premium_plus',
+            status='approved',
+            deleted_at__isnull=True,
+            expires_at__gt=timezone.now()  # Only count non-expired jobs
+        ).exists()
+        
+        if not has_premium_plus:
+            messages.error(request, "CV viewing is only available for employers with active Premium+ job listings.")
+            return redirect('cv_database')
+        
+        # Get the profile
+        user_profile = get_object_or_404(UserProfile, id=profile_id, role='candidate', visible_to_employers=True)
+        
+        # Check if CV exists
+        if not user_profile.cv:
+            messages.error(request, "This user has not uploaded a CV.")
+            return redirect('cv_database')
+        
+        # Get the file path
+        file_path = user_profile.cv.name
         file_name = os.path.basename(file_path)
         
-        # Check if using S3 storage
-        if hasattr(settings, 'USE_S3') and settings.USE_S3:
-            storage = PrivateMediaStorage()
-            if storage.exists(file_path):
-                # Get the file content
-                file_content = storage.open(file_path).read()
-                content_type = mimetypes.guess_type(file_name)[0] or 'application/octet-stream'
+        # Check if using S3
+        if getattr(settings, 'USE_S3', False):
+            # Generate a signed URL for the CV
+            s3 = boto3.client(
+                's3',
+                region_name=settings.AWS_S3_REGION_NAME,
+                aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
+                aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY
+            )
+            
+            try:
+                # Generate a signed URL that expires in 1 hour (3600 seconds)
+                url = s3.generate_presigned_url(
+                    'get_object',
+                    Params={
+                        'Bucket': settings.AWS_STORAGE_BUCKET_NAME,
+                        'Key': file_path,
+                    },
+                    ExpiresIn=3600
+                )
                 
-                # Create the response with the file content
-                response = HttpResponse(file_content, content_type=content_type)
-                
-                # Use content-disposition: inline to prevent downloading and force browser display
-                response['Content-Disposition'] = f'inline; filename="{file_name}"'
-                return response
-            else:
-                raise FileNotFoundError(f"File not found in S3: {file_path}")
+                # Redirect to the signed URL
+                return redirect(url)
+            except ClientError as e:
+                logger.error(f"Error generating S3 presigned URL: {str(e)}")
+                raise e
+        
         else:
             # Local storage case
             if default_storage.exists(file_path):

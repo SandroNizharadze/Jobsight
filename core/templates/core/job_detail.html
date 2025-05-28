@@ -1,6 +1,7 @@
 {% extends 'core/base.html' %}
 {% load static %}
 {% load i18n %}
+{% load core_extras %}
 
 {% block title %}{{ job.title }} - {% trans "Jobsy" %}{% endblock %}
 
@@ -133,11 +134,11 @@
           </svg>
           <span class="text-xl font-semibold">
             {% if job.salary_min and job.salary_max %}
-            {{ job.salary_min }} - {{ job.salary_max }} ₾ {% trans job.salary_type %}
+            {{ job.salary_min|remove_trailing_zeros }} - {{ job.salary_max|remove_trailing_zeros }} ₾ {% trans job.salary_type %}
             {% elif job.salary_min %}
-            {{ job.salary_min }} ₾ {% trans job.salary_type %}
+            {{ job.salary_min|remove_trailing_zeros }} ₾ {% trans job.salary_type %}
             {% elif job.salary_max %}
-            {{ job.salary_max }} ₾ {% trans job.salary_type %}
+            {{ job.salary_max|remove_trailing_zeros }} ₾ {% trans job.salary_type %}
             {% else %}
             {% trans "ანაზღაურება შეთანხმებით" %}
             {% endif %}
@@ -190,6 +191,12 @@
               {% endif %}
             </button>
           </form>
+          {% else %}
+          <a href="{% url 'register' %}?user_type=candidate" class="inline-block mt-3 md:mt-0 md:ml-3">
+            <button type="button" class="w-full md:w-auto border border-gray-300 hover:bg-gray-100 text-gray-700 font-medium py-3 px-6 rounded-lg transition-colors">
+              <i class="far fa-bookmark mr-2 text-sm"></i>{% trans "შენახვა" %}
+            </button>
+          </a>
           {% endif %}
         </div>
       </div>
