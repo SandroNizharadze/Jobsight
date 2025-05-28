@@ -16,7 +16,7 @@
     <div class="flex items-center justify-between mb-4">
       <div class="inline-flex items-center justify-center w-12 h-12 rounded-full 
           {% if package.package_type == 'premium' %}bg-blue-100 text-blue-600
-          {% elif package.package_type == 'premium_plus' %}bg-purple-100 text-purple-600
+          {% elif package.package_type == 'premium_plus' %}bg-gradient-to-br from-purple-100 to-blue-100 text-purple-600
           {% else %}bg-blue-100 text-blue-600{% endif %}">
         {% if package.package_type == 'standard' %}
           <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -34,7 +34,7 @@
       </div>
       
       {% if package.has_discount and package.has_discount_badge %}
-      <div class="{% if package.package_type == 'premium_plus' %}bg-purple-100 text-purple-600{% else %}bg-blue-100 text-blue-600{% endif %} text-xs font-bold uppercase px-3 py-1 rounded-full">
+      <div class="{% if package.package_type == 'premium_plus' %}bg-gradient-to-br from-purple-100 to-blue-100 text-purple-600{% else %}bg-blue-100 text-blue-600{% endif %} text-xs font-bold uppercase px-3 py-1 rounded-full">
         {% trans "ფასდაკლება" %}
       </div>
       {% endif %}
@@ -83,7 +83,7 @@
        {% if package.package_type == 'premium' %}
          text-white bg-blue-600 hover:bg-blue-700
        {% elif package.package_type == 'premium_plus' %}
-         text-white bg-purple-600 hover:bg-purple-700
+         text-white bg-gradient-to-br from-purple-500 to-blue-500 hover:from-purple-600 hover:to-blue-600
        {% else %}
          text-blue-600 bg-blue-50 hover:bg-blue-100
        {% endif %}

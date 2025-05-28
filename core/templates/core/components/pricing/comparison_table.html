@@ -13,7 +13,7 @@
           <th class="py-4 px-6 bg-gray-50 text-left text-gray-600 font-medium border-b"></th>
           
           {% for package in pricing_packages %}
-          <th class="py-4 px-6 {% if package.package_type == 'premium' %}bg-blue-50{% elif package.package_type == 'premium_plus' %}bg-purple-50{% else %}bg-gray-50{% endif %} text-center border-b relative">
+          <th class="py-4 px-6 {% if package.package_type == 'premium' %}bg-blue-50{% elif package.package_type == 'premium_plus' %}bg-gradient-to-br from-purple-50 to-blue-50{% else %}bg-gray-50{% endif %} text-center border-b relative">
             {% if package.is_popular %}
             <div class="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
             </div>
@@ -37,7 +37,7 @@
           <td class="py-4 px-6 text-gray-800 font-medium">{% trans "განცხადების რაოდენობა" %}</td>
           <td class="py-4 px-6 text-center">1</td>
           <td class="py-4 px-6 text-center bg-blue-50">1</td>
-          <td class="py-4 px-6 text-center bg-purple-50">1</td>
+          <td class="py-4 px-6 text-center bg-gradient-to-br from-purple-50 to-blue-50">1</td>
         </tr>
         
         <!-- Row 2 -->
@@ -45,7 +45,7 @@
           <td class="py-4 px-6 text-gray-800 font-medium">{% trans "პერიოდი" %}</td>
           <td class="py-4 px-6 text-center">30 {% trans "დღე" %}</td>
           <td class="py-4 px-6 text-center bg-blue-50">30 {% trans "დღე" %}</td>
-          <td class="py-4 px-6 text-center bg-purple-50">30 {% trans "დღე" %}</td>
+          <td class="py-4 px-6 text-center bg-gradient-to-br from-purple-50 to-blue-50">30 {% trans "დღე" %}</td>
         </tr>
         
         <!-- Row 3 -->
@@ -57,7 +57,7 @@
             </svg>
           </td>
           <td class="py-4 px-6 text-center bg-blue-50">{% trans "მეორე სექცია" %}</td>
-          <td class="py-4 px-6 text-center bg-purple-50">{% trans "პირველი სექცია" %}</td>
+          <td class="py-4 px-6 text-center bg-gradient-to-br from-purple-50 to-blue-50">{% trans "პირველი სექცია" %}</td>
         </tr>
         
         <!-- Row 4 -->
@@ -73,7 +73,7 @@
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
             </svg>
           </td>
-          <td class="py-4 px-6 text-center bg-purple-50">
+          <td class="py-4 px-6 text-center bg-gradient-to-br from-purple-50 to-blue-50">
             <svg class="h-5 w-5 text-green-500 mx-auto" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
             </svg>
@@ -89,7 +89,7 @@
             </svg>
           </td>
           <td class="py-4 px-6 text-center bg-blue-50">{% trans "ჯგუფური პოსტი" %}</td>
-          <td class="py-4 px-6 text-center bg-purple-50">{% trans "ინდივიდუალური და ჯგუფური პოსტი" %}</td>
+          <td class="py-4 px-6 text-center bg-gradient-to-br from-purple-50 to-blue-50">{% trans "ინდივიდუალური და ჯგუფური პოსტი" %}</td>
         </tr>
         
         <!-- Row 6 -->
@@ -103,8 +103,8 @@
           <td class="py-4 px-6 text-center bg-blue-50">
             <span class="inline-block px-2 py-1 bg-blue-100 text-blue-800 rounded text-xs font-medium">{% trans "პრემიუმი" %}</span>
           </td>
-          <td class="py-4 px-6 text-center bg-purple-50">
-            <span class="inline-block px-2 py-1 bg-purple-100 text-purple-800 rounded text-xs font-medium">{% trans "პრემიუმ+" %}</span>
+          <td class="py-4 px-6 text-center bg-gradient-to-br from-purple-50 to-blue-50">
+            <span class="inline-block px-2 py-1 bg-gradient-to-br from-purple-500 to-blue-500 text-white rounded text-xs font-medium">{% trans "პრემიუმ+" %}</span>
           </td>
         </tr>
         
@@ -120,7 +120,7 @@
           <td class="py-4 px-6 text-center bg-blue-50">
             <span class="inline-block px-2 py-1 bg-yellow-200 text-yellow-800 rounded text-xs font-medium">{% trans "საშუალო" %}</span>
           </td>
-          <td class="py-4 px-6 text-center bg-purple-50">
+          <td class="py-4 px-6 text-center bg-gradient-to-br from-purple-50 to-blue-50">
             <span class="inline-block px-2 py-1 bg-red-200 text-red-800 rounded text-xs font-medium">{% trans "მაღალი" %}</span>
           </td>
         </tr>
@@ -138,7 +138,7 @@
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
             </svg>
           </td>
-          <td class="py-4 px-6 text-center bg-purple-50">
+          <td class="py-4 px-6 text-center bg-gradient-to-br from-purple-50 to-blue-50">
             <svg class="h-5 w-5 text-green-500 mx-auto" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
             </svg>
@@ -158,7 +158,7 @@
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
             </svg>
           </td>
-          <td class="py-4 px-6 text-center bg-purple-50">
+          <td class="py-4 px-6 text-center bg-gradient-to-br from-purple-50 to-blue-50">
             <svg class="h-5 w-5 text-green-500 mx-auto" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
             </svg>
