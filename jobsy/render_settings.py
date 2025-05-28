@@ -8,7 +8,7 @@ DEBUG = False
 SECRET_KEY = os.environ.get('SECRET_KEY', 'placeholder-secret-key-do-not-use-in-production')
 
 # SECURITY WARNING: update this with your production domain
-ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', 'jobsy-uoul.onrender.com,localhost,127.0.0.1').split(',')
+ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', 'jobsy-uoul.onrender.com,localhost,127.0.0.1,jobsy.ge,www.jobsy.ge').split(',')
 
 # Database - Production always uses Supabase
 DATABASES = {
