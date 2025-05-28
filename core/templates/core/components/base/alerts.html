@@ -29,7 +29,13 @@
                 {% endif %}
                 </div>
                 <div class="ml-3">
-                    <p class="text-sm">{{ message }}</p>
+                    <p class="text-sm">
+                        {% if 'safe' in message.tags %}
+                            {{ message|safe }}
+                        {% else %}
+                            {{ message }}
+                        {% endif %}
+                    </p>
                 </div>
             </div>
         </div>

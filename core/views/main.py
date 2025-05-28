@@ -8,7 +8,7 @@ from .auth_views import login_view, logout_view, register, is_employer
 from .job_views import job_list, job_detail, apply_job, remove_from_query_string
 from .employer_views import (
     employer_home, employer_dashboard,
-    post_job, edit_job, delete_job, restore_job, extend_job,
+    post_job, delete_job, restore_job, extend_job,
     job_applications, update_application_status,
     get_job_details
 )

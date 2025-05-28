@@ -327,21 +327,6 @@
                           </span>
                           {% endif %}
                           
-                          <!-- Edit Icon -->
-                          {% if not job.is_deleted %}
-                          <a href="{% url 'edit_job' job.id %}" class="text-gray-600 hover:text-gray-900" title="{% trans 'Edit' %}">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
-                            </svg>
-                          </a>
-                          {% else %}
-                          <span class="text-gray-400 cursor-not-allowed" title="{% trans 'Cannot edit (job deleted)' %}">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
-                            </svg>
-                          </span>
-                          {% endif %}
-                          
                           <!-- Extend Expiration (if expiring soon or expired) -->
                           {% if not job.is_deleted and job.status == 'approved' and job.expires_at and job.days_until_expiration_value <= 7 or not job.is_deleted and job.status == 'expired' %}
                           <button type="button" 

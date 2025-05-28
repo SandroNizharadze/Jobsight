@@ -319,49 +319,6 @@ def post_job(request):
 
 @login_required
 @user_passes_test(is_employer)
-def edit_job(request, job_id):
-    """
-    Handle editing of an existing job listing
-    """
-    # Get the job and verify ownership
-    job = get_object_or_404(JobListing, id=job_id)
-    employer_profile = request.user.userprofile.employer_profile
-    
-    if job.employer != employer_profile:
-        messages.error(request, "You don't have permission to edit this job.")
-        return redirect('employer_dashboard')
-    
-    if request.method == 'POST':
-        form = JobListingForm(request.POST, instance=job)
-        if form.is_valid():
-            # Update job but don't save yet
-            updated_job = form.save(commit=False)
-            
-            # If the job was already approved and is being modified, set it back to pending review
-            if job.status == 'approved':
-                updated_job.status = 'pending_review'
-                messages.info(request, "Your job has been updated and is pending review again.")
-            
-            # Ensure georgian_language_only is set
-            if updated_job.georgian_language_only is None:
-                updated_job.georgian_language_only = False
-            
-            # Save changes
-            updated_job.save()
-            
-            return redirect('employer_dashboard')
-    else:
-        form = JobListingForm(instance=job)
-    
-    context = {
-        'form': form,
-        'job': job,
-    }
-    
-    return render(request, 'core/edit_job.html', context)
-
-@login_required
-@user_passes_test(is_employer)
 @require_POST
 def delete_job(request, job_id):
     """
@@ -667,7 +624,23 @@ def cv_database(request):
     """
     Display a database of candidate CVs for employers
     Only shows CVs where user has opted in to be visible to employers
+    Only accessible to employers with at least one premium+ job
     """
+    employer_profile = request.user.userprofile.employer_profile
+    
+    # Check if employer has at least one premium+ job
+    has_premium_plus = JobListing.objects.filter(
+        employer=employer_profile,
+        premium_level='premium_plus',
+        status='approved',  # Only count approved jobs
+        deleted_at__isnull=True  # Don't count deleted jobs
+    ).exists()
+    
+    if not has_premium_plus:
+        messages.error(request, "CV Database is only available for Premium+ employers. Please upgrade to Premium+ to access this feature.")
+        messages.info(request, "Visit our <a href='/pricing/' class='underline text-blue-600 hover:text-blue-800'>pricing page</a> to learn more about Premium+ benefits.", extra_tags='safe')
+        return redirect('employer_dashboard')
+    
     # Get user profiles with CVs that are visible to employers
     profiles = UserProfile.objects.filter(
         role='candidate',

@@ -3,7 +3,7 @@ from .auth_views import login_view, logout_view, register
 from .job_views import job_list, job_detail, apply_job
 from .employer_views import (
     employer_home, employer_dashboard,
-    post_job, edit_job, delete_job
+    post_job, delete_job
 )
 from .profile_views import profile, remove_cv
 from .admin_views import create_admin, assign_employer
