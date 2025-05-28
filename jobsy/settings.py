@@ -17,7 +17,7 @@ SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'placeholder-secret-key-for-dev
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get('DEBUG', 'True') == 'True'
 
-ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', 'localhost,127.0.0.1,jobsy.ge,www.jobsy.ge').split(',')
+ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', 'localho st,127.0.0.1,jobsy.ge,www.jobsy.ge').split(',')
 
 # Application definition
 INSTALLED_APPS = [
