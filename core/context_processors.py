@@ -31,3 +31,12 @@ def employer_premium_status(request):
             pass
     
     return context 
+
+def language_attributes(request):
+    """
+    Add language-specific HTML attributes to the context.
+    This helps with font selection based on language.
+    """
+    return {
+        'lang_attr': f'lang="{request.LANGUAGE_CODE}"',
+    } 

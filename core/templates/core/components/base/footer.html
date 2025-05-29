@@ -1,11 +1,12 @@
 {% load i18n %}
+{% load core_tags %}
 
 <footer class="bg-gray-800 text-white py-10 mt-10">
     <div class="container mx-auto px-4">
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
             <!-- Company Info -->
             <div>
-                <h3 class="text-lg font-bold mb-4">Jobsy.</h3>
+                <h3 class="text-lg font-bold mb-4 jobsy-logo">Jobsy.</h3>
                 <p class="text-gray-300 mb-4">{% trans "ჩვენთან შენი სივი არ დაიკარგება - იპოვე შენზე მორგებული სამსახური" %}</p>
                 <div class="flex space-x-4 mt-4">
                     <a href="https://www.facebook.com/profile.php?id=61575152227511" target="_blank" class="text-gray-300 hover:text-white">
@@ -56,7 +57,7 @@
         
         <!-- Copyright -->
         <div class="border-t border-gray-700 mt-8 pt-6 text-center text-gray-400">
-            <p>&copy; {% now "Y" %} Jobsy. {% trans "ყველა უფლება დაცულია." %}</p>
+            <p>&copy; {% now "Y" %} <span class="jobsy-logo">Jobsy.</span> {% trans "ყველა უფლება დაცულია." %}</p>
         </div>
     </div>
 </footer> 

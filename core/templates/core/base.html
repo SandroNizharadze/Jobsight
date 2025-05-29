@@ -24,9 +24,70 @@
     <title>{% block title %}Jobsy{% endblock %}</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Google Fonts - Lora for Latin and BPG Arial for Georgian -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&display=swap" rel="stylesheet">
+    <!-- BPG Arial for Georgian fallback -->
+    <link href="https://cdn.web-fonts.ge/fonts/bpg-arial/css/bpg-arial.min.css" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                fontFamily: {
+                    'sans': ['Lora', 'Sylfaen', 'BPG Arial', 'serif'],
+                    'serif': ['Lora', 'Sylfaen', 'BPG Arial', 'serif'],
+                    'mono': ['Lora', 'Sylfaen', 'BPG Arial', 'serif'],
+                    'display': ['Lora', 'Sylfaen', 'BPG Arial', 'serif'],
+                    'body': ['Lora', 'Sylfaen', 'BPG Arial', 'serif'],
+                }
+            }
+        }
+    </script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
+        /* Embed Sylfaen font if available */
+        @font-face {
+            font-family: 'Sylfaen Web';
+            src: local('Sylfaen');
+            font-weight: normal;
+            font-style: normal;
+            font-display: swap;
+        }
+        
+        /* Define fonts with unicode ranges */
+        @font-face {
+            font-family: 'Combined';
+            src: local('Sylfaen'), local('BPG Arial');
+            unicode-range: U+10A0-10FF; /* Georgian characters */
+        }
+        
+        @font-face {
+            font-family: 'Combined';
+            src: local('Lora');
+            unicode-range: U+0000-10A0, U+1100-FFFF; /* Everything else */
+        }
+        
+        /* Global font settings */
+        body, html {
+            font-family: 'Combined', 'Lora', 'Sylfaen Web', 'BPG Arial', serif;
+        }
+        
+        /* Apply Sylfaen to Georgian text */
+        :lang(ka) {
+            font-family: 'Sylfaen Web', 'Sylfaen', 'BPG Arial', serif !important;
+        }
+        
+        /* Helper class for Georgian text */
+        .georgian-text {
+            font-family: 'Sylfaen Web', 'Sylfaen', 'BPG Arial', serif !important;
+        }
+        
+        /* Keep Lora for English text */
+        :lang(en) {
+            font-family: 'Lora', serif;
+        }
+        
         /* Global icon sizing fixes */
         .fas, .far, .fab, .fa {
             font-size: 1em;
@@ -39,6 +100,11 @@
         a .fas, a .far, 
         .alert .fas, .alert .far {
             font-size: 0.875em;
+        }
+        
+        /* Jobsy logo font */
+        .jobsy-logo {
+            font-family: 'Lora', serif;
         }
     </style>
     {% block extra_head %}{% endblock %}
@@ -84,5 +150,52 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     {% include 'core/components/base/scripts.html' %}
     {% block extra_js %}{% endblock %}
+    
+    <!-- Script to apply Georgian font to Georgian text -->
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Georgian Unicode range: U+10A0 to U+10FF
+        const georgianRegex = /[\u10A0-\u10FF]/;
+        
+        // Function to check if text contains Georgian characters
+        function hasGeorgianChars(text) {
+            return georgianRegex.test(text);
+        }
+        
+        // Function to process text nodes
+        function processTextNodes(node) {
+            if (node.nodeType === Node.TEXT_NODE) {
+                const text = node.nodeValue.trim();
+                if (text && hasGeorgianChars(text)) {
+                    // If the parent is not already styled for Georgian
+                    if (!node.parentElement.classList.contains('georgian-text') && 
+                        !node.parentElement.classList.contains('jobsy-logo')) {
+                        
+                        // Create a span with Georgian font
+                        const span = document.createElement('span');
+                        span.className = 'georgian-text';
+                        span.textContent = node.nodeValue;
+                        
+                        // Replace the text node with the span
+                        node.parentNode.replaceChild(span, node);
+                    }
+                }
+            } else if (node.nodeType === Node.ELEMENT_NODE) {
+                // Skip elements that are already styled or should be skipped
+                if (node.classList && (
+                    node.classList.contains('jobsy-logo') || 
+                    node.classList.contains('georgian-text'))) {
+                    return;
+                }
+                
+                // Process child nodes
+                Array.from(node.childNodes).forEach(processTextNodes);
+            }
+        }
+        
+        // Process the entire body
+        processTextNodes(document.body);
+    });
+    </script>
 </body>
 </html> 
