@@ -69,7 +69,7 @@ class EmployerProfileResource(resources.ModelResource):
         model = EmployerProfile
         fields = ('id', 'company_name', 'company_id', 'phone_number', 'company_website', 
                  'company_description', 'company_size', 'industry', 'location', 
-                 'user_profile__user__email', 'created_at', 'deleted_at')
+                 'user_profile__user__email', 'has_cv_database_access', 'created_at', 'deleted_at')
 
 class JobApplicationResource(resources.ModelResource):
     class Meta:
@@ -161,9 +161,9 @@ class SoftDeletionAdmin(ImportExportModelAdmin):
 class EmployerProfileAdmin(SoftDeletionAdmin):
     resource_class = EmployerProfileResource
     list_display = ('company_name', 'get_employer_email', 'industry', 'company_size', 
-                   'location', 'get_deleted_state')
+                   'location', 'has_cv_database_access', 'get_deleted_state')
     search_fields = ('company_name', 'user_profile__user__email')
-    list_filter = ('company_size', 'industry', ('deleted_at', admin.EmptyFieldListFilter))
+    list_filter = ('company_size', 'industry', 'has_cv_database_access', ('deleted_at', admin.EmptyFieldListFilter))
     actions = ['restore_selected']
 
     def get_employer_email(self, obj):

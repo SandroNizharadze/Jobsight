@@ -429,6 +429,7 @@ class EmployerProfile(SoftDeletionModel):
     company_size = models.CharField(max_length=50, choices=COMPANY_SIZE_CHOICES, blank=True, verbose_name=_("კომპანიის ზომა"))
     industry = models.CharField(max_length=100, blank=True, db_index=True, verbose_name=_("ინდუსტრია"))
     location = models.CharField(max_length=100, blank=True, db_index=True, verbose_name=_("მდებარეობა"))
+    has_cv_database_access = models.BooleanField(default=False, verbose_name=_("წვდომა სივების ბაზაზე"))
     created_at = models.DateTimeField(auto_now_add=True, verbose_name=_("შექმნის თარიღი"))
     updated_at = models.DateTimeField(auto_now=True, verbose_name=_("განახლების თარიღი"))
 
