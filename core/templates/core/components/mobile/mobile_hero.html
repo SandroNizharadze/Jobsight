@@ -1,0 +1,76 @@
+{% load i18n %}
+{% load static %}
+
+<!-- Mobile Hero Section (only visible on mobile) -->
+<div class="md:hidden bg-gradient-to-r from-blue-800 to-purple-800 text-white">
+    <div class="container mx-auto px-4 py-6">
+        <!-- Hero Content -->
+        <div class="text-center mb-4">
+            <h1 class="text-2xl font-bold mb-2">{% trans "იპოვე სამსახური" %}</h1>
+            <p class="text-sm text-gray-100 mb-4">{% trans "ათასობით ვაკანსია ერთ სივრცეში" %}</p>
+        </div>
+        
+        <!-- Search Box -->
+        <div class="bg-white rounded-lg shadow-lg p-3 mb-4">
+            <form action="{% url 'job_list' %}" method="get" class="space-y-3">
+                <!-- Search Input -->
+                <div class="relative">
+                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <svg class="h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                        </svg>
+                    </div>
+                    <input type="text" name="search" value="{{ request.GET.search|default:'' }}" placeholder="{% trans 'ძიება პოზიციის მიხედვით...' %}" class="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                </div>
+                
+                <!-- Location Input -->
+                <div class="relative">
+                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <svg class="h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                        </svg>
+                    </div>
+                    <input type="text" name="location" value="{{ request.GET.location|default:'' }}" placeholder="{% trans 'ლოკაცია...' %}" class="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                </div>
+                
+                <!-- Action Buttons -->
+                <div class="flex space-x-2">
+                    <!-- Search Button -->
+                    <button type="submit" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-md transition duration-150 ease-in-out flex items-center justify-center">
+                        <svg class="h-5 w-5 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                        </svg>
+                        {% trans "ძიება" %}
+                    </button>
+                    
+                    <!-- Filter Button -->
+                    <a href="{% url 'job_list' %}?show_filters=1#filters" class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-medium py-2 px-4 rounded-md transition duration-150 ease-in-out flex items-center justify-center">
+                        <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
+                        </svg>
+                    </a>
+                </div>
+            </form>
+        </div>
+        
+        <!-- Quick Stats -->
+        <div class="flex justify-around text-center text-xs">
+            <div class="flex flex-col items-center">
+                <span class="font-bold text-lg">1000+</span>
+                <span class="text-gray-200">{% trans "ვაკანსია" %}</span>
+            </div>
+            <div class="flex flex-col items-center">
+                <span class="font-bold text-lg">500+</span>
+                <span class="text-gray-200">{% trans "კომპანია" %}</span>
+            </div>
+            <div class="flex flex-col items-center">
+                <span class="font-bold text-lg">10K+</span>
+                <span class="text-gray-200">{% trans "კანდიდატი" %}</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Add bottom margin to account for fixed bottom navbar -->
+<div class="md:hidden pb-16"></div>
