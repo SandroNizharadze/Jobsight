@@ -1,0 +1,92 @@
+{% load static %}
+{% load i18n %}
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Initialize the apply modal functionality
+    initApplyModal();
+    
+    // Set up save job functionality
+    initSaveJobButton();
+    
+    // Initialize share job functionality if available
+    if (document.querySelector('.share-job-button')) {
+      initShareJob();
+    }
+  });
+  
+  function initApplyModal() {
+    const modal = document.getElementById('applyModal');
+    const openModalButtons = document.querySelectorAll('[data-modal-target="applyModal"]');
+    const closeModalButtons = document.querySelectorAll('[data-close-modal="applyModal"]');
+    
+    if (!modal) return;
+    
+    // Open modal
+    openModalButtons.forEach(button => {
+      button.addEventListener('click', () => {
+        modal.classList.remove('hidden');
+        document.body.classList.add('overflow-hidden');
+      });
+    });
+    
+    // Close modal
+    closeModalButtons.forEach(button => {
+      button.addEventListener('click', () => {
+        modal.classList.add('hidden');
+        document.body.classList.remove('overflow-hidden');
+      });
+    });
+    
+    // Close modal when clicking outside of modal content
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) {
+        modal.classList.add('hidden');
+        document.body.classList.remove('overflow-hidden');
+      }
+    });
+  }
+  
+  function initSaveJobButton() {
+    // Handle save job form submission with AJAX if needed
+    const saveJobForms = document.querySelectorAll('form[action*="save_job"], form[action*="unsave_job"]');
+    
+    saveJobForms.forEach(form => {
+      form.addEventListener('submit', function(e) {
+        // Implement AJAX save/unsave functionality if needed
+        // or just let the form submit normally
+      });
+    });
+  }
+  
+  function initShareJob() {
+    // Share job functionality
+    const shareButtons = document.querySelectorAll('.share-job-button');
+    
+    shareButtons.forEach(button => {
+      button.addEventListener('click', function() {
+        const jobTitle = this.getAttribute('data-job-title');
+        const jobUrl = window.location.href;
+        
+        if (navigator.share) {
+          navigator.share({
+            title: jobTitle,
+            url: jobUrl
+          })
+          .catch(error => console.log('Error sharing:', error));
+        } else {
+          // Fallback for browsers that don't support navigator.share
+          const tempInput = document.createElement('input');
+          document.body.appendChild(tempInput);
+          tempInput.value = jobUrl;
+          tempInput.select();
+          document.execCommand('copy');
+          document.body.removeChild(tempInput);
+          
+          // Show copied message
+          alert('{% trans "Link copied to clipboard!" %}');
+        }
+      });
+    });
+  }
+</script> 

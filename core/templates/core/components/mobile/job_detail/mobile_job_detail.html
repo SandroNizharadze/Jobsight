@@ -297,44 +297,59 @@
     </div>
   </div>
   
-  <!-- Share Job (fit text and symbol in same line) -->
+  <!-- Share Job - Redesigned -->
   <div class="bg-white p-4 mt-4 border-t border-gray-200">
-    <h3 class="text-base font-bold text-gray-800 mb-3">{% trans "გაზიარება" %}
-      
-      <button id="copyLinkBtn" class="text-gray-600 hover:text-gray-800" data-url="{{ request.build_absolute_uri }}">
-        <i class="fas fa-link text-2xl"></i>
-      </button>
-    
-    </h3>
-   
+    <div class="flex items-center justify-between">
+      <h3 class="text-base font-bold text-gray-800">{% trans "გაზიარება" %}</h3>
+      <div class="flex space-x-3">
+        <button id="copyLinkBtn" class="flex items-center justify-center w-9 h-9 rounded-full bg-gray-100 text-gray-600 hover:bg-gray-200" data-url="{{ request.build_absolute_uri }}">
+          <i class="fas fa-link"></i>
+        </button>
+        {% if job.employer %}
+        <a href="{% url 'company_profile' job.employer.id %}" class="flex items-center justify-center w-9 h-9 rounded-full bg-gray-100 text-gray-600 hover:bg-gray-200">
+          <i class="fas fa-building"></i>
+        </a>
+        {% endif %}
+        {% if job.employer.facebook_url %}
+        <a href="{{ job.employer.facebook_url }}" target="_blank" class="flex items-center justify-center w-9 h-9 rounded-full bg-blue-50 text-blue-600 hover:bg-blue-100">
+          <i class="fab fa-facebook-f"></i>
+        </a>
+        {% endif %}
+        {% if job.employer.linkedin_url %}
+        <a href="{{ job.employer.linkedin_url }}" target="_blank" class="flex items-center justify-center w-9 h-9 rounded-full bg-blue-50 text-blue-700 hover:bg-blue-100">
+          <i class="fab fa-linkedin-in"></i>
+        </a>
+        {% endif %}
+      </div>
+    </div>
     <div id="linkCopiedMessage" class="text-green-600 text-sm mt-2 hidden">
       {% trans "ბმული დაკოპირებულია!" %}
     </div>
   </div>
   
-  <!-- Action Buttons -->
+  <!-- Action Buttons - Redesigned -->
   <div class="fixed bottom-16 left-0 right-0 bg-white border-t border-gray-200 p-3 flex shadow-lg z-10">
     {% if not is_expired %}
-      <button type="button" data-modal-target="applyModal" class="flex-1 bg-gray-800 hover:bg-gray-700 text-white font-medium py-2 px-4 rounded-lg transition-colors mr-3">
-        <i class="fas fa-paper-plane mr-2 text-sm"></i>{% trans "განაცხადის გაგზავნა" %}
+      <button type="button" data-modal-target="applyModal" class="flex-grow bg-gray-800 hover:bg-gray-700 text-white font-medium py-2.5 px-4 rounded-lg transition-colors mr-3 flex items-center justify-center">
+        <i class="fas fa-paper-plane mr-2"></i>{% trans "განაცხადის გაგზავნა" %}
       </button>
     {% endif %}
     
     {% if request.user.is_authenticated %}
-      <form method="post" action="{% if is_saved %}{% url 'unsave_job' job.id %}{% else %}{% url 'save_job' job.id %}{% endif %}" class="flex-1">
+      <form method="post" action="{% if is_saved %}{% url 'unsave_job' job.id %}{% else %}{% url 'save_job' job.id %}{% endif %}" class="w-12">
         {% csrf_token %}
-        <button type="submit" class="w-full border border-gray-300 hover:bg-gray-100 text-gray-700 font-medium py-2 px-4 rounded-lg transition-colors">
+        <button type="submit" class="w-full h-full border border-gray-300 hover:bg-gray-100 text-gray-700 font-medium rounded-lg transition-colors flex items-center justify-center shadow-sm">
           {% if is_saved %}
-            <i class="fas fa-bookmark mr-2 text-blue-600 text-sm"></i>{% trans "შენახულია" %}
+            <i class="fas fa-bookmark text-blue-600"></i>
           {% else %}
-            <i class="far fa-bookmark mr-2 text-sm"></i>{% trans "შენახვა" %}
+            <i class="far fa-bookmark"></i>
           {% endif %}
         </button>
       </form>
     {% else %}
-      <a href="{% url 'register' %}?user_type=candidate" class="flex-1">
-        <button type="button" class="w-full border border-gray-300 hover:bg-gray-100 text-gray-700 font-medium py-2 px-4 rounded-lg transition-colors">
-          <i class="far fa-bookmark mr-2 text-sm"></i>{% trans "შენახვა" %}
+      <a href="{% url 'register' %}?user_type=candidate" class="w-12">
+        <button type="button" class="w-full h-full border border-gray-300 hover:bg-gray-100 text-gray-700 font-medium rounded-lg transition-colors flex items-center justify-center shadow-sm">
+          <i class="far fa-bookmark"></i>
         </button>
       </a>
     {% endif %}
@@ -354,25 +369,49 @@
       copyLinkBtn.addEventListener('click', function() {
         const url = this.getAttribute('data-url');
         
-        // Create a temporary input element
-        const tempInput = document.createElement('input');
-        tempInput.value = url;
-        document.body.appendChild(tempInput);
+        // Use the modern Clipboard API if available
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(url)
+            .then(() => {
+              // Show the copied message
+              linkCopiedMessage.classList.remove('hidden');
+              
+              // Hide the message after 2 seconds
+              setTimeout(function() {
+                linkCopiedMessage.classList.add('hidden');
+              }, 2000);
+            })
+            .catch(err => {
+              console.error('Failed to copy: ', err);
+              // Fallback to the old method if the Clipboard API fails
+              copyWithFallback();
+            });
+        } else {
+          // Fallback for browsers that don't support Clipboard API
+          copyWithFallback();
+        }
         
-        // Select and copy the text
-        tempInput.select();
-        document.execCommand('copy');
-        
-        // Remove the temporary element
-        document.body.removeChild(tempInput);
-        
-        // Show the copied message
-        linkCopiedMessage.classList.remove('hidden');
-        
-        // Hide the message after 2 seconds
-        setTimeout(function() {
-          linkCopiedMessage.classList.add('hidden');
-        }, 2000);
+        function copyWithFallback() {
+          // Create a temporary input element
+          const tempInput = document.createElement('input');
+          tempInput.value = url;
+          document.body.appendChild(tempInput);
+          
+          // Select and copy the text
+          tempInput.select();
+          document.execCommand('copy');
+          
+          // Remove the temporary element
+          document.body.removeChild(tempInput);
+          
+          // Show the copied message
+          linkCopiedMessage.classList.remove('hidden');
+          
+          // Hide the message after 2 seconds
+          setTimeout(function() {
+            linkCopiedMessage.classList.add('hidden');
+          }, 2000);
+        }
       });
     }
   });

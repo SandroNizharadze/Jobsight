@@ -1,0 +1,58 @@
+{% load static %}
+{% load i18n %}
+
+<style>
+  /* Job detail page specific styles */
+  .job-detail-header {
+    background-color: #1f2937;
+    border-radius: 0.75rem;
+  }
+  
+  /* Premium job styling */
+  .premium-badge {
+    background: linear-gradient(135deg, #4f46e5 0%, #3b82f6 100%);
+    color: white;
+    font-weight: 500;
+    padding: 0.25rem 0.75rem;
+    border-radius: 9999px;
+    font-size: 0.875rem;
+  }
+  
+  .premium-plus-badge {
+    background: linear-gradient(135deg, #7c3aed 0%, #4f46e5 100%);
+    color: white;
+    font-weight: 500;
+    padding: 0.25rem 0.75rem;
+    border-radius: 9999px;
+    font-size: 0.875rem;
+  }
+  
+  /* Content section styling */
+  .job-content-section {
+    background-color: white;
+    border-radius: 0.75rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Apply button hover effect */
+  .apply-button {
+    transition: all 0.2s ease-in-out;
+  }
+  
+  .apply-button:hover {
+    transform: translateY(-2px);
+  }
+  
+  /* Responsive adjustments for mobile */
+  @media (max-width: 768px) {
+    .job-detail-header h1 {
+      font-size: 1.5rem;
+    }
+    
+    /* Make the save button more compact */
+    .fixed.bottom-16 .w-12 button {
+      padding: 0;
+      height: 36px;
+    }
+  }
+</style> 
