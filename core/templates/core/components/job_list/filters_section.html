@@ -2,7 +2,7 @@
 {% load core_extras %}
 
 <!-- Filtering Section -->
-<div id="filters" class="bg-amber-300 rounded-2xl shadow-sm mb-6 {% if not request.GET.show_filters %}hidden{% endif %} scroll-mt-24">
+<div id="filters" class="bg-amber-300 rounded-3xl shadow-sm {% if not request.GET.show_filters %}hidden{% else %}mb-4{% endif %} scroll-mt-24">
     <div class="p-4 sm:p-6">
         <form method="get" action="{% url 'job_list' %}" id="filter-form">
             <input type="hidden" name="show_filters" value="1">
@@ -122,8 +122,8 @@
     </div>
 </div>
 
-<!-- Filter Results Header -->
-<div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
+<!-- Result Header with rounded corners -->
+<div class="flex flex-row justify-between items-center mb-8  gap-4 bg-white rounded-t-3xl px-4 py-3 shadow-sm -mt-10">
     <h2 class="text-xl sm:text-2xl font-bold">
         {% trans "ვაკანსიები" %} 
         {% if filtered %}
@@ -132,11 +132,11 @@
             <span class="text-base sm:text-lg font-normal">({{ jobs|length }} {% trans "შედეგი" %})</span>
         {% endif %}
     </h2>
-    
-    <div class="flex flex-wrap items-center gap-2">
+    <div class="flex items-center">
         {% if not request.GET.show_filters %}
+        <!-- Filter button -->
         <a href="{% url 'job_list' %}?show_filters=1#filters" 
-           class="inline-flex items-center px-3 py-2 sm:px-4 sm:py-2 text-sm bg-gray-700 text-white rounded-lg hover:bg-gray-700 transition-colors">
+              class="px-4 py-2 sm:px-5 sm:py-2 text-sm border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-100 transition-colors filter-toggle-link">
             <i class="fas fa-filter mr-1 sm:mr-2"></i>{% trans "ფილტრები" %}
         </a>
         {% endif %}

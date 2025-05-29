@@ -10,16 +10,25 @@
         {% include 'core/components/job_list/hero_section.html' %}
     </div>
     
-    <!-- Mobile Hero Section -->
-    {% include 'core/components/mobile/job_list/mobile_hero.html' %}
+    <!-- Mobile Hero Section, Filters, and Job Cards -->
+    <div class="md:hidden">
+        {% include 'core/components/mobile/job_list/mobile_hero.html' %}
+        
+        <!-- Mobile Filters (only visible when active) -->
+        <div class="container mx-auto px-0">
+            {% include 'core/components/job_list/filters_section.html' %}
+        </div>
+        
+        {% include 'core/components/mobile/job_list/mobile_job_cards.html' %}
+    </div>
 {% endblock %}
 
 {% block content %}
-<div class="container mx-auto px-4 py-8">
-    {% include 'core/components/job_list/filters_section.html' %}
-    
-    <!-- Mobile Job Cards (visible only on mobile) -->
-    {% include 'core/components/mobile/job_list/mobile_job_cards.html' %}
+<div class="container mx-auto px-4 md:py-8 py-0">
+    <!-- Desktop Filters (hidden on mobile) -->
+    <div class="hidden md:block">
+        {% include 'core/components/job_list/filters_section.html' %}
+    </div>
     
     <!-- Desktop Job Cards (visible only on desktop) -->
     <div class="hidden md:block">
