@@ -76,9 +76,31 @@ def serve_cv_file(request, user_id=None):
                 
                 # Sometimes we get duplicate media/ prefixes, so clean that up
                 file_key = file_key.replace('media/media/', 'media/')
+                
+                # Log the original path and the cleaned path
+                logger.info(f"Original CV path: {user_profile.cv.name}")
+                logger.info(f"Constructed S3 key with location: {file_key}")
+                
+                # Try alternative path formats if the file name starts with cvs/
+                if user_profile.cv.name.startswith('cvs/'):
+                    # The file might be stored directly without the media/private prefix
+                    alternative_key = user_profile.cv.name
+                    logger.info(f"Trying alternative S3 key: {alternative_key}")
+                    
+                    try:
+                        # Check if the file exists with the alternative key
+                        s3_client.head_object(Bucket=settings.AWS_STORAGE_BUCKET_NAME, Key=alternative_key)
+                        logger.info(f"File exists with alternative key: {alternative_key}")
+                        file_key = alternative_key
+                    except ClientError as e:
+                        if e.response['Error']['Code'] == '404':
+                            logger.warning(f"File not found with alternative key: {alternative_key}")
+                        else:
+                            logger.error(f"Error checking alternative key: {str(e)}")
             else:
                 # Fallback to just the name
                 file_key = user_profile.cv.name
+                logger.info(f"Using fallback S3 key (just the name): {file_key}")
             
             logger.info(f"Generating signed URL for S3 key: {file_key}")
             
