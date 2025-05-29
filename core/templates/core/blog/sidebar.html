@@ -1,0 +1,73 @@
+{% load i18n %}
+
+<div class="space-y-8">
+    <!-- Search -->
+    <div class="bg-white rounded-lg shadow-md p-6">
+        <h3 class="text-lg font-semibold text-gray-900 mb-4">{% trans "ძიება" %}</h3>
+        <form action="{% url 'blog_list' %}" method="get">
+            <div class="flex">
+                <input type="text" name="search" placeholder="{% trans 'ძიება...' %}" class="flex-1 px-4 py-2 border border-gray-300 rounded-l-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-r-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                    </svg>
+                </button>
+            </div>
+        </form>
+    </div>
+    
+    <!-- Categories -->
+    {% if categories %}
+    <div class="bg-white rounded-lg shadow-md p-6">
+        <h3 class="text-lg font-semibold text-gray-900 mb-4">{% trans "კატეგორიები" %}</h3>
+        <ul class="space-y-2">
+            {% for category in categories %}
+            <li>
+                <a href="{% url 'blog_category' category.slug %}" class="flex items-center justify-between text-gray-700 hover:text-blue-600">
+                    <span>{{ category.name }}</span>
+                    <span class="bg-gray-100 text-gray-600 text-xs px-2 py-1 rounded-full">{{ category.post_count }}</span>
+                </a>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+    {% endif %}
+    
+    <!-- Recent posts -->
+    {% if recent_posts %}
+    <div class="bg-white rounded-lg shadow-md p-6">
+        <h3 class="text-lg font-semibold text-gray-900 mb-4">{% trans "ბოლო სტატიები" %}</h3>
+        <div class="space-y-4">
+            {% for post in recent_posts %}
+            <div class="flex space-x-3">
+                {% if post.featured_image %}
+                <div class="flex-shrink-0">
+                    <img class="h-14 w-14 object-cover rounded" src="{{ post.featured_image.url }}" alt="{{ post.title }}">
+                </div>
+                {% endif %}
+                <div>
+                    <h4 class="text-sm font-medium">
+                        <a href="{{ post.get_absolute_url }}" class="text-gray-900 hover:text-blue-600">{{ post.title }}</a>
+                    </h4>
+                    <div class="text-xs text-gray-500 mt-1">{{ post.published_at|date:"d M, Y" }}</div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+    
+    <!-- Tags -->
+    {% if popular_tags %}
+    <div class="bg-white rounded-lg shadow-md p-6">
+        <h3 class="text-lg font-semibold text-gray-900 mb-4">{% trans "პოპულარული ტეგები" %}</h3>
+        <div class="flex flex-wrap">
+            {% for tag in popular_tags %}
+            <a href="{% url 'blog_tag' tag.slug %}" class="inline-block bg-gray-100 hover:bg-gray-200 text-gray-800 text-sm px-3 py-1 rounded-full mr-2 mb-2">
+                #{{ tag.name }}
+            </a>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+</div> 

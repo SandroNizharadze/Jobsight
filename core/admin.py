@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.models import User
-from .models import JobListing, UserProfile, EmployerProfile, JobApplication, SavedJob, RejectionReason
+from .models import JobListing, UserProfile, EmployerProfile, JobApplication, SavedJob, RejectionReason, PricingPackage, PricingFeature, ComparisonTable, ComparisonRow, BlogPost, BlogCategory, BlogTag, BlogPostCategory
 from import_export.admin import ImportExportModelAdmin, ImportExportActionModelAdmin
 from import_export import resources
 from rangefilter.filters import DateRangeFilter
@@ -12,7 +12,6 @@ from django.template.response import TemplateResponse
 from django.contrib.admin.views.decorators import staff_member_required
 from django.utils.decorators import method_decorator
 from django.utils.translation import gettext_lazy as _
-from core.models import PricingPackage, PricingFeature, ComparisonTable, ComparisonRow
 
 # Add a historical data view to the admin site
 @staff_member_required
@@ -416,3 +415,67 @@ class UserProfileAdmin(admin.ModelAdmin):
                     return exp_display
         return '-'
     field_experience_display.short_description = 'Experience Level'
+
+class BlogPostAdmin(SoftDeletionAdmin):
+    list_display = ('title', 'author', 'status', 'published_at', 'view_count', 'get_deleted_state')
+    list_filter = ('status', ('published_at', DateRangeFilter), ('deleted_at', admin.EmptyFieldListFilter))
+    search_fields = ('title', 'content', 'excerpt', 'meta_description', 'meta_keywords')
+    prepopulated_fields = {'slug': ('title',)}
+    date_hierarchy = 'published_at'
+    readonly_fields = ('view_count', 'created_at', 'updated_at')
+    actions = ['restore_selected', 'publish_posts', 'unpublish_posts']
+    
+    fieldsets = (
+        (None, {
+            'fields': ('title', 'slug', 'author', 'status', 'content')
+        }),
+        (_('SEO Options'), {
+            'fields': ('excerpt', 'meta_description', 'meta_keywords'),
+            'classes': ('collapse',),
+        }),
+        (_('Media'), {
+            'fields': ('featured_image',)
+        }),
+        (_('Advanced options'), {
+            'fields': ('allow_comments', 'view_count', 'created_at', 'updated_at', 'published_at'),
+            'classes': ('collapse',),
+        }),
+    )
+    
+    def publish_posts(self, request, queryset):
+        updated = queryset.update(status='published')
+        self.message_user(request, f"{updated} posts have been published.")
+    publish_posts.short_description = "Mark selected posts as published"
+    
+    def unpublish_posts(self, request, queryset):
+        updated = queryset.update(status='draft')
+        self.message_user(request, f"{updated} posts have been unpublished.")
+    unpublish_posts.short_description = "Mark selected posts as draft"
+    
+    def save_model(self, request, obj, form, change):
+        if not obj.author_id:
+            obj.author = request.user
+        super().save_model(request, obj, form, change)
+
+class BlogCategoryAdmin(admin.ModelAdmin):
+    list_display = ('name', 'slug', 'post_count')
+    search_fields = ('name', 'description')
+    prepopulated_fields = {'slug': ('name',)}
+    
+    def post_count(self, obj):
+        return obj.posts.count()
+    post_count.short_description = 'Posts'
+
+class BlogTagAdmin(admin.ModelAdmin):
+    list_display = ('name', 'slug')
+    search_fields = ('name',)
+    prepopulated_fields = {'slug': ('name',)}
+
+class BlogPostCategoryInline(admin.TabularInline):
+    model = BlogPostCategory
+    extra = 1
+
+# Register the blog models
+admin.site.register(BlogPost, BlogPostAdmin)
+admin.site.register(BlogCategory, BlogCategoryAdmin)
+admin.site.register(BlogTag, BlogTagAdmin)

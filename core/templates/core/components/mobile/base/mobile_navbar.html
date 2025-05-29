@@ -25,6 +25,7 @@
                     <a href="{% url 'job_list' %}" class="block px-3 py-2 text-white hover:bg-blue-700 rounded-md">{% trans "მთავარი" %}</a>
                     <a href="{% url 'job_list' %}?show_filters=1#filters" class="block px-3 py-2 text-white hover:bg-blue-700 rounded-md">{% trans "ვაკანსიები" %}</a>
                     <a href="{% url 'pricing' %}" class="block px-3 py-2 text-white hover:bg-blue-700 rounded-md">{% trans "გამოქვეყნება" %}</a>
+                    <a href="{% url 'blog_list' %}" class="block px-3 py-2 text-white hover:bg-blue-700 rounded-md">{% trans "ბლოგი" %}</a>
                     
                     <!-- Language Switcher in mobile dropdown -->
                     <div class="flex items-center space-x-1 py-2">
@@ -44,21 +45,11 @@
                         </form>
                     </div>
                     
-                    <!-- Additional mobile menu items for non-authenticated users -->
+                    <!-- Auth buttons for mobile -->
                     {% if not user.is_authenticated %}
                     <div class="pt-2 border-t border-gray-700">
-                        <a href="{% url 'login' %}" class="block px-3 py-2 text-white hover:bg-blue-700 rounded-md">
-                            <svg class="inline-block w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />
-                            </svg>
-                            {% trans "შესვლა" %}
-                        </a>
-                        <a href="{% url 'register' %}" class="block px-3 py-2 text-white hover:bg-blue-700 rounded-md">
-                            <svg class="inline-block w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
-                            </svg>
-                            {% trans "რეგისტრაცია" %}
-                        </a>
+                        <a href="{% url 'login' %}" class="block px-3 py-2 text-white hover:bg-blue-700 rounded-md">{% trans "შესვლა" %}</a>
+                        <a href="{% url 'register' %}" class="block px-3 py-2 text-white hover:bg-blue-700 rounded-md">{% trans "რეგისტრაცია" %}</a>
                     </div>
                     {% endif %}
                     
@@ -85,7 +76,7 @@
                             {% trans "Job Management" %}
                         </a>
                         {% endif %}
-                        <a href="{% url 'logout' %}" class="block px-3 py-2 text-red-400 hover:bg-blue-700 hover:text-white rounded-md">
+                        <a href="{% url 'logout' %}" class="block px-3 py-2 text-white hover:bg-blue-700 rounded-md">
                             <svg class="inline-block w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
                             </svg>
