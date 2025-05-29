@@ -5,14 +5,26 @@
 {% block title %}{% trans "ვაკანსიები" %} | Jobsy{% endblock %}
 
 {% block hero_section %}
-    {% include 'core/components/job_list/hero_section.html' %}
+    <!-- Desktop Hero Section -->
+    <div class="hidden md:block">
+        {% include 'core/components/job_list/hero_section.html' %}
+    </div>
+    
+    <!-- Mobile Hero Section -->
+    {% include 'core/components/mobile/job_list/mobile_hero.html' %}
 {% endblock %}
 
 {% block content %}
 <div class="container mx-auto px-4 py-8">
     {% include 'core/components/job_list/filters_section.html' %}
     
-    {% include 'core/components/job_list/job_cards.html' %}
+    <!-- Mobile Job Cards (visible only on mobile) -->
+    {% include 'core/components/mobile/job_list/mobile_job_cards.html' %}
+    
+    <!-- Desktop Job Cards (visible only on desktop) -->
+    <div class="hidden md:block">
+        {% include 'core/components/job_list/job_cards.html' %}
+    </div>
 </div>
 {% endblock %}
 

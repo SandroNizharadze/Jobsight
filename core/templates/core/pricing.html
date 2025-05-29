@@ -5,8 +5,12 @@
 {% block title %}{% trans "Jobsy - სატარიფო პაკეტები" %}{% endblock %}
 
 {% block content %}
-<!-- Pricing Section -->
-<section class="py-16 px-4 bg-gray-50">
+<!-- Mobile Pricing Components -->
+{% include 'core/components/mobile/pricing/mobile_pricing.html' %}
+{% include 'core/components/mobile/pricing/mobile_faq.html' %}
+
+<!-- Desktop Pricing Section -->
+<section class="py-16 px-4 bg-gray-50 hidden md:block">
   <div class="container mx-auto">
     <!-- Header -->
     <div class="text-center mb-16">
@@ -40,15 +44,15 @@
   </div>
 </section>
 
-<!-- Comparison Table Section -->
-<section class="bg-white">
+<!-- Comparison Table Section (Desktop Only) -->
+<section class="bg-white hidden md:block">
   <div class="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
     {% include 'core/components/pricing/comparison_table.html' %}
   </div>
 </section>
 
-<!-- FAQ Section -->
-<section id="faq" class="py-16 bg-gray-50">
+<!-- FAQ Section (Desktop Only) -->
+<section id="faq" class="py-16 bg-gray-50 hidden md:block">
   <div class="container mx-auto px-4 max-w-6xl">
     <div class="text-center mb-12">
       <h2 class="text-3xl font-bold text-gray-900 mb-4">{% trans "ხშირად დასმული კითხვები" %}</h2>

@@ -1,7 +1,8 @@
 {% load i18n %}
 {% load core_tags %}
 
-<footer class="bg-gray-800 text-white py-10 mt-10">
+<!-- Footer - hidden on mobile -->
+<footer class="bg-gray-800 text-white py-8 hidden md:block">
     <div class="container mx-auto px-4">
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
             <!-- Company Info -->
@@ -23,7 +24,7 @@
             
             <!-- Quick Links -->
             <div>
-                <h3 class="text-lg font-bold mb-4">{% trans "სწრაფი ბმულები" %}</h3>
+                <h3 class="text-lg font-bold mb-4">{% trans "ბმულები" %}</h3>
                 <ul class="space-y-2">
                     <li><a href="{% url 'home_redirect' %}" class="text-gray-300 hover:text-white">{% trans "მთავარი" %}</a></li>
                     <li><a href="{% url 'job_list' %}" class="text-gray-300 hover:text-white">{% trans "ვაკანსიები" %}</a></li>

@@ -106,6 +106,13 @@
         .jobsy-logo {
             font-family: 'Lora', serif;
         }
+        
+        /* Add padding to the bottom of the page on mobile for the navigation bar */
+        @media (max-width: 768px) {
+            body {
+                padding-bottom: 4rem; /* Adjust this value based on the height of your mobile nav */
+            }
+        }
     </style>
     {% block extra_head %}{% endblock %}
     
@@ -146,6 +153,9 @@
     {% block bottom_section %}{% endblock %}
     
     {% include 'core/components/base/footer.html' %}
+    
+    <!-- Mobile Bottom Navigation - available on all pages -->
+    {% include 'core/components/mobile/base/mobile_bottom_nav.html' %}
     
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     {% include 'core/components/base/scripts.html' %}

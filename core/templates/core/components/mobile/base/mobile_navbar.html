@@ -1,0 +1,121 @@
+{% load i18n %}
+{% load static %}
+{% load core_tags %}
+
+<!-- Mobile Navigation (hidden on desktop) -->
+<div class="md:hidden">
+    <nav class="bg-gray-900 text-white py-3">
+        <div class="container mx-auto px-4">
+            <div class="flex items-center justify-between">
+                <!-- Logo -->
+                <a class="text-2xl font-bold text-white jobsy-logo" href="{% url 'job_list' %}">Jobsy.</a>
+                
+                <!-- Mobile hamburger menu button -->
+                <button id="mobile-menu-button" class="flex items-center justify-center p-2 rounded-md text-white hover:text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white">
+                    <span class="sr-only">Open main menu</span>
+                    <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                    </svg>
+                </button>
+            </div>
+            
+            <!-- Mobile menu dropdown -->
+            <div id="mobile-menu-dropdown" class="hidden fixed top-14 left-0 right-0 bg-gray-900 z-50">
+                <div class="px-4 py-3 space-y-1">
+                    <a href="{% url 'job_list' %}" class="block px-3 py-2 text-white hover:bg-blue-700 rounded-md">{% trans "მთავარი" %}</a>
+                    <a href="{% url 'job_list' %}?show_filters=1#filters" class="block px-3 py-2 text-white hover:bg-blue-700 rounded-md">{% trans "ვაკანსიები" %}</a>
+                    <a href="{% url 'pricing' %}" class="block px-3 py-2 text-white hover:bg-blue-700 rounded-md">{% trans "გამოქვეყნება" %}</a>
+                    
+                    <!-- Language Switcher in mobile dropdown -->
+                    <div class="flex items-center space-x-1 py-2">
+                        <span class="text-gray-300">{% trans "ენა" %}:</span>
+                        <form action="{% url 'set_language' %}" method="post" class="inline-block">
+                            {% csrf_token %}
+                            <input name="next" type="hidden" value="{% if not request.path|slice:':4' == '/en/' %}/en{{ request.path }}{% else %}{{ request.path }}{% endif %}">
+                            <input name="language" type="hidden" value="en">
+                            <button type="submit" class="text-sm text-white hover:text-blue-200 {% if LANGUAGE_CODE == 'en' %}font-bold{% endif %}">EN</button>
+                        </form>
+                        <span class="text-white">|</span>
+                        <form action="{% url 'set_language' %}" method="post" class="inline-block">
+                            {% csrf_token %}
+                            <input name="next" type="hidden" value="{{ request.path|cut:'/en' }}">
+                            <input name="language" type="hidden" value="ka">
+                            <button type="submit" class="text-sm text-white hover:text-blue-200 {% if LANGUAGE_CODE == 'ka' %}font-bold{% endif %}">KA</button>
+                        </form>
+                    </div>
+                    
+                    <!-- Additional mobile menu items for non-authenticated users -->
+                    {% if not user.is_authenticated %}
+                    <div class="pt-2 border-t border-gray-700">
+                        <a href="{% url 'login' %}" class="block px-3 py-2 text-white hover:bg-blue-700 rounded-md">
+                            <svg class="inline-block w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />
+                            </svg>
+                            {% trans "შესვლა" %}
+                        </a>
+                        <a href="{% url 'register' %}" class="block px-3 py-2 text-white hover:bg-blue-700 rounded-md">
+                            <svg class="inline-block w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
+                            </svg>
+                            {% trans "რეგისტრაცია" %}
+                        </a>
+                    </div>
+                    {% endif %}
+                    
+                    <!-- Additional mobile menu items for authenticated users -->
+                    {% if user.is_authenticated %}
+                    <div class="pt-2 border-t border-gray-700">
+                        <a href="{% url 'profile' %}" class="block px-3 py-2 text-white hover:bg-blue-700 rounded-md">
+                            <svg class="inline-block w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                            </svg>
+                            {% trans "Profile" %}
+                        </a>
+                        {% if user.userprofile.role == 'employer' %}
+                        <a href="{% url 'employer_home' %}" class="block px-3 py-2 text-white hover:bg-blue-700 rounded-md">
+                            <svg class="inline-block w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                            </svg>
+                            {% trans "Metrics" %}
+                        </a>
+                        <a href="{% url 'employer_dashboard' %}" class="block px-3 py-2 text-white hover:bg-blue-700 rounded-md">
+                            <svg class="inline-block w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                            </svg>
+                            {% trans "Job Management" %}
+                        </a>
+                        {% endif %}
+                        <a href="{% url 'logout' %}" class="block px-3 py-2 text-red-400 hover:bg-blue-700 hover:text-white rounded-md">
+                            <svg class="inline-block w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                            </svg>
+                            {% trans "Log out" %}
+                        </a>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </nav>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Mobile menu toggle
+    const mobileMenuButton = document.getElementById('mobile-menu-button');
+    const mobileMenuDropdown = document.getElementById('mobile-menu-dropdown');
+    
+    if (mobileMenuButton && mobileMenuDropdown) {
+        mobileMenuButton.addEventListener('click', function() {
+            mobileMenuDropdown.classList.toggle('hidden');
+        });
+        
+        // Close mobile menu when clicking outside
+        document.addEventListener('click', function(e) {
+            if (mobileMenuDropdown && !mobileMenuDropdown.contains(e.target) && !mobileMenuButton.contains(e.target)) {
+                mobileMenuDropdown.classList.add('hidden');
+            }
+        });
+    }
+});
+</script> 

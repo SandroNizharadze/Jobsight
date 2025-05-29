@@ -1,0 +1,229 @@
+{% load static %}
+{% load i18n %}
+{% load core_extras %}
+
+<!-- Mobile Job Detail (only visible on mobile) -->
+<div class="md:hidden">
+  <!-- Job Header -->
+  <div class="bg-gray-800 text-white p-4">
+    <div class="flex items-start justify-between mb-3">
+      <div>
+        <h1 class="text-xl font-bold mb-1">{{ job.title }}</h1>
+        <div class="flex items-center mb-1">
+          <span class="text-base font-semibold text-yellow-400">{{ job.company }}</span>
+          <span class="mx-2">•</span>
+          <span class="text-sm">{% trans job.location|default:"თბილისი" %}</span>
+        </div>
+      </div>
+      
+      <div class="flex-shrink-0">
+        {% if job.employer and job.employer.company_logo %}
+          <div class="bg-white p-1 rounded-lg w-12 h-12 flex items-center justify-center">
+            <img src="{{ job.employer.company_logo.url }}" alt="{{ job.company }}" class="max-w-full max-h-full">
+          </div>
+        {% else %}
+          <div class="bg-white p-1 rounded-lg w-12 h-12 flex items-center justify-center">
+            <span class="text-xl font-bold text-gray-800">{{ job.company|slice:":1" }}</span>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+    
+    <div class="flex flex-wrap gap-2 mb-2">
+      <span class="bg-yellow-400 text-gray-800 font-medium px-3 py-0.5 rounded-full text-xs">
+        {% trans job.category|default:"IT / კომპიუტერები" %}
+      </span>
+      <span class="bg-white text-gray-800 font-medium px-3 py-0.5 rounded-full text-xs">
+        {% trans job.get_experience_display|default:"სრული განაკვეთი" %}
+      </span>
+      {% if job.remote %}
+        <span class="bg-green-500 text-white font-medium px-3 py-0.5 rounded-full text-xs">
+          {% trans "Remote" %}
+        </span>
+      {% endif %}
+    </div>
+    
+    <div class="flex items-center mt-2">
+      {% if job.premium_level == 'premium_plus' %}
+        <span class="bg-gradient-to-br from-purple-500 to-blue-500 text-white font-medium px-3 py-0.5 rounded-full text-xs mr-3">
+          {% trans "Premium+" %}
+        </span>
+      {% elif job.premium_level == 'premium' %}
+        <span class="bg-white text-blue-700 font-medium px-3 py-0.5 rounded-full text-xs mr-3">
+          {% trans "Premium" %}
+        </span>
+      {% endif %}
+      <span class="text-xs font-medium">
+        <i class="far fa-clock mr-1"></i>
+        {% trans "გამოქვეყნებულია" %} {{ job.posted_at|date:"d/m/Y" }}
+      </span>
+    </div>
+  </div>
+  
+  <!-- Salary -->
+  <div class="bg-white p-4 border-b border-gray-200">
+    <div class="flex items-center">
+      <svg class="w-5 h-5 text-gray-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+      </svg>
+      <span class="text-lg font-semibold">
+        {% if job.salary_min and job.salary_max %}
+          {{ job.salary_min|remove_trailing_zeros }} - {{ job.salary_max|remove_trailing_zeros }} ₾ {% trans job.salary_type %}
+        {% elif job.salary_min %}
+          {{ job.salary_min|remove_trailing_zeros }} ₾ {% trans job.salary_type %}
+        {% elif job.salary_max %}
+          {{ job.salary_max|remove_trailing_zeros }} ₾ {% trans job.salary_type %}
+        {% else %}
+          {% trans "ანაზღაურება შეთანხმებით" %}
+        {% endif %}
+      </span>
+    </div>
+  </div>
+  
+  <!-- Expiration Notice -->
+  {% if is_expired %}
+    <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 mx-4 my-4 rounded-r-md">
+      <div class="flex">
+        <div class="flex-shrink-0">
+          <svg class="h-5 w-5 text-yellow-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
+          </svg>
+        </div>
+        <div class="ml-3">
+          <p class="text-sm text-yellow-700">
+            {% trans "ამ ვაკანსიის ვადა გასულია და აღარ მიმდინარეობს განაცხადების მიღება." %}
+          </p>
+          {% if job.expires_at %}
+            <p class="text-xs text-yellow-600 mt-1">{% trans "ვადა გაუვიდა:" %} {{ job.expires_at|date:"F j, Y" }}</p>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  {% endif %}
+  
+  <!-- Job Content -->
+  <div class="bg-white p-4">
+    <div>
+      <h2 class="text-lg font-bold text-gray-800 mb-3">{% trans "აღწერა" %}</h2>
+      <div class="prose max-w-none text-sm">
+        {{ job.description|linebreaks }}
+      </div>
+      
+      {% if job.requirements %}
+        <h2 class="text-lg font-bold text-gray-800 mt-5 mb-3">{% trans "მოთხოვნები" %}</h2>
+        <div class="prose max-w-none text-sm">
+          {{ job.requirements|linebreaks }}
+        </div>
+      {% endif %}
+      
+      {% if job.responsibilities %}
+        <h2 class="text-lg font-bold text-gray-800 mt-5 mb-3">{% trans "პასუხისმგებლობები" %}</h2>
+        <div class="prose max-w-none text-sm">
+          {{ job.responsibilities|linebreaks }}
+        </div>
+      {% endif %}
+      
+      {% if job.benefits %}
+        <h2 class="text-lg font-bold text-gray-800 mt-5 mb-3">{% trans "შეთავაზება" %}</h2>
+        <div class="prose max-w-none text-sm">
+          {{ job.benefits|linebreaks }}
+        </div>
+      {% endif %}
+    </div>
+  </div>
+  
+  <!-- Company Info -->
+  <div class="bg-gray-100 p-4 mt-4">
+    <h3 class="text-lg font-bold text-gray-800 mb-3">{% trans "კომპანიის შესახებ" %}</h3>
+    
+    <div class="flex items-center mb-3">
+      {% if job.employer and job.employer.company_logo %}
+        <img src="{{ job.employer.company_logo.url }}" alt="{{ job.company }}" class="w-10 h-10 object-cover rounded-full mr-3">
+      {% else %}
+        <div class="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center mr-3">
+          <span class="text-lg font-bold text-gray-800">{{ job.company|slice:":1" }}</span>
+        </div>
+      {% endif %}
+      <div>
+        <h4 class="text-base font-semibold">{{ job.company }}</h4>
+        <p class="text-xs text-gray-500">{{ job.employer.industry|default:_("IT სფერო") }}</p>
+      </div>
+    </div>
+    
+    <div class="mb-4">
+      <p class="text-sm text-gray-700">{{ job.employer.company_description|default:_("კომპანიის აღწერა არ არის მითითებული.")|truncatewords:30 }}</p>
+    </div>
+    
+    <div class="space-y-2 mb-4">
+      {% if job.employer %}
+        <div class="flex items-center">
+          <svg class="w-4 h-4 text-gray-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+          </svg>
+          <span class="text-sm">{{ job.employer.get_company_size_display }}</span>
+        </div>
+        <div class="flex items-center">
+          <svg class="w-4 h-4 text-gray-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+          </svg>
+          <span class="text-sm">{{ job.employer.location }}</span>
+        </div>
+        {% if job.employer.company_website %}
+          <div class="flex items-center">
+            <svg class="w-4 h-4 text-gray-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9" />
+            </svg>
+            <a href="{{ job.employer.company_website }}" target="_blank" class="text-sm text-blue-600 hover:underline">{{ job.employer.company_website }}</a>
+          </div>
+        {% endif %}
+      {% endif %}
+    </div>
+    
+    {% if job.employer.facebook_url or job.employer.linkedin_url %}
+      <div class="flex space-x-3">
+        {% if job.employer.facebook_url %}
+          <a href="{{ job.employer.facebook_url }}" target="_blank" class="text-blue-600 hover:text-blue-800">
+            <i class="fab fa-facebook-square text-xl"></i>
+          </a>
+        {% endif %}
+        {% if job.employer.linkedin_url %}
+          <a href="{{ job.employer.linkedin_url }}" target="_blank" class="text-blue-700 hover:text-blue-900">
+            <i class="fab fa-linkedin text-xl"></i>
+          </a>
+        {% endif %}
+      </div>
+    {% endif %}
+  </div>
+  
+  <!-- Action Buttons -->
+  <div class="fixed bottom-16 left-0 right-0 bg-white border-t border-gray-200 p-3 flex shadow-lg z-10">
+    {% if not is_expired %}
+      <button type="button" data-modal-target="applyModal" class="flex-1 bg-gray-800 hover:bg-gray-700 text-white font-medium py-2 px-4 rounded-lg transition-colors mr-3">
+        <i class="fas fa-paper-plane mr-2 text-sm"></i>{% trans "განაცხადის გაგზავნა" %}
+      </button>
+    {% endif %}
+    
+    {% if request.user.is_authenticated %}
+      <form method="post" action="{% if is_saved %}{% url 'unsave_job' job.id %}{% else %}{% url 'save_job' job.id %}{% endif %}" class="flex-1">
+        {% csrf_token %}
+        <button type="submit" class="w-full border border-gray-300 hover:bg-gray-100 text-gray-700 font-medium py-2 px-4 rounded-lg transition-colors">
+          {% if is_saved %}
+            <i class="fas fa-bookmark mr-2 text-blue-600 text-sm"></i>{% trans "შენახულია" %}
+          {% else %}
+            <i class="far fa-bookmark mr-2 text-sm"></i>{% trans "შენახვა" %}
+          {% endif %}
+        </button>
+      </form>
+    {% else %}
+      <a href="{% url 'register' %}?user_type=candidate" class="flex-1">
+        <button type="button" class="w-full border border-gray-300 hover:bg-gray-100 text-gray-700 font-medium py-2 px-4 rounded-lg transition-colors">
+          <i class="far fa-bookmark mr-2 text-sm"></i>{% trans "შენახვა" %}
+        </button>
+      </a>
+    {% endif %}
+  </div>
+  
+  <!-- Extra space at bottom to account for fixed buttons -->
+  <div class="h-24"></div>
+</div> 
