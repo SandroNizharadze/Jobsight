@@ -50,9 +50,9 @@
                       {% if job.salary_min and job.salary_max %}
                         {{ job.salary_min|remove_trailing_zeros }} - {{ job.salary_max|remove_trailing_zeros }} {{ job.get_salary_currency_display }}
                       {% elif job.salary_min %}
-                        {% trans "From" %} {{ job.salary_min|remove_trailing_zeros }} {{ job.get_salary_currency_display }}
+                        {{ job.salary_min|remove_trailing_zeros }} {{ job.get_salary_currency_display }}
                       {% elif job.salary_max %}
-                        {% trans "Up to" %} {{ job.salary_max|remove_trailing_zeros }} {{ job.get_salary_currency_display }}
+                        {{ job.salary_max|remove_trailing_zeros }} {{ job.get_salary_currency_display }}
                       {% else %}
                         {% trans "შეთანხმებით" %}
                       {% endif %}
@@ -130,9 +130,9 @@
                       {% if job.salary_min and job.salary_max %}
                         {{ job.salary_min|remove_trailing_zeros }} - {{ job.salary_max|remove_trailing_zeros }} {{ job.get_salary_currency_display }}
                       {% elif job.salary_min %}
-                        {% trans "From" %} {{ job.salary_min|remove_trailing_zeros }} {{ job.get_salary_currency_display }}
+                        {{ job.salary_min|remove_trailing_zeros }} {{ job.get_salary_currency_display }}
                       {% elif job.salary_max %}
-                        {% trans "Up to" %} {{ job.salary_max|remove_trailing_zeros }} {{ job.get_salary_currency_display }}
+                        {{ job.salary_max|remove_trailing_zeros }} {{ job.get_salary_currency_display }}
                       {% else %}
                         {% trans "შეთანხმებით" %}
                       {% endif %}
@@ -209,9 +209,9 @@
                       {% if job.salary_min and job.salary_max %}
                         {{ job.salary_min|remove_trailing_zeros }} - {{ job.salary_max|remove_trailing_zeros }} {{ job.get_salary_currency_display }}
                       {% elif job.salary_min %}
-                        {% trans "From" %} {{ job.salary_min|remove_trailing_zeros }} {{ job.get_salary_currency_display }}
+                        {{ job.salary_min|remove_trailing_zeros }} {{ job.get_salary_currency_display }}
                       {% elif job.salary_max %}
-                        {% trans "Up to" %} {{ job.salary_max|remove_trailing_zeros }} {{ job.get_salary_currency_display }}
+                        {{ job.salary_max|remove_trailing_zeros }} {{ job.get_salary_currency_display }}
                       {% else %}
                         {% trans "შეთანხმებით" %}
                       {% endif %}

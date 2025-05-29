@@ -48,9 +48,9 @@
                         {% if job.salary_min and job.salary_max %}
                           {{ job.salary_min|remove_trailing_zeros }} - {{ job.salary_max|remove_trailing_zeros }} {{ job.get_salary_currency_display }}
                         {% elif job.salary_min %}
-                          {% trans "From" %} {{ job.salary_min|remove_trailing_zeros }} {{ job.get_salary_currency_display }}
+                          {{ job.salary_min|remove_trailing_zeros }} {{ job.get_salary_currency_display }}
                         {% elif job.salary_max %}
-                          {% trans "Up to" %} {{ job.salary_max|remove_trailing_zeros }} {{ job.get_salary_currency_display }}
+                          {{ job.salary_max|remove_trailing_zeros }} {{ job.get_salary_currency_display }}
                         {% else %}
                           {% trans "შეთანხმებით" %}
                         {% endif %}
@@ -129,9 +129,9 @@
                         {% if job.salary_min and job.salary_max %}
                           {{ job.salary_min|remove_trailing_zeros }} - {{ job.salary_max|remove_trailing_zeros }} {{ job.get_salary_currency_display }}
                         {% elif job.salary_min %}
-                          {% trans "From" %} {{ job.salary_min|remove_trailing_zeros }} {{ job.get_salary_currency_display }}
+                          {{ job.salary_min|remove_trailing_zeros }} {{ job.get_salary_currency_display }}
                         {% elif job.salary_max %}
-                          {% trans "Up to" %} {{ job.salary_max|remove_trailing_zeros }} {{ job.get_salary_currency_display }}
+                          {{ job.salary_max|remove_trailing_zeros }} {{ job.get_salary_currency_display }}
                         {% else %}
                           {% trans "შეთანხმებით" %}
                         {% endif %}
@@ -208,9 +208,9 @@
                         {% if job.salary_min and job.salary_max %}
                           {{ job.salary_min|remove_trailing_zeros }} - {{ job.salary_max|remove_trailing_zeros }} {{ job.get_salary_currency_display }}
                         {% elif job.salary_min %}
-                          {% trans "From" %} {{ job.salary_min|remove_trailing_zeros }} {{ job.get_salary_currency_display }}
+                          {{ job.salary_min|remove_trailing_zeros }} {{ job.get_salary_currency_display }}
                         {% elif job.salary_max %}
-                          {% trans "Up to" %} {{ job.salary_max|remove_trailing_zeros }} {{ job.get_salary_currency_display }}
+                          {{ job.salary_max|remove_trailing_zeros }} {{ job.get_salary_currency_display }}
                         {% else %}
                           {% trans "შეთანხმებით" %}
                         {% endif %}
@@ -256,6 +256,15 @@
       </div>
     </div>
   {% endif %}
+  
+  <!-- Scroll to top button -->
+  <!-- show only if filters are applied -->
+  
+<button id="scrollToTopBtn" class="fixed bottom-16 right-6 bg-gray-800 hover:bg-blue-700 text-white rounded-full p-3 shadow-lg opacity-0 transition-opacity duration-300 z-50">
+    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18" />
+    </svg>
+  </button>
 </div>
 
 <style>
@@ -264,4 +273,28 @@
     font-size: 0.65rem;
     line-height: 0.85rem;
 }
-</style> 
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const scrollToTopBtn = document.getElementById('scrollToTopBtn');
+  
+  // Show button when user scrolls down 300px from the top
+  window.addEventListener('scroll', function() {
+    if (window.pageYOffset > 300) {
+      scrollToTopBtn.classList.remove('opacity-0');
+      scrollToTopBtn.classList.add('opacity-100');
+    } else {
+      scrollToTopBtn.classList.remove('opacity-100');
+      scrollToTopBtn.classList.add('opacity-0');
+    }
+  });
+  
+  // Scroll to top when button is clicked
+  scrollToTopBtn.addEventListener('click', function() {
+    // Find the filters section at the top of the page
+    const filtersSection = document.querySelector('.filters-section') || document.body;
+    filtersSection.scrollIntoView({ behavior: 'smooth' });
+  });
+});
+</script> 
