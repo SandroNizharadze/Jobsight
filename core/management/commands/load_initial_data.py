@@ -1,6 +1,6 @@
 from django.core.management.base import BaseCommand
 from django.utils.translation import gettext_lazy as _
-from core.models import PricingPackage, PricingFeature
+from core.models import PricingPackage, PricingFeature, ComparisonTable, ComparisonRow
 
 class Command(BaseCommand):
     help = 'Loads initial data for the pricing packages'
@@ -133,5 +133,121 @@ class Command(BaseCommand):
                 is_included=feature['is_included'],
                 display_order=i+1
             )
+            
+        # Create Comparison Table
+        self.stdout.write(self.style.SUCCESS('Creating comparison table...'))
         
-        self.stdout.write(self.style.SUCCESS('Successfully created pricing packages and features.')) 
+        comparison_table, created = ComparisonTable.objects.update_or_create(
+            id=1,
+            defaults={
+                'title': _('პაკეტების შედარება'),
+                'subtitle': _('დეტალური შედარება, რომ აირჩიოთ თქვენი ბიზნესისთვის შესაფერისი პაკეტი'),
+                'is_active': True,
+            }
+        )
+        
+        if created:
+            self.stdout.write(self.style.SUCCESS(f'Created comparison table: {str(comparison_table.title)}'))
+        else:
+            self.stdout.write(self.style.SUCCESS(f'Updated comparison table: {str(comparison_table.title)}'))
+        
+        # Comparison table rows
+        comparison_rows = [
+            {
+                'feature_name': _('მთავარ გვერდზე გამოჩენა'),
+                'display_type': 'text',
+                'standard_value': '',
+                'standard_included': False,
+                'premium_value': _('მეორე სექცია'),
+                'premium_included': True,
+                'premium_plus_value': _('პირველი სექცია'),
+                'premium_plus_included': True,
+                'display_order': 1
+            },
+            {
+                'feature_name': _('პრემიუმის ნიშანი'),
+                'display_type': 'badge',
+                'standard_value': '',
+                'standard_included': False,
+                'premium_value': _('პრემიუმი'),
+                'premium_included': True,
+                'premium_plus_value': _('პრემიუმ+'),
+                'premium_plus_included': True,
+                'display_order': 2
+            },
+            {
+                'feature_name': _('ძიებისას პრიორიტეტულობა'),
+                'display_type': 'badge',
+                'standard_value': _('დაბალი'),
+                'standard_included': True,
+                'premium_value': _('საშუალო'),
+                'premium_included': True,
+                'premium_plus_value': _('მაღალი'),
+                'premium_plus_included': True,
+                'display_order': 3
+            },
+            {
+                'feature_name': _('ლოგოს გამოჩენა'),
+                'display_type': 'checkmark',
+                'standard_value': '',
+                'standard_included': True,
+                'premium_value': '',
+                'premium_included': True,
+                'premium_plus_value': '',
+                'premium_plus_included': True,
+                'display_order': 4
+            },
+            {
+                'feature_name': _('დამსაქმებლის პროფილი'),
+                'display_type': 'checkmark',
+                'standard_value': '',
+                'standard_included': True,
+                'premium_value': '',
+                'premium_included': True,
+                'premium_plus_value': '',
+                'premium_plus_included': True,
+                'display_order': 5
+            },
+            {
+                'feature_name': _('სივების ანალიტიკა'),
+                'display_type': 'checkmark',
+                'standard_value': '',
+                'standard_included': True,
+                'premium_value': '',
+                'premium_included': True,
+                'premium_plus_value': '',
+                'premium_plus_included': True,
+                'display_order': 6
+            },
+            {
+                'feature_name': _('სოც. ქსელებში გაზიარება'),
+                'display_type': 'text',
+                'standard_value': '',
+                'standard_included': False,
+                'premium_value': _('ჯგუფური პოსტი'),
+                'premium_included': True,
+                'premium_plus_value': _('ინდივიდუალური და ჯგუფური პოსტი'),
+                'premium_plus_included': True,
+                'display_order': 7
+            },
+        ]
+        
+        # Delete existing rows
+        ComparisonRow.objects.filter(table=comparison_table).delete()
+        
+        # Create new rows
+        for row_data in comparison_rows:
+            ComparisonRow.objects.create(
+                table=comparison_table,
+                feature_name=row_data['feature_name'],
+                display_type=row_data['display_type'],
+                standard_value=row_data['standard_value'],
+                standard_included=row_data['standard_included'],
+                premium_value=row_data['premium_value'],
+                premium_included=row_data['premium_included'],
+                premium_plus_value=row_data['premium_plus_value'],
+                premium_plus_included=row_data['premium_plus_included'],
+                display_order=row_data['display_order']
+            )
+            
+        self.stdout.write(self.style.SUCCESS('Initial data loaded successfully')) 

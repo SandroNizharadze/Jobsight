@@ -26,9 +26,18 @@ def home_redirect(request):
 from django.shortcuts import redirect, render
 
 # Import the pricing models
-from core.models import PricingPackage
+from core.models import PricingPackage, ComparisonTable
 
 def pricing(request):
     """Display the pricing packages page"""
     pricing_packages = PricingPackage.objects.filter(is_active=True).prefetch_related('features').order_by('display_order')
-    return render(request, 'core/pricing.html', {'pricing_packages': pricing_packages})
+    
+    # Get the active comparison table with its rows
+    comparison_table = ComparisonTable.objects.filter(is_active=True).prefetch_related('rows').first()
+    
+    context = {
+        'pricing_packages': pricing_packages,
+        'comparison_table': comparison_table
+    }
+    
+    return render(request, 'core/pricing.html', context)

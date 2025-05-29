@@ -3,8 +3,8 @@
 
 <div id="comparison" class="py-16 scroll-mt-24">
   <div class="text-center mb-12">
-    <h2 class="text-3xl font-bold text-gray-900 mb-4">{% trans "პაკეტების შედარება" %}</h2>
-    <p class="text-lg text-gray-600 max-w-3xl mx-auto">{% trans "დეტალური შედარება, რომ აირჩიოთ თქვენი ბიზნესისთვის შესაფერისი პაკეტი" %}</p>
+    <h2 class="text-3xl font-bold text-gray-900 mb-4">{{ comparison_table.title }}</h2>
+    <p class="text-lg text-gray-600 max-w-3xl mx-auto">{{ comparison_table.subtitle }}</p>
   </div>
   
   <div class="overflow-x-auto">
@@ -33,7 +33,7 @@
         </tr>
       </thead>
       <tbody>
-        <!-- Row 1 - Job Count -->
+        <!-- Job Count and Period rows are kept static -->
         <tr class="border-b hover:bg-gray-50">
           <td class="py-4 px-6 text-gray-800 font-medium">{% trans "განცხადების რაოდენობა" %}</td>
           <td class="py-4 px-6 text-center">1</td>
@@ -41,7 +41,6 @@
           <td class="py-4 px-6 text-center bg-gradient-to-br from-purple-50 to-blue-50">1</td>
         </tr>
         
-        <!-- Row 2 - Period -->
         <tr class="border-b hover:bg-gray-50">
           <td class="py-4 px-6 text-gray-800 font-medium">{% trans "პერიოდი" %}</td>
           <td class="py-4 px-6 text-center">30 {% trans "დღე" %}</td>
@@ -49,52 +48,182 @@
           <td class="py-4 px-6 text-center bg-gradient-to-br from-purple-50 to-blue-50">30 {% trans "დღე" %}</td>
         </tr>
         
-        <!-- Dynamic Features -->
-        {% regroup pricing_packages.0.features.all by text as feature_groups %}
-        {% for feature_group in feature_groups %}
-          <tr class="border-b hover:bg-gray-50">
-            <td class="py-4 px-6 text-gray-800 font-medium">{{ feature_group.grouper }}</td>
-            
-            {% for package in pricing_packages %}
-              {% with package_feature=package.features.all|dictsort:"display_order"|filter_by_text:feature_group.grouper|first %}
-                <td class="py-4 px-6 text-center {% if package.package_type == 'premium' %}bg-blue-50{% elif package.package_type == 'premium_plus' %}bg-gradient-to-br from-purple-50 to-blue-50{% endif %}">
-                  {% if package_feature %}
-                    {% if package_feature.is_included %}
-                      {% if "პრემიუმის ნიშანი" in feature_group.grouper and package.package_type == 'premium' %}
-                        <span class="inline-block px-2 py-1 bg-blue-100 text-blue-800 rounded text-xs font-medium">{% trans "პრემიუმი" %}</span>
-                      {% elif "პრემიუმის ნიშანი" in feature_group.grouper and package.package_type == 'premium_plus' %}
-                        <span class="inline-block px-2 py-1 bg-gradient-to-br from-purple-500 to-blue-500 text-white rounded text-xs font-medium">{% trans "პრემიუმ+" %}</span>
-                      {% elif "ძიებისას პრიორიტეტულობა" in feature_group.grouper %}
-                        {% if package.package_type == 'standard' %}
-                          <span class="inline-block px-2 py-1 bg-gray-200 text-gray-700 rounded text-xs font-medium">{% trans "დაბალი" %}</span>
-                        {% elif package.package_type == 'premium' %}
-                          <span class="inline-block px-2 py-1 bg-yellow-200 text-yellow-800 rounded text-xs font-medium">{% trans "საშუალო" %}</span>
+        <!-- Dynamic Comparison Rows -->
+        {% if comparison_table %}
+          {% for row in comparison_table.rows.all %}
+            <tr class="border-b hover:bg-gray-50">
+              <td class="py-4 px-6 text-gray-800 font-medium">{{ row.feature_name }}</td>
+              
+              <!-- Standard Package Value -->
+              <td class="py-4 px-6 text-center">
+                {% if row.display_type == 'checkmark' %}
+                  {% if row.standard_included %}
+                    <svg class="h-5 w-5 text-green-500 mx-auto" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                    </svg>
+                  {% else %}
+                    <svg class="h-5 w-5 text-red-500 mx-auto" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                  {% endif %}
+                {% elif row.display_type == 'badge' %}
+                  {% if row.standard_included %}
+                    <span class="inline-block px-2 py-1 bg-gray-200 text-gray-700 rounded text-xs font-medium">{{ row.standard_value }}</span>
+                  {% else %}
+                    <svg class="h-5 w-5 text-red-500 mx-auto" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                  {% endif %}
+                {% elif row.display_type == 'text' %}
+                  {% if row.standard_included %}
+                    {{ row.standard_value }}
+                  {% else %}
+                    <svg class="h-5 w-5 text-red-500 mx-auto" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                  {% endif %}
+                {% elif row.display_type == 'special' %}
+                  {% if row.standard_included %}
+                    {{ row.standard_value|safe }}
+                  {% else %}
+                    <svg class="h-5 w-5 text-red-500 mx-auto" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                  {% endif %}
+                {% endif %}
+              </td>
+              
+              <!-- Premium Package Value -->
+              <td class="py-4 px-6 text-center bg-blue-50">
+                {% if row.display_type == 'checkmark' %}
+                  {% if row.premium_included %}
+                    <svg class="h-5 w-5 text-green-500 mx-auto" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                    </svg>
+                  {% else %}
+                    <svg class="h-5 w-5 text-red-500 mx-auto" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                  {% endif %}
+                {% elif row.display_type == 'badge' %}
+                  {% if row.premium_included %}
+                    <span class="inline-block px-2 py-1 bg-yellow-200 text-yellow-800 rounded text-xs font-medium">{{ row.premium_value }}</span>
+                  {% else %}
+                    <svg class="h-5 w-5 text-red-500 mx-auto" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                  {% endif %}
+                {% elif row.display_type == 'text' %}
+                  {% if row.premium_included %}
+                    {{ row.premium_value }}
+                  {% else %}
+                    <svg class="h-5 w-5 text-red-500 mx-auto" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                  {% endif %}
+                {% elif row.display_type == 'special' %}
+                  {% if row.premium_included %}
+                    {{ row.premium_value|safe }}
+                  {% else %}
+                    <svg class="h-5 w-5 text-red-500 mx-auto" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                  {% endif %}
+                {% endif %}
+              </td>
+              
+              <!-- Premium Plus Package Value -->
+              <td class="py-4 px-6 text-center bg-gradient-to-br from-purple-50 to-blue-50">
+                {% if row.display_type == 'checkmark' %}
+                  {% if row.premium_plus_included %}
+                    <svg class="h-5 w-5 text-green-500 mx-auto" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                    </svg>
+                  {% else %}
+                    <svg class="h-5 w-5 text-red-500 mx-auto" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                  {% endif %}
+                {% elif row.display_type == 'badge' %}
+                  {% if row.premium_plus_included %}
+                    <span class="inline-block px-2 py-1 bg-red-200 text-red-800 rounded text-xs font-medium">{{ row.premium_plus_value }}</span>
+                  {% else %}
+                    <svg class="h-5 w-5 text-red-500 mx-auto" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                  {% endif %}
+                {% elif row.display_type == 'text' %}
+                  {% if row.premium_plus_included %}
+                    {{ row.premium_plus_value }}
+                  {% else %}
+                    <svg class="h-5 w-5 text-red-500 mx-auto" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                  {% endif %}
+                {% elif row.display_type == 'special' %}
+                  {% if row.premium_plus_included %}
+                    {{ row.premium_plus_value|safe }}
+                  {% else %}
+                    <svg class="h-5 w-5 text-red-500 mx-auto" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                  {% endif %}
+                {% endif %}
+              </td>
+            </tr>
+          {% endfor %}
+        {% else %}
+          <!-- Fallback to old system if no comparison table is defined -->
+          {% regroup pricing_packages.0.features.all by text as feature_groups %}
+          {% for feature_group in feature_groups %}
+            <tr class="border-b hover:bg-gray-50">
+              <td class="py-4 px-6 text-gray-800 font-medium">{{ feature_group.grouper }}</td>
+              
+              {% for package in pricing_packages %}
+                {% with package_feature=package.features.all|dictsort:"display_order"|filter_by_text:feature_group.grouper|first %}
+                  <td class="py-4 px-6 text-center {% if package.package_type == 'premium' %}bg-blue-50{% elif package.package_type == 'premium_plus' %}bg-gradient-to-br from-purple-50 to-blue-50{% endif %}">
+                    {% if package_feature %}
+                      {% if package_feature.is_included %}
+                        {% if "პრემიუმის ნიშანი" in feature_group.grouper and package.package_type == 'premium' %}
+                          <span class="inline-block px-2 py-1 bg-blue-100 text-blue-800 rounded text-xs font-medium">{% trans "პრემიუმი" %}</span>
+                        {% elif "პრემიუმის ნიშანი" in feature_group.grouper and package.package_type == 'premium_plus' %}
+                          <span class="inline-block px-2 py-1 bg-gradient-to-br from-purple-500 to-blue-500 text-white rounded text-xs font-medium">{% trans "პრემიუმ+" %}</span>
+                        {% elif "ძიებისას პრიორიტეტულობა" in feature_group.grouper %}
+                          {% if package.package_type == 'standard' %}
+                            <span class="inline-block px-2 py-1 bg-gray-200 text-gray-700 rounded text-xs font-medium">{% trans "დაბალი" %}</span>
+                          {% elif package.package_type == 'premium' %}
+                            <span class="inline-block px-2 py-1 bg-yellow-200 text-yellow-800 rounded text-xs font-medium">{% trans "საშუალო" %}</span>
+                          {% else %}
+                            <span class="inline-block px-2 py-1 bg-red-200 text-red-800 rounded text-xs font-medium">{% trans "მაღალი" %}</span>
+                          {% endif %}
+                        {% elif "მთავარ გვერდზე გამოჩენა" in feature_group.grouper %}
+                          {% if package.package_type == 'premium' %}
+                            {% trans "მეორე სექცია" %}
+                          {% elif package.package_type == 'premium_plus' %}
+                            {% trans "პირველი სექცია" %}
+                          {% else %}
+                            <svg class="h-5 w-5 text-red-500 mx-auto" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                          {% endif %}
+                        {% elif "სოც. ქსელებში გაზიარება" in feature_group.grouper %}
+                          {% if package.package_type == 'premium' %}
+                            {% trans "ჯგუფური პოსტი" %}
+                          {% elif package.package_type == 'premium_plus' %}
+                            {% trans "ინდივიდუალური და ჯგუფური პოსტი" %}
+                          {% else %}
+                            <svg class="h-5 w-5 text-red-500 mx-auto" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                          {% endif %}
                         {% else %}
-                          <span class="inline-block px-2 py-1 bg-red-200 text-red-800 rounded text-xs font-medium">{% trans "მაღალი" %}</span>
-                        {% endif %}
-                      {% elif "მთავარ გვერდზე გამოჩენა" in feature_group.grouper %}
-                        {% if package.package_type == 'premium' %}
-                          {% trans "მეორე სექცია" %}
-                        {% elif package.package_type == 'premium_plus' %}
-                          {% trans "პირველი სექცია" %}
-                        {% else %}
-                          <svg class="h-5 w-5 text-red-500 mx-auto" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                          </svg>
-                        {% endif %}
-                      {% elif "სოც. ქსელებში გაზიარება" in feature_group.grouper %}
-                        {% if package.package_type == 'premium' %}
-                          {% trans "ჯგუფური პოსტი" %}
-                        {% elif package.package_type == 'premium_plus' %}
-                          {% trans "ინდივიდუალური და ჯგუფური პოსტი" %}
-                        {% else %}
-                          <svg class="h-5 w-5 text-red-500 mx-auto" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                          <svg class="h-5 w-5 text-green-500 mx-auto" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
                           </svg>
                         {% endif %}
                       {% else %}
-                        <svg class="h-5 w-5 text-green-500 mx-auto" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                        <svg class="h-5 w-5 text-red-500 mx-auto" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
                         </svg>
                       {% endif %}
                     {% else %}
@@ -102,16 +231,12 @@
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
                       </svg>
                     {% endif %}
-                  {% else %}
-                    <svg class="h-5 w-5 text-red-500 mx-auto" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                    </svg>
-                  {% endif %}
-                </td>
-              {% endwith %}
-            {% endfor %}
-          </tr>
-        {% endfor %}
+                  </td>
+                {% endwith %}
+              {% endfor %}
+            </tr>
+          {% endfor %}
+        {% endif %}
       </tbody>
     </table>
   </div>

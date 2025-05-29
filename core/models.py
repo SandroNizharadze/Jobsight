@@ -587,3 +587,50 @@ class PricingFeature(models.Model):
     def __str__(self):
         status = _("Included") if self.is_included else _("Not Included")
         return f"{self.text} - {status}"
+
+class ComparisonTable(models.Model):
+    """Model to manage the pricing comparison table separately from package features"""
+    title = models.CharField(max_length=255, verbose_name=_("Table Title"), default=_("პაკეტების შედარება"))
+    subtitle = models.CharField(max_length=255, verbose_name=_("Table Subtitle"), 
+                               default=_("დეტალური შედარება, რომ აირჩიოთ თქვენი ბიზნესისთვის შესაფერისი პაკეტი"))
+    is_active = models.BooleanField(default=True, verbose_name=_("Active"))
+    
+    class Meta:
+        verbose_name = _("Comparison Table")
+        verbose_name_plural = _("Comparison Tables")
+    
+    def __str__(self):
+        return self.title
+
+class ComparisonRow(models.Model):
+    """Individual row in the pricing comparison table"""
+    DISPLAY_TYPE_CHOICES = [
+        ('text', _('Text')),
+        ('checkmark', _('Checkmark')),
+        ('badge', _('Badge')),
+        ('special', _('Special Format')),
+    ]
+    
+    table = models.ForeignKey(ComparisonTable, on_delete=models.CASCADE, related_name='rows', verbose_name=_("Comparison Table"))
+    feature_name = models.CharField(max_length=255, verbose_name=_("Feature Name"))
+    display_type = models.CharField(max_length=20, choices=DISPLAY_TYPE_CHOICES, default='checkmark', 
+                                   verbose_name=_("Display Type"))
+    display_order = models.PositiveSmallIntegerField(default=0, verbose_name=_("Display Order"))
+    
+    # Values for each package type
+    standard_value = models.CharField(max_length=255, verbose_name=_("Standard Value"), blank=True)
+    standard_included = models.BooleanField(default=False, verbose_name=_("Included in Standard"))
+    
+    premium_value = models.CharField(max_length=255, verbose_name=_("Premium Value"), blank=True)
+    premium_included = models.BooleanField(default=True, verbose_name=_("Included in Premium"))
+    
+    premium_plus_value = models.CharField(max_length=255, verbose_name=_("Premium Plus Value"), blank=True)
+    premium_plus_included = models.BooleanField(default=True, verbose_name=_("Included in Premium Plus"))
+    
+    class Meta:
+        verbose_name = _("Comparison Row")
+        verbose_name_plural = _("Comparison Rows")
+        ordering = ['display_order', 'id']
+    
+    def __str__(self):
+        return self.feature_name

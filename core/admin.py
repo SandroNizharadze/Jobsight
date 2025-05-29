@@ -12,7 +12,7 @@ from django.template.response import TemplateResponse
 from django.contrib.admin.views.decorators import staff_member_required
 from django.utils.decorators import method_decorator
 from django.utils.translation import gettext_lazy as _
-from core.models import PricingPackage, PricingFeature
+from core.models import PricingPackage, PricingFeature, ComparisonTable, ComparisonRow
 
 # Add a historical data view to the admin site
 @staff_member_required
@@ -362,6 +362,25 @@ class PricingPackageAdmin(admin.ModelAdmin):
             return f"{obj.original_price} → {obj.current_price}"
         return f"{obj.current_price}"
     get_price_display.short_description = _("Price")
+
+class ComparisonRowInline(admin.TabularInline):
+    model = ComparisonRow
+    extra = 1
+    fields = ('feature_name', 'display_type', 'display_order', 
+              'standard_value', 'standard_included',
+              'premium_value', 'premium_included', 
+              'premium_plus_value', 'premium_plus_included')
+
+@admin.register(ComparisonTable)
+class ComparisonTableAdmin(admin.ModelAdmin):
+    list_display = ('title', 'is_active')
+    search_fields = ('title', 'subtitle')
+    inlines = [ComparisonRowInline]
+    fieldsets = (
+        (None, {
+            'fields': ('title', 'subtitle', 'is_active')
+        }),
+    )
 
 @admin.register(UserProfile)
 class UserProfileAdmin(admin.ModelAdmin):
