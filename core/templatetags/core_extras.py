@@ -1,4 +1,5 @@
 from django import template
+from decimal import Decimal
 
 register = template.Library()
 
@@ -13,21 +14,17 @@ def get_item(dictionary, key):
 @register.filter
 def remove_trailing_zeros(value):
     """
-    Removes trailing zeros from decimal values
-    Example: 500.00 becomes 500, 500.50 remains 500.5
-    Usage: {{ value|remove_trailing_zeros }}
+    Remove trailing zeros from a decimal number.
     """
-    if value is None:
-        return value
-        
-    try:
-        # Convert to string and check if it's a decimal with .00
-        str_value = str(value)
-        if str_value.endswith('.00'):
-            return int(float(str_value))
-        # For other decimal values, remove trailing zeros
-        if '.' in str_value:
-            return str_value.rstrip('0').rstrip('.') if '.' in str_value else str_value
-        return value
-    except (ValueError, TypeError):
-        return value 
+    if isinstance(value, (int, float, Decimal)):
+        value = str(value)
+    if '.' in value:
+        return value.rstrip('0').rstrip('.') if '.' in value else value
+    return value
+
+@register.filter
+def filter_by_text(queryset, text):
+    """
+    Filter a queryset of PricingFeature objects by their text field.
+    """
+    return [item for item in queryset if item.text == text] 

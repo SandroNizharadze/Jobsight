@@ -1,5 +1,6 @@
 {% load i18n %}
 {% load static %}
+{% load core_extras %}
 
 <!-- Mobile Pricing Section -->
 <div class="md:hidden">
@@ -162,7 +163,7 @@
           </tr>
         </thead>
         <tbody>
-          <!-- Row 1 -->
+          <!-- Row 1 - Job Count -->
           <tr class="border-b hover:bg-gray-50">
             <td class="py-2 px-3 text-gray-800 font-medium text-xs">{% trans "განცხადების რაოდენობა" %}</td>
             <td class="py-2 px-3 text-center text-xs">1</td>
@@ -170,7 +171,7 @@
             <td class="py-2 px-3 text-center text-xs">1</td>
           </tr>
           
-          <!-- Row 2 -->
+          <!-- Row 2 - Period -->
           <tr class="border-b hover:bg-gray-50">
             <td class="py-2 px-3 text-gray-800 font-medium text-xs">{% trans "პერიოდი" %}</td>
             <td class="py-2 px-3 text-center text-xs">30 {% trans "დღე" %}</td>
@@ -178,53 +179,69 @@
             <td class="py-2 px-3 text-center text-xs">30 {% trans "დღე" %}</td>
           </tr>
           
-          <!-- Row 3 -->
-          <tr class="border-b hover:bg-gray-50">
-            <td class="py-2 px-3 text-gray-800 font-medium text-xs">{% trans "მთავარ გვერდზე გამოჩენა" %}</td>
-            <td class="py-2 px-3 text-center">
-              <svg class="h-4 w-4 text-red-500 mx-auto" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-              </svg>
-            </td>
-            <td class="py-2 px-3 text-center text-xs">{% trans "მეორე სექცია" %}</td>
-            <td class="py-2 px-3 text-center text-xs">{% trans "პირველი სექცია" %}</td>
-          </tr>
-          
-          <!-- Row 4 -->
-          <tr class="border-b hover:bg-gray-50">
-            <td class="py-2 px-3 text-gray-800 font-medium text-xs">{% trans "ლოგოს გამოჩენა" %}</td>
-            <td class="py-2 px-3 text-center">
-              <svg class="h-4 w-4 text-green-500 mx-auto" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-              </svg>
-            </td>
-            <td class="py-2 px-3 text-center">
-              <svg class="h-4 w-4 text-green-500 mx-auto" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-              </svg>
-            </td>
-            <td class="py-2 px-3 text-center">
-              <svg class="h-4 w-4 text-green-500 mx-auto" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-              </svg>
-            </td>
-          </tr>
-          
-          <!-- Row 5 -->
-          <tr class="border-b hover:bg-gray-50">
-            <td class="py-2 px-3 text-gray-800 font-medium text-xs">{% trans "პრემიუმის ნიშანი" %}</td>
-            <td class="py-2 px-3 text-center">
-              <svg class="h-4 w-4 text-red-500 mx-auto" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-              </svg>
-            </td>
-            <td class="py-2 px-3 text-center text-xs">
-              <span class="inline-block px-1.5 py-0.5 bg-blue-100 text-blue-800 rounded text-2xs font-medium">{% trans "პრემიუმი" %}</span>
-            </td>
-            <td class="py-2 px-3 text-center text-xs">
-              <span class="inline-block px-1.5 py-0.5 bg-gradient-to-br from-purple-500 to-blue-500 text-white rounded text-2xs font-medium">{% trans "პრემიუმ+" %}</span>
-            </td>
-          </tr>
+          <!-- Dynamic Features -->
+          {% regroup pricing_packages.0.features.all by text as feature_groups %}
+          {% for feature_group in feature_groups %}
+            <tr class="border-b hover:bg-gray-50">
+              <td class="py-2 px-3 text-gray-800 font-medium text-xs">{{ feature_group.grouper }}</td>
+              
+              {% for package in pricing_packages %}
+                {% with package_feature=package.features.all|dictsort:"display_order"|filter_by_text:feature_group.grouper|first %}
+                  <td class="py-2 px-3 text-center">
+                    {% if package_feature %}
+                      {% if package_feature.is_included %}
+                        {% if "პრემიუმის ნიშანი" in feature_group.grouper and package.package_type == 'premium' %}
+                          <span class="inline-block px-1.5 py-0.5 bg-blue-100 text-blue-800 rounded text-2xs font-medium">{% trans "პრემიუმი" %}</span>
+                        {% elif "პრემიუმის ნიშანი" in feature_group.grouper and package.package_type == 'premium_plus' %}
+                          <span class="inline-block px-1.5 py-0.5 bg-gradient-to-br from-purple-500 to-blue-500 text-white rounded text-2xs font-medium">{% trans "პრემიუმ+" %}</span>
+                        {% elif "ძიებისას პრიორიტეტულობა" in feature_group.grouper %}
+                          {% if package.package_type == 'standard' %}
+                            <span class="inline-block px-1.5 py-0.5 bg-gray-200 text-gray-700 rounded text-2xs font-medium">{% trans "დაბალი" %}</span>
+                          {% elif package.package_type == 'premium' %}
+                            <span class="inline-block px-1.5 py-0.5 bg-yellow-200 text-yellow-800 rounded text-2xs font-medium">{% trans "საშუალო" %}</span>
+                          {% else %}
+                            <span class="inline-block px-1.5 py-0.5 bg-red-200 text-red-800 rounded text-2xs font-medium">{% trans "მაღალი" %}</span>
+                          {% endif %}
+                        {% elif "მთავარ გვერდზე გამოჩენა" in feature_group.grouper %}
+                          {% if package.package_type == 'premium' %}
+                            <span class="text-xs">{% trans "მეორე სექცია" %}</span>
+                          {% elif package.package_type == 'premium_plus' %}
+                            <span class="text-xs">{% trans "პირველი სექცია" %}</span>
+                          {% else %}
+                            <svg class="h-4 w-4 text-red-500 mx-auto" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                          {% endif %}
+                        {% elif "სოც. ქსელებში გაზიარება" in feature_group.grouper %}
+                          {% if package.package_type == 'premium' %}
+                            <span class="text-xs">{% trans "ჯგუფური პოსტი" %}</span>
+                          {% elif package.package_type == 'premium_plus' %}
+                            <span class="text-xs">{% trans "ინდ. და ჯგუფური" %}</span>
+                          {% else %}
+                            <svg class="h-4 w-4 text-red-500 mx-auto" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                          {% endif %}
+                        {% else %}
+                          <svg class="h-4 w-4 text-green-500 mx-auto" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                          </svg>
+                        {% endif %}
+                      {% else %}
+                        <svg class="h-4 w-4 text-red-500 mx-auto" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                      {% endif %}
+                    {% else %}
+                      <svg class="h-4 w-4 text-red-500 mx-auto" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                      </svg>
+                    {% endif %}
+                  </td>
+                {% endwith %}
+              {% endfor %}
+            </tr>
+          {% endfor %}
         </tbody>
       </table>
     </div>
