@@ -36,7 +36,7 @@
                   
                   <h3 class="text-sm font-bold mb-1 text-purple-900">{{ job.title }}</h3>
                   
-                  <div class="mb-1">
+                  <div>
                     <div class="flex items-center text-2xs text-gray-600 mb-0.5">
                       <i class="fas fa-map-marker-alt mr-1 text-gray-400"></i>
                       <span>{{ job.location }}</span>
@@ -61,14 +61,34 @@
                       <i class="fas fa-briefcase mr-1 text-gray-400"></i>
                       <span>{{ job.job_preferences }}</span>
                     </div>
+                    
+                    <!-- Experience level -->
+                    <div class="flex items-center text-2xs text-gray-600 mt-0.5">
+                      <i class="fas fa-user-graduate mr-1 text-gray-400"></i>
+                      <span>{{ job.experience }}</span>
+                    </div>
+                    
+                    <!-- Additional flags in a fixed height container -->
+                    <div class="flex flex-wrap gap-1 mt-0.5 min-h-[20px]">
+                      {% if job.considers_students %}
+                        <span class="inline-flex items-center px-1.5 py-0.5 rounded text-2xs font-medium bg-green-100 text-green-800">
+                          <i class="fas fa-graduation-cap mr-0.5"></i> {% trans "სტუდენტური" %}
+                        </span>
+                      {% endif %}
+                      
+                      {% if job.georgian_language_only %}
+                        <span class="inline-flex items-center px-1.5 py-0.5 rounded text-2xs font-medium bg-blue-100 text-blue-800">
+                          <i class="fas fa-language mr-0.5"></i> {% trans "მხოლოდ ქართულენოვანი" %}
+                        </span>
+                      {% endif %}
+                    </div>
                   </div>
                   
-                  <div class="text-2xs text-gray-500">{{ job.created_at|date:"M j" }}</div>
+                  <div class="text-2xs text-gray-500 mt-1">{{ job.created_at|date:"M j" }}</div>
                 </div>
                 
-                <!-- Company logo -->
-                <!-- Move logo down -->
-                <div class="flex-shrink-0" style="margin-top: 50px;">
+                <!-- Company logo with fixed positioning -->
+                <div class="flex-shrink-0 flex items-center">
                   {% if job.employer.company_logo %}
                     <img src="{{ job.employer.company_logo.url }}" alt="{{ job.employer.company_name }}" class="w-12 h-12 object-cover rounded-full">
                   {% else %}
@@ -117,7 +137,7 @@
                   
                   <h3 class="text-sm font-bold mb-1 text-blue-900">{{ job.title }}</h3>
                   
-                  <div class="mb-1">
+                  <div>
                     <div class="flex items-center text-2xs text-gray-600 mb-0.5">
                       <i class="fas fa-map-marker-alt mr-1 text-gray-400"></i>
                       <span>{{ job.location }}</span>
@@ -142,13 +162,34 @@
                       <i class="fas fa-briefcase mr-1 text-gray-400"></i>
                       <span>{{ job.job_preferences }}</span>
                     </div>
+                    
+                    <!-- Experience level -->
+                    <div class="flex items-center text-2xs text-gray-600 mt-0.5">
+                      <i class="fas fa-user-graduate mr-1 text-gray-400"></i>
+                      <span>{{ job.experience }}</span>
+                    </div>
+                    
+                    <!-- Additional flags in a fixed height container -->
+                    <div class="flex flex-wrap gap-1 mt-0.5 min-h-[20px]">
+                      {% if job.considers_students %}
+                        <span class="inline-flex items-center px-1.5 py-0.5 rounded text-2xs font-medium bg-green-100 text-green-800">
+                          <i class="fas fa-graduation-cap mr-0.5"></i> {% trans "სტუდენტური" %}
+                        </span>
+                      {% endif %}
+                      
+                      {% if job.georgian_language_only %}
+                        <span class="inline-flex items-center px-1.5 py-0.5 rounded text-2xs font-medium bg-blue-100 text-blue-800">
+                          <i class="fas fa-language mr-0.5"></i> {% trans "მხოლოდ ქართულენოვანი" %}
+                        </span>
+                      {% endif %}
+                    </div>
                   </div>
                   
-                  <div class="text-2xs text-gray-500">{{ job.created_at|date:"M j" }}</div>
+                  <div class="text-2xs text-gray-500 mt-1">{{ job.created_at|date:"M j" }}</div>
                 </div>
                 
-                <!-- Company logo -->
-                <div class="flex-shrink-0" style="margin-top: 50px;">
+                <!-- Company logo with fixed positioning -->
+                <div class="flex-shrink-0 flex items-center">
                   {% if job.employer.company_logo %}
                     <img src="{{ job.employer.company_logo.url }}" alt="{{ job.employer.company_name }}" class="w-12 h-12 object-cover rounded-full">
                   {% else %}
@@ -196,7 +237,7 @@
                   
                   <h3 class="text-sm font-bold mb-1 text-amber-900">{{ job.title }}</h3>
                   
-                  <div class="mb-1">
+                  <div>
                     <div class="flex items-center text-2xs text-gray-600 mb-0.5">
                       <i class="fas fa-map-marker-alt mr-1 text-gray-400"></i>
                       <span>{{ job.location }}</span>
@@ -221,13 +262,34 @@
                       <i class="fas fa-briefcase mr-1 text-gray-400"></i>
                       <span>{{ job.job_preferences }}</span>
                     </div>
+                    
+                    <!-- Experience level -->
+                    <div class="flex items-center text-2xs text-gray-600 mt-0.5">
+                      <i class="fas fa-user-graduate mr-1 text-gray-400"></i>
+                      <span>{{ job.experience }}</span>
+                    </div>
+                    
+                    <!-- Additional flags in a fixed height container -->
+                    <div class="flex flex-wrap gap-1 mt-0.5 min-h-[20px]">
+                      {% if job.considers_students %}
+                        <span class="inline-flex items-center px-1.5 py-0.5 rounded text-2xs font-medium bg-green-100 text-green-800">
+                          <i class="fas fa-graduation-cap mr-0.5"></i> {% trans "სტუდენტური" %}
+                        </span>
+                      {% endif %}
+                      
+                      {% if job.georgian_language_only %}
+                        <span class="inline-flex items-center px-1.5 py-0.5 rounded text-2xs font-medium bg-blue-100 text-blue-800">
+                          <i class="fas fa-language mr-0.5"></i> {% trans "მხოლოდ ქართულენოვანი" %}
+                        </span>
+                      {% endif %}
+                    </div>
                   </div>
                   
-                  <div class="text-2xs text-gray-500">{{ job.created_at|date:"M j" }}</div>
+                  <div class="text-2xs text-gray-500 mt-1">{{ job.created_at|date:"M j" }}</div>
                 </div>
                 
-                <!-- Company logo -->
-                <div class="flex-shrink-0" style="margin-top: 50px;">
+                <!-- Company logo with fixed positioning -->
+                <div class="flex-shrink-0 flex items-center">
                   {% if job.employer.company_logo %}
                     <img src="{{ job.employer.company_logo.url }}" alt="{{ job.employer.company_name }}" class="w-12 h-12 object-cover rounded-full">
                   {% else %}
