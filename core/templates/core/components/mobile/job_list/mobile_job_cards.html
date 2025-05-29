@@ -3,10 +3,10 @@
 {% load core_extras %}
 
 <!-- Mobile Job Listings -->
-<div class="-mt-10">
+<div class="-mt-7">
   <!-- Premium+ Section -->
   {% if premium_plus_count > 0 %}
-    <div class="bg-white py-2 px-4 rounded-t-3xl shadow-sm">
+    <div class="bg-white py-2 px-4 rounded-t-3xl shadow-lg relative z-20">
       <h3 class="text-gray-800 font-semibold flex items-center mb-2 pt-2">
         <span class="mr-2 flex items-center justify-center w-5 h-5 bg-gradient-to-br from-purple-500 to-blue-500 rounded-full text-white">
           <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -107,7 +107,7 @@
 
   <!-- Premium Section -->
   {% if premium_count > 0 %}
-    <div class="bg-white py-2 px-4 {% if premium_plus_count > 0 %}mt-0{% else %}rounded-t-3xl shadow-sm pt-2{% endif %}">
+    <div class="bg-white py-2 px-4 {% if premium_plus_count > 0 %}mt-0{% elif not request.GET.show_filters %}rounded-t-3xl shadow-lg relative z-20 pt-2{% endif %}">
       <h3 class="text-gray-800 font-semibold flex items-center mb-2">
         <span class="mr-2 flex items-center justify-center w-5 h-5 bg-blue-500 rounded-full text-white">
           <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -208,7 +208,7 @@
 
   <!-- Standard Jobs Section -->
   {% if standard_count > 0 %}
-    <div class="bg-white py-2 px-4 {% if premium_plus_count > 0 or premium_count > 0 %}mt-0{% else %}rounded-t-3xl shadow-sm pt-2{% endif %}">
+    <div class="bg-white py-2 px-4 {% if premium_plus_count > 0 or premium_count > 0 %}mt-0{% elif not request.GET.show_filters %}rounded-t-3xl shadow-lg relative z-20 pt-2{% endif %}">
       <h3 class="text-gray-800 font-semibold flex items-center mb-2">
         <span class="mr-2 flex items-center justify-center w-5 h-5 bg-amber-500 rounded-full text-white">
           <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -307,7 +307,7 @@
   {% endif %}
 
   {% if not jobs %}
-    <div class="text-center py-10 px-4 bg-white">
+    <div class="text-center py-10 px-4 bg-white {% if not request.GET.show_filters %}rounded-t-3xl shadow-lg relative z-20{% endif %}">
       <div class="mx-auto max-w-md">
         <img src="{% static 'core/images/no_results.svg' %}" alt="No results" class="w-32 h-32 mx-auto mb-4">
         <h3 class="text-lg font-bold mb-2">{% trans "No jobs found" %}</h3>
@@ -359,4 +359,4 @@ document.addEventListener('DOMContentLoaded', function() {
     filtersSection.scrollIntoView({ behavior: 'smooth' });
   });
 });
-</script> 
+</script>

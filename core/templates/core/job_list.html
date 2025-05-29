@@ -15,8 +15,8 @@
         {% include 'core/components/mobile/job_list/mobile_hero.html' %}
         
         <!-- Mobile Filters (only visible when active) -->
-        <div class="container mx-auto px-0">
-            {% include 'core/components/job_list/filters_section.html' %}
+        <div class="container mx-auto px-0 mb-4">
+            {% include 'core/components/mobile/job_list/mobile_filters.html' %}
         </div>
         
         {% include 'core/components/mobile/job_list/mobile_job_cards.html' %}
@@ -44,7 +44,7 @@
 {% block extra_js %}
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // Salary slider functionality
+    // Salary slider functionality for desktop
     const salarySlider = document.getElementById('salary-slider');
     const salaryValue = document.getElementById('salary-value');
     
@@ -72,13 +72,17 @@ document.addEventListener('DOMContentLoaded', function() {
             filter.addEventListener('change', function() {
                 // Only submit if not a touch device (to avoid double submission)
                 if (!('ontouchstart' in window)) {
-                    document.getElementById('filter-form').submit();
+                    // Check which form to submit
+                    const formId = window.innerWidth < 768 ? 'mobile-filter-form' : 'filter-form';
+                    document.getElementById(formId).submit();
                 }
             });
         } else {
             // For other inputs (select, checkbox), auto-submit on change
             filter.addEventListener('change', function() {
-                document.getElementById('filter-form').submit();
+                // Check which form to submit
+                const formId = window.innerWidth < 768 ? 'mobile-filter-form' : 'filter-form';
+                document.getElementById(formId).submit();
             });
         }
     });

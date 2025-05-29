@@ -2,15 +2,15 @@
 {% load static %}
 
 <!-- Mobile Hero Section (only visible on mobile) -->
-<div class="md:hidden bg-gray-900 text-white pb-12 pt-14">
+<div class="md:hidden bg-gray-900 text-white pb-20 pt-16">
     <div class="container mx-auto px-4">
         <!-- Hero Content -->
-        <div class="mb-2">
-            <h1 class="text-2xl font-extrabold mb-3">{% trans "ჩვენი ვაკანსიები დაგეხმარება!" %}</h1>
-            <p class="text-blue-100 mb-4">{% trans "მოძებნე, გაფილტრე, გაგზავნე სივი და მიიღე გარანტირებული უკუკავშირი დამსაქმებლისგან" %}</p>
+        <div class="mb-8 mt-8">
+            <h1 class="text-2xl font-extrabold mb-4">{% trans "ჩვენი ვაკანსიები დაგეხმარება!" %}</h1>
+            <p class="text-blue-100 mb-6">{% trans "მოძებნე, გაფილტრე, გაგზავნე სივი და მიიღე გარანტირებული უკუკავშირი დამსაქმებლისგან" %}</p>
             <a href="{% url 'job_list' %}?show_filters=1#filters" 
                class="inline-block bg-amber-400 hover:bg-amber-500 text-gray-700 font-semibold px-6 py-2 rounded-xl transition-colors mb-2">
-                {% trans "ყველა ვაკანსია" %}
+               {% trans "ყველა ვაკანსია" %}
             </a>
         </div>
     </div>
