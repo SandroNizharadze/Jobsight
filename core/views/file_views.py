@@ -1,10 +1,13 @@
 import logging
 import boto3
+import os
+import mimetypes
 from botocore.exceptions import ClientError
-from django.http import HttpResponseRedirect, HttpResponseNotFound, HttpResponseForbidden
+from django.http import HttpResponseRedirect, HttpResponseNotFound, HttpResponseForbidden, HttpResponse
 from django.contrib.auth.decorators import login_required
 from django.conf import settings
 from ..models import UserProfile, JobApplication
+from django.core.files.storage import default_storage
 
 logger = logging.getLogger(__name__)
 
@@ -14,8 +17,14 @@ def serve_cv_file(request, user_id=None):
     Serve a CV file securely by generating a temporary signed URL and redirecting to it.
     If user_id is None, serves the current user's CV.
     If user_id is provided, only employers who have received the CV through a job application can access it.
+    
+    If download=true is in the query parameters, the file will be served with Content-Disposition: attachment
+    to force download instead of viewing.
     """
     try:
+        # Check if this is a download request
+        is_download = request.GET.get('download', '').lower() in ('true', '1', 'yes')
+        
         # Determine which CV to serve
         if user_id is None or int(user_id) == request.user.id:
             # User wants to see their own CV
@@ -56,9 +65,23 @@ def serve_cv_file(request, user_id=None):
             logger.warning(f"User {user_profile.user.username} has no CV")
             return HttpResponseNotFound("No CV found for this user")
         
-        # If S3 is not enabled, just use the standard URL
+        # Get the file name for Content-Disposition header
+        file_name = os.path.basename(user_profile.cv.name)
+        
+        # If S3 is not enabled, serve the file directly
         if not getattr(settings, 'USE_S3', False):
-            return HttpResponseRedirect(user_profile.cv.url)
+            if is_download:
+                # For download, we need to get the file and serve it with attachment disposition
+                file_path = user_profile.cv.path
+                content_type = mimetypes.guess_type(file_path)[0] or 'application/octet-stream'
+                
+                with open(file_path, 'rb') as f:
+                    response = HttpResponse(f.read(), content_type=content_type)
+                    response['Content-Disposition'] = f'attachment; filename="{file_name}"'
+                    return response
+            else:
+                # For viewing, redirect to the URL
+                return HttpResponseRedirect(user_profile.cv.url)
         
         # For S3, create a signed URL directly with boto3
         try:
@@ -105,12 +128,18 @@ def serve_cv_file(request, user_id=None):
             logger.info(f"Generating signed URL for S3 key: {file_key}")
             
             # Generate a signed URL valid for 1 hour
+            params = {
+                'Bucket': settings.AWS_STORAGE_BUCKET_NAME,
+                'Key': file_key,
+            }
+            
+            # Add ResponseContentDisposition for download
+            if is_download:
+                params['ResponseContentDisposition'] = f'attachment; filename="{file_name}"'
+            
             signed_url = s3_client.generate_presigned_url(
                 'get_object',
-                Params={
-                    'Bucket': settings.AWS_STORAGE_BUCKET_NAME,
-                    'Key': file_key,
-                },
+                Params=params,
                 ExpiresIn=3600  # 1 hour in seconds
             )
             
