@@ -130,7 +130,7 @@
   {% if premium_count > 0 %}
     <h3 class="my-4 pt-2 text-gray-800 font-semibold border-b border-gray-100 pb-4 mb-5">
       <div class="flex items-center">
-        <span class="mr-2 flex items-center justify-center w-7 h-7 bg-blue-500 rounded-full text-white">
+        <span class="mr-2 flex items-center justify-center w-7 h-7 bg-amber-500 rounded-full text-white">
           <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
           </svg>
@@ -144,7 +144,7 @@
         {% if job.premium_level == 'premium' %}
           <!-- Premium Job Card -->
           <a href="{% url 'job_detail' job_id=job.id %}" class="block h-full">
-            <div class="bg-white rounded-2xl border border-blue-500 p-6 shadow-sm hover:shadow-lg transform hover:-translate-y-1 transition-all duration-200 h-full flex flex-col cursor-pointer">
+            <div class="bg-white rounded-2xl border border-amber-500 p-6 shadow-sm hover:shadow-lg transform hover:-translate-y-1 transition-all duration-200 h-full flex flex-col cursor-pointer">
               <div class="flex justify-between">
                 <div class="flex-1 pr-5">
                   <div class="flex justify-between items-start mb-3">
@@ -152,14 +152,14 @@
                       <div class="text-sm font-medium text-gray-700">{{ job.company }}</div>
                     </div>
                     <div class="flex space-x-1 absolute top-5 right-5">
-                      <span class="bg-blue-500 text-white text-xs px-2 py-1 rounded-full">Premium</span>
+                      <span class="bg-amber-500 text-white text-xs px-2 py-1 rounded-full">Premium</span>
                       {% if job.remote %}
                         <span class="bg-green-500 text-white text-xs px-2 py-1 rounded-full">{% trans "Remote" %}</span>
                       {% endif %}
                     </div>
                   </div>
                   
-                  <h3 class="text-xl font-bold mb-3 text-blue-900">{{ job.title }}</h3>
+                  <h3 class="text-xl font-bold mb-3 text-amber-900">{{ job.title }}</h3>
                   
                   <div class="mb-4">
                     <div class="flex items-center text-sm text-gray-600 mb-1">
@@ -234,7 +234,7 @@
   {% if standard_count > 0 %}
     <h3 class="my-4 pt-2 text-gray-800 font-semibold border-b border-gray-100 pb-4 mb-5">
       <div class="flex items-center">
-        <span class="mr-2 flex items-center justify-center w-7 h-7 bg-amber-500 rounded-full text-white">
+        <span class="mr-2 flex items-center justify-center w-7 h-7 bg-blue-500 rounded-full text-white">
           <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
           </svg>
@@ -248,7 +248,7 @@
         {% if job.premium_level == 'standard' or not job.premium_level %}
           <!-- Standard Job Card -->
           <a href="{% url 'job_detail' job_id=job.id %}" class="block h-full">
-            <div class="bg-white rounded-2xl border border-amber-300 p-6 shadow-sm hover:shadow-lg transform hover:-translate-y-1 transition-all duration-200 h-full flex flex-col cursor-pointer">
+            <div class="bg-white rounded-2xl border border-blue-500 p-6 shadow-sm hover:shadow-lg transform hover:-translate-y-1 transition-all duration-200 h-full flex flex-col cursor-pointer">
               <div class="flex justify-between">
                 <div class="flex-1 pr-5">
                   <div class="flex justify-between items-start mb-3">
@@ -262,7 +262,7 @@
                     </div>
                   </div>
                   
-                  <h3 class="text-xl font-bold mb-3 text-amber-900">{{ job.title }}</h3>
+                  <h3 class="text-xl font-bold mb-3 text-blue-900">{{ job.title }}</h3>
                   
                   <div class="mb-4">
                     <div class="flex items-center text-sm text-gray-600 mb-1">

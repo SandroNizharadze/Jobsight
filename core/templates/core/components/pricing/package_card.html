@@ -15,7 +15,7 @@
   <div class="p-6 pb-0">
     <div class="flex items-center justify-between mb-4">
       <div class="inline-flex items-center justify-center w-12 h-12 rounded-full 
-          {% if package.package_type == 'premium' %}bg-blue-100 text-blue-600
+          {% if package.package_type == 'premium' %}bg-amber-100 text-amber-600
           {% elif package.package_type == 'premium_plus' %}bg-gradient-to-br from-purple-100 to-blue-100 text-purple-600
           {% else %}bg-blue-100 text-blue-600{% endif %}">
         {% if package.package_type == 'standard' %}
@@ -81,7 +81,7 @@
     <a href="{% url 'post_job' %}?premium_level={{ package.package_type }}" 
        class="block w-full py-3 px-6 text-center font-medium 
        {% if package.package_type == 'premium' %}
-         text-white bg-blue-600 hover:bg-blue-700
+         text-white bg-amber-600 hover:bg-amber-700
        {% elif package.package_type == 'premium_plus' %}
          text-white bg-gradient-to-br from-purple-500 to-blue-500 hover:from-purple-600 hover:to-blue-600
        {% else %}
