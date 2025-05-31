@@ -192,11 +192,25 @@ def employer_dashboard(request):
     employer_profile = request.user.userprofile.employer_profile
 
     # Get all jobs for this employer, including deleted ones
-    all_jobs = JobListing.all_objects.filter(
+    jobs_query = JobListing.all_objects.filter(
         employer=employer_profile
-    ).annotate(
+    )
+    
+    # Apply search filter if provided
+    search_query = request.GET.get('search', '')
+    if search_query:
+        jobs_query = jobs_query.filter(
+            Q(title__icontains=search_query) |
+            Q(location__icontains=search_query) |
+            Q(company__icontains=search_query) |
+            Q(category__icontains=search_query)
+        )
+    
+    # Annotate with counts needed for sorting and display
+    jobs_query = jobs_query.annotate(
         applications_count=Count('applications'),
         unread_applications_count=Count('applications', filter=Q(applications__is_read=False)),
+        pending_applications_count=Count('applications', filter=Q(applications__status='განხილვის_პროცესში')),
         status_order=Case(
             When(status='approved', then=Value(1)),
             When(status='pending_review', then=Value(2)),
@@ -204,9 +218,37 @@ def employer_dashboard(request):
             default=Value(4),
             output_field=IntegerField(),
         ),
-    ).select_related(
-        'employer'  # Include employer data to reduce queries
-    ).order_by('status_order', '-posted_at')
+    )
+    
+    # Apply sorting
+    sort_option = request.GET.get('sort_by', 'date_desc')
+    if sort_option == 'date_desc':
+        jobs_query = jobs_query.order_by('-posted_at')
+    elif sort_option == 'date_asc':
+        jobs_query = jobs_query.order_by('posted_at')
+    elif sort_option == 'views_desc':
+        jobs_query = jobs_query.order_by('-view_count')
+    elif sort_option == 'applicants_desc':
+        jobs_query = jobs_query.order_by('-applications_count')
+    elif sort_option == 'status':
+        # Order: active, in review, expired, rejected, deleted
+        jobs_query = jobs_query.annotate(
+            custom_status_order=Case(
+                When(status='approved', deleted_at__isnull=True, then=Value(1)),
+                When(status='pending_review', deleted_at__isnull=True, then=Value(2)),
+                When(status='expired', deleted_at__isnull=True, then=Value(3)),
+                When(status='rejected', deleted_at__isnull=True, then=Value(4)),
+                When(deleted_at__isnull=False, then=Value(5)),
+                default=Value(6),
+                output_field=IntegerField(),
+            )
+        ).order_by('custom_status_order', '-posted_at')
+    else:
+        # Default sorting by date (newest first)
+        jobs_query = jobs_query.order_by('-posted_at')
+    
+    # Get the final query results
+    all_jobs = jobs_query.select_related('employer')
     
     # Process jobs to add expiration info
     for job in all_jobs:
@@ -214,39 +256,40 @@ def employer_dashboard(request):
         job.days_until_expiration_value = job.days_until_expiration()
         job.is_deleted = job.deleted_at is not None
     
-    # Get active jobs (not deleted)
-    jobs = JobListing.objects.filter(
-        employer=employer_profile
-    ).annotate(
-        applications_count=Count('applications'),
-        unread_applications_count=Count('applications', filter=Q(applications__is_read=False)),
-        status_order=Case(
-            When(status='approved', then=Value(1)),
-            When(status='pending_review', then=Value(2)),
-            When(status='rejected', then=Value(3)),
-            default=Value(4),
-            output_field=IntegerField(),
-        ),
-    ).select_related(
-        'employer'  # Include employer data to reduce queries
-    ).order_by('status_order', '-posted_at')
-
-    # Metrics
-    active_jobs = jobs.filter(status='approved').count()
+    # Get active jobs (not deleted) for metrics
+    active_jobs = JobListing.objects.filter(
+        employer=employer_profile,
+        status='approved'
+    ).count()
+    
+    # Count total pending applications
+    pending_applications_total = JobApplication.objects.filter(
+        job__employer=employer_profile,
+        status='განხილვის_პროცესში'
+    ).count()
+    
+    # Total applicants for metrics
     total_applicants = JobApplication.objects.filter(job__employer=employer_profile).count()
+    
+    # Average applicants per job
     avg_applicants = (
         total_applicants / active_jobs if active_jobs > 0 else 0
     )
+    
     # Jobs expiring soon (example: jobs expiring in next 7 days)
     soon = timezone.now() + timedelta(days=7)
-    jobs_expiring_soon = jobs.filter(
+    jobs_expiring_soon = JobListing.objects.filter(
+        employer=employer_profile,
         expires_at__lte=soon, 
         expires_at__gte=timezone.now(),
         status='approved'
     ).count()
     
     # Count expired jobs
-    expired_jobs_count = jobs.filter(status='expired').count()
+    expired_jobs_count = JobListing.objects.filter(
+        employer=employer_profile,
+        status='expired'
+    ).count()
     
     # Count deleted jobs
     deleted_jobs_count = JobListing.all_objects.filter(
@@ -261,7 +304,6 @@ def employer_dashboard(request):
 
     context = {
         'employer_profile': employer_profile,
-        'jobs': jobs,
         'all_jobs': all_jobs,
         'active_jobs': active_jobs,
         'total_applicants': total_applicants,
@@ -270,6 +312,7 @@ def employer_dashboard(request):
         'expired_jobs_count': expired_jobs_count,
         'deleted_jobs_count': deleted_jobs_count,
         'recent_applicants': recent_applicants,
+        'pending_applications_total': pending_applications_total,
     }
     return render(request, 'core/employer_profile.html', context)
 

@@ -224,164 +224,346 @@
         </div>
         
         <div class="p-6">
+          {% if pending_applications_total > 0 %}
+            <div class="bg-amber-50 border-l-4 border-amber-400 p-4 mb-6">
+              <div class="flex">
+                <div class="flex-shrink-0">
+                  <svg class="h-5 w-5 text-amber-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
+                  </svg>
+                </div>
+                <div class="ml-3">
+                  <p class="text-sm text-amber-700 font-medium">
+                    გაქვთ {{ pending_applications_total }} აპლიკანტი, რომელიც ელოდება განხილვას
+                  </p>
+                  <p class="text-sm text-amber-700 mt-1">
+                    გთხოვთ, დროულად განიხილოთ აპლიკაციები, რათა კანდიდატებმა არ დაკარგონ ინტერესი თქვენი კომპანიის მიმართ.
+                  </p>
+                </div>
+              </div>
+            </div>
+          {% endif %}
+
+          <!-- Filtering section - Always visible regardless of job results -->
+          <div class="bg-gray-50 rounded-lg p-5 mb-6">
+            <div class="flex items-center justify-between mb-4">
+              <h3 class="text-sm font-medium text-gray-700 flex items-center">
+                <svg class="w-4 h-4 mr-2 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"></path>
+                </svg>
+                ძებნა და დალაგება
+              </h3>
+              <a href="{% url 'employer_dashboard' %}" class="text-xs text-blue-600 hover:text-blue-800 flex items-center">
+                <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+                </svg>
+                გასუფთავება
+              </a>
+            </div>
+            
+            <form id="jobFilterForm" method="get">
+              <div class="flex flex-col gap-4">
+                <!-- Search bar -->
+                <div class="relative flex-grow">
+                  <input type="text" name="search" id="search" placeholder="ძებნა სათაურით, ლოკაციით..." value="{{ request.GET.search }}" 
+                        class="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50 text-sm pl-10 py-2">
+                  <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <svg class="h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                      <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd" />
+                    </svg>
+                  </div>
+                </div>
+                
+                <!-- Sorting options as icon buttons -->
+                <div>
+                  <p class="text-xs text-gray-500 mb-2">დალაგება:</p>
+                  <div class="flex flex-wrap gap-2">
+                    <input type="hidden" name="sort_by" id="sort_by" value="{{ request.GET.sort_by|default:'date_desc' }}">
+                    
+                    <!-- Newest First -->
+                    <button type="button" onclick="setSorting('date_desc')" 
+                      class="sort-button px-3 py-1.5 rounded-md flex items-center text-xs font-medium transition-colors duration-150 ease-in-out 
+                      {{ request.GET.sort_by|default:'date_desc' }}
+                      {% if request.GET.sort_by == 'date_desc' or not request.GET.sort_by %}bg-blue-100 text-blue-800 border border-blue-300{% else %}bg-white text-gray-700 border border-gray-300 hover:bg-gray-50{% endif %}">
+                      <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                      </svg>
+                      ახალი დამატებული
+                    </button>
+                    
+                    <!-- Oldest First -->
+                    <button type="button" onclick="setSorting('date_asc')" 
+                      class="sort-button px-3 py-1.5 rounded-md flex items-center text-xs font-medium transition-colors duration-150 ease-in-out 
+                      {% if request.GET.sort_by == 'date_asc' %}bg-blue-100 text-blue-800 border border-blue-300{% else %}bg-white text-gray-700 border border-gray-300 hover:bg-gray-50{% endif %}">
+                      <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                      </svg>
+                      ძველი დამატებული
+                    </button>
+                    
+                    <!-- Most Views -->
+                    <button type="button" onclick="setSorting('views_desc')" 
+                      class="sort-button px-3 py-1.5 rounded-md flex items-center text-xs font-medium transition-colors duration-150 ease-in-out 
+                      {% if request.GET.sort_by == 'views_desc' %}bg-blue-100 text-blue-800 border border-blue-300{% else %}bg-white text-gray-700 border border-gray-300 hover:bg-gray-50{% endif %}">
+                      <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                      </svg>
+                      მეტი ნახვით
+                    </button>
+                    
+                    <!-- Most Applicants -->
+                    <button type="button" onclick="setSorting('applicants_desc')" 
+                      class="sort-button px-3 py-1.5 rounded-md flex items-center text-xs font-medium transition-colors duration-150 ease-in-out 
+                      {% if request.GET.sort_by == 'applicants_desc' %}bg-blue-100 text-blue-800 border border-blue-300{% else %}bg-white text-gray-700 border border-gray-300 hover:bg-gray-50{% endif %}">
+                      <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                      </svg>
+                      მეტი აპლიკანტით
+                    </button>
+                    
+                    <!-- Active/Status First -->
+                    <button type="button" onclick="setSorting('status')" 
+                      class="sort-button px-3 py-1.5 rounded-md flex items-center text-xs font-medium transition-colors duration-150 ease-in-out 
+                      {% if request.GET.sort_by == 'status' %}bg-blue-100 text-blue-800 border border-blue-300{% else %}bg-white text-gray-700 border border-gray-300 hover:bg-gray-50{% endif %}">
+                      <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                      </svg>
+                      აქტიური
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+          
+          <!-- Job Results Section -->
           {% if all_jobs %}
-            <div class="overflow-x-auto">
-              <table class="min-w-full divide-y divide-gray-200">
-                <thead class="bg-gray-50">
-                  <tr>
-                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      {% trans "Job Title" %}
-                    </th>
-                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      {% trans "Status" %}
-                    </th>
-                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      {% trans "Posted" %}
-                    </th>
-                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      {% trans "Applications" %}
-                    </th>
-                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      {% trans "Views" %}
-                    </th>
-                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      {% trans "Expiration" %}
-                    </th>
-                    <th scope="col" class="relative px-6 py-3">
-                      <span class="sr-only">{% trans "Actions" %}</span>
-                    </th>
-                  </tr>
-                </thead>
-                <tbody class="bg-white divide-y divide-gray-200">
-                  {% for job in all_jobs %}
-                    <tr>
-                      <td class="px-6 py-4 whitespace-nowrap">
-                        <div class="flex items-center">
-                          <div class="ml-4">
-                            <div class="text-sm font-medium text-gray-900">
-                              {{ job.title }}
-                            </div>
-                            <div class="text-sm text-gray-500">
-                              {{ job.location }}
-                            </div>
-                          </div>
-                        </div>
-                      </td>
-                      <td class="px-6 py-4 whitespace-nowrap">
-                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
-                          {% if job.is_deleted %}bg-gray-100 text-gray-800
-                          {% elif job.status == 'approved' %}bg-green-100 text-green-800
-                          {% elif job.status == 'pending_review' %}bg-yellow-100 text-yellow-800
-                          {% elif job.status == 'rejected' %}bg-red-100 text-red-800
-                          {% elif job.status == 'expired' %}bg-orange-100 text-orange-800
-                          {% else %}bg-gray-100 text-gray-800{% endif %}">
-                          {% if job.is_deleted %}{% trans "Deleted" %}{% else %}{{ job.get_status_display }}{% endif %}
-                        </span>
-                      </td>
-                      <td class="px-6 py-4 whitespace-nowrap">
-                        <div class="text-sm text-gray-900">{{ job.posted_at|date:"M d, Y" }}</div>
-                      </td>
-                      <td class="px-6 py-4 whitespace-nowrap">
-                        <div class="text-sm text-gray-900">
+            <div id="jobsContainer" class="grid gap-4">
+              {% for job in all_jobs %}
+                <div class="bg-white border border-gray-200 rounded-lg shadow-sm p-4 hover:shadow-md transition-all duration-200">
+                  <div class="flex flex-wrap justify-between items-center gap-3 mb-4">
+                    <div class="flex-1 min-w-0">
+                      <h3 class="text-lg font-medium text-gray-900 truncate">{{ job.title }}</h3>
+                      <div class="flex items-center mt-1 text-sm text-gray-500">
+                        <svg class="w-4 h-4 mr-1 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                        </svg>
+                        {{ job.location }}
+                      </div>
+                    </div>
+                    <span class="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full 
+                      {% if job.is_deleted %}bg-gray-100 text-gray-800
+                      {% elif job.status == 'approved' %}bg-green-100 text-green-800
+                      {% elif job.status == 'pending_review' %}bg-yellow-100 text-yellow-800
+                      {% elif job.status == 'rejected' %}bg-red-100 text-red-800
+                      {% elif job.status == 'expired' %}bg-orange-100 text-orange-800
+                      {% else %}bg-gray-100 text-gray-800{% endif %}">
+                      {% if job.is_deleted %}წაშლილი{% else %}{{ job.get_status_display }}{% endif %}
+                    </span>
+                  </div>
+                  
+                  <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
+                    <div class="bg-gray-50 rounded-lg p-3">
+                      <p class="text-xs text-gray-500 mb-1">გამოქვეყნების თარიღი</p>
+                      <p class="text-sm font-medium">{{ job.posted_at|date:"M d, Y" }}</p>
+                    </div>
+                    <div class="bg-gray-50 rounded-lg p-3">
+                      <p class="text-xs text-gray-500 mb-1">აპლიკანტები</p>
+                      <div class="flex items-center">
+                        <p class="text-sm font-medium">
                           {{ job.applications_count }}
-                          {% if job.unread_applications_count > 0 %}
-                            <span class="ml-2 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
-                              {{ job.unread_applications_count }} {% trans "new" %}
-                            </span>
+                        </p>
+                        {% if job.unread_applications_count > 0 %}
+                          <span class="ml-2 inline-flex items-center px-1.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
+                            {{ job.unread_applications_count }} ახალი
+                          </span>
+                        {% endif %}
+                      </div>
+                    </div>
+                    <div class="{% if job.pending_applications_count > 0 %}{% if job.pending_applications_count <= 10 %}bg-amber-50 border border-amber-200{% else %}bg-red-50 border border-red-200{% endif %}{% else %}bg-gray-50{% endif %} rounded-lg p-3">
+                      <div class="flex items-center justify-between">
+                        <p class="text-xs {% if job.pending_applications_count > 0 %}{% if job.pending_applications_count <= 10 %}text-amber-700{% else %}text-red-700{% endif %} font-medium{% else %}text-gray-500{% endif %} mb-1">განხილვის მოლოდინში</p>
+                        {% if job.pending_applications_count > 0 %}
+                          <span class="flex h-5 w-5 items-center justify-center rounded-full {% if job.pending_applications_count <= 10 %}bg-amber-400{% else %}bg-red-400{% endif %} {% if job.pending_applications_count <= 10 %}shadow-amber-200{% else %}shadow-red-200{% endif %} shadow-md" title="აპლიკანტები ელოდებიან პასუხს">
+                            <span class="text-white text-xs font-bold">!</span>
+                          </span>
+                        {% endif %}
+                      </div>
+                      <p class="text-sm {% if job.pending_applications_count > 0 %}{% if job.pending_applications_count <= 10 %}text-amber-700{% else %}text-red-700{% endif %} font-bold{% else %}text-gray-500{% endif %}">
+                        {{ job.pending_applications_count|default:"0" }}
+                      </p>
+                    </div>
+                    <div class="bg-gray-50 rounded-lg p-3">
+                      <p class="text-xs text-gray-500 mb-1">ნახვები</p>
+                      <p class="text-sm font-medium">{{ job.view_count }}</p>
+                    </div>
+                  </div>
+                  
+                  <div class="flex flex-wrap justify-between items-center border-t border-gray-200 pt-4">
+                    <div>
+                      {% if job.expires_at %}
+                        <div class="bg-gray-50 rounded-lg px-3 py-2 inline-block">
+                          {% if job.is_expired_status %}
+                            <p class="text-sm text-red-600 font-medium flex items-center">
+                              <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                              </svg>
+                              ვადაგასული
+                            </p>
+                          {% elif job.days_until_expiration_value <= 7 %}
+                            <p class="text-sm text-amber-600 font-medium flex items-center">
+                              <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                              </svg>
+                              {{ job.days_until_expiration_value }} დღე
+                            </p>
+                          {% else %}
+                            <p class="text-sm text-gray-900 flex items-center">
+                              <svg class="w-4 h-4 mr-1 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                              </svg>
+                              {{ job.days_until_expiration_value }} დღე
+                            </p>
                           {% endif %}
                         </div>
-                      </td>
-                      <td class="px-6 py-4 whitespace-nowrap">
-                        <div class="text-sm text-gray-900">{{ job.view_count }}</div>
-                      </td>
-                      <td class="px-6 py-4 whitespace-nowrap">
-                        {% if job.expires_at %}
-                          <div class="text-sm">
-                            {% if job.is_expired_status %}
-                              <span class="text-red-600 font-medium">{% trans "Expired" %}</span>
-                            {% elif job.days_until_expiration_value <= 7 %}
-                              <span class="text-amber-600 font-medium">{{ job.days_until_expiration_value }} {% trans "days left" %}</span>
-                            {% else %}
-                              <span class="text-gray-900">{{ job.days_until_expiration_value }} {% trans "days left" %}</span>
-                            {% endif %}
-                            <div class="text-xs text-gray-500 mt-1">{{ job.expires_at|date:"M d, Y" }}</div>
-                          </div>
-                        {% else %}
-                          <div class="text-sm text-gray-500">{% trans "No expiration" %}</div>
-                        {% endif %}
-                      </td>
-                      <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                        <div class="flex items-center justify-end space-x-3">
-                          <!-- View Applications Icon -->
-                          {% if not job.is_deleted %}
-                          <a href="{% url 'job_applications' job.id %}" class="text-blue-600 hover:text-blue-900" title="{% trans 'View Applications' %}">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a1.994 1.994 0 01-1.414-.586m0 0L11 14h4a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2v4l.586-.586z"></path>
-                            </svg>
-                          </a>
-                          {% else %}
-                          <span class="text-gray-400 cursor-not-allowed" title="{% trans 'Cannot view applications (job deleted)' %}">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a1.994 1.994 0 01-1.414-.586m0 0L11 14h4a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2v4l.586-.586z"></path>
-                            </svg>
-                          </span>
-                          {% endif %}
-                          
-                          <!-- Extend Expiration (if expiring soon or expired) -->
-                          {% if not job.is_deleted and job.status == 'approved' and job.expires_at and job.days_until_expiration_value <= 7 or not job.is_deleted and job.status == 'expired' %}
-                          <button type="button" 
-                                 class="text-green-600 hover:text-green-900" 
-                                 title="{% trans 'Extend by 30 days' %}"
-                                 onclick="openExtendModal('{{ job.id }}', '{{ job.title }}', '{{ job.premium_level }}', '{{ job.is_expired_status }}')">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                      {% else %}
+                        <div class="bg-gray-50 rounded-lg px-3 py-2 inline-block">
+                          <p class="text-sm text-gray-500 flex items-center">
+                            <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                             </svg>
-                          </button>
-                          {% endif %}
-                          
-                          <!-- Delete Form or Restore Button -->
-                          {% if not job.is_deleted %}
-                          <form action="{% url 'delete_job' job.id %}" method="post" class="inline">
-                            {% csrf_token %}
-                            <button type="submit" class="text-red-600 hover:text-red-900" title="{% trans 'Delete' %}" onclick="return confirm('{% trans "Are you sure you want to delete this job? This action cannot be undone." %}')">
-                              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
-                              </svg>
-                            </button>
-                          </form>
-                          {% else %}
-                          <!-- Restore Button -->
-                          <form action="{% url 'restore_job' job.id %}" method="post" class="inline">
-                            {% csrf_token %}
-                            <button type="submit" class="text-blue-600 hover:text-blue-900" title="{% trans 'Restore' %}" onclick="return confirm('{% trans "Are you sure you want to restore this job? It will be set to pending review status." %}')">
-                              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
-                              </svg>
-                            </button>
-                          </form>
-                          {% endif %}
+                            ვადა არ არის
+                          </p>
                         </div>
-                      </td>
-                    </tr>
-                  {% endfor %}
-                </tbody>
-              </table>
+                      {% endif %}
+                    </div>
+                    
+                    <div class="flex items-center space-x-3 mt-3 sm:mt-0">
+                      <!-- View Job Button -->
+                      {% if not job.is_deleted and job.status == 'approved' and not job.is_expired_status %}
+                      <a href="{% url 'job_detail' job.id %}" class="inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                        </svg>
+                        ნახვა
+                      </a>
+                      {% else %}
+                      <button disabled class="inline-flex items-center px-3 py-2 border border-gray-200 shadow-sm text-sm font-medium rounded-md text-gray-400 bg-gray-50 cursor-not-allowed">
+                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                        </svg>
+                        ნახვა
+                      </button>
+                      {% endif %}
+                      
+                      <!-- View Applications Button -->
+                      {% if not job.is_deleted %}
+                      <a href="{% url 'job_applications' job.id %}" class="inline-flex items-center px-3 py-2 border border-blue-300 shadow-sm text-sm font-medium rounded-md text-blue-700 bg-blue-50 hover:bg-blue-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a1.994 1.994 0 01-1.414-.586m0 0L11 14h4a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2v4l.586-.586z"></path>
+                        </svg>
+                        განაცხადები
+                      </a>
+                      {% else %}
+                      <button disabled class="inline-flex items-center px-3 py-2 border border-gray-200 shadow-sm text-sm font-medium rounded-md text-gray-400 bg-gray-50 cursor-not-allowed">
+                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a1.994 1.994 0 01-1.414-.586m0 0L11 14h4a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2v4l.586-.586z"></path>
+                        </svg>
+                        განაცხადები
+                      </button>
+                      {% endif %}
+                      
+                      <div class="flex space-x-1">
+                        <!-- Extend Expiration Button -->
+                        {% if not job.is_deleted and job.status == 'approved' and job.expires_at and job.days_until_expiration_value <= 7 or not job.is_deleted and job.status == 'expired' %}
+                        <button type="button" 
+                               class="inline-flex items-center p-2 border border-green-300 rounded-md shadow-sm text-sm font-medium text-green-700 bg-green-50 hover:bg-green-100" 
+                               title="30 დღით გაგრძელება"
+                               onclick="openExtendModal('{{ job.id }}', '{{ job.title }}', '{{ job.premium_level }}', '{{ job.is_expired_status }}')">
+                          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                          </svg>
+                        </button>
+                        {% endif %}
+                        
+                        <!-- Delete Button -->
+                        {% if not job.is_deleted %}
+                        <form action="{% url 'delete_job' job.id %}" method="post" class="inline">
+                          {% csrf_token %}
+                          <button type="submit" 
+                                 class="inline-flex items-center p-2 border border-red-300 rounded-md shadow-sm text-sm font-medium text-red-700 bg-red-50 hover:bg-red-100" 
+                                 title="წაშლა" 
+                                 onclick="return confirm('დარწმუნებული ხართ, რომ გსურთ ამ ვაკანსიის წაშლა? ეს მოქმედება ვერ იქნება გაუქმებული.')">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                            </svg>
+                          </button>
+                        </form>
+                        {% else %}
+                        <!-- Restore Button -->
+                        <form action="{% url 'restore_job' job.id %}" method="post" class="inline">
+                          {% csrf_token %}
+                          <button type="submit" 
+                                 class="inline-flex items-center p-2 border border-blue-300 rounded-md shadow-sm text-sm font-medium text-blue-700 bg-blue-50 hover:bg-blue-100" 
+                                 title="აღდგენა" 
+                                 onclick="return confirm('დარწმუნებული ხართ, რომ გსურთ ამ ვაკანსიის აღდგენა? მას მიენიჭება განხილვის მოლოდინის სტატუსი.')">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+                            </svg>
+                          </button>
+                        </form>
+                        {% endif %}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              {% empty %}
+                <div class="bg-white border border-gray-200 rounded-lg p-8 text-center">
+                  <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
+                  </svg>
+                  {% if request.GET.search %}
+                    <h3 class="mt-2 text-sm font-medium text-gray-900">არცერთი ვაკანსია არ მოიძებნა</h3>
+                    <p class="mt-1 text-sm text-gray-500">შეცვალეთ ძებნის ტექსტი</p>
+                  {% else %}
+                    <h3 class="mt-2 text-sm font-medium text-gray-900">{% trans "No job listings yet" %}</h3>
+                    <p class="mt-1 text-sm text-gray-500">{% trans "Get started by posting your first job" %}</p>
+                    <div class="mt-6">
+                      <a href="{% url 'pricing' %}" class="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700">
+                        <svg class="-ml-1 mr-2 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                        </svg>
+                        {% trans "Post a Job" %}
+                      </a>
+                    </div>
+                  {% endif %}
+                </div>
+              {% endfor %}
             </div>
           {% else %}
-            <div class="text-center py-8">
-              <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
+            <div id="jobsContainer" class="bg-white border border-gray-200 rounded-lg p-8 text-center">
+              <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
               </svg>
-              <h3 class="mt-2 text-sm font-medium text-gray-900">{% trans "No job listings yet" %}</h3>
-              <p class="mt-1 text-sm text-gray-500">{% trans "Get started by posting your first job" %}</p>
-              <div class="mt-6">
-                <a href="{% url 'pricing' %}" class="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700">
-                  <svg class="-ml-1 mr-2 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
-                  </svg>
-                  {% trans "Post a Job" %}
-                </a>
-              </div>
+              {% if request.GET.search %}
+                <h3 class="mt-2 text-sm font-medium text-gray-900">არცერთი ვაკანსია არ მოიძებნა</h3>
+                <p class="mt-1 text-sm text-gray-500">შეცვალეთ ძებნის ტექსტი</p>
+              {% else %}
+                <h3 class="mt-2 text-sm font-medium text-gray-900">{% trans "No job listings yet" %}</h3>
+                <p class="mt-1 text-sm text-gray-500">{% trans "Get started by posting your first job" %}</p>
+                <div class="mt-6">
+                  <a href="{% url 'pricing' %}" class="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700">
+                    <svg class="-ml-1 mr-2 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                    </svg>
+                    {% trans "Post a Job" %}
+                  </a>
+                </div>
+              {% endif %}
             </div>
           {% endif %}
         </div>
@@ -504,5 +686,50 @@
   function closeExtendModal() {
     document.getElementById('extendJobModal').classList.add('hidden');
   }
+  
+  // Function to handle sorting button clicks
+  function setSorting(sortValue) {
+    // Set the hidden input value
+    document.getElementById('sort_by').value = sortValue;
+    
+    // Update button styling
+    document.querySelectorAll('.sort-button').forEach(button => {
+      button.classList.remove('bg-blue-100', 'text-blue-800', 'border-blue-300');
+      button.classList.add('bg-white', 'text-gray-700', 'border-gray-300', 'hover:bg-gray-50');
+    });
+    
+    // Highlight the clicked button
+    const clickedButton = event.currentTarget;
+    clickedButton.classList.remove('bg-white', 'text-gray-700', 'border-gray-300', 'hover:bg-gray-50');
+    clickedButton.classList.add('bg-blue-100', 'text-blue-800', 'border-blue-300');
+    
+    // Show loading indicator
+    const jobsContainer = document.getElementById('jobsContainer');
+    jobsContainer.innerHTML = '<div class="col-span-full text-center py-10"><svg class="animate-spin mx-auto h-8 w-8 text-blue-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg><p class="mt-2 text-sm text-gray-600">იტვირთება...</p></div>';
+    
+    // Submit the form
+    document.getElementById('jobFilterForm').submit();
+  }
+  
+  // Auto-submit filters when changed
+  document.addEventListener('DOMContentLoaded', function() {
+    const searchInput = document.getElementById('search');
+    let typingTimer;
+    
+    // Search with delay after typing stops
+    searchInput.addEventListener('input', function() {
+      clearTimeout(typingTimer);
+      typingTimer = setTimeout(function() {
+        document.getElementById('jobFilterForm').submit();
+      }, 500); // 500ms delay
+    });
+    
+    // Clear timer if user presses enter
+    searchInput.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') {
+        clearTimeout(typingTimer);
+      }
+    });
+  });
 </script>
 {% endblock %} 
