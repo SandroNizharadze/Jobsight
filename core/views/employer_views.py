@@ -222,6 +222,7 @@ def employer_dashboard(request):
     
     # Apply sorting
     sort_option = request.GET.get('sort_by', 'date_desc')
+    
     if sort_option == 'date_desc':
         jobs_query = jobs_query.order_by('-posted_at')
     elif sort_option == 'date_asc':
@@ -231,38 +232,36 @@ def employer_dashboard(request):
     elif sort_option == 'applicants_desc':
         jobs_query = jobs_query.order_by('-applications_count')
     elif sort_option == 'status':
-        # Order: active, in review, expired, rejected, deleted
-        jobs_query = jobs_query.annotate(
-            custom_status_order=Case(
-                When(status='approved', deleted_at__isnull=True, then=Value(1)),
-                When(status='pending_review', deleted_at__isnull=True, then=Value(2)),
-                When(status='expired', deleted_at__isnull=True, then=Value(3)),
-                When(status='rejected', deleted_at__isnull=True, then=Value(4)),
-                When(deleted_at__isnull=False, then=Value(5)),
-                default=Value(6),
-                output_field=IntegerField(),
-            )
-        ).order_by('custom_status_order', '-posted_at')
+        jobs_query = jobs_query.order_by('status_order', '-posted_at')
     else:
-        # Default sorting by date (newest first)
-        jobs_query = jobs_query.order_by('-posted_at')
+        jobs_query = jobs_query.order_by('-posted_at')  # Default to newest first
     
-    # Get the final query results
-    all_jobs = jobs_query.select_related('employer')
+    # Process jobs to add helper attributes for template
+    all_jobs = []
+    for job in jobs_query:
+        # Check expiration date and add a convenience attribute
+        if job.expires_at:
+            job.is_expired_status = job.expires_at < timezone.now()
+            
+            # Calculate days until expiration
+            if job.is_expired_status:
+                job.days_until_expiration_value = 0
+            else:
+                days_until = (job.expires_at - timezone.now()).days
+                job.days_until_expiration_value = max(0, days_until)
+        else:
+            job.is_expired_status = False
+            job.days_until_expiration_value = None
+            
+        all_jobs.append(job)
     
-    # Process jobs to add expiration info
-    for job in all_jobs:
-        job.is_expired_status = job.is_expired()
-        job.days_until_expiration_value = job.days_until_expiration()
-        job.is_deleted = job.deleted_at is not None
-    
-    # Get active jobs (not deleted) for metrics
+    # Get active jobs count
     active_jobs = JobListing.objects.filter(
-        employer=employer_profile,
+        employer=employer_profile, 
         status='approved'
     ).count()
     
-    # Count total pending applications
+    # Count pending applications across all jobs
     pending_applications_total = JobApplication.objects.filter(
         job__employer=employer_profile,
         status='განხილვის_პროცესში'
@@ -314,6 +313,11 @@ def employer_dashboard(request):
         'recent_applicants': recent_applicants,
         'pending_applications_total': pending_applications_total,
     }
+    
+    # If this is an AJAX request, only return the jobs container
+    if request.GET.get('ajax') == 'true' or request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+        return render(request, 'core/partials/job_listings.html', context)
+    
     return render(request, 'core/employer_profile.html', context)
 
 @login_required
