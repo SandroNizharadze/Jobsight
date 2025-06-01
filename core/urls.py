@@ -6,6 +6,7 @@ from .views.profile_views import get_application_rejection_reasons, view_cv_empl
 from .views.employer_views import company_profile, application_detail, cv_database
 from django.views.generic.base import RedirectView
 from .views.blog_views import BlogListView, BlogPostDetailView, BlogCategoryView, BlogTagView
+from .views.email_views import verify_email, resend_verification_email
 
 urlpatterns = [
     path('', job_views.job_list, name='job_list'),
@@ -18,6 +19,11 @@ urlpatterns = [
     path('register/', auth_views.register, name='register'),
     path('profile/', profile_views.profile, name='profile'),
     path('profile/remove-cv/', profile_views.remove_cv, name='remove_cv'),
+    
+    # Email verification URLs
+    path('verify-email/<str:token>/', verify_email, name='verify_email'),
+    path('resend-verification/', resend_verification_email, name='resend_verification'),
+    
     path('employer/', employer_views.employer_home, name='employer_home'),
     path('employer/dashboard/', employer_views.employer_dashboard, name='employer_dashboard'),
     path('employer/post-job/', employer_views.post_job, name='post_job'),

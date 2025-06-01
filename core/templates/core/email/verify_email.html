@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verify Your Email</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .header {
+            text-align: center;
+            padding: 20px 0;
+        }
+        .logo {
+            max-width: 150px;
+        }
+        .content {
+            background-color: #f9f9f9;
+            padding: 30px;
+            border-radius: 5px;
+        }
+        .button {
+            display: inline-block;
+            background-color: #4CAF50;
+            color: white;
+            text-decoration: none;
+            padding: 12px 24px;
+            border-radius: 4px;
+            margin: 20px 0;
+            font-weight: bold;
+        }
+        .footer {
+            text-align: center;
+            font-size: 12px;
+            color: #777;
+            margin-top: 30px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Jobsy</h1>
+    </div>
+    
+    <div class="content">
+        <h2>Verify Your Email Address</h2>
+        
+        <p>Hello {% if user.first_name %}{{ user.first_name }}{% else %}{{ user.username }}{% endif %},</p>
+        
+        <p>Thank you for registering with Jobsy! To complete your registration and activate your account, please verify your email address by clicking the button below:</p>
+        
+        <div style="text-align: center;">
+            <a href="{{ verify_url }}" class="button">Verify Email Address</a>
+        </div>
+        
+        <p>This link will expire in {{ expiry_hours }} hours.</p>
+        
+        <p>If you did not register for a Jobsy account, please ignore this email.</p>
+        
+        <p>If the button above doesn't work, you can also copy and paste the following link into your browser:</p>
+        <p style="word-break: break-all;">{{ verify_url }}</p>
+    </div>
+    
+    <div class="footer">
+        <p>This is an automated message from Jobsy. Please do not reply to this email.</p>
+        <p>&copy; {% now "Y" %} Jobsy. All rights reserved.</p>
+    </div>
+</body>
+</html> 

@@ -5,7 +5,9 @@ from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.models import User
 from ..forms import RegistrationForm, EmployerRegistrationForm
 from ..models import UserProfile, EmployerProfile
+from .email_views import send_verification_email
 import logging
+from django.urls import reverse
 
 logger = logging.getLogger(__name__)
 
@@ -46,6 +48,20 @@ def login_view(request):
                     user = None
             
             if user is not None:
+                # Check if email is verified
+                try:
+                    user_profile = UserProfile.objects.get(user=user)
+                    if not user_profile.is_email_verified:
+                        messages.warning(request, "Please verify your email address before logging in. Check your inbox for the verification link.")
+                        # Option to resend verification email
+                        resend_url = reverse('resend_verification')
+                        messages.info(request, f"Didn't receive the email? <a href='{resend_url}'>Resend verification email</a>", extra_tags='safe')
+                        return render(request, 'core/login.html', {'form': form})
+                except UserProfile.DoesNotExist:
+                    # This shouldn't happen, but just in case
+                    messages.error(request, "User profile not found.")
+                    return render(request, 'core/login.html', {'form': form})
+                
                 # Ensure backend is set
                 if not hasattr(user, 'backend'):
                     user.backend = 'django.contrib.auth.backends.ModelBackend'
@@ -146,6 +162,9 @@ def register(request):
                         user.refresh_from_db()
                         logger.info(f"Final role check: User {user.username} has role {user.userprofile.role}")
                         
+                        # Send verification email
+                        send_verification_email(request, user)
+                        
                         # Log in the user
                         user.backend = 'django.contrib.auth.backends.ModelBackend'
                         login(request, user)
@@ -161,7 +180,7 @@ def register(request):
                         'employer_form': employer_form
                     })
                 
-                messages.success(request, "Registration successful! Please complete your employer profile.")
+                messages.success(request, "Registration successful! Please check your email to verify your account.")
                 return redirect('profile')
             else:
                 # Handle form errors
@@ -198,6 +217,9 @@ def register(request):
                             
                         logger.info(f"{'Created' if created else 'Using existing'} UserProfile with role 'candidate' for {user.username}")
                         
+                        # Send verification email
+                        send_verification_email(request, user)
+                        
                         # Log in the user
                         user.backend = 'django.contrib.auth.backends.ModelBackend'
                         login(request, user)
@@ -212,7 +234,7 @@ def register(request):
                         'employer_form': None
                     })
                 
-                messages.success(request, "Registration successful. Welcome to Jobsy!")
+                messages.success(request, "Registration successful! Please check your email to verify your account.")
                 return redirect('job_list')
             else:
                 # Display form errors

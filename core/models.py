@@ -297,6 +297,7 @@ class UserProfile(models.Model):
     
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, verbose_name=_("მომხმარებელი"))
     role = models.CharField(max_length=20, choices=ROLE_CHOICES, default='candidate', db_index=True, verbose_name=_("როლი"))
+    is_email_verified = models.BooleanField(default=False, verbose_name=_("ელ-ფოსტა დადასტურებულია"))
     
     # Use PublicMediaStorage for profile pictures when S3 is enabled
     if PublicMediaStorage:
@@ -778,3 +779,39 @@ class BlogTag(models.Model):
     
     def get_absolute_url(self):
         return reverse('blog_tag', kwargs={'slug': self.slug})
+
+class EmailVerificationToken(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='verification_token')
+    token = models.CharField(max_length=64, unique=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    expires_at = models.DateTimeField()
+    
+    def __str__(self):
+        return f"Verification token for {self.user.username}"
+    
+    def is_valid(self):
+        """Check if the token is still valid (not expired)"""
+        return timezone.now() <= self.expires_at
+    
+    @classmethod
+    def generate_token(cls, user, expiry_hours=24):
+        """Generate a new verification token for a user"""
+        import secrets
+        
+        # Delete any existing tokens for this user
+        cls.objects.filter(user=user).delete()
+        
+        # Generate a new token
+        token = secrets.token_urlsafe(32)
+        expires_at = timezone.now() + timedelta(hours=expiry_hours)
+        
+        # Create and return the token
+        return cls.objects.create(
+            user=user,
+            token=token,
+            expires_at=expires_at
+        )
+    
+    class Meta:
+        verbose_name = _("Email Verification Token")
+        verbose_name_plural = _("Email Verification Tokens")

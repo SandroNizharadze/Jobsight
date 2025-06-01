@@ -22,27 +22,25 @@
             <!-- Mobile menu dropdown -->
             <div id="mobile-menu-dropdown" class="hidden fixed top-14 left-0 right-0 bg-gray-900 z-50">
                 <div class="px-4 py-3 space-y-1">
+                    {% if user.is_authenticated and user.userprofile.role == 'employer' %}
+                    <a href="{% url 'employer_home' %}" class="block px-3 py-2 text-white hover:bg-blue-700 rounded-md">{% trans "მთავარი" %}</a>
+                    {% else %}
                     <a href="{% url 'job_list' %}" class="block px-3 py-2 text-white hover:bg-blue-700 rounded-md">{% trans "მთავარი" %}</a>
+                    {% endif %}
+                    {% if user.is_authenticated and user.userprofile.role == 'employer' %}
+                    <a href="{% url 'job_list' %}" class="block px-3 py-2 text-white hover:bg-blue-700 rounded-md">{% trans "ვაკანსიები" %}</a>
+                    {% else %}
                     <a href="{% url 'job_list' %}?show_filters=1#filters" class="block px-3 py-2 text-white hover:bg-blue-700 rounded-md">{% trans "ვაკანსიები" %}</a>
+                    {% endif %}
                     <a href="{% url 'pricing' %}" class="block px-3 py-2 text-white hover:bg-blue-700 rounded-md">{% trans "გამოქვეყნება" %}</a>
                     <a href="{% url 'blog_list' %}" class="block px-3 py-2 text-white hover:bg-blue-700 rounded-md">{% trans "ბლოგი" %}</a>
                     
                     <!-- Language Switcher in mobile dropdown -->
                     <div class="flex items-center space-x-1 py-2">
                         <span class="text-gray-300">{% trans "ენა" %}:</span>
-                        <form action="{% url 'set_language' %}" method="post" class="inline-block">
-                            {% csrf_token %}
-                            <input name="next" type="hidden" value="{% if not request.path|slice:':4' == '/en/' %}/en{{ request.path }}{% else %}{{ request.path }}{% endif %}">
-                            <input name="language" type="hidden" value="en">
-                            <button type="submit" class="text-sm text-white hover:text-blue-200 {% if LANGUAGE_CODE == 'en' %}font-bold{% endif %}">EN</button>
-                        </form>
+                        <a href="/en{{ request.path|cut:'/en' }}" class="text-sm text-white hover:text-blue-200 {% if LANGUAGE_CODE == 'en' %}font-bold{% endif %}">EN</a>
                         <span class="text-white">|</span>
-                        <form action="{% url 'set_language' %}" method="post" class="inline-block">
-                            {% csrf_token %}
-                            <input name="next" type="hidden" value="{{ request.path|cut:'/en' }}">
-                            <input name="language" type="hidden" value="ka">
-                            <button type="submit" class="text-sm text-white hover:text-blue-200 {% if LANGUAGE_CODE == 'ka' %}font-bold{% endif %}">KA</button>
-                        </form>
+                        <a href="{{ request.path|cut:'/en' }}" class="text-sm text-white hover:text-blue-200 {% if LANGUAGE_CODE == 'ka' %}font-bold{% endif %}">KA</a>
                     </div>
                     
                     <!-- Auth buttons for mobile -->
@@ -73,7 +71,7 @@
                             <svg class="inline-block w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
                             </svg>
-                            {% trans "Job Management" %}
+                            {% trans "Jobs" %}
                         </a>
                         {% endif %}
                         <a href="{% url 'logout' %}" class="block px-3 py-2 text-white hover:bg-blue-700 rounded-md">

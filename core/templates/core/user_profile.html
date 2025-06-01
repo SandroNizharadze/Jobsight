@@ -40,6 +40,35 @@
     <!-- Profile & CV Section -->
     <div class="tab-pane block" id="profile-section">
       <div class="bg-white rounded-xl shadow-md overflow-hidden">
+        <div class="container mt-4">
+          <div class="row">
+            <div class="col-md-12">
+              <!-- Email verification status -->
+              <div class="card mb-4">
+                <div class="card-header">
+                  <h5 class="mb-0">{% trans "Email Verification Status" %}</h5>
+                </div>
+                <div class="card-body">
+                  {% if user.userprofile.is_email_verified %}
+                    <div class="alert alert-success mb-0">
+                      <i class="fas fa-check-circle mr-2"></i> {% trans "Your email address has been verified." %}
+                    </div>
+                  {% else %}
+                    <div class="alert alert-warning mb-0">
+                      <i class="fas fa-exclamation-triangle mr-2"></i> 
+                      {% trans "Your email address has not been verified yet." %}
+                      <p class="mt-2">{% trans "Please check your inbox for the verification link or click the button below to resend the verification email." %}</p>
+                      <a href="{% url 'resend_verification' %}" class="btn btn-primary mt-2">
+                        <i class="fas fa-envelope mr-1"></i> {% trans "Resend Verification Email" %}
+                      </a>
+                    </div>
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <form method="post" enctype="multipart/form-data" class="needs-validation" id="profile-picture-form" novalidate>
           {% csrf_token %}
           <input type="hidden" name="form_type" value="user_profile">
