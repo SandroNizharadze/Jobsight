@@ -416,6 +416,10 @@ class UserProfileAdmin(admin.ModelAdmin):
         return '-'
     field_experience_display.short_description = 'Experience Level'
 
+class BlogPostCategoryInline(admin.TabularInline):
+    model = BlogPostCategory
+    extra = 1
+
 class BlogPostAdmin(SoftDeletionAdmin):
     list_display = ('title', 'author', 'status', 'published_at', 'view_count', 'get_deleted_state')
     list_filter = ('status', ('published_at', DateRangeFilter), ('deleted_at', admin.EmptyFieldListFilter))
@@ -424,6 +428,7 @@ class BlogPostAdmin(SoftDeletionAdmin):
     date_hierarchy = 'published_at'
     readonly_fields = ('view_count', 'created_at', 'updated_at')
     actions = ['restore_selected', 'publish_posts', 'unpublish_posts']
+    inlines = [BlogPostCategoryInline]
     
     fieldsets = (
         (None, {
@@ -470,10 +475,6 @@ class BlogTagAdmin(admin.ModelAdmin):
     list_display = ('name', 'slug')
     search_fields = ('name',)
     prepopulated_fields = {'slug': ('name',)}
-
-class BlogPostCategoryInline(admin.TabularInline):
-    model = BlogPostCategory
-    extra = 1
 
 # Register the blog models
 admin.site.register(BlogPost, BlogPostAdmin)

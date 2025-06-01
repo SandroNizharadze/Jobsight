@@ -123,15 +123,17 @@
                     </div>
                 </form>
 
-                <div class="relative flex items-center justify-center my-6">
-                    <div class="border-t border-gray-200 absolute w-full"></div>
-                    <div class="bg-white px-4 relative text-sm text-gray-500">{% trans "or" %}</div>
-                </div>
+                <div id="social-login-section" class="mt-6">
+                    <div class="relative flex items-center justify-center mb-6">
+                        <div class="border-t border-gray-200 absolute w-full"></div>
+                        <div class="bg-white px-4 relative text-sm text-gray-500">{% trans "or" %}</div>
+                    </div>
 
-                <div>
-                    <a href="{% url 'social:begin' 'google-oauth2' %}" class="w-full flex items-center justify-center px-4 py-2.5 border border-gray-300 rounded-lg text-gray-700 bg-white hover:bg-gray-50 transition-colors">
-                        <i class="fab fa-google mr-3 text-red-500"></i>{% trans "Continue with Google" %}
-                    </a>
+                    <div>
+                        <a href="{% url 'social:begin' 'google-oauth2' %}" class="w-full flex items-center justify-center px-4 py-2.5 border border-gray-300 rounded-lg text-gray-700 bg-white hover:bg-gray-50 transition-colors">
+                            <i class="fab fa-google mr-3 text-red-500"></i>{% trans "Continue with Google" %}
+                        </a>
+                    </div>
                 </div>
 
                 <div class="mt-6 text-center">
@@ -149,13 +151,15 @@
     document.addEventListener('DOMContentLoaded', function() {
         const userTypeRadios = document.querySelectorAll('input[name="user_type"]');
         const employerFields = document.getElementById('employer_fields');
+        const socialLoginSection = document.getElementById('social-login-section');
         
-        // Function to toggle employer fields
-        function toggleEmployerFields() {
+        // Function to toggle employer fields and social login section
+        function toggleFields() {
             const selectedValue = document.querySelector('input[name="user_type"]:checked').value;
             
             if (selectedValue === 'employer') {
                 employerFields.classList.remove('hidden');
+                socialLoginSection.classList.add('hidden'); // Hide Google login for employers
                 document.querySelectorAll('#employer_fields input').forEach(input => {
                     if (!input.name.includes('company_id')) {
                         input.setAttribute('required', 'required');
@@ -163,6 +167,7 @@
                 });
             } else {
                 employerFields.classList.add('hidden');
+                socialLoginSection.classList.remove('hidden'); // Show Google login for job seekers
                 document.querySelectorAll('#employer_fields input').forEach(input => {
                     input.removeAttribute('required');
                 });
@@ -171,11 +176,11 @@
         
         // Add event listeners to radio buttons
         userTypeRadios.forEach(radio => {
-            radio.addEventListener('change', toggleEmployerFields);
+            radio.addEventListener('change', toggleFields);
         });
         
         // Initialize state on page load
-        toggleEmployerFields();
+        toggleFields();
         
         // Form validation
         const form = document.querySelector('form');

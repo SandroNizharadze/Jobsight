@@ -12,6 +12,7 @@ urlpatterns = [
     path('i18n/setlanguage/', set_language, name='set_language'),  # Use Django's built-in view with correct path
     path('', include('core.urls')),
     path('auth/', include('social_django.urls', namespace='social')),
+    path('ckeditor5/', include('django_ckeditor_5.urls')),
 ]
 
 urlpatterns += i18n_patterns(

@@ -32,6 +32,7 @@ INSTALLED_APPS = [
     'rangefilter',
     'storages',
     'core',
+    'django_ckeditor_5',
 ]
 
 MIDDLEWARE = [
@@ -226,4 +227,30 @@ DEFAULT_FROM_EMAIL = os.environ.get('DEFAULT_FROM_EMAIL', 'noreply@jobsy.ge')
 
 # For development/testing, you can use the console backend
 if DEBUG:
-    EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend' 
+    EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+# CKEditor 5 Settings
+CKEDITOR_5_CONFIGS = {
+    'default': {
+        'toolbar': ['heading', '|', 'bold', 'italic', 'link', 'bulletedList', 'numberedList', 'blockQuote', 'imageUpload'],
+        'heading': {
+            'options': [
+                {'model': 'paragraph', 'title': 'Paragraph', 'class': 'ck-heading_paragraph'},
+                {'model': 'heading1', 'view': 'h1', 'title': 'Heading 1', 'class': 'ck-heading_heading1'},
+                {'model': 'heading2', 'view': 'h2', 'title': 'Heading 2', 'class': 'ck-heading_heading2'},
+                {'model': 'heading3', 'view': 'h3', 'title': 'Heading 3', 'class': 'ck-heading_heading3'}
+            ]
+        },
+        'ckfinder': {
+            'uploadUrl': '/ck_upload_url/'
+        },
+        'css': {
+            'all': ['/static/css/ckeditor5-custom.css']
+        }
+    }
+}
+
+# CKEditor 5 upload folder
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_URL = '/media/'
+CKEDITOR_5_UPLOAD_PATH = 'uploads/ckeditor/' 

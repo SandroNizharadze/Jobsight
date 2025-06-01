@@ -199,27 +199,27 @@
     <div>
       <h2 class="text-lg font-bold text-gray-800 mb-3">{% trans "აღწერა" %}</h2>
       <div class="prose max-w-none text-sm">
-        {{ job.description|linebreaks }}
+        {{ job.description|safe|linebreaks }}
       </div>
       
       {% if job.requirements %}
         <h2 class="text-lg font-bold text-gray-800 mt-5 mb-3">{% trans "მოთხოვნები" %}</h2>
         <div class="prose max-w-none text-sm">
-          {{ job.requirements|linebreaks }}
+          {{ job.requirements|safe|linebreaks }}
         </div>
       {% endif %}
       
       {% if job.responsibilities %}
         <h2 class="text-lg font-bold text-gray-800 mt-5 mb-3">{% trans "პასუხისმგებლობები" %}</h2>
         <div class="prose max-w-none text-sm">
-          {{ job.responsibilities|linebreaks }}
+          {{ job.responsibilities|safe|linebreaks }}
         </div>
       {% endif %}
       
       {% if job.benefits %}
         <h2 class="text-lg font-bold text-gray-800 mt-5 mb-3">{% trans "შეთავაზება" %}</h2>
         <div class="prose max-w-none text-sm">
-          {{ job.benefits|linebreaks }}
+          {{ job.benefits|safe|linebreaks }}
         </div>
       {% endif %}
     </div>

@@ -72,13 +72,13 @@
       <!-- About Section -->
       <div class="bg-white rounded-xl shadow-md p-6 mb-8">
         <h2 class="text-xl font-semibold mb-6 pb-2 border-b border-gray-200">{% trans "About" %}</h2>
-        <div class="prose max-w-none">
-          {% if company.company_description %}
-            {{ company.company_description|linebreaks }}
-          {% else %}
-            <p class="text-gray-500">{% trans "No company description available." %}</p>
-          {% endif %}
-        </div>
+        {% if company.company_description %}
+          <div class="prose max-w-none">
+            {{ company.company_description|safe|linebreaks }}
+          </div>
+        {% else %}
+          <p class="text-gray-500">{% trans "No company description available." %}</p>
+        {% endif %}
       </div>
       
       <!-- Open Positions Section -->

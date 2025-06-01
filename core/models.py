@@ -10,6 +10,7 @@ import logging
 from django.db import transaction
 from datetime import timedelta
 from django.utils.text import slugify
+from django_ckeditor_5.fields import CKEditor5Field
 
 # Import storage backends if S3 is enabled
 if hasattr(settings, 'USE_S3') and settings.USE_S3:
@@ -131,7 +132,7 @@ class JobListing(SoftDeletionModel):
 
     title = models.CharField(max_length=100, db_index=True, verbose_name=_("ვაკანსიის დასახელება"))
     company = models.CharField(max_length=100, db_index=True, verbose_name=_("კომპანია"))
-    description = models.TextField(verbose_name=_("ვაკანსიის აღწერა"))
+    description = CKEditor5Field(verbose_name=_("ვაკანსიის აღწერა"))
     salary_min = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True, db_index=True, verbose_name=_("მინიმალური ხელფასი"))
     salary_max = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True, verbose_name=_("მაქსიმალური ხელფასი"))
     salary_type = models.CharField(max_length=50, choices=SALARY_TYPE_CHOICES, default='თვეში', verbose_name=_("ხელფასის ტიპი"))
@@ -410,7 +411,7 @@ class EmployerProfile(SoftDeletionModel):
     phone_number = models.CharField(max_length=50, blank=True, null=True, verbose_name=_("მობილურის ნომერი"))
     show_phone_number = models.BooleanField(default=True, verbose_name=_("გამოჩნდეს ტელეფონის ნომერი პროფილზე"))
     company_website = models.URLField(blank=True, verbose_name=_("კომპანიის ვებსაიტი"))
-    company_description = models.TextField(blank=True, verbose_name=_("კომპანიის აღწერა"))
+    company_description = CKEditor5Field(blank=True, verbose_name=_("კომპანიის აღწერა"))
     # Use PublicMediaStorage for company logos when S3 is enabled
     if PublicMediaStorage:
         company_logo = models.ImageField(
@@ -646,7 +647,7 @@ class BlogPost(SoftDeletionModel):
     
     title = models.CharField(max_length=200, verbose_name=_("სათაური"))
     slug = models.SlugField(max_length=250, unique=True, verbose_name=_("სლაგი"))
-    content = models.TextField(verbose_name=_("კონტენტი"))
+    content = CKEditor5Field(verbose_name=_("კონტენტი"))
     excerpt = models.TextField(max_length=500, blank=True, verbose_name=_("მოკლე აღწერა"))
     meta_description = models.CharField(max_length=160, blank=True, verbose_name=_("მეტა აღწერა"))
     meta_keywords = models.CharField(max_length=255, blank=True, verbose_name=_("მეტა საკვანძო სიტყვები"))
