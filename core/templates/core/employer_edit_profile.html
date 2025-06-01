@@ -2,6 +2,11 @@
 {% load i18n %}
 {% load form_tags %}
 
+{% block head %}
+{{ block.super }}
+{{ employer_form.media }}
+{% endblock %}
+
 {% block title %}{% trans "კომპანიის პროფილი" %} - Jobsy{% endblock %}
 
 {% block content %}

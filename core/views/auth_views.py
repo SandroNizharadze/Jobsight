@@ -48,15 +48,10 @@ def login_view(request):
                     user = None
             
             if user is not None:
-                # Check if email is verified
+                # Email verification is now optional and doesn't affect login
                 try:
                     user_profile = UserProfile.objects.get(user=user)
-                    if not user_profile.is_email_verified:
-                        messages.warning(request, "Please verify your email address before logging in. Check your inbox for the verification link.")
-                        # Option to resend verification email
-                        resend_url = reverse('resend_verification')
-                        messages.info(request, f"Didn't receive the email? <a href='{resend_url}'>Resend verification email</a>", extra_tags='safe')
-                        return render(request, 'core/login.html', {'form': form})
+                    # No verification check needed - allow login regardless of verification status
                 except UserProfile.DoesNotExist:
                     # This shouldn't happen, but just in case
                     messages.error(request, "User profile not found.")

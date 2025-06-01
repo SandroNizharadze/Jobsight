@@ -1,6 +1,12 @@
 {% extends 'core/base.html' %}
 {% load i18n %}
+{% load static %}
 {% load form_tags %}
+
+{% block head %}
+{{ block.super }}
+{{ form.media }}
+{% endblock %}
 
 {% block title %}{% trans "ვაკანსიის გამოქვეყნება" %} - Jobsy{% endblock %}
 

@@ -4,6 +4,7 @@ from .models import UserProfile, EmployerProfile, JobListing
 from django.contrib.auth.forms import UserCreationForm
 from django.core.files.uploadedfile import UploadedFile
 from django.utils.translation import gettext_lazy as _
+from django_ckeditor_5.widgets import CKEditor5Widget
 
 class RegistrationForm(UserCreationForm):
     email = forms.EmailField(required=True)
@@ -167,11 +168,10 @@ class EmployerProfileForm(forms.ModelForm):
                 'class': 'form-control',
                 'placeholder': 'https://www.example.com'
             }),
-            'company_description': forms.Textarea(attrs={
-                'class': 'form-control',
-                'rows': 4,
-                'placeholder': 'Describe your company...'
-            }),
+            'company_description': CKEditor5Widget(
+                attrs={'class': 'django_ckeditor_5'}, 
+                config_name='default'
+            ),
             'company_logo': forms.FileInput(attrs={
                 'class': 'form-control',
                 'accept': 'image/*'
@@ -214,7 +214,10 @@ class JobListingForm(forms.ModelForm):
         )
         widgets = {
             'title': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Job Title'}),
-            'description': forms.Textarea(attrs={'class': 'form-control', 'rows': 4, 'placeholder': 'Describe the job...'}),
+            'description': CKEditor5Widget(
+                attrs={'class': 'django_ckeditor_5'}, 
+                config_name='default'
+            ),
             'location': forms.Select(attrs={'class': 'form-control'}),
             'salary_min': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Minimum Salary'}),
             'salary_max': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Maximum Salary'}),
