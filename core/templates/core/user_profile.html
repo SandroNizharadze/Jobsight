@@ -57,10 +57,6 @@
                     <div class="alert alert-info mb-0">
                       <i class="fas fa-info-circle mr-2"></i> 
                       {% trans "Your email address is not verified yet." %}
-                      <p class="mt-2">{% trans "Verification is optional, but recommended to receive email notifications. Check your inbox for the verification link or click below to resend it." %}</p>
-                      <a href="{% url 'resend_verification' %}" class="btn btn-primary mt-2">
-                        <i class="fas fa-envelope mr-1"></i> {% trans "Resend Verification Email" %}
-                      </a>
                     </div>
                   {% endif %}
                 </div>
