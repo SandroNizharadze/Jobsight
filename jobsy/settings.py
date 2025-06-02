@@ -22,7 +22,8 @@ SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'placeholder-secret-key-for-dev
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get('DEBUG', 'True') == 'True'
 
-ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', 'localhost,127.0.0.1,192.168.0.100,jobsy.ge,www.jobsy.ge').split(',')
+# Update allowed hosts
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '.jobsy.ge', '.render.com', 'testserver']
 
 # Application definition
 INSTALLED_APPS = [
@@ -165,6 +166,9 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 # S3 Settings - Apply when USE_S3 is True
 print(f"USE_S3 value from environment: {os.environ.get('USE_S3', 'NOT SET')}")
 USE_S3 = os.environ.get('USE_S3', 'False') == 'True'
+
+# Define media locations for consistency
+PRIVATE_MEDIA_LOCATION = 'media/private'
 
 # Media files - Only use local storage if S3 is disabled
 if not USE_S3:

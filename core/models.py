@@ -319,22 +319,14 @@ class UserProfile(models.Model):
     
     created_at = models.DateTimeField(auto_now_add=True, verbose_name=_("შექმნის თარიღი"))
     
-    # Use PrivateMediaStorage for CV files when S3 is enabled
-    if PrivateMediaStorage:
-        cv = models.FileField(
-            upload_to='cvs/', 
-            storage=PrivateMediaStorage(),
-            blank=True, 
-            null=True, 
-            verbose_name=_("CV")
-        )
-    else:
-        cv = models.FileField(
-            upload_to='cvs/', 
-            blank=True, 
-            null=True, 
-            verbose_name=_("CV")
-        )
+    # CV field - always use PrivateMediaStorage to ensure S3 storage regardless of USE_S3 setting
+    cv = models.FileField(
+        upload_to='cvs/', 
+        storage=PrivateMediaStorage(),
+        blank=True, 
+        null=True, 
+        verbose_name=_("CV")
+    )
     
     # New fields for CV database functionality
     desired_field = models.CharField(
@@ -500,16 +492,29 @@ class SavedJob(models.Model):
             self.job_title = self.job.title
             self.job_company = self.job.company
         super().save(*args, **kwargs)
-
+    
     class Meta:
         unique_together = ('user', 'job')
         verbose_name = _("შენახული ვაკანსია")
         verbose_name_plural = _("შენახული ვაკანსიები")
         ordering = ['-saved_at']
-
+        
     def __str__(self):
         job_info = self.job_title if self.job is None else self.job.title
         return f"{self.user.username} - {job_info}"
+
+class CVAccess(models.Model):
+    """Track employer access to candidate CVs"""
+    employer_profile = models.ForeignKey('EmployerProfile', on_delete=models.CASCADE, related_name='cv_accesses')
+    candidate_profile = models.ForeignKey('UserProfile', on_delete=models.CASCADE, related_name='cv_accesses')
+    accessed_at = models.DateTimeField(auto_now_add=True)
+    
+    class Meta:
+        verbose_name = _("CV წვდომა")
+        verbose_name_plural = _("CV წვდომები")
+        
+    def __str__(self):
+        return f"{self.employer_profile.company_name} accessed {self.candidate_profile.user.username}'s CV on {self.accessed_at}"
 
 # Add signals to ensure user profile and employer profile are properly created
 @receiver(post_save, sender=UserProfile)

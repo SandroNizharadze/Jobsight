@@ -2,9 +2,9 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib import messages
 from django.views.decorators.http import require_POST
-from django.http import JsonResponse, HttpResponse
+from django.http import JsonResponse, HttpResponse, FileResponse
 from django.db.models import Prefetch, Q
-from ..models import UserProfile, EmployerProfile, JobApplication, SavedJob, JobListing
+from ..models import UserProfile, EmployerProfile, JobApplication, SavedJob, JobListing, CVAccess
 from ..forms import UserProfileForm, EmployerProfileForm
 import logging
 import os
@@ -244,74 +244,92 @@ def view_cv_employer(request, profile_id):
         has_premium_plus = JobListing.objects.filter(
             employer=employer_profile,
             premium_level='premium_plus',
-            status='approved',
-            deleted_at__isnull=True,
-            expires_at__gt=timezone.now()  # Only count non-expired jobs
+            status='active',
+            is_approved=True
         ).exists()
         
-        # Allow access if either condition is met
         if not (has_direct_access or has_premium_plus):
-            messages.error(request, "CV viewing is only available for employers with active Premium+ job listings or special access.")
-            return redirect('cv_database')
+            messages.error(request, _("You don't have access to view candidate CVs. Please upgrade your subscription."))
+            return redirect('employer_dashboard')
         
         # Get the profile
-        user_profile = get_object_or_404(UserProfile, id=profile_id, role='candidate', visible_to_employers=True)
+        profile = get_object_or_404(UserProfile, id=profile_id, visible_to_employers=True)
         
-        # Check if CV exists
-        if not user_profile.cv:
-            messages.error(request, "This user has not uploaded a CV.")
+        # Check if profile has a CV
+        if not profile.cv:
+            messages.error(request, _("This candidate doesn't have a CV uploaded."))
             return redirect('cv_database')
         
-        # Get the file path
-        file_path = user_profile.cv.name
-        file_name = os.path.basename(file_path)
+        # Log this access for analytics
+        CVAccess.objects.create(
+            employer_profile=employer_profile,
+            candidate_profile=profile
+        )
         
-        # Check if using S3
-        if getattr(settings, 'USE_S3', False):
-            # Generate a signed URL for the CV
-            s3 = boto3.client(
+        # Get the CV file
+        cv_file = profile.cv
+        
+        # For S3 storage, generate a signed URL
+        if settings.USE_S3:
+            import boto3
+            from botocore.exceptions import ClientError
+            
+            s3_client = boto3.client(
                 's3',
-                region_name=settings.AWS_S3_REGION_NAME,
                 aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
-                aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY
+                aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY,
+                region_name=settings.AWS_S3_REGION_NAME
             )
             
             try:
-                # Generate a signed URL that expires in 1 hour (3600 seconds)
-                url = s3.generate_presigned_url(
+                # Get the file key - remove any leading slash
+                file_key = profile.cv.name
+                if file_key.startswith('/'):
+                    file_key = file_key[1:]
+                
+                # If the path doesn't include the media/private prefix needed for S3, add it
+                if not file_key.startswith('media/private/'):
+                    # Check for duplicate 'cvs/' in the path and fix it
+                    if file_key.startswith('cvs/cvs/'):
+                        file_key = file_key[4:]  # Remove the first 'cvs/'
+                    
+                    file_key = f'media/private/{file_key}'
+                
+                # Log the file key for debugging
+                logger.info(f"Accessing S3 file with key: {file_key}")
+                
+                # Generate a signed URL that expires in 1 hour
+                response = s3_client.generate_presigned_url(
                     'get_object',
                     Params={
                         'Bucket': settings.AWS_STORAGE_BUCKET_NAME,
-                        'Key': file_path,
+                        'Key': file_key
                     },
-                    ExpiresIn=3600
+                    ExpiresIn=3600  # URL valid for 1 hour
                 )
                 
                 # Redirect to the signed URL
-                return redirect(url)
+                return redirect(response)
+                
             except ClientError as e:
-                logger.error(f"Error generating S3 presigned URL: {str(e)}")
-                raise e
+                logger.error(f"Error generating signed URL: {str(e)}")
+                messages.error(request, _("There was an error accessing the CV file."))
+                return redirect('cv_database')
         
+        # For local storage, serve the file directly
         else:
-            # Local storage case
-            if default_storage.exists(file_path):
-                # Get the file path
-                file_path = os.path.join(settings.MEDIA_ROOT, file_path)
-                content_type = mimetypes.guess_type(file_path)[0] or 'application/octet-stream'
+            # Get the file path
+            file_path = profile.cv.path
+            
+            # Check if file exists
+            if not os.path.exists(file_path):
+                messages.error(request, _("CV file not found."))
+                return redirect('cv_database')
                 
-                # Open the file and create the response
-                with open(file_path, 'rb') as f:
-                    file_content = f.read()
-                
-                response = HttpResponse(file_content, content_type=content_type)
-                response['Content-Disposition'] = f'inline; filename="{file_name}"'
-                return response
-            else:
-                raise FileNotFoundError(f"File not found: {file_path}")
-    
+            # Serve the file
+            return FileResponse(open(file_path, 'rb'), content_type='application/pdf')
+            
     except Exception as e:
-        logger.error(f"Error displaying CV: {str(e)}")
-        logger.error(traceback.format_exc())
-        messages.error(request, f"Error displaying CV: {str(e)}")
+        logger.error(f"Error in view_cv_employer: {str(e)}")
+        messages.error(request, _("An error occurred while trying to access the CV."))
         return redirect('cv_database')
