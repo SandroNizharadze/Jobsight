@@ -46,14 +46,23 @@ def serve_cv_file(request, user_id=None):
                 
                 # Check if this employer has any job applications from this user
                 employer_profile = request.user.userprofile.employer_profile
-                has_application = JobApplication.objects.filter(
+                applications = JobApplication.objects.filter(
                     user_id=user_id,
                     job__employer=employer_profile
-                ).exists()
+                )
+                
+                has_application = applications.exists()
                 
                 if not has_application:
                     logger.warning(f"Employer {request.user.username} attempted to access CV for user {user_id} without an application")
                     return HttpResponseForbidden("You don't have permission to access this CV")
+                
+                # Update application status to "ნანახი" if currently in "განხილვის_პროცესში" state
+                for application in applications:
+                    if not application.is_viewed:
+                        application.is_viewed = True
+                        application.save(update_fields=['is_viewed'])
+                        logger.info(f"Marked application {application.id} as viewed for user {user_id}")
                 
                 user_profile = target_profile
             except UserProfile.DoesNotExist:

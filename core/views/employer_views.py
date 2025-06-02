@@ -499,14 +499,22 @@ def update_application_status(request, application_id):
     application = get_object_or_404(JobApplication, id=application_id)
     employer_profile = request.user.userprofile.employer_profile
     
+    # Log the request data for debugging
+    logger.info(f"Updating application {application_id} status. Request data: {request.POST}")
+    
     # Check if the application belongs to a job owned by this employer
     if application.job.employer != employer_profile:
+        logger.warning(f"Permission denied: User {request.user.id} tried to update application {application_id} but doesn't own the job")
         return HttpResponseForbidden("You don't have permission to update this application.")
     
     # Update the status
     new_status = request.POST.get('status')
+    logger.info(f"New status for application {application_id}: {new_status}")
+    
     if new_status in dict(JobApplication.STATUS_CHOICES):
+        old_status = application.status
         application.status = new_status
+        logger.info(f"Changing application {application_id} status from {old_status} to {new_status}")
         
         # If status is changed to "რეზერვი" (reserve) and no rejection reasons are provided yet,
         # return JSON response to request rejection reasons
@@ -517,10 +525,12 @@ def update_application_status(request, application_id):
             if is_guest:
                 # For guest applications, just update the status without requesting reasons
                 application.save()
+                logger.info(f"Updated guest application {application_id} status to {new_status}")
                 return JsonResponse({'success': True})
             else:
                 # For registered users, save the status change and request rejection reasons
                 application.save()
+                logger.info(f"Updated registered user application {application_id} status to {new_status}, requesting rejection reasons")
                 
                 # Get all available rejection reasons
                 reasons = [{'id': key, 'name': value} for key, value in dict(RejectionReason.REASON_CHOICES).items()]
@@ -543,8 +553,8 @@ def update_application_status(request, application_id):
                     # Create or get the reason by its choice key
                     reason, created = RejectionReason.objects.get_or_create(name=reason_id)
                     application.rejection_reasons.add(reason)
-                except Exception:
-                    pass
+                except Exception as e:
+                    logger.error(f"Error adding rejection reason {reason_id}: {str(e)}")
             
             # Save feedback if provided and not a guest user
             is_guest = request.POST.get('is_guest') == 'true'
@@ -552,8 +562,10 @@ def update_application_status(request, application_id):
                 application.feedback = request.POST.get('feedback')
         
         application.save()
+        logger.info(f"Successfully updated application {application_id} status to {new_status}")
         messages.success(request, "Application status updated successfully.")
     else:
+        logger.warning(f"Invalid status value for application {application_id}: {new_status}")
         messages.error(request, "Invalid status value provided.")
     
     # Check if this is an AJAX request
@@ -630,6 +642,12 @@ def application_detail(request, application_id):
         messages.error(request, "You don't have permission to view this application.")
         return redirect('employer_dashboard')
     
+    # Mark application as viewed if not already
+    if not application.is_viewed:
+        application.is_viewed = True
+        application.save(update_fields=['is_viewed'])
+        logger.info(f"Marked application {application.id} as viewed when accessed by employer {employer_profile.id}")
+    
     context = {
         'application': application,
         'job': application.job,
@@ -683,7 +701,7 @@ def cv_database(request):
     has_premium_plus = JobListing.objects.filter(
         employer=employer_profile,
         premium_level='premium_plus',
-        status='approved',  # Only count approved jobs
+        status='active',  # Use 'active' instead of 'approved'
         deleted_at__isnull=True,  # Don't count deleted jobs
         expires_at__gt=timezone.now()  # Only count non-expired jobs
     ).exists()

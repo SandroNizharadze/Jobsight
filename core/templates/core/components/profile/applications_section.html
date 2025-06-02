@@ -26,18 +26,25 @@
     <div data-activity-pane="applications" class="tab-pane block" id="applications" role="tabpanel">
       {% if applications %}
       <!-- Status Explanations -->
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-        <div class="bg-green-50 border border-green-200 rounded-lg p-4">
-          <h5 class="font-medium text-green-800 mb-2">{% trans "გასაუბრება" %}</h5>
-          <p class="text-sm text-green-700">{% trans "ნიშნავს რომ კომპანიამ განიხილა თქვენი კანდიდატურა, თვლის რომ შეესაბამებით პოზიციას და დაგიკავშირდებიან გასაუბრებაზე დასაბარებლად" %}</p>
+      <div class="mb-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+        <div class="bg-blue-50 border border-blue-200 rounded-lg p-3">
+          <h5 class="font-medium text-blue-800 mb-1">{% trans "განხილვის პროცესში" %}</h5>
+          <p class="text-xs text-blue-700">{% trans "ნიშნავს რომ თქვენი კანდიდატურა ჯერ არ განუხილავთ" %}</p>
         </div>
-        <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
-          <h5 class="font-medium text-yellow-800 mb-2">{% trans "რეზერვი" %}</h5>
-          <p class="text-sm text-yellow-700">{% trans "ნიშნავს, რომ კომპანიამ განიხილა თქვენი კანდიდატურა, თვლის რომ არ შეესაბამებით პოზიციას და ამ ეტაპზე ვერ აგიყვანენ, თუმცა თქვენი სივი შეინახება ბაზაში მომავალში დაინტერესების შემთვევაში დასაკონტაქტებლად" %}</p>
+        
+        <div class="bg-purple-50 border border-purple-200 rounded-lg p-3">
+          <h5 class="font-medium text-purple-800 mb-1">{% trans "ნანახი" %}</h5>
+          <p class="text-xs text-purple-700">{% trans "ნიშნავს, რომ დამსაქმებელმა ნახა თქვენი სივი მაგრამ გადაწყვეტილება ჯერ არ მიუღია" %}</p>
         </div>
-        <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
-          <h5 class="font-medium text-blue-800 mb-2">{% trans "განხილვის პროცესში" %}</h5>
-          <p class="text-sm text-blue-700">{% trans "ნიშნავს რომ თქვენი კანდიდატურა ჯერ არ განუხილავთ" %}</p>
+
+        <div class="bg-green-50 border border-green-200 rounded-lg p-3">
+          <h5 class="font-medium text-green-800 mb-1">{% trans "გასაუბრება" %}</h5>
+          <p class="text-xs text-green-700">{% trans "ნიშნავს რომ კომპანიამ განიხილა თქვენი კანდიდატურა, თვლის რომ შეესაბამებით პოზიციას და დაგიკავშირდებიან გასაუბრებაზე დასაბარებლად" %}</p>
+        </div>
+
+        <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-3">
+          <h5 class="font-medium text-yellow-800 mb-1">{% trans "რეზერვი" %}</h5>
+          <p class="text-xs text-yellow-700">{% trans "ნიშნავს, რომ კომპანიამ განიხილა თქვენი კანდიდატურა, თვლის რომ არ შეესაბამებით პოზიციას და ამ ეტაპზე ვერ აგიყვანენ, თუმცა თქვენი სივი შეინახება ბაზაში მომავალში დაინტერესების შემთვევაში დასაკონტაქტებლად" %}</p>
         </div>
       </div>
       
@@ -66,7 +73,7 @@
             </thead>
             <tbody class="bg-white divide-y divide-gray-200">
               {% for application in applications %}
-              <tr class="{% if application.status == 'გასაუბრება' %}bg-green-50{% elif application.status == 'რეზერვი' %}bg-yellow-50{% endif %} hover:bg-gray-50">
+              <tr class="{% if application.status == 'გასაუბრება' %}bg-green-50{% elif application.status == 'რეზერვი' %}bg-yellow-50{% elif application.is_viewed and application.status == 'განხილვის_პროცესში' %}bg-purple-50{% endif %} hover:bg-gray-50">
                 <td class="px-6 py-4 whitespace-nowrap">
                   <div class="text-sm font-medium text-gray-900">
                     {% if application.job %}
@@ -97,6 +104,11 @@
                     <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">
                       {% trans "განხილვის პროცესში" %}
                     </span>
+                    {% if application.is_viewed %}
+                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-purple-100 text-purple-800 mt-1">
+                      {% trans "ნანახი" %}
+                    </span>
+                    {% endif %}
                   {% elif application.status == 'გასაუბრება' %}
                     <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
                       {% trans "გასაუბრება" %}

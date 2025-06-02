@@ -266,6 +266,7 @@ class JobApplication(models.Model):
     applied_at = models.DateTimeField(auto_now_add=True, db_index=True, verbose_name=_("აპლიკაციის თარიღი"))
     updated_at = models.DateTimeField(auto_now=True, verbose_name=_("განახლების თარიღი"))
     is_read = models.BooleanField(default=False, db_index=True, verbose_name=_("წაკითხულია"))
+    is_viewed = models.BooleanField(default=False, db_index=True, verbose_name=_("ნანახია"))
     rejection_reasons = models.ManyToManyField(RejectionReason, blank=True, related_name='applications', verbose_name=_("უარის მიზეზები"))
     feedback = models.TextField(blank=True, verbose_name=_("უკუკავშირი"))
     

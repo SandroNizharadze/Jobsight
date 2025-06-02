@@ -6,6 +6,7 @@
 
 {% block content %}
 <div class="container mx-auto px-4 py-8 sm:px-6 lg:px-8">
+  {% csrf_token %}
   <!-- Header -->
   <div class="bg-white rounded-xl shadow-sm mb-8">
     <div class="p-6">
@@ -505,13 +506,14 @@
     });
 
     function updateApplicationStatus(applicationId, status) {
+      const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
       fetch(`/employer/applications/${applicationId}/update-status/`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',
-          'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
+          'X-CSRFToken': csrfToken
         },
-        body: `status=${status}`
+        body: `status=${status}&csrfmiddlewaretoken=${csrfToken}`
       })
       .then(response => {
         // First check if the response is ok before trying to parse JSON
