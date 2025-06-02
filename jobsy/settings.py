@@ -37,6 +37,8 @@ INSTALLED_APPS = [
     'rangefilter',
     'storages',
     'core',
+    'ckeditor',  # Keep for backward compatibility with migrations
+    'ckeditor_uploader',  # Keep for backward compatibility with migrations
     'django_ckeditor_5',
 ]
 
@@ -233,6 +235,16 @@ DEFAULT_FROM_EMAIL = os.environ.get('DEFAULT_FROM_EMAIL', 'noreply@jobsy.ge')
 # For development/testing, you can use the console backend
 if DEBUG:
     EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+# CKEditor 4 Settings (for backward compatibility with migrations)
+CKEDITOR_UPLOAD_PATH = "uploads/ckeditor4/"
+CKEDITOR_CONFIGS = {
+    'default': {
+        'toolbar': 'full',
+        'height': 300,
+        'width': 800,
+    },
+}
 
 # CKEditor 5 Settings
 CKEDITOR_5_CONFIGS = {
