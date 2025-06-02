@@ -23,7 +23,7 @@ SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'placeholder-secret-key-for-dev
 DEBUG = os.environ.get('DEBUG', 'True') == 'True'
 
 # Update allowed hosts
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '.jobsy.ge', '.render.com', 'testserver']
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '.jobsy.ge', '.render.com', 'testserver', '192.168.0.100']
 
 # Application definition
 INSTALLED_APPS = [

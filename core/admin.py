@@ -228,6 +228,22 @@ class JobListingAdmin(SoftDeletionAdmin):
         return obj.applications.count()
     get_cv_count.short_description = 'CV Count'
 
+    def save_model(self, request, obj, form, change):
+        """
+        Override save_model to grant CV database access when premium+ job is approved
+        """
+        # Check if this is a status change to 'approved' for a premium+ job
+        if 'status' in form.changed_data and obj.status == 'approved' and obj.premium_level == 'premium_plus':
+            # Grant CV database access to the employer
+            employer_profile = obj.employer
+            if employer_profile and not employer_profile.has_cv_database_access:
+                employer_profile.has_cv_database_access = True
+                employer_profile.save()
+                self.message_user(request, f"CV database access granted to {employer_profile.company_name}", level='success')
+        
+        # Call the parent class save_model method to save the job
+        super().save_model(request, obj, form, change)
+
     def extend_expiration(self, request, queryset):
         """Extend the expiration date of selected jobs by 30 days"""
         count = 0

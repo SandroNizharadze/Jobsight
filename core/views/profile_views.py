@@ -232,7 +232,7 @@ def get_application_rejection_reasons(request, application_id):
 def view_cv_employer(request, profile_id):
     """
     Display a job seeker's CV to an employer
-    Requires employer to have an active premium+ job or direct CV database access
+    Requires employer to have direct CV database access
     """
     try:
         # Verify access
@@ -241,16 +241,8 @@ def view_cv_employer(request, profile_id):
         # Check if employer has direct access to CV database
         has_direct_access = employer_profile.has_cv_database_access
         
-        # Check if employer has premium+ access
-        has_premium_plus = JobListing.objects.filter(
-            employer=employer_profile,
-            premium_level='premium_plus',
-            status='active',
-            expires_at__gte=timezone.now().date()
-        ).exists()
-        
-        if not (has_direct_access or has_premium_plus):
-            messages.error(request, _("You don't have access to view candidate CVs. Please upgrade to Premium+ or purchase CV database access."))
+        if not has_direct_access:
+            messages.error(request, _("You don't have access to view candidate CVs. Please purchase CV database access."))
             return redirect('employer_dashboard')
             
         # Get the profile
