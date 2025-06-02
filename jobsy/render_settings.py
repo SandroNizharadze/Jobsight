@@ -1,5 +1,6 @@
 from .settings import *
 import os
+import dj_database_url
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
@@ -25,7 +26,6 @@ DATABASES = {
 # Use DATABASE_URL if provided (for Render deployment)
 DATABASE_URL = os.environ.get('DATABASE_URL')
 if DATABASE_URL:
-    import dj_database_url
     DATABASES["default"] = dj_database_url.parse(DATABASE_URL)
 
 # Always use Supabase in production

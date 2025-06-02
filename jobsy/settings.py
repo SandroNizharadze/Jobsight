@@ -2,9 +2,14 @@
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
 
 import os
-import dj_database_url
 from pathlib import Path
 from dotenv import load_dotenv
+
+# Try to import dj_database_url, but don't fail if it's not available
+try:
+    import dj_database_url
+except ImportError:
+    dj_database_url = None
 
 # Load environment variables from .env file if it exists
 load_dotenv()
@@ -83,7 +88,7 @@ DATABASES = {
 
 # Use DATABASE_URL if provided (for Render deployment)
 DATABASE_URL = os.environ.get('DATABASE_URL')
-if DATABASE_URL:
+if DATABASE_URL and dj_database_url:
     DATABASES["default"] = dj_database_url.parse(DATABASE_URL)
 
 # Use Supabase only if explicitly enabled and we're not in development

@@ -12,3 +12,5 @@ django-ckeditor-5==0.2.18
 psycopg2-binary==2.9.3
 django-cors-headers==3.14.0
 python-dotenv==1.0.1
+dj-database-url==2.1.0
+whitenoise==6.5.0
