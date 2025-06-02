@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: jobsy
+    env: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: ./deploy.sh
+    envVars:
+      - key: DJANGO_SETTINGS_MODULE
+        value: jobsy.render_settings
+      - key: PYTHON_VERSION
+        value: 3.11.4
+    healthCheckPath: /
+    autoDeploy: true 
