@@ -1408,7 +1408,7 @@ msgid "ხშირად დასმული კითხვები"
 msgstr ""
 
 #: core/templates/core/pricing.html:108
-msgid "რატომ შეიქმნა Jobsy.ge?"
+msgid "რატომ შეიქმნა Jobsight.ge?"
 msgstr ""
 
 #: core/templates/core/pricing.html:113
@@ -1435,7 +1435,7 @@ msgstr ""
 #: core/templates/core/pricing.html:125
 msgid ""
 "ჩვენ ვცდილობთ გამოვასწოროთ სიტუაცია სამუშაო ბაზარზე. მსგავს შემთხვევაში "
-"აუცილებლად დაგვიკავშირდით Info@jobsy.ge ზე და მოვახდენთ შესაბამის რეაგირებას"
+"აუცილებლად დაგვიკავშირდით Info@jobsight.ge ზე და მოვახდენთ შესაბამის რეაგირებას"
 msgstr ""
 
 #: core/templates/core/pricing.html:132

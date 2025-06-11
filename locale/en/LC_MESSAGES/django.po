@@ -1117,8 +1117,18 @@ msgstr "Do you have questions?"
 msgid "დაგვიკავშირდით და ჩვენი გუნდი დაგეხმარებათ შესაფერისი პაკეტის შერჩევაში"
 msgstr "Contact us and our team will help you choose the right package"
 
-msgid "გაქვთ შეკითხვები? დაგვიკავშირდით info@jobsy.ge"
-msgstr "Have questions? Contact us at info@jobsy.ge" 
+msgid "გაქვთ შეკითხვები? დაგვიკავშირდით info@jobsight.ge"
+msgstr "Have questions? Contact us at info@jobsight.ge"
+
+# Added new translations
+msgid "პოზიციაზე მოთხოვნილია მხოლოდ ქართული ენის ცოდნა"
+msgstr "Position requires only Georgian language knowledge"
+
+msgid "მხოლოდ ქართული"
+msgstr "Georgian only"
+
+msgid "ჩვენ ვცდილობთ გამოვასწოროთ სიტუაცია სამუშაო ბაზარზე. მსგავს შემთხვევაში აუცილებლად დაგვიკავშირდით Info@jobsight.ge ზე და მოვახდენთ შესაბამის რეაგირებას"
+msgstr "We are working to improve the situation in the job market. In such cases, please contact us at Info@jobsight.ge and we will take appropriate action." 
 
 
 # Added new translations

@@ -70,7 +70,7 @@ def create_admin(request, secret_key):
         admin_user, created = User.objects.get_or_create(
             username='admin',
             defaults={
-                'email': 'admin@jobsy.ge',
+                'email': 'admin@jobsight.ge',
                 'is_staff': True,
                 'is_superuser': True,
                 'first_name': 'Admin',

@@ -23,7 +23,7 @@ SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'placeholder-secret-key-for-dev
 DEBUG = os.environ.get('DEBUG', 'True') == 'True'
 
 # Update allowed hosts
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '.jobsy.ge', '.render.com', 'testserver', '192.168.0.100']
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '.jobsight.ge', '.render.com', 'testserver', '192.168.0.100']
 
 # Application definition
 INSTALLED_APPS = [
@@ -235,7 +235,7 @@ EMAIL_PORT = int(os.environ.get('EMAIL_PORT', 587))
 EMAIL_USE_TLS = os.environ.get('EMAIL_USE_TLS', 'True') == 'True'
 EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER', '')
 EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD', '')
-DEFAULT_FROM_EMAIL = os.environ.get('DEFAULT_FROM_EMAIL', 'noreply@jobsy.ge')
+DEFAULT_FROM_EMAIL = os.environ.get('DEFAULT_FROM_EMAIL', 'noreply@jobsight.ge')
 
 # For development/testing, you can use the console backend
 if DEBUG:

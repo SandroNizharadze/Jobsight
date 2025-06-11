@@ -1,4 +1,4 @@
-# robots.txt for jobsy.ge
+# robots.txt for jobsight.ge
 User-agent: *
 Allow: /
 

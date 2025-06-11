@@ -34,7 +34,7 @@ def create_sample_jobs(apps, schema_editor):
         user_profile=admin_profile,
         defaults={
             'company_name': 'Jobsight Admin',
-            'company_website': 'https://jobsy.ge',
+            'company_website': 'https://jobsight.ge',
             'company_description': 'Administrator for Jobsight platform',
             'company_size': '1-10',
             'industry': 'Technology',
