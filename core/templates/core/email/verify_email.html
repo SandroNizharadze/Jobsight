@@ -45,7 +45,7 @@
 </head>
 <body>
     <div class="header">
-        <h1>Jobsy</h1>
+        <h1>Jobsight</h1>
     </div>
     
     <div class="content">
@@ -53,7 +53,7 @@
         
         <p>Hello {% if user.first_name %}{{ user.first_name }}{% else %}{{ user.username }}{% endif %},</p>
         
-        <p>Thank you for registering with Jobsy! To complete your registration and activate your account, please verify your email address by clicking the button below:</p>
+        <p>Thank you for registering with Jobsight! To complete your registration and activate your account, please verify your email address by clicking the button below:</p>
         
         <div style="text-align: center;">
             <a href="{{ verify_url }}" class="button">Verify Email Address</a>
@@ -61,15 +61,15 @@
         
         <p>This link will expire in {{ expiry_hours }} hours.</p>
         
-        <p>If you did not register for a Jobsy account, please ignore this email.</p>
+        <p>If you did not register for a Jobsight account, please ignore this email.</p>
         
         <p>If the button above doesn't work, you can also copy and paste the following link into your browser:</p>
         <p style="word-break: break-all;">{{ verify_url }}</p>
     </div>
     
     <div class="footer">
-        <p>This is an automated message from Jobsy. Please do not reply to this email.</p>
-        <p>&copy; {% now "Y" %} Jobsy. All rights reserved.</p>
+        <p>This is an automated message from Jobsight. Please do not reply to this email.</p>
+        <p>&copy; {% now "Y" %} Jobsight. All rights reserved.</p>
     </div>
 </body>
 </html> 

@@ -1,6 +1,6 @@
-# S3 Storage Troubleshooting Guide
+# S3 Troubleshooting Guide
 
-This guide provides instructions for diagnosing and fixing issues with AWS S3 storage integration in the Jobsy application.
+This guide provides instructions for diagnosing and fixing issues with AWS S3 storage integration in the Jobsight application.
 
 ## Prerequisites
 
@@ -131,25 +131,3 @@ profile.cv.save('test_cv.txt', test_content)
 print(f"CV path: {profile.cv.name}")
 print(f"CV URL: {profile.cv.url}")
 ```
-
-## Verifying S3 Files via AWS CLI
-
-You can also use the AWS CLI to verify files in your bucket:
-
-```bash
-# List files in bucket
-aws s3 ls s3://your-bucket-name/ --recursive
-
-# Download a specific file
-aws s3 cp s3://your-bucket-name/media/private/cvs/filename.pdf ./downloaded_file.pdf
-```
-
-## Resetting S3 Integration
-
-If you need to completely reset and test the S3 integration:
-
-1. Backup your database
-2. Clear CV fields in the database: `UserProfile.objects.all().update(cv=None)`
-3. Verify S3 environment variables
-4. Run the test upload command: `python manage.py test_s3_upload`
-5. Have users re-upload their CV files 

@@ -34,16 +34,16 @@ def send_verification_email(request, user):
         plain_message = f"""
         {_('Hello')} {user.first_name or user.username},
         
-        {_('Thank you for registering with Jobsy. Please verify your email address by clicking the link below:')}
+        {_('Thank you for registering with Jobsight. Please verify your email address by clicking the link below:')}
         
         {verify_url}
         
         {_('This link will expire in 24 hours.')}
         
-        {_('If you did not register for a Jobsy account, please ignore this email.')}
+        {_('If you did not register for a Jobsight account, please ignore this email.')}
         
         {_('Best regards,')}
-        {_('The Jobsy Team')}
+        {_('The Jobsight Team')}
         """
         
         # Send the email

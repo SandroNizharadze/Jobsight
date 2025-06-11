@@ -1,6 +1,6 @@
-# S3 Integration Tools for Jobsy
+# S3 Integration Tools for Jobsight
 
-This directory contains tools for managing the AWS S3 integration in the Jobsy application.
+This directory contains tools for managing the AWS S3 integration in the Jobsight application.
 
 ## Scripts
 

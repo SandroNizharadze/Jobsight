@@ -21,7 +21,7 @@
     gtag('config', 'G-28X5PJN9VV');
     </script>
     
-    <title>{% block title %}Jobsy{% endblock %}</title>
+    <title>{% block title %}Jobsight{% endblock %}</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- Favicon -->
@@ -104,8 +104,8 @@
             font-size: 0.875em;
         }
         
-        /* Jobsy logo font */
-        .jobsy-logo {
+        /* Jobsight logo font */
+        .jobsight-logo {
             font-family: 'Lora', serif;
         }
         
@@ -181,7 +181,7 @@
                 if (text && hasGeorgianChars(text)) {
                     // If the parent is not already styled for Georgian
                     if (!node.parentElement.classList.contains('georgian-text') && 
-                        !node.parentElement.classList.contains('jobsy-logo')) {
+                        !node.parentElement.classList.contains('jobsight-logo')) {
                         
                         // Create a span with Georgian font
                         const span = document.createElement('span');
@@ -195,7 +195,7 @@
             } else if (node.nodeType === Node.ELEMENT_NODE) {
                 // Skip elements that are already styled or should be skipped
                 if (node.classList && (
-                    node.classList.contains('jobsy-logo') || 
+                    node.classList.contains('jobsight-logo') || 
                     node.classList.contains('georgian-text'))) {
                     return;
                 }

@@ -1,6 +1,6 @@
-# Cron Jobs Setup
+# Cron Jobs Documentation
 
-This document explains how to set up cron jobs for Jobsy to ensure proper maintenance of the site.
+This document explains how to set up cron jobs for Jobsight to ensure proper maintenance of the site.
 
 ## List of Cron Jobs
 

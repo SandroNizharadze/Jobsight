@@ -1,6 +1,6 @@
-# Jobsy - Job Listing Platform
+# Jobsight - Job Listing Platform
 
-Jobsy is a comprehensive job listing platform built with Django.
+Jobsight is a comprehensive job listing platform built with Django.
 
 ## Environment Variables and Security
 

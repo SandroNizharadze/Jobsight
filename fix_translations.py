@@ -34,7 +34,7 @@ for match in pattern.finditer(old_content):
     entries.append(entry)
 
 # Create new content
-new_content = header + 'msgid \"\"\nmsgstr \"\"\n\"Project-Id-Version: Jobsy 1.0\\n\"\n\"Report-Msgid-Bugs-To: \\n\"\n\"POT-Creation-Date: 2025-05-19 15:12+0000\\n\"\n\"PO-Revision-Date: 2023-05-20 12:00+0000\\n\"\n\"Last-Translator: \\n\"\n\"Language-Team: English\\n\"\n\"Language: en\\n\"\n\"MIME-Version: 1.0\\n\"\n\"Content-Type: text/plain; charset=UTF-8\\n\"\n\"Content-Transfer-Encoding: 8bit\\n\"\n\"Plural-Forms: nplurals=2; plural=(n != 1);\\n\"\n\n' + '\n\n'.join(entries)
+new_content = header + 'msgid \"\"\nmsgstr \"\"\n\"Project-Id-Version: Jobsight 1.0\\n\"\n\"Report-Msgid-Bugs-To: \\n\"\n\"POT-Creation-Date: 2025-05-19 15:12+0000\\n\"\n\"PO-Revision-Date: 2023-05-20 12:00+0000\\n\"\n\"Last-Translator: \\n\"\n\"Language-Team: English\\n\"\n\"Language: en\\n\"\n\"MIME-Version: 1.0\\n\"\n\"Content-Type: text/plain; charset=UTF-8\\n\"\n\"Content-Transfer-Encoding: 8bit\\n\"\n\"Plural-Forms: nplurals=2; plural=(n != 1);\\n\"\n\n' + '\n\n'.join(entries)
 
 # Write the new file
 with open('locale/en/LC_MESSAGES/django.po', 'w', encoding='utf-8') as f:

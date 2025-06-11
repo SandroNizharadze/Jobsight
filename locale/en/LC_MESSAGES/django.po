@@ -6,7 +6,7 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: Jobsy 1.0\n"
+"Project-Id-Version: Jobsight 1.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-05-19 15:12+0000\n"
 "PO-Revision-Date: 2023-05-20 12:00+0000\n"
@@ -610,7 +610,7 @@ msgstr "Premium: It will appear on the main page in a standard style"
 msgid ""
 "არ გამოგრჩეთ კანდიდატების სტატუსების მინიჭება, ეს გეხმარებათ მარტივად "
 "გამოარჩიოთ და დაახარისხოთ მეტად სასურველი კანდიდატები"
-msgstr "Post a job on Jobsy and find the best candidates for your company."
+msgstr "Post a job on Jobsight and find the best candidates for your company."
 
 #: core/templates/core/components/employer_applications/search_filter.html:16
 #, fuzzy
@@ -638,7 +638,7 @@ msgstr "Thousands of professionals look for new opportunities every day."
 #, fuzzy
 #| msgid "საუკეთესო სამსახურის მოძიებაში ჯობსის ვაკანსიები დაგეხმარება"
 msgid "თქვენი პროფილში ატვირთული CV ავტომატურად გადაეგზავნება დამსაქმებელს."
-msgstr "Jobsy's listings will help you find the best job"
+msgstr "Jobsight's listings will help you find the best job"
 
 #: core/templates/core/components/job_detail/apply_modal.html:23
 #: core/templates/core/components/job_detail/apply_modal.html:46
@@ -952,7 +952,7 @@ msgstr ""
 #, fuzzy
 #| msgid "Jobsy"
 msgid "All Jobs"
-msgstr "Jobsy"
+msgstr "Jobsight"
 
 #: core/templates/core/employer_home.html:99
 msgid "No jobs available."
@@ -971,8 +971,8 @@ msgid "Post New Job"
 msgstr ""
 
 #: core/templates/core/job_list.html:5
-msgid "Jobsy - ვაკანსიები"
-msgstr "Jobsy - Jobs"
+msgid "Jobsight - ვაკანსიები"
+msgstr "Jobsight - Jobs"
 
 #: core/templates/core/login.html:28
 msgid "გთხოვთ შეიყვანოთ თქვენი ელ-ფოსტა."
@@ -1009,14 +1009,14 @@ msgid "ხშირად დასმული კითხვები"
 msgstr "Frequently Asked Questions"
 
 #: core/templates/core/pricing.html:108
-msgid "რატომ შეიქმნა Jobsy.ge?"
-msgstr "Why was Jobsy.ge created?"
+msgid "რატომ შეიქმნა Jobsight.ge?"
+msgstr "Why was Jobsight.ge created?"
 # Added new translations
 msgid "ჩვენი ვაკანსიები დაგეხმარება!"
 msgstr "Our job listings will help you!"
 
 msgid "საუკეთესო სამსახურის მოძიებაში ჯობსის ვაკანსიები დაგეხმარება"
-msgstr "Jobsy's job listings will help you find the best job"
+msgstr "Jobsight's job listings will help you find the best job"
 
 msgid "რეგისტრაცია"
 msgstr "Registration"
@@ -1036,8 +1036,8 @@ msgstr "Our Packages"
 msgid "აირჩიეთ თქვენთვის შესაფერისი პაკეტი"
 msgstr "Choose the package that suits you"
 
-msgid "ვაკანსიის გამოქვეყნება Jobsy-ზე არის მარტივი და ეფექტური გზა კარგი კანდიდატების მოსაზიდად"
-msgstr "Posting a job on Jobsy is a simple and effective way to attract good candidates"
+msgid "ვაკანსიის გამოქვეყნება Jobsight-ზე არის მარტივი და ეფექტური გზა კარგი კანდიდატების მოსაზიდად"
+msgstr "Posting a job on Jobsight is a simple and effective way to attract good candidates"
 
 msgid "ფასდაკლება"
 msgstr "Discount"

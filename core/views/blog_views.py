@@ -35,8 +35,8 @@ class BlogListView(ListView):
         ).order_by('-published_at')[:5]
         
         # SEO metadata
-        context['meta_title'] = 'Jobsy ბლოგი - კარიერული რჩევები და სიახლეები'
-        context['meta_description'] = 'გაეცანით უახლეს სტატიებს დასაქმების, კარიერული განვითარების და პროფესიული ზრდის შესახებ Jobsy-ს ბლოგზე.'
+        context['meta_title'] = 'Jobsight ბლოგი - კარიერული რჩევები და სიახლეები'
+        context['meta_description'] = 'გაეცანით უახლეს სტატიებს დასაქმების, კარიერული განვითარების და პროფესიული ზრდის შესახებ Jobsight-ს ბლოგზე.'
         context['meta_keywords'] = 'ბლოგი, კარიერა, დასაქმება, სამსახური, პროფესიული განვითარება'
         
         return context
@@ -86,7 +86,7 @@ class BlogPostDetailView(DetailView):
         
         # SEO metadata
         context['meta_title'] = post.title
-        context['meta_description'] = post.meta_description or post.excerpt or f"{post.title} - Jobsy ბლოგი"
+        context['meta_description'] = post.meta_description or post.excerpt or f"{post.title} - Jobsight ბლოგი"
         context['meta_keywords'] = post.meta_keywords
         
         return context
@@ -128,8 +128,8 @@ class BlogCategoryView(ListView):
         ).order_by('-post_count')[:15]
         
         # SEO metadata
-        context['meta_title'] = f"{self.category.name} - Jobsy ბლოგი"
-        context['meta_description'] = self.category.description or f"სტატიები კატეგორიაში {self.category.name} - Jobsy ბლოგი"
+        context['meta_title'] = f"{self.category.name} - Jobsight ბლოგი"
+        context['meta_description'] = self.category.description or f"სტატიები კატეგორიაში {self.category.name} - Jobsight ბლოგი"
         context['meta_keywords'] = f"{self.category.name}, ბლოგი, კარიერა, დასაქმება"
         
         return context
@@ -163,8 +163,8 @@ class BlogTagView(ListView):
         ).order_by('-post_count')[:15]
         
         # SEO metadata
-        context['meta_title'] = f"#{self.tag.name} - Jobsy ბლოგი"
-        context['meta_description'] = f"სტატიები ტეგით #{self.tag.name} - Jobsy ბლოგი"
+        context['meta_title'] = f"#{self.tag.name} - Jobsight ბლოგი"
+        context['meta_description'] = f"სტატიები ტეგით #{self.tag.name} - Jobsight ბლოგი"
         context['meta_keywords'] = f"{self.tag.name}, ბლოგი, კარიერა, დასაქმება"
         
         return context 

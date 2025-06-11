@@ -1,6 +1,6 @@
-# Deploying to Render with Supabase
+# Render Deployment Guide
 
-This guide explains how to deploy the Jobsy application to Render using Supabase as the database.
+This guide explains how to deploy the Jobsight application to Render using Supabase as the database.
 
 ## Prerequisites
 
@@ -37,7 +37,7 @@ GOOGLE_OAUTH2_SECRET=<your-google-oauth2-secret>
 ## Deployment Steps
 
 1. Log in to your Render dashboard
-2. Navigate to your Web Service for Jobsy
+2. Navigate to your Web Service for Jobsight
 3. Go to the "Environment" tab
 4. Add all the environment variables listed above
 5. Click "Save Changes"

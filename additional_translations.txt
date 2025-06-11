@@ -2,7 +2,7 @@ msgid "ჩვენი ვაკანსიები დაგეხმარ�
 msgstr "Our job listings will help you!"
 
 msgid "საუკეთესო სამსახურის მოძიებაში ჯობსის ვაკანსიები დაგეხმარება"
-msgstr "Jobsy's job listings will help you find the best job"
+msgstr "Jobsight's job listings will help you find the best job"
 
 msgid "რეგისტრაცია"
 msgstr "Registration"
@@ -25,8 +25,8 @@ msgstr "Our Packages"
 msgid "აირჩიეთ თქვენთვის შესაფერისი პაკეტი"
 msgstr "Choose the package that suits you"
 
-msgid "ვაკანსიის გამოქვეყნება Jobsy-ზე არის მარტივი და ეფექტური გზა კარგი კანდიდატების მოსაზიდად"
-msgstr "Posting a job on Jobsy is a simple and effective way to attract good candidates"
+msgid "ვაკანსიის გამოქვეყნება Jobsight-ზე არის მარტივი და ეფექტური გზა კარგი კანდიდატების მოსაზიდად"
+msgstr "Posting a job on Jobsight is a simple and effective way to attract good candidates"
 
 msgid "ფასდაკლება"
 msgstr "Discount"

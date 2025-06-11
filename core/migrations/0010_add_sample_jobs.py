@@ -33,9 +33,9 @@ def create_sample_jobs(apps, schema_editor):
     employer_profile, created = EmployerProfile.objects.get_or_create(
         user_profile=admin_profile,
         defaults={
-            'company_name': 'Jobsy Admin',
+            'company_name': 'Jobsight Admin',
             'company_website': 'https://jobsy.ge',
-            'company_description': 'Administrator for Jobsy platform',
+            'company_description': 'Administrator for Jobsight platform',
             'company_size': '1-10',
             'industry': 'Technology',
             'location': 'თბილისი'

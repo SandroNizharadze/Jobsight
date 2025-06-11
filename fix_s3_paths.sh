@@ -1,8 +1,8 @@
 #!/bin/bash
 
-# Script to fix S3 paths and configure AWS credentials for Jobsy CV database
+# Script to fix S3 paths and configure AWS credentials for Jobsight CV database
 
-echo "Jobsy S3 Configuration Helper"
+echo "Jobsight S3 Configuration Helper"
 echo "============================"
 echo
 
