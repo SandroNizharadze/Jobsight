@@ -11,5 +11,7 @@ services:
         value: 3.11.4
       - key: RENDER
         value: "true"
+      - key: ALLOWED_HOSTS
+        value: "jobsy-uoul.onrender.com,localhost,127.0.0.1,jobsight.ge,www.jobsight.ge"
     healthCheckPath: /
     autoDeploy: true 

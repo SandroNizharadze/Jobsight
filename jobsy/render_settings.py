@@ -10,12 +10,21 @@ DEBUG = True
 print(f"Starting with ALLOWED_HOSTS: {ALLOWED_HOSTS}")
 print(f"Running with BASE_DIR: {BASE_DIR}")
 
+# Get and print raw ALLOWED_HOSTS environment variable
+raw_allowed_hosts = os.environ.get('ALLOWED_HOSTS', 'NO_ALLOWED_HOSTS_ENV_VAR')
+print(f"Raw ALLOWED_HOSTS env var: {raw_allowed_hosts}")
+
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.environ.get('SECRET_KEY', 'placeholder-secret-key-do-not-use-in-production')
 
 # SECURITY WARNING: update this with your production domain
 ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', 'jobsy-uoul.onrender.com,localhost,127.0.0.1,jobsight.ge,www.jobsight.ge').split(',')
-print(f"Updated ALLOWED_HOSTS: {ALLOWED_HOSTS}")
+# Explicitly add jobsight.ge domains to ALLOWED_HOSTS to ensure they're included
+if 'jobsight.ge' not in ALLOWED_HOSTS:
+    ALLOWED_HOSTS.append('jobsight.ge')
+if 'www.jobsight.ge' not in ALLOWED_HOSTS:
+    ALLOWED_HOSTS.append('www.jobsight.ge')
+print(f"Final ALLOWED_HOSTS: {ALLOWED_HOSTS}")
 
 # Database - Production always uses Supabase
 DATABASES = {
@@ -41,6 +50,9 @@ print("Production environment: Using Supabase database")
 
 # Enable S3 storage in production
 USE_S3 = os.environ.get('USE_S3', 'True') == 'True'
+
+# Add FixHostHeaderMiddleware to handle domain transition
+MIDDLEWARE = ['core.middleware.FixHostHeaderMiddleware'] + MIDDLEWARE
 
 if USE_S3:
     from .s3_settings import *
