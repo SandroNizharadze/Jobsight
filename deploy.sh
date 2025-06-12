@@ -21,5 +21,5 @@ if [ $? -ne 0 ]; then
     python manage.py migrate
 fi
 
-# Start the application with gunicorn
-exec gunicorn jobsy.wsgi:application 
+# Start the application with gunicorn and specify host binding
+exec gunicorn jobsy.wsgi:application --bind=0.0.0.0:$PORT 

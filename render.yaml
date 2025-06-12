@@ -9,5 +9,7 @@ services:
         value: jobsy.render_settings
       - key: PYTHON_VERSION
         value: 3.11.4
+      - key: RENDER
+        value: "true"
     healthCheckPath: /
     autoDeploy: true 
