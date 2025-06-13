@@ -402,7 +402,7 @@ class EmployerProfile(SoftDeletionModel):
     company_name = models.CharField(max_length=100, blank=True, db_index=True, verbose_name=_("კომპანიის დასახელება"))
     company_id = models.CharField(max_length=50, blank=True, null=True, verbose_name=_("საიდენტიფიკაციო კოდი"))
     phone_number = models.CharField(max_length=50, blank=True, null=True, verbose_name=_("მობილურის ნომერი"))
-    show_phone_number = models.BooleanField(default=True, verbose_name=_("გამოჩნდეს ტელეფონის ნომერი პროფილზე"))
+    show_phone_number = models.BooleanField(default=False, verbose_name=_("გამოჩნდეს ტელეფონის ნომერი პროფილზე"))
     company_website = models.URLField(blank=True, verbose_name=_("კომპანიის ვებსაიტი"))
     company_description = CKEditor5Field(blank=True, verbose_name=_("კომპანიის აღწერა"))
     # Use PublicMediaStorage for company logos when S3 is enabled
