@@ -39,8 +39,6 @@ INSTALLED_APPS = [
     'rangefilter',
     'storages',
     'core',
-    'ckeditor',  # Keep for backward compatibility with migrations
-    'ckeditor_uploader',  # Keep for backward compatibility with migrations
     'django_ckeditor_5',
 ]
 
@@ -241,16 +239,6 @@ DEFAULT_FROM_EMAIL = os.environ.get('DEFAULT_FROM_EMAIL', 'noreply@jobsight.ge')
 if DEBUG:
     EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
-# CKEditor 4 Settings (for backward compatibility with migrations)
-CKEDITOR_UPLOAD_PATH = "uploads/ckeditor4/"
-CKEDITOR_CONFIGS = {
-    'default': {
-        'toolbar': 'full',
-        'height': 300,
-        'width': 800,
-    },
-}
-
 # CKEditor 5 Settings
 CKEDITOR_5_CONFIGS = {
     'default': {
@@ -263,12 +251,41 @@ CKEDITOR_5_CONFIGS = {
                 {'model': 'heading3', 'view': 'h3', 'title': 'Heading 3', 'class': 'ck-heading_heading3'}
             ]
         },
+        'language': {
+            'ui': 'en',
+            'content': 'ka',
+            'textPartLanguage': [
+                { 'title': 'Georgian', 'languageCode': 'ka' },
+                { 'title': 'English', 'languageCode': 'en' }
+            ]
+        },
         'ckfinder': {
-            'uploadUrl': '/ck_upload_url/'
+            'uploadUrl': '/ckeditor5/upload/'
         },
         'css': {
             'all': ['/static/css/ckeditor5-custom.css']
-        }
+        },
+        'extraPlugins': ['Font'],
+        'font': {
+            'supportAllValues': True
+        },
+        'fontSize': {
+            'options': [9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25],
+            'supportAllValues': True
+        },
+        'enterMode': 2,  # CKEDITOR.ENTER_BR
+        'entities': False,
+        'entities_greek': False,
+        'entities_latin': False,
+        'forcePasteAsPlainText': True,
+        'allowedContent': True,  # Allow all content
+        'disableNativeSpellChecker': False,
+        'disableObjectResizing': False,
+        'contentsCss': ['/static/css/ckeditor5-contents.css'],
+        'extraAllowedContent': '*[*]{*}(*)',  # Allow all tags, attributes, styles
+        'pasteFilter': None,  # Disable paste filtering
+        'forceEnterMode': True,  # Force the enter mode
+        'autoParagraph': False,  # Disable auto paragraph
     }
 }
 

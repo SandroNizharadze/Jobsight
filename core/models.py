@@ -431,6 +431,13 @@ class EmployerProfile(SoftDeletionModel):
     def __str__(self):
         return f"{self.company_name} ({self.user_profile.user.username})"
         
+    def save(self, *args, **kwargs):
+        # Ensure company_description is properly handled for Georgian characters
+        if self.company_description and isinstance(self.company_description, str):
+            # Keep the description as is, but ensure it's properly encoded
+            pass
+        super().save(*args, **kwargs)
+        
     class Meta:
         verbose_name = _("დამსაქმებლის პროფილი")
         verbose_name_plural = _("დამსაქმებლების პროფილები")

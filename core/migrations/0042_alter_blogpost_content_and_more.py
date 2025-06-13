@@ -3,8 +3,8 @@
 # even though we're transitioning to django-ckeditor-5. This is why both packages
 # are included in requirements.txt and INSTALLED_APPS.
 
-import ckeditor.fields
 from django.db import migrations
+import django.db.models.fields
 
 
 class Migration(migrations.Migration):
@@ -17,16 +17,16 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='blogpost',
             name='content',
-            field=ckeditor.fields.RichTextField(verbose_name='კონტენტი'),
+            field=django.db.models.fields.TextField(verbose_name='კონტენტი'),
         ),
         migrations.AlterField(
             model_name='employerprofile',
             name='company_description',
-            field=ckeditor.fields.RichTextField(blank=True, verbose_name='კომპანიის აღწერა'),
+            field=django.db.models.fields.TextField(blank=True, verbose_name='კომპანიის აღწერა'),
         ),
         migrations.AlterField(
             model_name='joblisting',
             name='description',
-            field=ckeditor.fields.RichTextField(verbose_name='ვაკანსიის აღწერა'),
+            field=django.db.models.fields.TextField(verbose_name='ვაკანსიის აღწერა'),
         ),
     ]

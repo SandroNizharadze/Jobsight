@@ -1,6 +1,7 @@
 {% extends 'core/base.html' %}
 {% load i18n %}
 {% load form_tags %}
+{% load static %}
 
 {% block head %}
 {{ block.super }}
@@ -174,6 +175,14 @@
           {% if employer_form.company_description.errors %}
           <p class="mt-1 text-sm text-red-600">{{ employer_form.company_description.errors|join:", " }}</p>
           {% endif %}
+          
+          <!-- Debug info - will be hidden in production -->
+          {% if debug %}
+          <div class="mt-4 p-3 bg-gray-100 rounded text-xs">
+            <p class="font-bold">Debug Info:</p>
+            <p>Raw content: <span id="debug-raw-content" class="font-mono">{{ user.userprofile.employer_profile.company_description|default:"" }}</span></p>
+          </div>
+          {% endif %}
         </div>
 
         <!-- Company Logo -->
@@ -209,7 +218,7 @@
       
       <!-- Form Actions -->
       <div class="px-6 py-4 bg-gray-50 border-t border-gray-200 flex justify-end">
-        <button type="submit" class="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+        <button type="submit" id="employer-profile-submit" class="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
           <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4"></path>
           </svg>
@@ -224,6 +233,63 @@
 {% block extra_js %}
 <script>
   document.addEventListener('DOMContentLoaded', function() {
+    // Ensure CKEditor shows the current company description
+    // Add a small delay to make sure CKEditor is fully initialized
+    setTimeout(function() {
+      const editorElement = document.querySelector('.django_ckeditor_5');
+      if (editorElement) {
+        // Wait for CKEditor instance to be available
+        const checkForInstance = setInterval(function() {
+          if (editorElement.ckeditorInstance) {
+            clearInterval(checkForInstance);
+            console.log('CKEditor instance found, ensuring content is loaded');
+            
+            // Force CKEditor to use the content from the textarea
+            const textarea = document.querySelector('textarea[name="company_description"]');
+            if (textarea) {
+              // Ensure the textarea content is properly encoded for Georgian characters
+              let content = textarea.value;
+              console.log('Original content:', content.substring(0, 50) + (content.length > 50 ? '...' : ''));
+              
+              // Force CKEditor to use this content
+              editorElement.ckeditorInstance.setData(content);
+              
+              // Add a change event listener to update the textarea when CKEditor content changes
+              editorElement.ckeditorInstance.model.document.on('change:data', () => {
+                const newData = editorElement.ckeditorInstance.getData();
+                textarea.value = newData;
+                console.log('CKEditor content updated:', newData.substring(0, 50) + (newData.length > 50 ? '...' : ''));
+              });
+            } else {
+              console.log('Textarea not found');
+            }
+          }
+        }, 200);
+      } else {
+        console.log('CKEditor element not found');
+      }
+    }, 1000); // Increased delay to ensure CKEditor is fully initialized
+
+    // Handle form submission to ensure CKEditor data is properly saved
+    const form = document.getElementById('employer-profile-form');
+    const submitButton = document.getElementById('employer-profile-submit');
+    
+    if (form && submitButton) {
+      form.addEventListener('submit', function(e) {
+        // Find CKEditor instance
+        const editorElement = document.querySelector('.django_ckeditor_5');
+        if (editorElement && editorElement.ckeditorInstance) {
+          // Get data from CKEditor and update the hidden textarea
+          const data = editorElement.ckeditorInstance.getData();
+          const textarea = document.querySelector('textarea[name="company_description"]');
+          if (textarea) {
+            textarea.value = data;
+            console.log('Updated company description before submission:', data.substring(0, 50) + (data.length > 50 ? '...' : ''));
+          }
+        }
+      });
+    }
+    
     // Preview profile picture
     const profilePictureInput = document.getElementById('{{ profile_form.profile_picture.id_for_label }}');
     profilePictureInput.addEventListener('change', function(e) {

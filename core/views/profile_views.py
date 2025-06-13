@@ -72,10 +72,21 @@ def profile(request):
                 user_profile.profile_picture = profile_picture
                 user_profile.save()
             
+            # Get the company description
+            company_description = request.POST.get('company_description', '')
+            
+            # Log the company description to help debug Georgian character issues
+            logger.info(f"Company description before validation: {company_description[:50]}...")
+            
             if employer_form.is_valid():
-                employer_form.save()
+                # Save the form
+                employer_profile = employer_form.save()
                 messages.success(request, "Company profile updated successfully!")
                 return redirect('profile')
+            else:
+                # If the form is invalid, log the errors
+                logger.error(f"Employer form errors: {employer_form.errors}")
+                messages.error(request, "Error updating company profile. Please check the form and try again.")
     
     # Get filters from query params
     name_filter = request.GET.get('name', '')

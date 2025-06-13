@@ -4,13 +4,13 @@ from .models import JobListing, BlogPost
 from django.utils import timezone
 from datetime import timedelta
 
-class JobSitemap(Sitemap):
+class JobListingSitemap(Sitemap):
     changefreq = "daily"
-    priority = 0.8
+    priority = 0.9
 
     def items(self):
         # Only include active jobs
-        return JobListing.objects.filter(status='approved', deleted_at=None)
+        return JobListing.objects.filter(status='approved', deleted_at=None).order_by('-posted_at')
 
     def lastmod(self, obj):
         return obj.updated_at or obj.posted_at
@@ -24,13 +24,13 @@ class BlogSitemap(Sitemap):
     priority = 0.7
 
     def items(self):
-        return BlogPost.objects.filter(status='published', deleted_at=None)
+        return BlogPost.objects.filter(status='published', deleted_at=None).order_by('-published_at')
 
     def lastmod(self, obj):
         return obj.updated_at or obj.created_at
 
     def location(self, obj):
-        return reverse('blog_post_detail', args=[obj.slug])
+        return reverse('blog_post_detail', kwargs={'slug': obj.slug})
 
 
 class StaticViewSitemap(Sitemap):
@@ -38,7 +38,7 @@ class StaticViewSitemap(Sitemap):
     changefreq = "monthly"
 
     def items(self):
-        return ['job_list', 'login', 'register', 'blog_list', 'pricing']
+        return ['job_list', 'about', 'contact', 'terms', 'privacy']
 
     def location(self, item):
         return reverse(item) 

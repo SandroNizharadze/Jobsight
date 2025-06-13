@@ -197,6 +197,28 @@ class EmployerProfileForm(forms.ModelForm):
                 raise forms.ValidationError("File is not an image")
         return company_logo
 
+    def clean_company_description(self):
+        """Ensure proper handling of Georgian characters in company description"""
+        data = self.cleaned_data.get('company_description', '')
+        
+        # If data is empty or only contains HTML tags, return it as is
+        if not data or data.strip() == '':
+            return data
+        
+        # Ensure data is properly encoded as UTF-8
+        if isinstance(data, str):
+            try:
+                # First encode to bytes, then decode back to ensure proper encoding
+                data_bytes = data.encode('utf-8', errors='replace')
+                return data_bytes.decode('utf-8', errors='replace')
+            except Exception as e:
+                import logging
+                logging.error(f"Error encoding company description: {str(e)}")
+                # Return original data if encoding fails
+                return data
+        
+        return data
+
 class JobListingForm(forms.ModelForm):
     # Add georgian_language_only as a form field (not a model field)
     georgian_language_only = forms.BooleanField(
