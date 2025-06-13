@@ -4,11 +4,13 @@
 
 <!-- Desktop Navigation (hidden on mobile) -->
 <div class="hidden md:block">
-    <nav class="bg-gray-900 text-white py-3">
+    <nav class="text-white py-3" style="background-color:rgb(9, 36, 60);">
         <div class="container mx-auto px-4">
             <div class="flex items-center justify-between">
                 <!-- Logo -->
-                <a class="text-2xl font-bold text-white jobsight-logo" href="{% url 'job_list' %}">Jobsight.</a>
+                <a class="text-2xl font-bold text-white jobsight-logo" href="{% url 'job_list' %}">
+                    <img src="{% static 'images/jobsight.png' %}" alt="Jobsight" class="h-6">
+                </a>
                 
                 <!-- Desktop menu -->
                 <div class="flex items-center">
