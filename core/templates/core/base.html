@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="{{ LANGUAGE_CODE }}">
+<html lang="{{ LANGUAGE_CODE }}" style="background-color: rgb(9, 36, 60);">
 {% load static %}
 {% load i18n %}
 
@@ -48,6 +48,11 @@
     </script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
+        /* Prevent white overscroll background */
+        html {
+            background-color: rgb(9, 36, 60);
+        }
+        
         /* Embed Sylfaen font if available */
         @font-face {
             font-family: 'Sylfaen Web';
@@ -114,6 +119,15 @@
             body {
                 padding-bottom: 4rem; /* Adjust this value based on the height of your mobile nav */
             }
+            
+            /* Fix for job list page - remove extra space */
+            body.job-list-page .min-h-screen {
+                min-height: auto !important;
+            }
+            
+            body.job-list-page footer {
+                margin-top: 0 !important;
+            }
         }
     </style>
     {% block extra_head %}{% endblock %}
@@ -137,7 +151,7 @@
     <!-- End Meta Pixel Code -->
 </head>
 
-<body class="bg-gray-50">
+<body class="bg-gray-50 {% if request.resolver_match.url_name == 'job_list' %}job-list-page{% endif %}">
     <!-- Google Tag Manager (noscript) -->
     <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-NVBR47B6"
     height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
@@ -147,7 +161,7 @@
     
     {% block hero_section %}{% endblock %}
     
-    <div class="min-h-screen">
+    <div class="min-h-screen {% if request.resolver_match.url_name == 'job_list' %}job-list-content{% endif %}">
         {% include 'core/components/base/alerts.html' %}
         {% block content %}{% endblock %}
     </div>
@@ -207,6 +221,11 @@
         
         // Process the entire body
         processTextNodes(document.body);
+        
+        // Fix for job list page on mobile
+        if (document.body.classList.contains('job-list-page') && window.innerWidth < 768) {
+            document.querySelector('.job-list-content').style.minHeight = 'auto';
+        }
     });
     </script>
 </body>

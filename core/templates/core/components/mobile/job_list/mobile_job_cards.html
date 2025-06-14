@@ -3,10 +3,10 @@
 {% load core_extras %}
 
 <!-- Mobile Job Listings -->
-<div class="-mt-7">
+<div class="-mt-7 pb-0 mb-0">
   <!-- Premium+ Section -->
   {% if premium_plus_count > 0 %}
-    <div class="bg-white py-2 px-4 shadow-lg relative z-20">
+    <div class="bg-white py-2 px-4 {% if not premium_count > 0 %}shadow-lg{% endif %} relative z-20">
       <h3 class="text-gray-800 font-semibold flex items-center mb-2 pt-2">
         <span class="mr-2 flex items-center justify-center w-5 h-5 bg-gradient-to-br from-purple-500 to-blue-500 rounded-full text-white">
           <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -107,9 +107,9 @@
 
   <!-- Premium Section -->
   {% if premium_count > 0 %}
-    <div class="bg-white py-2 px-4 {% if premium_plus_count > 0 %}mt-0{% elif not request.GET.show_filters %}rounded-t-3xl shadow-lg relative z-20 pt-2{% endif %}">
+    <div class="bg-white py-2 px-4 {% if premium_plus_count > 0 %}mt-0 pt-0{% elif not request.GET.show_filters %}rounded-t-3xl shadow-lg relative z-20 pt-2{% endif %}">
       <h3 class="text-gray-800 font-semibold flex items-center mb-2">
-        <span class="mr-2 flex items-center justify-center w-5 h-5 bg-blue-500 rounded-full text-white">
+        <span class="mr-2 flex items-center justify-center w-5 h-5 bg-amber-500 rounded-full text-white">
           <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
           </svg>
@@ -122,20 +122,20 @@
           {% if job.premium_level == 'premium' %}
             <!-- Premium Job Card -->
             <a href="{% url 'job_detail' job_id=job.id %}" class="block">
-              <div class="bg-white rounded-xl border border-blue-500 p-3 shadow-sm flex relative">
+              <div class="bg-white rounded-xl border border-amber-500 p-3 shadow-sm flex relative">
                 <!-- Job info -->
                 <div class="flex-1 pr-3">
                   <div class="flex justify-between items-start mb-1">
                     <div class="text-xs font-medium text-gray-700 mb-1">{{ job.company }}</div>
                     <div class="flex space-x-1 absolute top-2 right-2">
-                      <span class="bg-blue-500 text-white text-2xs px-1.5 py-0.5 rounded-full">Premium</span>
+                      <span class="bg-amber-500 text-white text-2xs px-1.5 py-0.5 rounded-full">Premium</span>
                       {% if job.remote %}
                         <span class="bg-green-500 text-white text-2xs px-1.5 py-0.5 rounded-full">{% trans "Remote" %}</span>
                       {% endif %}
                     </div>
                   </div>
                   
-                  <h3 class="text-sm font-bold mb-1 text-blue-900">{{ job.title }}</h3>
+                  <h3 class="text-sm font-bold mb-1 text-amber-900">{{ job.title }}</h3>
                   
                   <div>
                     <div class="flex items-center text-2xs text-gray-600 mb-0.5">
@@ -210,7 +210,7 @@
   {% if standard_count > 0 %}
     <div class="bg-white py-2 px-4 {% if premium_plus_count > 0 or premium_count > 0 %}mt-0{% elif not request.GET.show_filters %}rounded-t-3xl shadow-lg relative z-20 pt-2{% endif %}">
       <h3 class="text-gray-800 font-semibold flex items-center mb-2">
-        <span class="mr-2 flex items-center justify-center w-5 h-5 bg-amber-500 rounded-full text-white">
+        <span class="mr-2 flex items-center justify-center w-5 h-5 bg-blue-500 rounded-full text-white">
           <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
           </svg>
@@ -223,7 +223,7 @@
           {% if job.premium_level == 'standard' or not job.premium_level %}
             <!-- Standard Job Card -->
             <a href="{% url 'job_detail' job_id=job.id %}" class="block">
-              <div class="bg-white rounded-xl border border-amber-300 p-3 shadow-sm flex relative">
+              <div class="bg-white rounded-xl border border-blue-500 p-3 shadow-sm flex relative">
                 <!-- Job info -->
                 <div class="flex-1 pr-3">
                   <div class="flex justify-between items-start mb-1">
@@ -235,7 +235,7 @@
                     </div>
                   </div>
                   
-                  <h3 class="text-sm font-bold mb-1 text-amber-900">{{ job.title }}</h3>
+                  <h3 class="text-sm font-bold mb-1 text-blue-900">{{ job.title }}</h3>
                   
                   <div>
                     <div class="flex items-center text-2xs text-gray-600 mb-0.5">

@@ -4,6 +4,64 @@
 
 {% block title %}{% trans "ვაკანსიები" %} | Jobsight{% endblock %}
 
+{% block extra_head %}
+<style>
+@media (max-width: 768px) {
+  .mobile-job-cta-fix {
+    margin-top: 0 !important;
+    padding-top: 0 !important;
+  }
+  
+  .mobile-job-cards-container {
+    margin-bottom: 0 !important;
+    padding-bottom: 0 !important;
+  }
+  
+  .mobile-employer-cta {
+    margin-top: 0 !important;
+    border-top-left-radius: 0 !important;
+    border-top-right-radius: 0 !important;
+    margin-bottom: 0 !important;
+    padding-bottom: 0 !important;
+  }
+  
+  /* Fix for empty space after CTA */
+  .min-h-screen {
+    min-height: auto !important;
+  }
+  
+  /* Adjust bottom padding to account for mobile nav */
+  .mobile-employer-cta section {
+    padding-bottom: 1rem !important;
+    margin-bottom: 0 !important;
+  }
+  
+  /* Fix for footer spacing */
+  footer {
+    margin-top: 0 !important;
+  }
+  
+  /* Remove any extra space in the hero section */
+  .md\:hidden {
+    margin-bottom: 0 !important;
+  }
+  
+  /* Force the footer to be directly below the CTA */
+  .mobile-employer-cta + * {
+    margin-top: 0 !important;
+    padding-top: 0 !important;
+  }
+  
+  /* Fix for the job list page specifically */
+  .job-list-page-container {
+    min-height: auto !important;
+    margin-bottom: 0 !important;
+    padding-bottom: 0 !important;
+  }
+}
+</style>
+{% endblock %}
+
 {% block hero_section %}
     <!-- Desktop Hero Section -->
     <div class="hidden md:block">
@@ -11,7 +69,7 @@
     </div>
     
     <!-- Mobile Hero Section, Filters, and Job Cards -->
-    <div class="md:hidden">
+    <div class="md:hidden job-list-page-container">
         {% include 'core/components/mobile/job_list/mobile_hero.html' %}
         
         <!-- Mobile Filters (only visible when active) -->
@@ -19,7 +77,33 @@
             {% include 'core/components/mobile/job_list/mobile_filters.html' %}
         </div>
         
-        {% include 'core/components/mobile/job_list/mobile_job_cards.html' %}
+        <!-- Mobile Job Cards -->
+        <div class="mobile-job-cards-container">
+            {% include 'core/components/mobile/job_list/mobile_job_cards.html' %}
+        </div>
+        
+        <!-- Mobile Employer CTA (only on mobile) -->
+        <div class="mobile-employer-cta job-list-last-element">
+            <section class="mt-0 mb-0">
+                <div class="container mx-auto px-4">
+                    <div class="bg-amber-300 rounded-none rounded-b-2xl p-6">
+                        <div class="grid grid-cols-1 items-center">
+                            <div>
+                                <h2 class="text-2xl font-bold mb-3">{% trans "გჭირდებათ თანამშრომელი?" %}</h2>
+                                <div class="mb-6 text-gray-800">
+                                    <p>{% trans "გამოაქვეყნეთ ვაკანსია ჯობსიზე და იპოვეთ საუკეთესო კანდიდატები თქვენი კომპანიისთვის." %}</p>
+                                    <p>{% trans "ათასობით პროფესიონალი ეძებს ახალ შესაძლებლობებს ყოველდღე." %}</p>
+                                </div>
+                                <a href="{% url 'pricing' %}" 
+                                   class="inline-block bg-gray-900 hover:bg-gray-800 text-white font-medium px-6 py-3 rounded-xl transition-colors">
+                                    {% trans "შეიტყვეთ მეტი" %}
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
     </div>
 {% endblock %}
 
@@ -38,12 +122,27 @@
 {% endblock %}
 
 {% block bottom_section %}
-    {% include 'core/components/job_list/employer_cta.html' %}
+    <!-- Desktop Employer CTA (hidden on mobile) -->
+    <div class="hidden md:block mt-12">
+        {% include 'core/components/job_list/employer_cta.html' %}
+    </div>
 {% endblock %}
 
 {% block extra_js %}
 <script>
 document.addEventListener('DOMContentLoaded', function() {
+    // Fix for empty space after CTA on mobile
+    if (window.innerWidth < 768) {
+        document.querySelector('.min-h-screen').style.minHeight = 'auto';
+        
+        // Add padding to the last element to account for mobile nav
+        const lastElement = document.querySelector('.job-list-last-element');
+        if (lastElement) {
+            lastElement.style.marginBottom = '0';
+            lastElement.style.paddingBottom = '0';
+        }
+    }
+
     // Salary slider functionality for desktop
     const salarySlider = document.getElementById('salary-slider');
     const salaryValue = document.getElementById('salary-value');
