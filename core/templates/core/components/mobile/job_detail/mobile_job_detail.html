@@ -5,7 +5,7 @@
 <!-- Mobile Job Detail (only visible on mobile) -->
 <div class="md:hidden">
   <!-- Job Header -->
-  <div class="bg-gray-800 text-white p-4">
+  <div class="bg-gray-800 text-white p-4" style="background-color:rgb(9, 36, 60);">
     <div class="flex items-start justify-between mb-3">
       <div>
         <h1 class="text-xl font-bold mb-1">{{ job.title }}</h1>
@@ -330,7 +330,7 @@
   <!-- Action Buttons - Redesigned -->
   <div class="fixed bottom-16 left-0 right-0 bg-white border-t border-gray-200 p-3 flex shadow-lg z-10">
     {% if not is_expired %}
-      <button type="button" data-modal-target="applyModal" class="flex-grow bg-gray-800 hover:bg-gray-700 text-white font-medium py-2.5 px-4 rounded-lg transition-colors mr-3 flex items-center justify-center">
+      <button type="button" data-modal-target="applyModal" class="flex-grow bg-gray-800 hover:bg-gray-700 text-white font-medium py-2.5 px-4 rounded-lg transition-colors mr-3 flex items-center justify-center" style="background-color:rgb(9, 36, 60);">
         <i class="fas fa-paper-plane mr-2"></i>{% trans "განაცხადის გაგზავნა" %}
       </button>
     {% endif %}
