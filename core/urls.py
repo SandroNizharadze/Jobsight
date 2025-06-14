@@ -26,6 +26,7 @@ urlpatterns = [
     
     path('employer/', employer_views.employer_home, name='employer_home'),
     path('employer/dashboard/', employer_views.employer_dashboard, name='employer_dashboard'),
+    path('employer/deleted-jobs/', employer_views.deleted_jobs, name='deleted_jobs'),
     path('employer/post-job/', employer_views.post_job, name='post_job'),
     path('employer/delete-job/<int:job_id>/', employer_views.delete_job, name='delete_job'),
     path('employer/restore-job/<int:job_id>/', employer_views.restore_job, name='restore_job'),

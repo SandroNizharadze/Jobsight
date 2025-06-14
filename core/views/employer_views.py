@@ -191,8 +191,8 @@ def employer_dashboard(request):
     """
     employer_profile = request.user.userprofile.employer_profile
 
-    # Get all jobs for this employer, including deleted ones
-    jobs_query = JobListing.all_objects.filter(
+    # Get all jobs for this employer, excluding deleted ones
+    jobs_query = JobListing.objects.filter(
         employer=employer_profile
     )
     
@@ -322,6 +322,69 @@ def employer_dashboard(request):
 
 @login_required
 @user_passes_test(is_employer)
+def deleted_jobs(request):
+    """
+    Display all deleted jobs for an employer
+    """
+    employer_profile = request.user.userprofile.employer_profile
+
+    # Get all deleted jobs for this employer
+    jobs_query = JobListing.all_objects.filter(
+        employer=employer_profile,
+        deleted_at__isnull=False
+    )
+    
+    # Apply search filter if provided
+    search_query = request.GET.get('search', '')
+    if search_query:
+        jobs_query = jobs_query.filter(
+            Q(title__icontains=search_query) |
+            Q(location__icontains=search_query) |
+            Q(company__icontains=search_query) |
+            Q(category__icontains=search_query)
+        )
+    
+    # Annotate with counts needed for sorting and display
+    jobs_query = jobs_query.annotate(
+        applications_count=Count('applications'),
+        unread_applications_count=Count('applications', filter=Q(applications__is_read=False)),
+        pending_applications_count=Count('applications', filter=Q(applications__status='განხილვის_პროცესში')),
+    )
+    
+    # Apply sorting
+    sort_option = request.GET.get('sort_by', 'date_desc')
+    
+    if sort_option == 'date_desc':
+        jobs_query = jobs_query.order_by('-posted_at')
+    elif sort_option == 'date_asc':
+        jobs_query = jobs_query.order_by('posted_at')
+    elif sort_option == 'views_desc':
+        jobs_query = jobs_query.order_by('-view_count')
+    elif sort_option == 'applicants_desc':
+        jobs_query = jobs_query.order_by('-applications_count')
+    else:
+        jobs_query = jobs_query.order_by('-posted_at')  # Default to newest first
+    
+    # Process jobs to add helper attributes for template
+    all_jobs = []
+    for job in jobs_query:
+        # Set is_deleted flag for template
+        job.is_deleted = True
+        all_jobs.append(job)
+    
+    context = {
+        'employer_profile': employer_profile,
+        'all_jobs': all_jobs,
+    }
+    
+    # If this is an AJAX request, only return the jobs container
+    if request.GET.get('ajax') == 'true' or request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+        return render(request, 'core/partials/job_listings.html', context)
+    
+    return render(request, 'core/employer_deleted_jobs.html', context)
+
+@login_required
+@user_passes_test(is_employer)
 def post_job(request):
     """
     Handle job posting form submission
@@ -430,7 +493,7 @@ def job_applications(request, job_id):
     Display all applications for a specific job
     """
     # Get the job and verify ownership
-    job = get_object_or_404(JobListing, id=job_id)
+    job = get_object_or_404(JobListing.all_objects, id=job_id)
     employer_profile = request.user.userprofile.employer_profile
     
     if job.employer != employer_profile:
@@ -484,6 +547,7 @@ def job_applications(request, job_id):
         'review_applications': review_applications,
         'interview_applications': interview_applications,
         'reserve_applications': reserve_applications,
+        'is_deleted': job.deleted_at is not None,
     }
     
     return render(request, 'core/employer_applications.html', context)
@@ -703,10 +767,11 @@ def cv_database(request):
         return redirect('employer_dashboard')
     
     # Get user profiles with CVs that are visible to employers
+    # Ensure both CV is uploaded and visibility is enabled
     profiles = UserProfile.objects.filter(
         role='candidate',
-        cv__isnull=False,
-        visible_to_employers=True
+        cv__isnull=False,  # CV must be uploaded
+        visible_to_employers=True  # Visibility must be enabled
     ).select_related('user')
     
     # Apply filters if provided

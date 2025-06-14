@@ -206,8 +206,13 @@
                 {% endblocktrans %}
               </p>
               <p class="text-sm text-gray-600 mt-1">
-                {% trans "Click the restore button next to deleted jobs to restore them. Restored jobs will be set to pending review status." %}
+                {% trans "Click the button below to view your deleted jobs and their applications." %}
               </p>
+              <div class="mt-4">
+                <a href="{% url 'deleted_jobs' %}" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                  {% trans "View Deleted Jobs" %}
+                </a>
+              </div>
             </div>
           </div>
         </div>

@@ -59,9 +59,13 @@ def profile(request):
             if form.is_valid():
                 form.save()
                 if is_ajax:
-                    return JsonResponse({'success': True})
+                    return JsonResponse({'success': True, 'message': "Profile updated successfully."})
                 messages.success(request, "Profile updated successfully!")
                 return redirect('profile')
+            else:
+                if is_ajax:
+                    return JsonResponse({'success': False, 'errors': form.errors}, status=400)
+                messages.error(request, "Error updating profile. Please check the form and try again.")
         
         elif form_type == 'employer_form' and user_profile.role == 'employer':
             employer_form = EmployerProfileForm(request.POST, request.FILES, instance=user_profile.employer_profile)

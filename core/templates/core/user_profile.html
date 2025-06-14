@@ -207,7 +207,7 @@
                     <label for="{{ profile_form.desired_field.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-1">
                       {% trans "სასურველი სფერო" %}
                     </label>
-                    <select id="{{ profile_form.desired_field.id_for_label }}" name="desired_field" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md">
+                    <select id="{{ profile_form.desired_field.id_for_label }}" name="desired_field" class="auto-save-field mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md">
                       <option value="">{% trans "აირჩიეთ სფერო" %}</option>
                       {% for value, label in category_choices %}
                         <option value="{{ value }}" {% if user.userprofile.desired_field == value %}selected{% endif %}>{{ label }}</option>
@@ -223,7 +223,7 @@
                     <label for="{{ profile_form.field_experience.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-1">
                       {% trans "გამოცდილება" %}
                     </label>
-                    <select id="{{ profile_form.field_experience.id_for_label }}" name="field_experience" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md">
+                    <select id="{{ profile_form.field_experience.id_for_label }}" name="field_experience" class="auto-save-field mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md">
                       <option value="">{% trans "აირჩიეთ გამოცდილების დონე" %}</option>
                       {% for value, label in experience_choices %}
                         <option value="{{ value }}" {% if user.userprofile.field_experience == value %}selected{% endif %}>{{ label }}</option>
@@ -235,24 +235,49 @@
                   </div>
                 </div>
                 
-                <!-- Visible to Employers -->
+                <!-- Visible to Employers - Only show if CV is uploaded -->
+                {% if user.userprofile.cv %}
                 <div class="flex items-start">
                   <div class="flex items-center h-5">
-                    <input id="{{ profile_form.visible_to_employers.id_for_label }}" name="visible_to_employers" type="checkbox" class="focus:ring-blue-500 h-4 w-4 text-blue-600 border-gray-300 rounded" {% if user.userprofile.visible_to_employers %}checked{% endif %}>
-                  </div>
-                  <div class="ml-3 text-sm">
-                    <label for="{{ profile_form.visible_to_employers.id_for_label }}" class="font-medium text-gray-700">{% trans "მსურს ჩემი CV ხილვადი იყოს დამსაქმებლისთვის" %}</label>
-                    <p class="text-gray-500">{% trans "დამსაქმებლებს შეეძლებათ თქვენი CV-ის ნახვა" %}</p>
+                    <!-- Toggle switch instead of checkbox -->
+                    <label for="{{ profile_form.visible_to_employers.id_for_label }}" class="flex items-center cursor-pointer">
+                      <div class="relative">
+                        <input id="{{ profile_form.visible_to_employers.id_for_label }}" name="visible_to_employers" type="checkbox" class="sr-only auto-save-field" {% if user.userprofile.visible_to_employers %}checked{% endif %}>
+                        <div class="w-10 h-5 bg-gray-200 rounded-full shadow-inner"></div>
+                        <div class="dot absolute w-5 h-5 bg-white rounded-full shadow -left-0.5 -top-0.5 transition {% if user.userprofile.visible_to_employers %}transform translate-x-5 bg-blue-600{% endif %}"></div>
+                      </div>
+                      <div class="ml-3 text-sm">
+                        <span class="font-medium text-gray-700">{% trans "მსურს ჩემი CV ხილვადი იყოს დამსაქმებლისთვის" %}</span>
+                        <p class="text-gray-500">{% trans "დამსაქმებლებს შეეძლებათ თქვენი CV-ის ნახვა" %}</p>
+                      </div>
+                    </label>
                   </div>
                 </div>
+                {% else %}
+                <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4">
+                  <div class="flex">
+                    <div class="flex-shrink-0">
+                      <svg class="h-5 w-5 text-yellow-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
+                      </svg>
+                    </div>
+                    <div class="ml-3">
+                      <p class="text-sm text-yellow-700">
+                        {% trans "ატვირთეთ CV რომ გახდეთ ხილვადი დამსაქმებლებისთვის CV-ების ბაზაში" %}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+                {% endif %}
                 
-                <div class="flex justify-end">
-                  <button type="submit" class="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
-                    <svg class="h-5 w-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <!-- Status message for auto-save -->
+                <div id="auto-save-status" class="hidden">
+                  <div class="flex items-center text-sm text-green-600">
+                    <svg class="h-5 w-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
                     </svg>
-                    {% trans "შენახვა" %}
-                  </button>
+                    <span>{% trans "ცვლილებები შენახულია" %}</span>
+                  </div>
                 </div>
               </form>
             </div>
@@ -302,6 +327,79 @@
         }
       });
     }
+    
+    // Toggle switch functionality
+    const toggleSwitch = document.getElementById('{{ profile_form.visible_to_employers.id_for_label }}');
+    if (toggleSwitch) {
+      toggleSwitch.addEventListener('change', function() {
+        const dot = this.parentElement.querySelector('.dot');
+        if (this.checked) {
+          dot.classList.add('transform', 'translate-x-5', 'bg-blue-600');
+        } else {
+          dot.classList.remove('transform', 'translate-x-5', 'bg-blue-600');
+        }
+      });
+    }
+
+    // Auto-save functionality
+    const autoSaveForm = document.getElementById('cv-database-form');
+    const autoSaveStatus = document.getElementById('auto-save-status');
+    const autoSaveFields = document.querySelectorAll('.auto-save-field');
+    
+    if (autoSaveForm && autoSaveFields.length > 0) {
+      // Add change event listeners to all auto-save fields
+      autoSaveFields.forEach(field => {
+        field.addEventListener('change', function() {
+          // Submit form via AJAX
+          submitFormAjax(autoSaveForm);
+        });
+      });
+    }
+    
+    // Function to submit form via AJAX
+    function submitFormAjax(form) {
+      // Create FormData object from the form
+      const formData = new FormData(form);
+      
+      // Show loading state
+      autoSaveStatus.innerHTML = '<div class="flex items-center text-sm text-blue-600"><svg class="animate-spin h-5 w-5 mr-1" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg><span>{% trans "შენახვა..." %}</span></div>';
+      autoSaveStatus.classList.remove('hidden');
+      
+      // Send AJAX request
+      fetch(window.location.href, {
+        method: 'POST',
+        body: formData,
+        headers: {
+          'X-Requested-With': 'XMLHttpRequest'
+        }
+      })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        return response.json();
+      })
+      .then(data => {
+        // Show success message
+        autoSaveStatus.innerHTML = '<div class="flex items-center text-sm text-green-600"><svg class="h-5 w-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg><span>{% trans "ცვლილებები შენახულია" %}</span></div>';
+        
+        // Hide message after 3 seconds
+        setTimeout(() => {
+          autoSaveStatus.classList.add('hidden');
+        }, 3000);
+      })
+      .catch(error => {
+        // Show error message
+        autoSaveStatus.innerHTML = '<div class="flex items-center text-sm text-red-600"><svg class="h-5 w-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg><span>{% trans "შეცდომა შენახვისას" %}</span></div>';
+      });
+    }
   });
 </script>
+
+<style>
+  /* Toggle switch animation */
+  .dot {
+    transition: all 0.3s ease-in-out;
+  }
+</style>
 {% endblock %}

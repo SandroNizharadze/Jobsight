@@ -135,6 +135,12 @@ class UserProfileForm(forms.ModelForm):
         self.fields['desired_field'].choices = [('', '----------')] + list(JobListing.CATEGORY_CHOICES)
         # Set choices for field_experience from JobListing.EXPERIENCE_CHOICES
         self.fields['field_experience'].choices = [('', '----------')] + list(JobListing.EXPERIENCE_CHOICES)
+        
+        # If no CV is uploaded, set visible_to_employers to False
+        instance = kwargs.get('instance')
+        if instance and not instance.cv:
+            self.fields['visible_to_employers'].initial = False
+            self.fields['visible_to_employers'].disabled = True
 
     def clean_profile_picture(self):
         profile_picture = self.cleaned_data.get('profile_picture')
@@ -145,6 +151,16 @@ class UserProfileForm(forms.ModelForm):
             if not profile_picture.content_type.startswith('image/'):
                 raise forms.ValidationError("File is not an image")
         return profile_picture
+
+    def save(self, commit=True):
+        instance = super().save(commit=False)
+        # Ensure visible_to_employers is False when no CV is uploaded
+        if not instance.cv:
+            instance.visible_to_employers = False
+        
+        if commit:
+            instance.save()
+        return instance
 
 class EmployerProfileForm(forms.ModelForm):
     class Meta:

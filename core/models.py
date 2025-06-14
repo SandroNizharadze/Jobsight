@@ -371,6 +371,10 @@ class UserProfile(models.Model):
             except Exception as e:
                 logger.error(f"Error getting old role: {e}")
         
+        # Ensure visible_to_employers is False when no CV is uploaded
+        if not self.cv:
+            self.visible_to_employers = False
+        
         # Ensure the save completes 
         super().save(*args, **kwargs)
         
