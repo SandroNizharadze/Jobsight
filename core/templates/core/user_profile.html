@@ -244,7 +244,7 @@
                       <div class="relative">
                         <input id="{{ profile_form.visible_to_employers.id_for_label }}" name="visible_to_employers" type="checkbox" class="sr-only auto-save-field" {% if user.userprofile.visible_to_employers %}checked{% endif %}>
                         <div class="w-10 h-5 bg-gray-200 rounded-full shadow-inner"></div>
-                        <div class="dot absolute w-5 h-5 bg-white rounded-full shadow -left-0.5 -top-0.5 transition {% if user.userprofile.visible_to_employers %}transform translate-x-5 bg-blue-600{% endif %}"></div>
+                        <div class="dot absolute w-5 h-5 bg-white rounded-full shadow top-0 left-0 transition-transform duration-300 ease-in-out {% if user.userprofile.visible_to_employers %}transform translate-x-5 bg-blue-600{% endif %}"></div>
                       </div>
                       <div class="ml-3 text-sm">
                         <span class="font-medium text-gray-700">{% trans "მსურს ჩემი CV ხილვადი იყოს დამსაქმებლისთვის" %}</span>
@@ -400,6 +400,15 @@
   /* Toggle switch animation */
   .dot {
     transition: all 0.3s ease-in-out;
+  }
+  
+  /* Ensure toggle switch is properly sized and positioned */
+  input[type="checkbox"].sr-only + div + .dot {
+    transform: translateX(0);
+  }
+  
+  input[type="checkbox"].sr-only:checked + div + .dot {
+    transform: translateX(1.25rem);
   }
 </style>
 {% endblock %}
