@@ -277,7 +277,9 @@ CKEDITOR_5_CONFIGS = {
         'entities': False,
         'entities_greek': False,
         'entities_latin': False,
-        'forcePasteAsPlainText': True,
+        'entities_processNumerical': False,
+        'entities_additional': '',
+        'forcePasteAsPlainText': False,  # Changed to False to preserve Georgian text
         'allowedContent': True,  # Allow all content
         'disableNativeSpellChecker': False,
         'disableObjectResizing': False,
@@ -286,6 +288,11 @@ CKEDITOR_5_CONFIGS = {
         'pasteFilter': None,  # Disable paste filtering
         'forceEnterMode': True,  # Force the enter mode
         'autoParagraph': False,  # Disable auto paragraph
+        'basicEntities': False,
+        'fillEmptyBlocks': False,
+        'tabSpaces': 0,
+        'fullPage': False,
+        'ignoreEmptyParagraph': True,
     }
 }
 

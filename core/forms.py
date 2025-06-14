@@ -5,6 +5,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.core.files.uploadedfile import UploadedFile
 from django.utils.translation import gettext_lazy as _
 from django_ckeditor_5.widgets import CKEditor5Widget
+import re
 
 class RegistrationForm(UserCreationForm):
     email = forms.EmailField(required=True)
@@ -184,10 +185,11 @@ class EmployerProfileForm(forms.ModelForm):
                 'class': 'form-control',
                 'placeholder': 'https://www.example.com'
             }),
-            'company_description': CKEditor5Widget(
-                attrs={'class': 'django_ckeditor_5'}, 
-                config_name='default'
-            ),
+            'company_description': forms.Textarea(attrs={
+                'class': 'form-control',
+                'placeholder': 'კომპანიის აღწერა',
+                'rows': 6
+            }),
             'company_logo': forms.FileInput(attrs={
                 'class': 'form-control',
                 'accept': 'image/*'
@@ -217,23 +219,13 @@ class EmployerProfileForm(forms.ModelForm):
         """Ensure proper handling of Georgian characters in company description"""
         data = self.cleaned_data.get('company_description', '')
         
-        # If data is empty or only contains HTML tags, return it as is
+        # If data is empty, return it as is
         if not data or data.strip() == '':
             return data
         
-        # Ensure data is properly encoded as UTF-8
-        if isinstance(data, str):
-            try:
-                # First encode to bytes, then decode back to ensure proper encoding
-                data_bytes = data.encode('utf-8', errors='replace')
-                return data_bytes.decode('utf-8', errors='replace')
-            except Exception as e:
-                import logging
-                logging.error(f"Error encoding company description: {str(e)}")
-                # Return original data if encoding fails
-                return data
-        
-        return data
+        # No special processing needed for regular textarea
+        # Just ensure it's a proper string
+        return str(data)
 
 class JobListingForm(forms.ModelForm):
     # Add georgian_language_only as a form field (not a model field)

@@ -4,7 +4,7 @@ import dj_database_url
 
 # SECURITY WARNING: don't run with debug turned on in production!
 # Temporarily enable debug for troubleshooting the 400 error
-DEBUG = True
+DEBUG = False
 
 # Print environment variables and settings for debugging
 print(f"Starting with ALLOWED_HOSTS: {ALLOWED_HOSTS}")

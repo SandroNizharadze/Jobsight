@@ -6,6 +6,50 @@
 {% block head %}
 {{ block.super }}
 {{ employer_form.media }}
+<style>
+  /* Custom styles for CKEditor placeholder */
+  .ck.ck-editor__editable_inline {
+    position: relative;
+  }
+  
+  /* Georgian placeholder overlay */
+  #georgian-placeholder-overlay {
+    font-family: 'Noto Sans Georgian', 'BPG Arial', sans-serif;
+    font-size: 16px;
+    color: #aaa;
+    font-style: italic;
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    pointer-events: none;
+    z-index: 100;
+    transition: opacity 0.2s ease;
+  }
+  
+  /* Ensure the CKEditor container is properly positioned */
+  .django_ckeditor_5 {
+    position: relative !important;
+  }
+  
+  /* Custom styles for textarea */
+  textarea[name="company_description"] {
+    width: 100%;
+    min-height: 150px;
+    padding: 10px;
+    font-family: 'Noto Sans Georgian', 'BPG Arial', 'Sylfaen', sans-serif;
+    font-size: 16px;
+    border: 1px solid #d1d5db;
+    border-radius: 0.375rem;
+    resize: vertical;
+    line-height: 1.5;
+  }
+  
+  textarea[name="company_description"]::placeholder {
+    color: #9ca3af;
+    opacity: 1;
+    font-family: 'Noto Sans Georgian', 'BPG Arial', 'Sylfaen', sans-serif;
+  }
+</style>
 {% endblock %}
 
 {% block title %}{% trans "კომპანიის პროფილი" %} - Jobsight{% endblock %}
@@ -31,7 +75,7 @@
   </div>
 
   <div class="bg-white rounded-xl shadow-md overflow-hidden">
-    <form method="post" enctype="multipart/form-data" id="employer-profile-form">
+    <form method="post" enctype="multipart/form-data" id="employer-profile-form" action="{% url 'update_employer_profile' %}">
       {% csrf_token %}
       <input type="hidden" name="form_type" value="employer_form">
       
@@ -171,7 +215,7 @@
           <label for="{{ employer_form.company_description.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-1">
             {% trans "კომპანიის აღწერა" %}
           </label>
-          {{ employer_form.company_description|add_class:"w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50" }}
+          {{ employer_form.company_description|add_class:"w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50 georgian-text" }}
           {% if employer_form.company_description.errors %}
           <p class="mt-1 text-sm text-red-600">{{ employer_form.company_description.errors|join:", " }}</p>
           {% endif %}
@@ -305,28 +349,6 @@
 {% block extra_js %}
 <script>
   document.addEventListener('DOMContentLoaded', function() {
-    // Ensure CKEditor shows the current company description
-    // Add a small delay to make sure CKEditor is fully initialized
-    setTimeout(function() {
-      const editorElement = document.querySelector('.django_ckeditor_5');
-      if (editorElement) {
-        // Wait for CKEditor instance to be available
-        const checkForInstance = setInterval(function() {
-          if (editorElement.ckeditorInstance) {
-            clearInterval(checkForInstance);
-            console.log('CKEditor instance found, ensuring content is loaded');
-            
-            // Force CKEditor to use the content from the textarea
-            const textarea = document.querySelector('textarea[name="company_description"]');
-            if (textarea) {
-              // Ensure the textarea content is properly encoded for Georgian characters
-              editorElement.ckeditorInstance.setData(textarea.value);
-            }
-          }
-        }, 100);
-      }
-    }, 500);
-    
     // Handle company logo file input changes
     const logoInput = document.getElementById('{{ employer_form.company_logo.id_for_label }}');
     if (logoInput) {

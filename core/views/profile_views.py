@@ -78,15 +78,22 @@ def profile(request):
                 user_profile.profile_picture = profile_picture
                 user_profile.save()
             
-            # Get the company description
+            # Get the company description directly from the form
             company_description = request.POST.get('company_description', '')
             
-            # Log the company description to help debug Georgian character issues
-            logger.info(f"Company description before validation: {company_description[:50]}...")
+            # Log the company description for debugging
+            logger.info(f"Company description: {company_description[:50]}...")
             
             if employer_form.is_valid():
-                # Save the form
-                employer_profile = employer_form.save()
+                # Save the form but don't commit yet
+                employer_profile = employer_form.save(commit=False)
+                
+                # Ensure the company description is properly set
+                if company_description:
+                    employer_profile.company_description = company_description
+                
+                # Now save the profile
+                employer_profile.save()
                 messages.success(request, "Company profile updated successfully!")
                 return redirect('profile')
             else:
@@ -469,4 +476,65 @@ def delete_account(request):
         logger.error(f"Error during account deletion: {str(e)}")
         logger.error(traceback.format_exc())
         messages.error(request, _("An error occurred while deleting your account. Please try again or contact support."))
+        return redirect('profile')
+
+@login_required
+@require_POST
+def update_employer_profile(request):
+    """
+    Special view to handle employer profile updates with Georgian text
+    """
+    try:
+        # Get user profile
+        user_profile = request.user.userprofile
+        
+        # Ensure user is an employer
+        if user_profile.role != 'employer':
+            messages.error(request, "Only employers can update company profiles.")
+            return redirect('profile')
+        
+        # Get employer profile
+        try:
+            employer_profile = user_profile.employer_profile
+        except EmployerProfile.DoesNotExist:
+            messages.error(request, "Employer profile not found.")
+            return redirect('profile')
+        
+        # Process the form data
+        form = EmployerProfileForm(request.POST, request.FILES, instance=employer_profile)
+        
+        # Handle profile picture update
+        profile_picture = request.FILES.get('profile_picture')
+        if profile_picture:
+            user_profile.profile_picture = profile_picture
+            user_profile.save()
+        
+        # Get the company description directly from the form
+        company_description = request.POST.get('company_description', '')
+        
+        # Log the company description
+        logger.info(f"Company description: {company_description[:100]}...")
+        
+        if form.is_valid():
+            # Save form but don't commit yet
+            profile = form.save(commit=False)
+            
+            # Use our processed company description
+            if company_description:
+                profile.company_description = company_description
+            
+            # Save the profile
+            profile.save()
+            
+            messages.success(request, "Company profile updated successfully!")
+        else:
+            logger.error(f"Form errors: {form.errors}")
+            messages.error(request, "Error updating company profile. Please check the form and try again.")
+        
+        return redirect('profile')
+    
+    except Exception as e:
+        logger.error(f"Error in update_employer_profile: {str(e)}")
+        logger.error(traceback.format_exc())
+        messages.error(request, "An error occurred while updating your profile.")
         return redirect('profile')

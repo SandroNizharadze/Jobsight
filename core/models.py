@@ -438,10 +438,44 @@ class EmployerProfile(SoftDeletionModel):
     def save(self, *args, **kwargs):
         # Ensure company_description is properly handled for Georgian characters
         if self.company_description and isinstance(self.company_description, str):
-            # Keep the description as is, but ensure it's properly encoded
-            pass
+            # Check if description contains Georgian characters
+            has_georgian = any(ord(c) >= 0x10A0 and ord(c) <= 0x10FF for c in self.company_description)
+            
+            if has_georgian:
+                # For Georgian text, preserve as is without any normalization
+                # Just log that we're handling Georgian text
+                import logging
+                logging.info("Georgian text detected in company description - preserving as is")
+                
+                # Ensure the database connection is using UTF-8
+                from django.db import connection
+                try:
+                    with connection.cursor() as cursor:
+                        cursor.execute("SET client_encoding = 'UTF8';")
+                        logging.info("Database client encoding set to UTF8")
+                except Exception as e:
+                    logging.error(f"Error setting database encoding: {str(e)}")
+        
         super().save(*args, **kwargs)
         
+        # If there's Georgian text, update the field directly in the database
+        # to bypass any ORM transformations
+        if self.company_description and isinstance(self.company_description, str):
+            has_georgian = any(ord(c) >= 0x10A0 and ord(c) <= 0x10FF for c in self.company_description)
+            if has_georgian and self.pk:
+                import logging
+                from django.db import connection
+                try:
+                    with connection.cursor() as cursor:
+                        # Use parameterized query to avoid SQL injection
+                        cursor.execute(
+                            "UPDATE core_employerprofile SET company_description = %s WHERE id = %s",
+                            [self.company_description, self.pk]
+                        )
+                        logging.info(f"Direct database update for Georgian text in company_description (ID: {self.pk})")
+                except Exception as e:
+                    logging.error(f"Error in direct database update: {str(e)}")
+
     class Meta:
         verbose_name = _("დამსაქმებლის პროფილი")
         verbose_name_plural = _("დამსაქმებლების პროფილები")
