@@ -291,6 +291,73 @@
       {% include 'core/components/profile/applications_section.html' %}
     </div>
   </div>
+  
+  <!-- Delete Account Section -->
+  <div class="mt-12 pt-8 border-t border-gray-200">
+    <div class="max-w-2xl mx-auto">
+      <h3 class="text-lg font-medium text-gray-900 mb-4">{% trans "ექაუნთის წაშლა" %}</h3>
+      <div class="bg-red-50 border-l-4 border-red-400 p-4 mb-6">
+        <div class="flex">
+          <div class="flex-shrink-0">
+            <svg class="h-5 w-5 text-red-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+              <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
+            </svg>
+          </div>
+          <div class="ml-3">
+            <p class="text-sm text-red-700">
+              {% trans "გაფრთხილება: ექაუნთის წაშლა შეუქცევადია. ყველა თქვენი პერსონალური ინფორმაცია, მათ შორის ელფოსტა და CV, სამუდამოდ წაიშლება." %}
+            </p>
+          </div>
+        </div>
+      </div>
+      <button id="delete-account-btn" type="button" class="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
+        <svg class="h-5 w-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+        </svg>
+        {% trans "წაშალე ექაუნთი" %}
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Delete Account Modal -->
+<div id="delete-account-modal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden overflow-y-auto h-full w-full" aria-hidden="true">
+  <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+    <div class="mt-3">
+      <h3 class="text-lg font-medium leading-6 text-gray-900 mb-4">{% trans "დაადასტურეთ ექაუნთის წაშლა" %}</h3>
+      <div class="bg-red-50 border-l-4 border-red-400 p-4 mb-4">
+        <div class="flex">
+          <div class="flex-shrink-0">
+            <svg class="h-5 w-5 text-red-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+              <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
+            </svg>
+          </div>
+          <div class="ml-3">
+            <p class="text-sm text-red-700">
+              {% trans "ეს ქმედება შეუქცევადია. ყველა თქვენი პერსონალური ინფორმაცია წაიშლება." %}
+            </p>
+          </div>
+        </div>
+      </div>
+      <form id="delete-account-form" action="{% url 'delete_account' %}" method="post" class="space-y-4">
+        {% csrf_token %}
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-2">
+            {% trans "დასადასტურებლად ჩაწერეთ სიტყვა" %} <span class="font-bold">delete</span>
+          </label>
+          <input type="text" name="confirmation" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-red-500 focus:ring focus:ring-red-500 focus:ring-opacity-50" required>
+        </div>
+        <div class="flex justify-end space-x-3">
+          <button type="button" id="cancel-delete" class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50">
+            {% trans "გაუქმება" %}
+          </button>
+          <button type="submit" class="px-4 py-2 text-sm font-medium text-white bg-red-600 border border-transparent rounded-md hover:bg-red-700">
+            {% trans "წაშალე ექაუნთი" %}
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
 </div>
 
 {% include 'core/components/profile/rejection_reasons_modal.html' %}
@@ -300,97 +367,148 @@
 {% include 'core/components/profile/profile_js.html' %}
 
 <script>
-  // Additional script to ensure tab switching works correctly
   document.addEventListener('DOMContentLoaded', function() {
-    // Add direct click handler to job activity tab
-    const jobActivityTab = document.getElementById('job-activity-tab');
-    if (jobActivityTab) {
-      jobActivityTab.addEventListener('click', function() {
-        console.log("Job activity tab clicked directly");
+    // Tab functionality
+    const tabToggles = document.querySelectorAll('[data-tab-toggle="tab"]');
+    tabToggles.forEach(toggle => {
+      toggle.addEventListener('click', function() {
+        const targetId = this.dataset.tabTarget;
         
-        // Show job activity section
-        const profileSection = document.getElementById('profile-section');
-        const jobActivitySection = document.getElementById('job-activity-section');
+        // Hide all tab panes
+        document.querySelectorAll('.tab-pane').forEach(pane => {
+          pane.classList.add('hidden');
+          pane.classList.remove('block');
+        });
         
-        if (profileSection && jobActivitySection) {
-          profileSection.classList.add('hidden');
-          profileSection.classList.remove('block');
-          
-          jobActivitySection.classList.remove('hidden');
-          jobActivitySection.classList.add('block');
-          
-          // Ensure applications tab is active
-          const applicationsButton = document.querySelector('[data-activity-tab="applications"]');
-          if (applicationsButton) {
-            applicationsButton.click();
+        // Show the target tab pane
+        const targetPane = document.querySelector(targetId);
+        if (targetPane) {
+          targetPane.classList.remove('hidden');
+          targetPane.classList.add('block');
+        }
+        
+        // Update the active tab styling
+        tabToggles.forEach(t => {
+          t.classList.remove('border-blue-500', 'text-blue-600');
+          t.classList.add('border-transparent', 'text-gray-500', 'hover:text-gray-700', 'hover:border-gray-300');
+        });
+        this.classList.remove('border-transparent', 'text-gray-500', 'hover:text-gray-700', 'hover:border-gray-300');
+        this.classList.add('border-blue-500', 'text-blue-600');
+      });
+    });
+    
+    // CV form toggle
+    const showCvFormBtn = document.getElementById('show-cv-form-btn');
+    const cancelCvFormBtn = document.getElementById('cancel-cv-form-btn');
+    const cvInitialBtn = document.getElementById('cv-initial-btn');
+    const cvUploadForm = document.getElementById('cv-upload-form');
+    
+    if (showCvFormBtn && cancelCvFormBtn && cvInitialBtn && cvUploadForm) {
+      showCvFormBtn.addEventListener('click', function() {
+        cvInitialBtn.style.display = 'none';
+        cvUploadForm.style.display = 'block';
+      });
+      
+      cancelCvFormBtn.addEventListener('click', function() {
+        cvInitialBtn.style.display = 'block';
+        cvUploadForm.style.display = 'none';
+      });
+    }
+    
+    // CV form AJAX submission
+    const cvUploadFormElement = document.getElementById('cv-upload-form-element');
+    if (cvUploadFormElement) {
+      cvUploadFormElement.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const formData = new FormData(this);
+        const errorElement = document.getElementById('cv-form-error');
+        
+        fetch(window.location.href, {
+          method: 'POST',
+          body: formData,
+          headers: {
+            'X-Requested-With': 'XMLHttpRequest'
           }
-        }
-      });
-    }
-    
-    // Toggle switch functionality
-    const toggleSwitch = document.getElementById('{{ profile_form.visible_to_employers.id_for_label }}');
-    if (toggleSwitch) {
-      toggleSwitch.addEventListener('change', function() {
-        const dot = this.parentElement.querySelector('.dot');
-        if (this.checked) {
-          dot.classList.add('transform', 'translate-x-5', 'bg-blue-600');
-        } else {
-          dot.classList.remove('transform', 'translate-x-5', 'bg-blue-600');
-        }
-      });
-    }
-
-    // Auto-save functionality
-    const autoSaveForm = document.getElementById('cv-database-form');
-    const autoSaveStatus = document.getElementById('auto-save-status');
-    const autoSaveFields = document.querySelectorAll('.auto-save-field');
-    
-    if (autoSaveForm && autoSaveFields.length > 0) {
-      // Add change event listeners to all auto-save fields
-      autoSaveFields.forEach(field => {
-        field.addEventListener('change', function() {
-          // Submit form via AJAX
-          submitFormAjax(autoSaveForm);
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.success) {
+            // Reload the page to show the updated CV
+            window.location.reload();
+          } else {
+            // Show error message
+            errorElement.textContent = Object.values(data.errors).join(', ');
+            errorElement.classList.remove('hidden');
+          }
+        })
+        .catch(error => {
+          console.error('Error:', error);
+          errorElement.textContent = 'An error occurred. Please try again.';
+          errorElement.classList.remove('hidden');
         });
       });
     }
     
-    // Function to submit form via AJAX
-    function submitFormAjax(form) {
-      // Create FormData object from the form
-      const formData = new FormData(form);
-      
-      // Show loading state
-      autoSaveStatus.innerHTML = '<div class="flex items-center text-sm text-blue-600"><svg class="animate-spin h-5 w-5 mr-1" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg><span>{% trans "შენახვა..." %}</span></div>';
-      autoSaveStatus.classList.remove('hidden');
-      
-      // Send AJAX request
-      fetch(window.location.href, {
-        method: 'POST',
-        body: formData,
-        headers: {
-          'X-Requested-With': 'XMLHttpRequest'
-        }
-      })
-      .then(response => {
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
-        return response.json();
-      })
-      .then(data => {
-        // Show success message
-        autoSaveStatus.innerHTML = '<div class="flex items-center text-sm text-green-600"><svg class="h-5 w-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg><span>{% trans "ცვლილებები შენახულია" %}</span></div>';
+    // Auto-save fields
+    const autoSaveFields = document.querySelectorAll('.auto-save-field');
+    autoSaveFields.forEach(field => {
+      field.addEventListener('change', function() {
+        const formData = new FormData();
+        formData.append('form_type', 'user_profile');
+        formData.append(this.name, this.type === 'checkbox' ? (this.checked ? 'on' : '') : this.value);
+        formData.append('csrfmiddlewaretoken', document.querySelector('[name=csrfmiddlewaretoken]').value);
         
-        // Hide message after 3 seconds
-        setTimeout(() => {
-          autoSaveStatus.classList.add('hidden');
-        }, 3000);
-      })
-      .catch(error => {
-        // Show error message
-        autoSaveStatus.innerHTML = '<div class="flex items-center text-sm text-red-600"><svg class="h-5 w-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg><span>{% trans "შეცდომა შენახვისას" %}</span></div>';
+        // Update toggle switch appearance for checkboxes
+        if (this.type === 'checkbox') {
+          const dot = this.parentElement.querySelector('.dot');
+          if (dot) {
+            if (this.checked) {
+              dot.classList.add('transform', 'translate-x-5', 'bg-blue-600');
+            } else {
+              dot.classList.remove('transform', 'translate-x-5', 'bg-blue-600');
+            }
+          }
+        }
+        
+        fetch(window.location.href, {
+          method: 'POST',
+          body: formData,
+          headers: {
+            'X-Requested-With': 'XMLHttpRequest'
+          }
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (!data.success) {
+            console.error('Error saving field:', data.errors);
+          }
+        })
+        .catch(error => {
+          console.error('Error:', error);
+        });
+      });
+    });
+    
+    // Delete account modal
+    const deleteAccountBtn = document.getElementById('delete-account-btn');
+    const deleteAccountModal = document.getElementById('delete-account-modal');
+    const cancelDeleteBtn = document.getElementById('cancel-delete');
+    
+    if (deleteAccountBtn && deleteAccountModal && cancelDeleteBtn) {
+      deleteAccountBtn.addEventListener('click', function() {
+        deleteAccountModal.classList.remove('hidden');
+      });
+      
+      cancelDeleteBtn.addEventListener('click', function() {
+        deleteAccountModal.classList.add('hidden');
+      });
+      
+      // Close modal when clicking outside
+      deleteAccountModal.addEventListener('click', function(e) {
+        if (e.target === deleteAccountModal) {
+          deleteAccountModal.classList.add('hidden');
+        }
       });
     }
   });

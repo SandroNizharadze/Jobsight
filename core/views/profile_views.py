@@ -19,6 +19,8 @@ import mimetypes
 import boto3
 from botocore.exceptions import ClientError
 from django.utils import timezone
+from django.contrib.auth import logout
+import uuid
 
 logger = logging.getLogger(__name__)
 
@@ -350,3 +352,121 @@ def view_cv_employer(request, profile_id):
         logging.error(traceback.format_exc())
         messages.error(request, _("An error occurred. Please try again later."))
         return redirect('employer_dashboard')
+
+@login_required
+@require_POST
+def delete_account(request):
+    """
+    Delete user account by anonymizing personal data and removing files
+    """
+    try:
+        user = request.user
+        
+        # Get confirmation from the form
+        confirmation = request.POST.get('confirmation', '').lower()
+        if confirmation != 'delete':
+            messages.error(request, _("Please type 'delete' to confirm account deletion."))
+            return redirect('profile')
+        
+        # Check if user has a profile
+        try:
+            user_profile = user.userprofile
+            is_employer = user_profile.role == 'employer'
+            
+            # Remove CV file if exists
+            if user_profile.cv:
+                # Get the CV file path
+                cv_path = user_profile.cv.name
+                logger.info(f"Removing CV for deleted account: {cv_path}")
+                
+                try:
+                    if hasattr(settings, 'USE_S3') and settings.USE_S3:
+                        # For S3 storage
+                        storage = PrivateMediaStorage()
+                        if storage.exists(cv_path):
+                            storage.delete(cv_path)
+                    else:
+                        # For local storage
+                        if default_storage.exists(cv_path):
+                            default_storage.delete(cv_path)
+                except Exception as e:
+                    logger.error(f"Error deleting CV file during account deletion: {str(e)}")
+                
+                # Clear CV field
+                user_profile.cv = None
+            
+            # Remove profile picture if exists
+            if user_profile.profile_picture:
+                try:
+                    picture_path = user_profile.profile_picture.name
+                    logger.info(f"Removing profile picture for deleted account: {picture_path}")
+                    
+                    if hasattr(settings, 'USE_S3') and settings.USE_S3:
+                        storage = PublicMediaStorage()
+                        if storage.exists(picture_path):
+                            storage.delete(picture_path)
+                    else:
+                        if default_storage.exists(picture_path):
+                            default_storage.delete(picture_path)
+                    
+                    user_profile.profile_picture = None
+                except Exception as e:
+                    logger.error(f"Error deleting profile picture during account deletion: {str(e)}")
+            
+            # Handle employer-specific data if applicable
+            if is_employer and hasattr(user_profile, 'employer_profile'):
+                employer_profile = user_profile.employer_profile
+                
+                # Remove company logo if exists
+                if employer_profile.company_logo:
+                    try:
+                        logo_path = employer_profile.company_logo.name
+                        logger.info(f"Removing company logo for deleted account: {logo_path}")
+                        
+                        if hasattr(settings, 'USE_S3') and settings.USE_S3:
+                            storage = PublicMediaStorage()
+                            if storage.exists(logo_path):
+                                storage.delete(logo_path)
+                        else:
+                            if default_storage.exists(logo_path):
+                                default_storage.delete(logo_path)
+                        
+                        employer_profile.company_logo = None
+                    except Exception as e:
+                        logger.error(f"Error deleting company logo during account deletion: {str(e)}")
+                
+                # Anonymize employer profile data
+                employer_profile.company_name = f"Deleted Employer {uuid.uuid4().hex[:8]}"
+                employer_profile.company_id = None
+                employer_profile.phone_number = None
+                employer_profile.company_website = None
+                employer_profile.company_description = None
+                employer_profile.save()
+            
+            # Anonymize user data
+            user.email = f"deleted_{uuid.uuid4().hex[:8]}@deleted.user"
+            user.first_name = "Deleted"
+            user.last_name = "User"
+            user.username = f"deleted_user_{uuid.uuid4().hex[:8]}"
+            user.set_unusable_password()
+            user.save()
+            
+            # Save profile changes
+            user_profile.save()
+            
+            # Log the user out
+            logout(request)
+            
+            messages.success(request, _("Your account has been successfully deleted. All personal information has been removed."))
+            return redirect('login')
+            
+        except UserProfile.DoesNotExist:
+            logger.error(f"Attempted to delete account without profile: {user.username}")
+            messages.error(request, _("Error: User profile not found."))
+            return redirect('profile')
+            
+    except Exception as e:
+        logger.error(f"Error during account deletion: {str(e)}")
+        logger.error(traceback.format_exc())
+        messages.error(request, _("An error occurred while deleting your account. Please try again or contact support."))
+        return redirect('profile')

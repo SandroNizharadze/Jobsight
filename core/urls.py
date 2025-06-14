@@ -19,6 +19,7 @@ urlpatterns = [
     path('register/', auth_views.register, name='register'),
     path('profile/', profile_views.profile, name='profile'),
     path('profile/remove-cv/', profile_views.remove_cv, name='remove_cv'),
+    path('profile/delete-account/', profile_views.delete_account, name='delete_account'),
     
     # Email verification URLs
     path('verify-email/<str:token>/', verify_email, name='verify_email'),
