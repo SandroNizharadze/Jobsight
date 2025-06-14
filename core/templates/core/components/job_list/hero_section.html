@@ -2,23 +2,84 @@
 {% load i18n %}
 
 
-<section style="background-color:rgb(9, 36, 60);" class="pb-16 pt-24 ">
-    <div class="container mx-auto px-4 ">
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center min-h-[400px]">
-            <div>
-                <div class="p-8 md:p-10 h-full">
-                    <h1 class="text-3xl md:text-4xl font-extrabold text-white mb-4">{% trans "ჩვენი ვაკანსიები დაგეხმარება!" %}</h1>
-                    <p class="text-xl text-blue-100 mb-6">{% trans "მოძებნე, გაფილტრე, გაგზავნე სივი და მიიღე გარანტირებული უკუკავშირი დამსაქმებლისგან" %}</p>
-                    <a href="{% url 'job_list' %}?show_filters=1#filters" 
-                       class="inline-block bg-amber-400 hover:bg-amber-500 text-gray-700 font-semibold px-8 py-3 rounded-xl text-lg transition-colors">
-                        {% trans "ყველა ვაკანსია" %}
-                    </a>
+<section style="background-color:rgb(9, 36, 60);" class="pb-16 pt-24 relative">
+    <div class="container mx-auto px-4">
+        <div class="text-center max-w-5xl mx-auto">
+            <h1 class="text-4xl md:text-5xl font-bold text-white mb-4">{% trans "იპოვე შენი სამსახური დღესვე!" %}</h1>
+            <p class="text-xl text-blue-100 mb-8">{% trans "ყველა სივი მნიშვნელოვანია" %}</p>
+            
+            <form action="{% url 'job_list' %}" method="get" class="mb-12">
+                <div class="bg-white rounded-2xl shadow-lg flex flex-col md:flex-row overflow-hidden">
+                    <div class="flex-1 p-3">
+                        <div class="relative">
+                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                <svg class="h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                                </svg>
+                            </div>
+                            <input type="text" name="search" value="{{ request.GET.search|default:'' }}" placeholder="{% trans 'სამსახურის დასახელება ან კომპანია' %}" class="w-full pl-10 px-4 py-4 rounded-xl focus:outline-none focus:ring-2 focus:ring-teal-500 text-gray-700 text-base">
+                        </div>
+                    </div>
+                    <div class="flex-1 p-3 border-t md:border-t-0 md:border-l border-gray-200">
+                        <select name="location" class="w-full px-4 py-4 rounded-xl focus:outline-none focus:ring-2 focus:ring-teal-500 text-gray-600 text-base">
+                            <option value="">{% trans 'აირჩიეთ ადგილმდებარეობა' %}</option>
+                            {% for location_code, location_name in job_locations %}
+                                <option value="{{ location_code }}" {% if request.GET.location == location_code %}selected{% endif %}>{{ location_name }}</option>
+                            {% empty %}
+                                <option value="tbilisi">{% trans 'თბილისი' %}</option>
+                                <option value="batumi">{% trans 'ბათუმი' %}</option>
+                                <option value="kutaisi">{% trans 'ქუთაისი' %}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="flex-1 p-3 border-t md:border-t-0 md:border-l border-gray-200">
+                        <select name="category" class="w-full px-4 py-4 rounded-xl focus:outline-none focus:ring-2 focus:ring-teal-500 text-gray-600 text-base">
+                            <option value="">{% trans 'აირჩიეთ კატეგორია' %}</option>
+                            {% for category_code, category_name in job_categories %}
+                                <option value="{{ category_code }}" {% if request.GET.category == category_code %}selected{% endif %}>{{ category_name }}</option>
+                            {% empty %}
+                                <option value="it">{% trans 'ინფორმაციული ტექნოლოგიები' %}</option>
+                                <option value="sales">{% trans 'გაყიდვები' %}</option>
+                                <option value="marketing">{% trans 'მარკეტინგი' %}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="p-3">
+                        <button type="submit" class="w-full bg-teal-600 hover:bg-teal-700 text-white font-medium px-6 py-4 rounded-xl transition-colors text-base">
+                            <i class="fas fa-search mr-2"></i>{% trans 'ძიება' %}
+                        </button>
+                    </div>
                 </div>
-            </div>
-            <div class="hidden lg:flex justify-end items-end relative min-h-[400px] z-0">
-                <img src="{% static 'images/hero_woman.png' %}" 
-                     alt="Hero" 
-                     class="absolute bottom-[-64px] right-0 h-auto max-h-[500px] object-contain z-10">
+            </form>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mt-8">
+                <div class="flex items-center justify-center">
+                    <div class="bg-teal-600 rounded-full p-4 mr-3 w-16 h-16">
+                        <i class="fas fa-briefcase text-white text-2xl"></i>
+                    </div>
+                    <div class="text-left">
+                        <div class="text-white font-bold text-2xl">{{ total_jobs_count|default:"0" }}</div>
+                        <div class="text-blue-100">{% trans 'ვაკანსია' %}</div>
+                    </div>
+                </div>
+                <div class="flex items-center justify-center">
+                    <div class="bg-teal-600 rounded-full p-4 mr-3 w-16 h-16">
+                        <i class="fas fa-users text-white text-2xl"></i>
+                    </div>
+                    <div class="text-left">
+                        <div class="text-white font-bold text-2xl">{{ total_candidates_count|default:"0" }}</div>
+                        <div class="text-blue-100">{% trans 'კანდიდატი' %}</div>
+                    </div>
+                </div>
+                <div class="flex items-center justify-center">
+                    <div class="bg-teal-600 rounded-full p-4 mr-3 w-16 h-16 flex items-center justify-center">
+                        <i class="fas fa-building text-white text-2xl"></i>
+                    </div>
+                    <div class="text-left">
+                        <div class="text-white font-bold text-2xl">{{ total_companies_count|default:"0" }}</div>
+                        <div class="text-blue-100">{% trans 'კომპანია' %}</div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

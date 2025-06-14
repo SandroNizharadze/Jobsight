@@ -1,8 +1,8 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
-from django.db.models import Q
+from django.db.models import Q, Count
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
-from ..models import JobListing, JobApplication, SavedJob
+from ..models import JobListing, JobApplication, SavedJob, UserProfile, EmployerProfile
 from ..forms import JobListingForm
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
@@ -155,6 +155,11 @@ def job_list(request):
     premium_count = jobs.filter(premium_level='premium').count()
     standard_count = jobs.filter(Q(premium_level='standard') | Q(premium_level__isnull=True)).count()
     
+    # Get real counts for statistics
+    total_jobs_count = JobListing.objects.filter(status='approved').count()
+    total_companies_count = EmployerProfile.objects.count()
+    total_candidates_count = UserProfile.objects.filter(role='candidate').count()
+    
     context = {
         'jobs': jobs_page,
         'is_employer': is_employer_user,
@@ -170,6 +175,9 @@ def job_list(request):
         'premium_plus_count': premium_plus_count,
         'premium_count': premium_count,
         'standard_count': standard_count,
+        'total_jobs_count': total_jobs_count,
+        'total_companies_count': total_companies_count,
+        'total_candidates_count': total_candidates_count,
     }
     
     # Return the appropriate template based on the request type
