@@ -17,12 +17,12 @@
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                                 </svg>
                             </div>
-                            <input type="text" name="search" value="{{ request.GET.search|default:'' }}" placeholder="{% trans 'სამსახურის დასახელება ან კომპანია' %}" class="w-full pl-10 px-4 py-4 rounded-xl focus:outline-none focus:ring-2 focus:ring-teal-500 text-gray-700 text-base">
+                            <input type="text" name="search" value="{{ request.GET.search|default:'' }}" placeholder="{% trans 'სამსახურის დასახელება' %}" class="w-full pl-10 px-4 py-4 rounded-xl focus:outline-none focus:ring-2 focus:ring-teal-500 text-gray-700 text-base">
                         </div>
                     </div>
                     <div class="flex-1 p-3 border-t md:border-t-0 md:border-l border-gray-200">
                         <select name="location" class="w-full px-4 py-4 rounded-xl focus:outline-none focus:ring-2 focus:ring-teal-500 text-gray-600 text-base">
-                            <option value="">{% trans 'აირჩიეთ ადგილმდებარეობა' %}</option>
+                            <option value="">{% trans 'ადგილმდებარეობა' %}</option>
                             {% for location_code, location_name in job_locations %}
                                 <option value="{{ location_code }}" {% if request.GET.location == location_code %}selected{% endif %}>{{ location_name }}</option>
                             {% empty %}
@@ -34,7 +34,7 @@
                     </div>
                     <div class="flex-1 p-3 border-t md:border-t-0 md:border-l border-gray-200">
                         <select name="category" class="w-full px-4 py-4 rounded-xl focus:outline-none focus:ring-2 focus:ring-teal-500 text-gray-600 text-base">
-                            <option value="">{% trans 'აირჩიეთ კატეგორია' %}</option>
+                            <option value="">{% trans 'კატეგორია' %}</option>
                             {% for category_code, category_name in job_categories %}
                                 <option value="{{ category_code }}" {% if request.GET.category == category_code %}selected{% endif %}>{{ category_name }}</option>
                             {% empty %}

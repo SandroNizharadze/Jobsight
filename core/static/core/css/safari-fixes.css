@@ -1,0 +1,184 @@
+/* Safari-specific fixes */
+
+/* Fix form elements in Safari */
+.safari input,
+.safari select,
+.safari button,
+.safari .btn {
+    -webkit-appearance: none !important;
+    appearance: none !important;
+    border-radius: 0.75rem !important;
+}
+
+/* Fix for Safari rounded corners */
+.safari .rounded-2xl,
+.safari .rounded-3xl,
+.safari .rounded-xl,
+.safari .rounded-full {
+    overflow: hidden !important;
+    -webkit-mask-image: -webkit-radial-gradient(white, black) !important;
+}
+
+/* Fix Safari gradient issues */
+.safari .bg-gradient-to-br {
+    background-image: none !important;
+}
+
+.safari .from-purple-500.to-blue-500 {
+    background-color: #8b5cf6 !important;
+}
+
+.safari .from-teal-500.to-teal-700,
+.safari .from-teal-500,
+.safari .to-teal-700 {
+    background-color: #14b8a6 !important;
+}
+
+.safari .from-amber-500.to-amber-700,
+.safari .bg-amber-500 {
+    background-color: #f59e0b !important;
+}
+
+/* Fix Safari animations */
+.safari .animate-fade-in,
+.safari .animate-fade-in-delay,
+.safari .animate-fade-in-delay-long,
+.safari .animate-slide-up {
+    opacity: 1 !important;
+    transform: none !important;
+    animation: none !important;
+}
+
+/* Fix Safari transitions */
+.safari .transition-all {
+    -webkit-transition: none !important;
+    transition: none !important;
+}
+
+.safari .hover\:scale-\[1\.01\]:hover {
+    -webkit-transform: none !important;
+    transform: none !important;
+}
+
+/* Fix Safari box shadows */
+.safari .shadow-md,
+.safari .shadow-lg {
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06) !important;
+}
+
+/* Fix for Safari flexbox issues */
+.safari .flex {
+    display: -webkit-box !important;
+    display: -ms-flexbox !important;
+    display: flex !important;
+}
+
+.safari .items-center {
+    -webkit-box-align: center !important;
+    -ms-flex-align: center !important;
+    align-items: center !important;
+}
+
+.safari .justify-center {
+    -webkit-box-pack: center !important;
+    -ms-flex-pack: center !important;
+    justify-content: center !important;
+}
+
+/* Fix pattern overlay in Safari */
+.safari .enhanced-cta-box::before {
+    opacity: 0.2 !important;
+}
+
+/* Fix specific card styles */
+.safari .safari-fix-card,
+.safari .border-purple-500,
+.safari .border-amber-500,
+.safari .border-blue-500 {
+    transform: translateZ(0) !important;
+    -webkit-transform: translateZ(0) !important;
+    backface-visibility: hidden !important;
+    -webkit-backface-visibility: hidden !important;
+}
+
+/* Fix form inputs in Safari */
+.safari .rounded-xl {
+    border-radius: 0.75rem !important;
+}
+
+/* Fix Safari stats icons */
+.safari .pulse-animation,
+.safari .pulse-animation-delay,
+.safari .pulse-animation-delay-long {
+    animation: none !important;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1) !important;
+}
+
+/* Fix Safari-specific border radius issues for job cards */
+.safari .mobile-job-cards-container .rounded-2xl {
+    border-radius: 1rem !important;
+}
+
+/* Fix Safari-specific enhanced CTA box */
+.safari .enhanced-cta-box {
+    border-radius: 1.5rem 1.5rem 0 0 !important;
+    background-image: none !important;
+    background-color: #fbbf24 !important;
+}
+
+/* Fix Safari-specific hero form */
+.safari .bg-white.rounded-3xl {
+    border-radius: 1.5rem !important;
+}
+
+/* Fix border issues */
+.safari .border {
+    border-width: 1px !important;
+    border-style: solid !important;
+}
+
+/* Fix Safari padding issues */
+.safari .p-3\.5 {
+    padding: 0.875rem !important;
+}
+
+/* Fix Safari margins */
+.safari .mt-7 {
+    margin-top: 1.75rem !important;
+}
+
+/* Fix badge positioning in Safari */
+.safari .absolute.top-2.right-2 {
+    right: 0.5rem !important;
+    top: 0.5rem !important;
+}
+
+/* Fix Safari text rendering */
+.safari .text-2xs {
+    font-size: 0.65rem !important;
+    line-height: 1rem !important;
+}
+
+/* Fix Safari overflow issues */
+.safari .overflow-hidden {
+    overflow: hidden !important;
+    -webkit-overflow-scrolling: touch !important;
+}
+
+/* Fix Safari button styling */
+.safari button {
+    -webkit-appearance: none !important;
+    appearance: none !important;
+}
+
+/* Fix Safari job card interaction */
+.safari .mobile-job-cards-container a:active .rounded-2xl {
+    transform: scale(0.99) !important;
+}
+
+/* Fix Safari z-index issues */
+.safari .z-20,
+.safari .z-50 {
+    transform: translateZ(0) !important;
+    -webkit-transform: translateZ(0) !important;
+}

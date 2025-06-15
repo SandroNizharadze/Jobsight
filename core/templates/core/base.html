@@ -1,7 +1,8 @@
-<!DOCTYPE html>
-<html lang="{{ LANGUAGE_CODE }}" style="background-color: rgb(9, 36, 60);">
 {% load static %}
 {% load i18n %}
+
+<!DOCTYPE html>
+<html lang="{{ LANGUAGE_CODE }}" style="background-color: rgb(9, 36, 60);">
 
 <head>
     <!-- Google Tag Manager -->
@@ -138,6 +139,70 @@
             }
         }
     </style>
+    <!-- Safari detection and fixes -->
+    <script>
+        (function() {
+            const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+            if (isSafari) {
+                document.documentElement.classList.add('safari');
+                console.log('Safari browser detected');
+            }
+        })();
+    </script>
+    
+    <!-- Safari-specific CSS Fixes -->
+    <style>
+        html.safari .rounded-2xl,
+        html.safari .rounded-3xl,
+        html.safari .rounded-xl,
+        html.safari .rounded-full {
+            overflow: hidden !important;
+            -webkit-mask-image: -webkit-radial-gradient(white, black) !important;
+        }
+        
+        html.safari input,
+        html.safari select,
+        html.safari button,
+        html.safari .btn {
+            -webkit-appearance: none !important;
+            appearance: none !important;
+        }
+        
+        html.safari .bg-gradient-to-br {
+            background-image: none !important;
+        }
+        
+        html.safari .from-purple-500.to-blue-500 {
+            background-color: #8b5cf6 !important;
+        }
+        
+        html.safari .from-teal-500.to-teal-700,
+        html.safari .from-teal-500 {
+            background-color: #14b8a6 !important;
+        }
+        
+        html.safari .enhanced-cta-box {
+            border-radius: 1.5rem 1.5rem 0 0 !important;
+            background-image: none !important;
+            background-color: #fbbf24 !important;
+        }
+        
+        html.safari .animate-fade-in,
+        html.safari .animate-fade-in-delay,
+        html.safari .animate-fade-in-delay-long,
+        html.safari .animate-slide-up {
+            opacity: 1 !important;
+            transform: none !important;
+            animation: none !important;
+        }
+        
+        html.safari .pulse-animation,
+        html.safari .pulse-animation-delay,
+        html.safari .pulse-animation-delay-long {
+            animation: none !important;
+        }
+    </style>
+    
     {% block extra_head %}{% endblock %}
     
     <!-- Meta Pixel Code -->
@@ -235,6 +300,48 @@
             document.querySelector('.job-list-content').style.minHeight = 'auto';
         }
     });
+    </script>
+    
+    <!-- Safari-specific fixes -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            if (document.documentElement.classList.contains('safari')) {
+                console.log('Applying Safari-specific JS fixes');
+                
+                // Fix Safari gradients
+                document.querySelectorAll('.bg-gradient-to-br').forEach(function(el) {
+                    el.style.backgroundImage = 'none';
+                    if (el.classList.contains('from-purple-500')) {
+                        el.style.backgroundColor = '#8b5cf6';
+                    } else if (el.classList.contains('from-teal-500')) {
+                        el.style.backgroundColor = '#14b8a6';
+                    } else if (el.classList.contains('bg-amber-500')) {
+                        el.style.backgroundColor = '#f59e0b';
+                    }
+                });
+                
+                // Fix border radius rendering
+                document.querySelectorAll('.rounded-2xl, .rounded-3xl, .rounded-xl, .rounded-full').forEach(function(el) {
+                    el.style.overflow = 'hidden';
+                    el.style.webkitMaskImage = '-webkit-radial-gradient(white, black)';
+                });
+                
+                // Fix CTA box
+                const ctaBox = document.querySelector('.enhanced-cta-box');
+                if (ctaBox) {
+                    ctaBox.style.borderRadius = '1.5rem 1.5rem 0 0';
+                    ctaBox.style.backgroundImage = 'none';
+                    ctaBox.style.backgroundColor = '#fbbf24';
+                }
+                
+                // Fix form elements
+                document.querySelectorAll('input, select, button').forEach(function(el) {
+                    el.style.webkitAppearance = 'none';
+                    el.style.appearance = 'none';
+                    el.style.borderRadius = '0.75rem';
+                });
+            }
+        });
     </script>
 </body>
 </html> 

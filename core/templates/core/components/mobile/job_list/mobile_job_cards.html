@@ -3,12 +3,12 @@
 {% load core_extras %}
 
 <!-- Mobile Job Listings -->
-<div class="-mt-7 pb-0 mb-0">
+<div class="-mt-7 pb-6 mb-6">
   <!-- Premium+ Section -->
   {% if premium_plus_count > 0 %}
     <div class="bg-white py-2 px-4 {% if not premium_count > 0 %}shadow-lg{% endif %} relative z-20">
       <h3 class="text-gray-800 font-semibold flex items-center mb-4 mt-3 pt-2">
-        <span class="mr-2 flex items-center justify-center w-5 h-5 bg-gradient-to-br from-purple-500 to-blue-500 rounded-full text-white">
+        <span class="mr-2 flex items-center justify-center w-5 h-5 bg-gradient-to-br from-purple-500 to-blue-500 rounded-full text-white shadow-sm">
           <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
           </svg>
@@ -16,20 +16,20 @@
         <span class="text-sm">პრემიუმ+ ვაკანსიები ({{ premium_plus_count }})</span>
       </h3>
 
-      <div class="space-y-3">
+      <div class="space-y-4">
         {% for job in jobs %}
           {% if job.premium_level == 'premium_plus' %}
             <!-- Premium Plus Job Card -->
             <a href="{% url 'job_detail' job_id=job.id %}" class="block">
-              <div class="bg-white rounded-xl border-2 border-purple-500 p-3 shadow-sm flex relative">
+              <div class="bg-white rounded-2xl border-2 border-purple-500 p-3.5 shadow-md hover:shadow-lg flex relative transition-all duration-200 hover:scale-[1.01] safari-fix-card">
                 <!-- Job info -->
                 <div class="flex-1 pr-3">
                   <div class="flex justify-between items-start mb-1">
                     <div class="text-xs font-medium text-gray-700 mb-1">{{ job.company }}</div>
                     <div class="flex space-x-1 absolute top-2 right-2">
-                      <span class="bg-gradient-to-br from-purple-500 to-blue-500 text-white text-2xs px-1.5 py-0.5 rounded-full">Premium+</span>
+                      <span class="bg-gradient-to-br from-purple-500 to-blue-500 text-white text-2xs px-1.5 py-0.5 rounded-full shadow-sm">Premium+</span>
                       {% if job.remote %}
-                        <span class="bg-green-500 text-white text-2xs px-1.5 py-0.5 rounded-full">{% trans "Remote" %}</span>
+                        <span class="bg-green-500 text-white text-2xs px-1.5 py-0.5 rounded-full shadow-sm">{% trans "Remote" %}</span>
                       {% endif %}
                     </div>
                   </div>
@@ -90,9 +90,9 @@
                 <!-- Company logo with fixed positioning -->
                 <div class="flex-shrink-0 flex items-center">
                   {% if job.employer.company_logo %}
-                    <img src="{{ job.employer.company_logo.url }}" alt="{{ job.employer.company_name }}" class="w-12 h-12 object-cover rounded-full">
+                    <img src="{{ job.employer.company_logo.url }}" alt="{{ job.employer.company_name }}" class="w-12 h-12 object-cover rounded-full shadow-sm border border-gray-100">
                   {% else %}
-                    <div class="w-12 h-12 bg-gray-200 rounded-full flex items-center justify-center">
+                    <div class="w-12 h-12 bg-gray-200 rounded-full flex items-center justify-center shadow-sm">
                       <i class="fas fa-building text-gray-400"></i>
                     </div>
                   {% endif %}
@@ -109,7 +109,7 @@
   {% if premium_count > 0 %}
     <div class="bg-white py-2 px-4 {% if premium_plus_count > 0 %}mt-0 pt-0{% elif not request.GET.show_filters %}rounded-t-3xl shadow-lg relative z-20 pt-2{% endif %}">
       <h3 class="text-gray-800 font-semibold flex items-center mb-4 mt-8">
-        <span class="mr-2 flex items-center justify-center w-5 h-5 bg-amber-500 rounded-full text-white">
+        <span class="mr-2 flex items-center justify-center w-5 h-5 bg-amber-500 rounded-full text-white shadow-sm">
           <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
           </svg>
@@ -117,20 +117,20 @@
         <span class="text-sm">პრემიუმ ვაკანსიები ({{ premium_count }})</span>
       </h3>
 
-      <div class="space-y-3">
+      <div class="space-y-4">
         {% for job in jobs %}
           {% if job.premium_level == 'premium' %}
             <!-- Premium Job Card -->
             <a href="{% url 'job_detail' job_id=job.id %}" class="block">
-              <div class="bg-white rounded-xl border border-amber-500 p-3 shadow-sm flex relative">
+              <div class="bg-white rounded-2xl border border-amber-500 p-3.5 shadow-md hover:shadow-lg flex relative transition-all duration-200 hover:scale-[1.01] safari-fix-card">
                 <!-- Job info -->
                 <div class="flex-1 pr-3">
                   <div class="flex justify-between items-start mb-1">
                     <div class="text-xs font-medium text-gray-700 mb-1">{{ job.company }}</div>
                     <div class="flex space-x-1 absolute top-2 right-2">
-                      <span class="bg-amber-500 text-white text-2xs px-1.5 py-0.5 rounded-full">Premium</span>
+                      <span class="bg-amber-500 text-white text-2xs px-1.5 py-0.5 rounded-full shadow-sm">Premium</span>
                       {% if job.remote %}
-                        <span class="bg-green-500 text-white text-2xs px-1.5 py-0.5 rounded-full">{% trans "Remote" %}</span>
+                        <span class="bg-green-500 text-white text-2xs px-1.5 py-0.5 rounded-full shadow-sm">{% trans "Remote" %}</span>
                       {% endif %}
                     </div>
                   </div>
@@ -191,9 +191,9 @@
                 <!-- Company logo with fixed positioning -->
                 <div class="flex-shrink-0 flex items-center">
                   {% if job.employer.company_logo %}
-                    <img src="{{ job.employer.company_logo.url }}" alt="{{ job.employer.company_name }}" class="w-12 h-12 object-cover rounded-full">
+                    <img src="{{ job.employer.company_logo.url }}" alt="{{ job.employer.company_name }}" class="w-12 h-12 object-cover rounded-full shadow-sm border border-gray-100">
                   {% else %}
-                    <div class="w-12 h-12 bg-gray-200 rounded-full flex items-center justify-center">
+                    <div class="w-12 h-12 bg-gray-200 rounded-full flex items-center justify-center shadow-sm">
                       <i class="fas fa-building text-gray-400"></i>
                     </div>
                   {% endif %}
@@ -210,7 +210,7 @@
   {% if standard_count > 0 %}
     <div class="bg-white py-2 px-4 {% if premium_plus_count > 0 or premium_count > 0 %}mt-0{% elif not request.GET.show_filters %}rounded-t-3xl shadow-lg relative z-20 pt-2{% endif %}">
       <h3 class="text-gray-800 font-semibold flex items-center mb-4 mt-3">
-        <span class="mr-2 flex items-center justify-center w-5 h-5 bg-blue-500 rounded-full text-white">
+        <span class="mr-2 flex items-center justify-center w-5 h-5 bg-blue-500 rounded-full text-white shadow-sm">
           <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
           </svg>
@@ -218,19 +218,19 @@
         <span class="text-sm">სტანდარტული ვაკანსიები ({{ standard_count }})</span>
       </h3>
 
-      <div class="space-y-3">
+      <div class="space-y-4 pb-6">
         {% for job in jobs %}
           {% if job.premium_level == 'standard' or not job.premium_level %}
             <!-- Standard Job Card -->
             <a href="{% url 'job_detail' job_id=job.id %}" class="block">
-              <div class="bg-white rounded-xl border border-blue-500 p-3 shadow-sm flex relative">
+              <div class="bg-white rounded-2xl border border-blue-500 p-3.5 shadow-md hover:shadow-lg flex relative transition-all duration-200 hover:scale-[1.01] safari-fix-card">
                 <!-- Job info -->
                 <div class="flex-1 pr-3">
                   <div class="flex justify-between items-start mb-1">
                     <div class="text-xs font-medium text-gray-700 mb-1">{{ job.company }}</div>
                     <div class="flex space-x-1 absolute top-2 right-2">
                       {% if job.remote %}
-                        <span class="bg-green-500 text-white text-2xs px-1.5 py-0.5 rounded-full">{% trans "Remote" %}</span>
+                        <span class="bg-green-500 text-white text-2xs px-1.5 py-0.5 rounded-full shadow-sm">{% trans "Remote" %}</span>
                       {% endif %}
                     </div>
                   </div>
@@ -291,9 +291,9 @@
                 <!-- Company logo with fixed positioning -->
                 <div class="flex-shrink-0 flex items-center">
                   {% if job.employer.company_logo %}
-                    <img src="{{ job.employer.company_logo.url }}" alt="{{ job.employer.company_name }}" class="w-12 h-12 object-cover rounded-full">
+                    <img src="{{ job.employer.company_logo.url }}" alt="{{ job.employer.company_name }}" class="w-12 h-12 object-cover rounded-full shadow-sm border border-gray-100">
                   {% else %}
-                    <div class="w-12 h-12 bg-gray-200 rounded-full flex items-center justify-center">
+                    <div class="w-12 h-12 bg-gray-200 rounded-full flex items-center justify-center shadow-sm">
                       <i class="fas fa-building text-gray-400"></i>
                     </div>
                   {% endif %}
@@ -320,9 +320,7 @@
   {% endif %}
   
   <!-- Scroll to top button -->
-  <!-- show only if filters are applied -->
-  
-<button id="scrollToTopBtn" class="fixed bottom-16 right-6 bg-gray-800 hover:bg-blue-700 text-white rounded-full p-3 shadow-lg opacity-0 transition-opacity duration-300 z-50">
+  <button id="scrollToTopBtn" class="fixed bottom-16 right-6 bg-gray-800 hover:bg-blue-700 text-white rounded-full p-3 shadow-lg opacity-0 transition-opacity duration-300 z-50">
     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18" />
     </svg>
@@ -334,6 +332,53 @@
 .text-2xs {
     font-size: 0.65rem;
     line-height: 0.85rem;
+}
+
+/* Enhanced card animations */
+@media (max-width: 768px) {
+  /* Subtle pulse animation for premium+ badges */
+  .bg-gradient-to-br {
+    background-size: 150% 150%;
+    animation: gradientShift 3s ease infinite;
+  }
+  
+  @keyframes gradientShift {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+  
+  /* Enhanced card shadows */
+  .shadow-md {
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  }
+  
+  .hover\:shadow-lg:hover {
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  }
+  
+  /* Safari-specific fixes */
+  @supports (-webkit-touch-callout: none) {
+    /* Safari card fixes */
+    .safari-fix-card {
+      transform: translateZ(0);
+      -webkit-transform: translateZ(0);
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
+      overflow: hidden;
+      will-change: transform;
+    }
+    
+    /* Fix Safari rounded corners on cards */
+    .rounded-2xl {
+      -webkit-mask-image: -webkit-radial-gradient(white, black);
+    }
+    
+    /* Fix badges in Safari */
+    .rounded-full {
+      overflow: hidden;
+    }
+  }
 }
 </style>
 
@@ -356,7 +401,51 @@ document.addEventListener('DOMContentLoaded', function() {
   scrollToTopBtn.addEventListener('click', function() {
     // Find the filters section at the top of the page
     const filtersSection = document.querySelector('.filters-section') || document.body;
-    filtersSection.scrollIntoView({ behavior: 'smooth' });
+    filtersSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
   });
+  
+  // Add subtle animation to job cards when they come into view
+  if ('IntersectionObserver' in window) {
+    const cards = document.querySelectorAll('.rounded-2xl');
+    
+    const cardObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.style.opacity = '1';
+          entry.target.style.transform = 'translateY(0)';
+          cardObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.1 });
+    
+    cards.forEach(card => {
+      card.style.opacity = '0';
+      card.style.transform = 'translateY(10px)';
+      card.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
+      cardObserver.observe(card);
+    });
+  }
+  
+  // Apply Safari-specific fixes
+  const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+  if (isSafari) {
+    // Apply fixes for rounded corners and overflow issues
+    document.querySelectorAll('.rounded-2xl').forEach(card => {
+      card.style.overflow = 'hidden';
+      card.style.WebkitMaskImage = '-webkit-radial-gradient(white, black)';
+    });
+    
+    // Fix Safari-specific badge rendering
+    document.querySelectorAll('.bg-gradient-to-br').forEach(badge => {
+      if (badge.classList.contains('from-purple-500')) {
+        badge.style.backgroundImage = 'none';
+        badge.style.backgroundColor = '#8b5cf6';
+      }
+      else if (badge.classList.contains('from-teal-500')) {
+        badge.style.backgroundImage = 'none';
+        badge.style.backgroundColor = '#14b8a6';
+      }
+    });
+  }
 });
 </script>

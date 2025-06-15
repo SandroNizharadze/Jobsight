@@ -2,28 +2,31 @@
 {% load static %}
 
 <!-- Mobile Hero Section (only visible on mobile) -->
-<div class="md:hidden text-white pb-16 pt-16" style="background-color:rgb(9, 36, 60);">
-    <div class="container mx-auto px-4">
+<div class="md:hidden text-white pb-16 pt-16 relative" style="background-color:rgb(9, 36, 60);">
+    <!-- Background pattern overlay -->
+    <div class="absolute inset-0 opacity-10" style="background-image: url('data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.4'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E')"></div>
+    
+    <div class="container mx-auto px-4 relative">
         <!-- Hero Content -->
         <div class="text-center">
-            <h1 class="text-3xl font-bold mb-3">{% trans "იპოვე შენი სამსახური დღესვე!" %}</h1>
-            <p class="text-blue-100 mb-6">{% trans "დააკავშირე შენი ნიჭი შესაძლებლობასთან: შენი კარიერული წარმატების გზა" %}</p>
+            <h1 class="text-3xl font-bold mb-3 animate-fade-in">{% trans "იპოვე შენი სამსახური დღესვე!" %}</h1>
+            <p class="text-blue-100 mb-6 animate-fade-in-delay">{% trans "დააკავშირე შენი ნიჭი შესაძლებლობასთან: შენი კარიერული წარმატების გზა" %}</p>
             
-            <form action="{% url 'job_list' %}" method="get" class="mb-8">
-                <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
-                    <div class="p-3">
+            <form action="{% url 'job_list' %}" method="get" class="mb-8 animate-slide-up">
+                <div class="bg-white rounded-3xl shadow-lg overflow-hidden border border-gray-100 safari-hero-form">
+                    <div class="p-4">
                         <div class="relative">
                             <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                                 <svg class="h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                                 </svg>
                             </div>
-                            <input type="text" name="search" value="{{ request.GET.search|default:'' }}" placeholder="{% trans 'სამსახურის დასახელება ან კომპანია' %}" class="w-full pl-10 px-4 py-4 rounded-xl focus:outline-none focus:ring-2 focus:ring-teal-500 text-gray-700 text-base">
+                            <input type="text" name="search" value="{{ request.GET.search|default:'' }}" placeholder="{% trans 'სამსახურის დასახელება' %}" class="w-full pl-10 px-4 py-4 rounded-xl safari-input focus:outline-none focus:ring-2 focus:ring-teal-500 text-gray-700 text-base">
                         </div>
                     </div>
-                    <div class="p-3 border-t border-gray-200">
-                        <select name="location" class="w-full px-4 py-4 rounded-xl focus:outline-none focus:ring-2 focus:ring-teal-500 text-gray-600 text-base">
-                            <option value="">{% trans 'აირჩიეთ ადგილმდებარეობა' %}</option>
+                    <div class="p-4 border-t border-gray-200">
+                        <select name="location" class="w-full px-4 py-4 rounded-xl safari-input focus:outline-none focus:ring-2 focus:ring-teal-500 text-gray-600 text-base bg-gray-50">
+                            <option value="">{% trans 'ადგილმდებარეობა' %}</option>
                             {% for location_code, location_name in job_locations %}
                                 <option value="{{ location_code }}" {% if request.GET.location == location_code %}selected{% endif %}>{{ location_name }}</option>
                             {% empty %}
@@ -33,9 +36,9 @@
                             {% endfor %}
                         </select>
                     </div>
-                    <div class="p-3 border-t border-gray-200">
-                        <select name="category" class="w-full px-4 py-4 rounded-xl focus:outline-none focus:ring-2 focus:ring-teal-500 text-gray-600 text-base">
-                            <option value="">{% trans 'აირჩიეთ კატეგორია' %}</option>
+                    <div class="p-4 border-t border-gray-200">
+                        <select name="category" class="w-full px-4 py-4 rounded-xl safari-input focus:outline-none focus:ring-2 focus:ring-teal-500 text-gray-600 text-base bg-gray-50">
+                            <option value="">{% trans 'კატეგორია' %}</option>
                             {% for category_code, category_name in job_categories %}
                                 <option value="{{ category_code }}" {% if request.GET.category == category_code %}selected{% endif %}>{{ category_name }}</option>
                             {% empty %}
@@ -45,8 +48,8 @@
                             {% endfor %}
                         </select>
                     </div>
-                    <div class="p-3">
-                        <button type="submit" class="w-full bg-teal-600 hover:bg-teal-700 text-white font-medium px-6 py-4 rounded-xl transition-colors text-base">
+                    <div class="p-4">
+                        <button type="submit" class="w-full bg-teal-600 hover:bg-teal-700 text-white font-medium px-6 py-4 rounded-xl safari-input transition-colors text-base shadow-md hover:shadow-lg transform hover:scale-[1.01] transition-transform">
                             <i class="fas fa-search mr-2"></i>{% trans 'ძიება' %}
                         </button>
                     </div>
@@ -54,11 +57,11 @@
             </form>
             
             <!-- Stats Section - Horizontal Layout -->
-            <div class="mt-8">
-                <div class="grid grid-cols-3 gap-3">
+            <div class="mt-8 animate-fade-in-delay-long">
+                <div class="grid grid-cols-3 gap-4">
                     <!-- Jobs Stat -->
                     <div class="flex flex-col items-center">
-                        <div class="bg-teal-600 rounded-full w-16 h-16 flex items-center justify-center mb-2">
+                        <div class="bg-gradient-to-br from-teal-500 to-teal-700 rounded-full w-16 h-16 flex items-center justify-center mb-2 shadow-lg pulse-animation safari-stats-icon">
                             <i class="fas fa-briefcase text-white text-2xl"></i>
                         </div>
                         <div class="text-white font-bold text-xl">{{ total_jobs_count|default:"11" }}</div>
@@ -67,7 +70,7 @@
                     
                     <!-- Candidates Stat -->
                     <div class="flex flex-col items-center">
-                        <div class="bg-teal-600 rounded-full w-16 h-16 flex items-center justify-center mb-2">
+                        <div class="bg-gradient-to-br from-teal-500 to-teal-700 rounded-full w-16 h-16 flex items-center justify-center mb-2 shadow-lg pulse-animation-delay safari-stats-icon">
                             <i class="fas fa-users text-white text-2xl"></i>
                         </div>
                         <div class="text-white font-bold text-xl">{{ total_candidates_count|default:"20" }}</div>
@@ -76,7 +79,7 @@
                     
                     <!-- Companies Stat -->
                     <div class="flex flex-col items-center">
-                        <div class="bg-teal-600 rounded-full w-16 h-16 flex items-center justify-center mb-2">
+                        <div class="bg-gradient-to-br from-teal-500 to-teal-700 rounded-full w-16 h-16 flex items-center justify-center mb-2 shadow-lg pulse-animation-delay-long safari-stats-icon">
                             <i class="fas fa-building text-white text-2xl"></i>
                         </div>
                         <div class="text-white font-bold text-xl">{{ total_companies_count|default:"7" }}</div>
@@ -87,3 +90,127 @@
         </div>
     </div>
 </div>
+
+<style>
+/* Animation classes */
+.animate-fade-in {
+    animation: fadeIn 0.8s ease-out;
+}
+
+.animate-fade-in-delay {
+    animation: fadeIn 0.8s ease-out 0.3s both;
+}
+
+.animate-fade-in-delay-long {
+    animation: fadeIn 0.8s ease-out 0.6s both;
+}
+
+.animate-slide-up {
+    animation: slideUp 0.8s ease-out 0.3s both;
+}
+
+.pulse-animation {
+    animation: pulse 2s infinite;
+}
+
+.pulse-animation-delay {
+    animation: pulse 2s infinite 0.7s;
+}
+
+.pulse-animation-delay-long {
+    animation: pulse 2s infinite 1.4s;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes pulse {
+    0% {
+        box-shadow: 0 0 0 0 rgba(45, 212, 191, 0.7);
+    }
+    70% {
+        box-shadow: 0 0 0 10px rgba(45, 212, 191, 0);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(45, 212, 191, 0);
+    }
+}
+
+/* Safari-specific fixes */
+@supports (-webkit-touch-callout: none) {
+    /* Fix animations in Safari */
+    .animate-fade-in, 
+    .animate-fade-in-delay, 
+    .animate-fade-in-delay-long {
+        opacity: 1;
+        animation: none;
+    }
+    
+    .animate-slide-up {
+        transform: none;
+        opacity: 1;
+        animation: none;
+    }
+    
+    /* Fix Safari form */
+    .safari-hero-form {
+        -webkit-mask-image: -webkit-radial-gradient(white, black);
+    }
+    
+    /* Fix input appearance in Safari */
+    .safari-input {
+        -webkit-appearance: none;
+        appearance: none;
+    }
+    
+    /* Fix Safari stats icons */
+    .safari-stats-icon {
+        background-image: none;
+        background-color: #14b8a6;
+        animation: none;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    }
+    
+    /* Fix Safari border radius */
+    .rounded-full, .rounded-xl, .rounded-3xl {
+        overflow: hidden;
+    }
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Detect Safari browser
+    const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+    
+    if (isSafari) {
+        // Apply Safari-specific fixes
+        document.querySelectorAll('.bg-gradient-to-br').forEach(function(el) {
+            el.style.backgroundImage = 'none';
+            el.style.backgroundColor = '#14b8a6';
+        });
+        
+        // Fix form elements
+        document.querySelectorAll('input, select, button').forEach(function(el) {
+            el.style.borderRadius = '0.75rem';
+        });
+    }
+});
+</script>

@@ -13,12 +13,12 @@
   }
   
   .mobile-job-cards-container {
-    margin-bottom: 3rem !important;
-    padding-bottom: 0 !important;
+    margin-bottom: 1.5rem !important;
+    padding-bottom: 1.5rem !important;
   }
   
   .mobile-employer-cta {
-    margin-top: 0 !important;
+    margin-top: 1.5rem !important;
     margin-bottom: 0 !important;
     padding-bottom: 0 !important;
   }
@@ -56,6 +56,123 @@
     margin-bottom: 0 !important;
     padding-bottom: 0 !important;
   }
+  
+  /* Enhanced CTA box */
+  .enhanced-cta-box {
+    border-radius: 1.5rem 1.5rem 0 0 !important;
+    box-shadow: 0 -4px 15px -3px rgba(0, 0, 0, 0.1), 0 -2px 6px -2px rgba(0, 0, 0, 0.05) !important;
+    background-image: linear-gradient(to bottom right, #fcd34d, #fbbf24) !important;
+    border: 1px solid rgba(251, 191, 36, 0.3) !important;
+    position: relative;
+    overflow: hidden;
+  }
+  
+  /* Add a subtle pattern overlay to the CTA */
+  .enhanced-cta-box::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%23ffffff' fill-opacity='0.1' fill-rule='evenodd'/%3E%3C/svg%3E");
+    opacity: 0.5;
+    pointer-events: none;
+  }
+  
+  /* Enhanced button style */
+  .enhanced-cta-button {
+    background-color: #1f2937 !important;
+    transition: transform 0.2s ease, box-shadow 0.2s ease !important;
+  }
+  
+  .enhanced-cta-button:hover {
+    transform: translateY(-2px) !important;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.2), 0 4px 6px -2px rgba(0, 0, 0, 0.1) !important;
+  }
+  
+  /* Add spacing between job cards and CTA */
+  .mobile-job-cards-container + .mobile-employer-cta {
+    margin-top: 2rem !important;
+  }
+  
+  /* Safari-specific fixes */
+  @supports (-webkit-touch-callout: none) {
+    /* Fix for Safari form inputs */
+    input, select, button {
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      appearance: none;
+      border-radius: 1.5rem;
+    }
+    
+    /* Fix for Safari rounded corners */
+    .rounded-2xl {
+      overflow: hidden;
+    }
+    
+    /* Fix Safari gradient issues */
+    .bg-gradient-to-br {
+      background-image: none !important;
+    }
+    
+    .from-purple-500.to-blue-500 {
+      background-color: #8b5cf6 !important;
+    }
+    
+    .from-teal-500.to-teal-700 {
+      background-color: #14b8a6 !important;
+    }
+    
+    /* Fix Safari animations */
+    .animate-fade-in,
+    .animate-fade-in-delay,
+    .animate-fade-in-delay-long,
+    .animate-slide-up {
+      opacity: 1 !important;
+      transform: none !important;
+    }
+    
+    /* Fix Safari box shadows */
+    .shadow-md, .shadow-lg {
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06) !important;
+    }
+    
+    /* Fix Safari transitions */
+    .transition-all {
+      -webkit-transition: none !important;
+      transition: none !important;
+    }
+    
+    .hover\:scale-\[1\.01\]:hover {
+      -webkit-transform: none !important;
+      transform: none !important;
+    }
+    
+    /* Fix pattern overlay in Safari */
+    .enhanced-cta-box::before {
+      opacity: 0.2;
+    }
+    
+    /* Fix for Safari flexbox issues */
+    .flex {
+      display: -webkit-box;
+      display: -ms-flexbox;
+      display: flex;
+    }
+    
+    .items-center {
+      -webkit-box-align: center;
+      -ms-flex-align: center;
+      align-items: center;
+    }
+    
+    .justify-center {
+      -webkit-box-pack: center;
+      -ms-flex-pack: center;
+      justify-content: center;
+    }
+  }
 }
 </style>
 {% endblock %}
@@ -84,16 +201,16 @@
         <div class="mobile-employer-cta job-list-last-element mt-4">
             <section class="mt-0 mb-0">
                 <div class="container mx-auto px-4">
-                    <div class="bg-amber-300 rounded-2xl p-6">
+                    <div class="enhanced-cta-box p-6 pt-7 pb-7">
                         <div class="grid grid-cols-1 items-center">
                             <div>
-                                <h2 class="text-2xl font-bold mb-3">{% trans "გჭირდებათ თანამშრომელი?" %}</h2>
+                                <h2 class="text-2xl font-bold mb-3 text-gray-900">{% trans "გჭირდებათ თანამშრომელი?" %}</h2>
                                 <div class="mb-6 text-gray-800">
                                     <p>{% trans "გამოაქვეყნეთ ვაკანსია ჯობსიზე და იპოვეთ საუკეთესო კანდიდატები თქვენი კომპანიისთვის." %}</p>
                                     <p>{% trans "ათასობით პროფესიონალი ეძებს ახალ შესაძლებლობებს ყოველდღე." %}</p>
                                 </div>
                                 <a href="{% url 'pricing' %}" 
-                                   class="inline-block bg-gray-900 hover:bg-gray-800 text-white font-medium px-6 py-3 rounded-xl transition-colors">
+                                   class="enhanced-cta-button inline-block bg-gray-900 hover:bg-gray-800 text-white font-medium px-6 py-3 rounded-xl transition-colors shadow-md hover:shadow-lg">
                                     {% trans "შეიტყვეთ მეტი" %}
                                 </a>
                             </div>
@@ -138,6 +255,38 @@ document.addEventListener('DOMContentLoaded', function() {
         if (lastElement) {
             lastElement.style.marginBottom = '0';
             lastElement.style.paddingBottom = '0';
+        }
+        
+        // Add animation to CTA button
+        const ctaButton = document.querySelector('.enhanced-cta-button');
+        if (ctaButton) {
+            setTimeout(() => {
+                ctaButton.classList.add('animate-pulse');
+                setTimeout(() => {
+                    ctaButton.classList.remove('animate-pulse');
+                }, 1500);
+            }, 2000);
+        }
+        
+        // Detect Safari browser and add class to body
+        const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+        if (isSafari) {
+            document.body.classList.add('safari');
+            
+            // Fix Safari-specific issues with JS
+            document.querySelectorAll('.bg-gradient-to-br').forEach(el => {
+                if (el.classList.contains('from-purple-500')) {
+                    el.style.backgroundColor = '#8b5cf6';
+                } else if (el.classList.contains('from-teal-500')) {
+                    el.style.backgroundColor = '#14b8a6';
+                }
+            });
+            
+            // Ensure proper rendering of enhanced-cta-box in Safari
+            const ctaBox = document.querySelector('.enhanced-cta-box');
+            if (ctaBox) {
+                ctaBox.style.borderRadius = '1.5rem 1.5rem 0 0';
+            }
         }
     }
 
