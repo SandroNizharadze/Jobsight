@@ -146,7 +146,7 @@
             {% for filter_name, filter_value in active_filters.items %}
                 <div class="bg-gray-100 text-gray-800 px-2 py-1 text-xs rounded-full flex items-center">
                     <span>{{ filter_name }}: {{ filter_value }}</span>
-                    <a href="{{ filter_remove_urls|get_item:filter_name }}" 
+                    <a href="{{ filter_remove_urls.filter_name }}" 
                        class="ml-1 text-red-500 hover:text-red-700 filter-remove-link" 
                        data-filter="{{ filter_name }}">
                         <i class="fas fa-times"></i>

@@ -27,7 +27,7 @@
                 <h3 class="text-lg font-bold mb-4">{% trans "ბმულები" %}</h3>
                 <ul class="space-y-2">
                     <li><a href="{% url 'job_list' %}" class="text-gray-300 hover:text-white">{% trans "მთავარი" %}</a></li>
-                    <li><a href="{% url 'job_list' %}?show_filters=1#filters" class="text-gray-300 hover:text-white">{% trans "ვაკანსიები" %}</a></li>
+                    <li><a href="{% url 'job_list' %}" class="text-gray-300 hover:text-white">{% trans "ვაკანსიები" %}</a></li>
                     <li><a href="{% url 'pricing' %}" class="text-gray-300 hover:text-white">{% trans "გამოქვეყნება" %}</a></li>
                     {% if not user.is_authenticated %}
                     <li><a href="{% url 'login' %}" class="text-gray-300 hover:text-white">{% trans "შესვლა" %}</a></li>

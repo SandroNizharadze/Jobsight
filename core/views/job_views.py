@@ -345,3 +345,9 @@ def unsave_job(request, job_id):
             
         return redirect('job_detail', job_id=job_id)
     return redirect('job_list') 
+
+def filter_jobs(request):
+    """
+    This view is no longer used. We're using regular form submission instead.
+    """
+    return redirect('job_list')

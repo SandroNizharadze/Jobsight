@@ -6,10 +6,12 @@ register = template.Library()
 @register.filter
 def get_item(dictionary, key):
     """
-    Get an item from a dictionary by key
-    Usage: {{ mydict|get_item:key }}
+    Get an item from a dictionary using a variable key.
+    Usage: {{ mydict|get_item:key_variable }}
     """
-    return dictionary.get(key, '')
+    if dictionary is None:
+        return None
+    return dictionary.get(key)
 
 @register.filter
 def remove_trailing_zeros(value):
@@ -27,4 +29,4 @@ def filter_by_text(queryset, text):
     """
     Filter a queryset of PricingFeature objects by their text field.
     """
-    return [item for item in queryset if item.text == text] 
+    return [item for item in queryset if item.text == text]

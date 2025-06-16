@@ -123,12 +123,12 @@
 </div>
 
 {% if filtered %}
-<div class="flex flex-wrap gap-2 mb-6">
+<div class="flex flex-wrap gap-2 mb-6 active-filters-container">
     {% for filter_name, filter_value in active_filters.items %}
-        <div class="bg-gray-100 text-gray-800 px-2 py-1 sm:px-3 text-xs sm:text-sm rounded-full flex items-center">
+        <div class="bg-blue-50 border border-blue-100 text-blue-700 px-3 py-1.5 text-sm rounded-full flex items-center shadow-sm">
             <span>{{ filter_name }}: {{ filter_value }}</span>
             <a href="{{ filter_remove_urls|get_item:filter_name }}" 
-               class="ml-1 sm:ml-2 text-red-500 hover:text-red-700 filter-remove-link" 
+               class="ml-2 text-blue-500 hover:text-blue-700 filter-remove-link" 
                data-filter="{{ filter_name }}">
                 <i class="fas fa-times"></i>
             </a>

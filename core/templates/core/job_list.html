@@ -1,6 +1,7 @@
 {% extends "core/base.html" %}
 {% load i18n %}
 {% load static %}
+{% load core_extras %}
 
 {% block title %}{% trans "ვაკანსიები" %} | Jobsight{% endblock %}
 
@@ -187,11 +188,6 @@
     <div class="md:hidden job-list-page-container">
         {% include 'core/components/mobile/job_list/mobile_hero.html' %}
         
-        <!-- Mobile Filters (only visible when active) -->
-        <div class="container mx-auto px-0 mb-4">
-            {% include 'core/components/mobile/job_list/mobile_filters.html' %}
-        </div>
-        
         <!-- Mobile Job Cards -->
         <div class="mobile-job-cards-container">
             {% include 'core/components/mobile/job_list/mobile_job_cards.html' %}
@@ -224,9 +220,20 @@
 
 {% block content %}
 <div class="container mx-auto px-4 md:py-8 py-0 max-w-[1600px]" style="zoom: 90%;">
-    <!-- Desktop Filters (hidden on mobile) -->
-    <div class="hidden md:block">
-        {% include 'core/components/job_list/filters_section.html' %}
+    <!-- Include Filter Modal -->
+    {% include 'core/components/job_list/filter_modal.html' %}
+    
+    <!-- Active Filters Display -->
+    <div id="active-filters-container" class="flex flex-wrap gap-2 mb-6 {% if not filtered %}hidden{% endif %}">
+        {% for filter_name, filter_value in active_filters.items %}
+            <div class="bg-blue-50 border border-blue-100 text-blue-700 px-3 py-1.5 text-sm rounded-full flex items-center shadow-sm">
+                <span>{{ filter_name }}: {{ filter_value }}</span>
+                <a href="{{ filter_remove_urls|get_item:filter_name }}" 
+                   class="ml-2 text-blue-500 hover:text-blue-700">
+                    <i class="fas fa-times"></i>
+                </a>
+            </div>
+        {% endfor %}
     </div>
     
     <!-- Desktop Job Cards (visible only on desktop) -->
@@ -337,7 +344,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const resetButton = document.getElementById('reset-filters');
     if (resetButton) {
         resetButton.addEventListener('click', function() {
-            window.location.href = '{% url 'job_list' %}?show_filters=1';
+            window.location.href = '{% url 'job_list' %}';
         });
     }
     
@@ -349,33 +356,6 @@ document.addEventListener('DOMContentLoaded', function() {
             window.location.href = this.getAttribute('href');
         });
     });
-    
-    // Smooth scroll to filters when they're shown
-    if (window.location.hash === '#filters') {
-        const filtersElement = document.getElementById('filters');
-        if (filtersElement) {
-            setTimeout(function() {
-                filtersElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
-            }, 100);
-        }
-    }
-    
-    // Make filter button sticky on mobile scroll
-    const filterButton = document.querySelector('a[href*="show_filters=1"]');
-    if (filterButton && window.innerWidth < 768) {
-        let lastScrollTop = 0;
-        window.addEventListener('scroll', function() {
-            const st = window.pageYOffset || document.documentElement.scrollTop;
-            if (st > lastScrollTop && st > 200) {
-                // Scrolling down & past header
-                filterButton.classList.add('fixed', 'bottom-4', 'right-4', 'z-50', 'shadow-lg');
-            } else if (st < 100) {
-                // Scrolling up & near top
-                filterButton.classList.remove('fixed', 'bottom-4', 'right-4', 'z-50', 'shadow-lg');
-            }
-            lastScrollTop = st <= 0 ? 0 : st;
-        });
-    }
 });
 </script>
 {% endblock %} 

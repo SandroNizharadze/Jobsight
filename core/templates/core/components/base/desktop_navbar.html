@@ -23,7 +23,7 @@
                         {% if user.is_authenticated and user.userprofile.role == 'employer' %}
                         <a class="px-4 py-2 text-white hover:text-gray-300 transition-colors" href="{% url 'job_list' %}">{% trans "ვაკანსიები" %}</a>
                         {% else %}
-                        <a class="px-4 py-2 text-white hover:text-gray-300 transition-colors" href="{% url 'job_list' %}?show_filters=1#filters">{% trans "ვაკანსიები" %}</a>
+                        <a class="px-4 py-2 text-white hover:text-gray-300 transition-colors" href="{% url 'job_list' %}">{% trans "ვაკანსიები" %}</a>
                         {% endif %}
                         <a class="px-4 py-2 text-white hover:text-gray-300 transition-colors" href="{% url 'pricing' %}">{% trans "გამოქვეყნება" %}</a>
                         <a class="px-4 py-2 text-white hover:text-gray-300 transition-colors" href="{% url 'blog_list' %}">{% trans "ბლოგი" %}</a>

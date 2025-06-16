@@ -9,7 +9,7 @@
             <p class="text-xl text-blue-100 mb-8">{% trans "ყველა სივი მნიშვნელოვანია" %}</p>
             
             <form action="{% url 'job_list' %}" method="get" class="mb-12">
-                <div class="bg-white rounded-2xl shadow-lg flex flex-col md:flex-row overflow-hidden">
+                <div class="bg-white rounded-3xl shadow-lg flex flex-col md:flex-row overflow-hidden">
                     <div class="flex-1 p-3">
                         <div class="relative">
                             <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -17,36 +17,18 @@
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                                 </svg>
                             </div>
-                            <input type="text" name="search" value="{{ request.GET.search|default:'' }}" placeholder="{% trans 'სამსახურის დასახელება' %}" class="w-full pl-10 px-4 py-4 rounded-xl focus:outline-none focus:ring-2 focus:ring-teal-500 text-gray-700 text-base">
+                            <input type="text" name="search" value="{{ request.GET.search|default:'' }}" placeholder="{% trans 'სამსახურის დასახელება' %}" class="w-full pl-10 px-4 py-3 rounded-2xl focus:outline-none focus:ring-2 focus:ring-teal-500 text-gray-700 text-base">
                         </div>
                     </div>
-                    <div class="flex-1 p-3 border-t md:border-t-0 md:border-l border-gray-200">
-                        <select name="location" class="w-full px-4 py-4 rounded-xl focus:outline-none focus:ring-2 focus:ring-teal-500 text-gray-600 text-base">
-                            <option value="">{% trans 'ადგილმდებარეობა' %}</option>
-                            {% for location_code, location_name in job_locations %}
-                                <option value="{{ location_code }}" {% if request.GET.location == location_code %}selected{% endif %}>{{ location_name }}</option>
-                            {% empty %}
-                                <option value="tbilisi">{% trans 'თბილისი' %}</option>
-                                <option value="batumi">{% trans 'ბათუმი' %}</option>
-                                <option value="kutaisi">{% trans 'ქუთაისი' %}</option>
-                            {% endfor %}
-                        </select>
-                    </div>
-                    <div class="flex-1 p-3 border-t md:border-t-0 md:border-l border-gray-200">
-                        <select name="category" class="w-full px-4 py-4 rounded-xl focus:outline-none focus:ring-2 focus:ring-teal-500 text-gray-600 text-base">
-                            <option value="">{% trans 'კატეგორია' %}</option>
-                            {% for category_code, category_name in job_categories %}
-                                <option value="{{ category_code }}" {% if request.GET.category == category_code %}selected{% endif %}>{{ category_name }}</option>
-                            {% empty %}
-                                <option value="it">{% trans 'ინფორმაციული ტექნოლოგიები' %}</option>
-                                <option value="sales">{% trans 'გაყიდვები' %}</option>
-                                <option value="marketing">{% trans 'მარკეტინგი' %}</option>
-                            {% endfor %}
-                        </select>
-                    </div>
+                    
                     <div class="p-3">
-                        <button type="submit" class="w-full bg-teal-600 hover:bg-teal-700 text-white font-medium px-6 py-4 rounded-xl transition-colors text-base">
+                        <button type="submit" class="w-full bg-teal-600 hover:bg-teal-700 text-white font-medium px-6 py-3 rounded-xl transition-colors text-base">
                             <i class="fas fa-search mr-2"></i>{% trans 'ძიება' %}
+                        </button>
+                    </div>
+                    <div class="p-3 border-t md:border-t-0 md:border-l border-gray-200">
+                        <button type="button" id="open-filter-modal" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium px-6 py-3 rounded-xl transition-colors text-base">
+                            <i class="fas fa-filter mr-2"></i>
                         </button>
                     </div>
                 </div>

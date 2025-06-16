@@ -72,4 +72,5 @@ urlpatterns = [
     
     # API routes
     path('api/applications/<int:application_id>/rejection-reasons/', get_application_rejection_reasons, name='get_application_rejection_reasons'),
+    path('jobs/filter/', job_views.filter_jobs, name='filter_jobs'),
 ]
