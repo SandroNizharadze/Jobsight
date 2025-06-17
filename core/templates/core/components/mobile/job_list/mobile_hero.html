@@ -10,15 +10,7 @@
         <!-- Hero Content -->
         <div class="text-center">
             <h1 class="text-3xl font-bold mb-3 animate-fade-in">{% trans "იპოვე შენი სამსახური დღესვე!" %}</h1>
-            <p class="text-blue-100 mb-6 animate-fade-in-delay">{% trans "დააკავშირე შენი ნიჭი შესაძლებლობასთან: შენი კარიერული წარმატების გზა" %}</p>
-            
-            <div class="flex items-center space-x-3">
-                <!-- Filter Button -->
-                <button id="mobile-open-filter-modal" class="flex-1 flex items-center justify-center px-4 py-3 bg-white text-blue-700 rounded-xl shadow-lg hover:bg-blue-50 transition-colors">
-                    <i class="fas fa-filter mr-2"></i>
-                    <span class="font-medium">{% trans "ფილტრები" %}</span>
-                </button>
-            </div>
+            <p class="text-blue-100 mb-6 animate-fade-in-delay">{% trans "ყველა სივი მნიშვნელოვანია" %}</p>
             
             <form action="{% url 'job_list' %}" method="get" class="mb-8 animate-slide-up">
                 <div class="bg-white rounded-3xl shadow-lg overflow-hidden border border-gray-100 safari-hero-form">
@@ -56,9 +48,12 @@
                             {% endfor %}
                         </select>
                     </div>
-                    <div class="p-4">
-                        <button type="submit" class="w-full bg-teal-600 hover:bg-teal-700 text-white font-medium px-6 py-3 rounded-xl safari-input transition-colors text-base shadow-md hover:shadow-lg transform hover:scale-[1.01] transition-transform">
+                    <div class="flex items-center gap-3 p-3 border-t border-gray-200">
+                        <button type="submit" class="flex-1 bg-teal-600 hover:bg-teal-700 text-white font-medium px-4 py-3 rounded-xl safari-input transition-colors text-base shadow-md hover:shadow-lg">
                             <i class="fas fa-search mr-2"></i>{% trans 'ძიება' %}
+                        </button>
+                        <button type="button" id="mobile-open-filter-modal" class="bg-blue-600 hover:bg-blue-700 text-white font-medium w-12 h-12 flex items-center justify-center rounded-xl transition-colors text-base shadow-md hover:shadow-lg">
+                            <i class="fas fa-filter"></i>
                         </button>
                     </div>
                 </div>
