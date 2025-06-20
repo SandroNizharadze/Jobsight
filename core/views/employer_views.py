@@ -107,20 +107,35 @@ def employer_home(request):
     status_data = []
     status_colors = []
     
+    # Define status mapping with consistent colors
+    status_mapping = {
+        'განხილვის_პროცესში': {
+            'label': 'In Review',
+            'color': 'rgba(245, 158, 11, 0.7)',  # amber/yellow
+        },
+        'გასაუბრება': {
+            'label': 'Interview',
+            'color': 'rgba(16, 185, 129, 0.7)',  # green
+        },
+        'რეზერვი': {
+            'label': 'Reserve',
+            'color': 'rgba(239, 68, 68, 0.7)',  # red
+        },
+    }
+    
+    # Create a dictionary to store counts by status type
+    status_counts = {status: 0 for status in status_mapping.keys()}
+    
+    # Aggregate the status counts
     for status in status_distribution:
-        if status['status'] == 'განხილვის_პროცესში':
-            status_labels.append('In Review')
-            status_colors.append('rgba(245, 158, 11, 0.7)')
-        elif status['status'] == 'გასაუბრება':
-            status_labels.append('Interview')
-            status_colors.append('rgba(16, 185, 129, 0.7)')
-        elif status['status'] == 'რეზერვი':
-            status_labels.append('Reserve')
-            status_colors.append('rgba(239, 68, 68, 0.7)')
-        else:
-            # Skip any legacy status values that don't match current choices
-            continue
-        status_data.append(status['count'])
+        if status['status'] in status_counts:
+            status_counts[status['status']] = status['count']
+    
+    # Generate the arrays in a consistent order
+    for status_key, status_info in status_mapping.items():
+        status_labels.append(status_info['label'])
+        status_data.append(status_counts[status_key])
+        status_colors.append(status_info['color'])
     
     # Job category performance
     category_performance = JobApplication.objects.filter(
