@@ -177,45 +177,49 @@
         <div class="space-y-2">
           <label class="block text-sm font-medium text-gray-700">{% trans "აირჩიეთ მიზეზები:" %} <span class="text-red-500">*</span></label>
           <div id="reasonsContainer" class="space-y-2">
-            <div class="flex items-center">
-              <input type="checkbox" name="rejection_reasons" value="ენის_ცოდნის_ნაკლებობა" class="h-4 w-4 text-blue-600 rounded rejection-reason-checkbox">
-              <label class="ml-2 text-sm text-gray-700">{% trans "ენის ცოდნის ნაკლებობა" %}</label>
+            <div class="flex items-center cursor-pointer">
+              <input type="checkbox" name="rejection_reasons" value="ენის_ცოდნის_ნაკლებობა" class="h-4 w-4 text-blue-600 rounded rejection-reason-checkbox pointer-events-auto relative z-20 cursor-pointer appearance-none border border-gray-300 bg-white checked:bg-blue-600 checked:border-transparent focus:outline-none">
+              <label class="ml-2 text-sm text-gray-700 cursor-pointer select-none w-full">{% trans "ენის ცოდნის ნაკლებობა" %}</label>
             </div>
-            <div class="flex items-center">
-              <input type="checkbox" name="rejection_reasons" value="არასაკმარისი_გამოცდილება" class="h-4 w-4 text-blue-600 rounded rejection-reason-checkbox">
-              <label class="ml-2 text-sm text-gray-700">{% trans "არასაკმარისი გამოცდილება" %}</label>
+            <div class="flex items-center cursor-pointer">
+              <input type="checkbox" name="rejection_reasons" value="არასაკმარისი_გამოცდილება" class="h-4 w-4 text-blue-600 rounded rejection-reason-checkbox pointer-events-auto relative z-20 cursor-pointer appearance-none border border-gray-300 bg-white checked:bg-blue-600 checked:border-transparent focus:outline-none">
+              <label class="ml-2 text-sm text-gray-700 cursor-pointer select-none w-full">{% trans "არასაკმარისი გამოცდილება" %}</label>
             </div>
-            <div class="flex items-center">
-              <input type="checkbox" name="rejection_reasons" value="უნარების_ნაკლებობა" class="h-4 w-4 text-blue-600 rounded rejection-reason-checkbox">
-              <label class="ml-2 text-sm text-gray-700">{% trans "უნარების ნაკლებობა" %}</label>
+            <div class="flex items-center cursor-pointer">
+              <input type="checkbox" name="rejection_reasons" value="უნარების_ნაკლებობა" class="h-4 w-4 text-blue-600 rounded rejection-reason-checkbox pointer-events-auto relative z-20 cursor-pointer appearance-none border border-gray-300 bg-white checked:bg-blue-600 checked:border-transparent focus:outline-none">
+              <label class="ml-2 text-sm text-gray-700 cursor-pointer select-none w-full">{% trans "უნარების ნაკლებობა" %}</label>
             </div>
-            <div class="flex items-center">
-              <input type="checkbox" name="rejection_reasons" value="შეუსაბამო_საცხოვრებელი_ადგილი" class="h-4 w-4 text-blue-600 rounded rejection-reason-checkbox">
-              <label class="ml-2 text-sm text-gray-700">{% trans "შეუსაბამო საცხოვრებელი ადგილი" %}</label>
+            <div class="flex items-center cursor-pointer">
+              <input type="checkbox" name="rejection_reasons" value="შეუსაბამო_საცხოვრებელი_ადგილი" class="h-4 w-4 text-blue-600 rounded rejection-reason-checkbox pointer-events-auto relative z-20 cursor-pointer appearance-none border border-gray-300 bg-white checked:bg-blue-600 checked:border-transparent focus:outline-none">
+              <label class="ml-2 text-sm text-gray-700 cursor-pointer select-none w-full">{% trans "შეუსაბამო საცხოვრებელი ადგილი" %}</label>
             </div>
-            <div class="flex items-center">
-              <input type="checkbox" name="rejection_reasons" value="სივიში_არ_არის_საკმარისი_ინფორმაცია" class="h-4 w-4 text-blue-600 rounded rejection-reason-checkbox">
-              <label class="ml-2 text-sm text-gray-700">{% trans "სივიში არ არის საკმარისი ინფორმაცია" %}</label>
+            <div class="flex items-center cursor-pointer">
+              <input type="checkbox" name="rejection_reasons" value="სივიში_არ_არის_საკმარისი_ინფორმაცია" class="h-4 w-4 text-blue-600 rounded rejection-reason-checkbox pointer-events-auto relative z-20 cursor-pointer appearance-none border border-gray-300 bg-white checked:bg-blue-600 checked:border-transparent focus:outline-none">
+              <label class="ml-2 text-sm text-gray-700 cursor-pointer select-none w-full">{% trans "სივიში არ არის საკმარისი ინფორმაცია" %}</label>
             </div>
-            <div class="flex items-center">
-              <input type="checkbox" name="rejection_reasons" value="განათლების_შეუსაბამობა" class="h-4 w-4 text-blue-600 rounded rejection-reason-checkbox">
-              <label class="ml-2 text-sm text-gray-700">{% trans "განათლების შეუსაბამობა" %}</label>
+            <div class="flex items-center cursor-pointer">
+              <input type="checkbox" name="rejection_reasons" value="განათლების_შეუსაბამობა" class="h-4 w-4 text-blue-600 rounded rejection-reason-checkbox pointer-events-auto relative z-20 cursor-pointer appearance-none border border-gray-300 bg-white checked:bg-blue-600 checked:border-transparent focus:outline-none">
+              <label class="ml-2 text-sm text-gray-700 cursor-pointer select-none w-full">{% trans "განათლების შეუსაბამობა" %}</label>
             </div>
-            <div class="flex items-center">
-              <input type="checkbox" name="rejection_reasons" value="კარიერული_მიზნების_შეუსაბამობა" class="h-4 w-4 text-blue-600 rounded rejection-reason-checkbox">
-              <label class="ml-2 text-sm text-gray-700">{% trans "კარიერული მიზნების შეუსაბამობა" %}</label>
+            <div class="flex items-center cursor-pointer">
+              <input type="checkbox" name="rejection_reasons" value="კარიერული_მიზნების_შეუსაბამობა" class="h-4 w-4 text-blue-600 rounded rejection-reason-checkbox pointer-events-auto relative z-20 cursor-pointer appearance-none border border-gray-300 bg-white checked:bg-blue-600 checked:border-transparent focus:outline-none">
+              <label class="ml-2 text-sm text-gray-700 cursor-pointer select-none w-full">{% trans "კარიერული მიზნების შეუსაბამობა" %}</label>
             </div>
-            <div class="flex items-center">
-              <input type="checkbox" name="rejection_reasons" value="სივის_ფორმატის_სტრუქტურის_ხარვეზები" class="h-4 w-4 text-blue-600 rounded rejection-reason-checkbox">
-              <label class="ml-2 text-sm text-gray-700">{% trans "სივის ფორმატის/სტრუქტურის ხარვეზები" %}</label>
+            <div class="flex items-center cursor-pointer">
+              <input type="checkbox" name="rejection_reasons" value="სივის_ფორმატის_სტრუქტურის_ხარვეზები" class="h-4 w-4 text-blue-600 rounded rejection-reason-checkbox pointer-events-auto relative z-20 cursor-pointer appearance-none border border-gray-300 bg-white checked:bg-blue-600 checked:border-transparent focus:outline-none">
+              <label class="ml-2 text-sm text-gray-700 cursor-pointer select-none w-full">{% trans "სივის ფორმატის/სტრუქტურის ხარვეზები" %}</label>
             </div>
-            <div class="flex items-center">
-              <input type="checkbox" name="rejection_reasons" value="სერთიფიკატების_ლიცენზიების_ნაკლებობა" class="h-4 w-4 text-blue-600 rounded rejection-reason-checkbox">
-              <label class="ml-2 text-sm text-gray-700">{% trans "სერთიფიკატების/ლიცენზიების ნაკლებობა" %}</label>
+            <div class="flex items-center cursor-pointer">
+              <input type="checkbox" name="rejection_reasons" value="სერთიფიკატების_ლიცენზიების_ნაკლებობა" class="h-4 w-4 text-blue-600 rounded rejection-reason-checkbox pointer-events-auto relative z-20 cursor-pointer appearance-none border border-gray-300 bg-white checked:bg-blue-600 checked:border-transparent focus:outline-none">
+              <label class="ml-2 text-sm text-gray-700 cursor-pointer select-none w-full">{% trans "სერთიფიკატების/ლიცენზიების ნაკლებობა" %}</label>
             </div>
-            <div class="flex items-center">
-              <input type="checkbox" name="rejection_reasons" value="არარელევანტური_სამუშაო_ისტორია" class="h-4 w-4 text-blue-600 rounded rejection-reason-checkbox">
-              <label class="ml-2 text-sm text-gray-700">{% trans "არარელევანტური სამუშაო ისტორია" %}</label>
+            <div class="flex items-center cursor-pointer">
+              <input type="checkbox" name="rejection_reasons" value="არარელევანტური_სამუშაო_ისტორია" class="h-4 w-4 text-blue-600 rounded rejection-reason-checkbox pointer-events-auto relative z-20 cursor-pointer appearance-none border border-gray-300 bg-white checked:bg-blue-600 checked:border-transparent focus:outline-none">
+              <label class="ml-2 text-sm text-gray-700 cursor-pointer select-none w-full">{% trans "არარელევანტური სამუშაო ისტორია" %}</label>
+            </div>
+            <div class="flex items-center cursor-pointer">
+              <input type="checkbox" name="rejection_reasons" value="სხვა" class="h-4 w-4 text-blue-600 rounded rejection-reason-checkbox pointer-events-auto relative z-20 cursor-pointer appearance-none border border-gray-300 bg-white checked:bg-blue-600 checked:border-transparent focus:outline-none">
+              <label class="ml-2 text-sm text-gray-700 cursor-pointer select-none w-full">{% trans "სხვა" %}</label>
             </div>
           </div>
           <div id="reasonError" class="text-red-500 text-sm hidden">{% trans "გთხოვთ აირჩიოთ მინიმუმ ერთი მიზეზი" %}</div>
@@ -246,6 +250,31 @@
     const reasonError = document.getElementById('reasonError');
     let lastSelectedStatus = null;
     let statusSelect = null;
+    
+    // Make sure checkbox clicks are registered 
+    document.querySelectorAll('.rejection-reason-checkbox').forEach(checkbox => {
+      checkbox.addEventListener('click', function(e) {
+        // Toggle checked state manually
+        this.checked = !this.checked;
+        // Prevent event propagation
+        e.stopPropagation();
+      });
+    });
+    
+    // Add click handlers for the entire container of each checkbox
+    document.querySelectorAll('#reasonsContainer > div').forEach(container => {
+      container.addEventListener('click', function(e) {
+        // Find the checkbox inside this container
+        const checkbox = this.querySelector('input[type="checkbox"]');
+        if (checkbox) {
+          // Toggle the checkbox state
+          checkbox.checked = !checkbox.checked;
+        }
+        // Prevent default behavior
+        e.preventDefault();
+        e.stopPropagation();
+      });
+    });
     
     // Status select styling and functionality
     statusSelect = document.querySelector('.application-status-select');

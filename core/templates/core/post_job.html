@@ -190,9 +190,9 @@
             </span>
             <div class="flex space-x-4">
               {% for radio in form.considers_students %}
-              <label class="inline-flex items-center">
-                {{ radio.tag|add_class:"h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded" }}
-                <span class="ml-2 text-gray-700">{{ radio.choice_label }}</span>
+              <label class="inline-flex items-center cursor-pointer">
+                {{ radio.tag|add_class:"h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded pointer-events-auto relative z-20 cursor-pointer" }}
+                <span class="ml-2 text-gray-700 select-none">{{ radio.choice_label }}</span>
               </label>
               {% endfor %}
             </div>
@@ -207,16 +207,15 @@
             </span>
             <div class="flex space-x-4">
               {% for radio in form.georgian_language_only %}
-              <label class="inline-flex items-center">
-                {{ radio.tag|add_class:"h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded" }}
-                <span class="ml-2 text-gray-700">{{ radio.choice_label }}</span>
+              <label class="inline-flex items-center cursor-pointer">
+                {{ radio.tag|add_class:"h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded pointer-events-auto relative z-20 cursor-pointer" }}
+                <span class="ml-2 text-gray-700 select-none">{{ radio.choice_label }}</span>
               </label>
               {% endfor %}
             </div>
             {% if form.georgian_language_only.errors %}
             <p class="mt-1 text-sm text-red-600">{{ form.georgian_language_only.errors }}</p>
             {% endif %}
-            <input type="hidden" name="georgian_language_only" value="False">
           </div>
         </div>
 
@@ -310,6 +309,55 @@
     if (premiumLevelSelect) {
       premiumLevelSelect.value = '{{ selected_premium_level }}';
     }
+    
+    // Enhance radio button functionality for the georgian_language_only and considers_students fields
+    const radioButtons = document.querySelectorAll('input[type="radio"][name="georgian_language_only"], input[type="radio"][name="considers_students"]');
+    
+    // Ensure radio buttons are clickable
+    radioButtons.forEach(radio => {
+      radio.style.pointerEvents = 'auto';
+      
+      // Add click handler with higher priority
+      radio.addEventListener('click', function(e) {
+        // Force the checked state
+        this.checked = true;
+        // Stop event propagation
+        e.stopPropagation();
+      }, true);
+      
+      // Handle touch events separately
+      radio.addEventListener('touchend', function(e) {
+        // Force the checked state
+        this.checked = true;
+        // Stop event propagation
+        e.stopPropagation();
+      }, true);
+    });
+    
+    // Add click handlers for the labels to ensure they correctly toggle the radio buttons
+    const radioLabels = document.querySelectorAll('input[type="radio"][name="georgian_language_only"], input[type="radio"][name="considers_students"]').forEach(radio => {
+      const parentLabel = radio.closest('label');
+      if (parentLabel) {
+        parentLabel.addEventListener('click', function(e) {
+          // Find the radio button inside this label
+          const radioInput = this.querySelector('input[type="radio"]');
+          if (radioInput) {
+            // Set this radio button to checked
+            radioInput.checked = true;
+          }
+        });
+        
+        // Also handle touch events
+        parentLabel.addEventListener('touchend', function(e) {
+          // Find the radio button inside this label
+          const radioInput = this.querySelector('input[type="radio"]');
+          if (radioInput) {
+            // Set this radio button to checked
+            radioInput.checked = true;
+          }
+        });
+      }
+    });
   });
 </script>
 {% endblock %} 
