@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="150px" height="150px" viewBox="0 0 150 150" version="1.1" xmlns="http://www.w3.org/2000/svg">
+    <title>No Results</title>
+    <g id="No-Results" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <circle id="Face" stroke="#CBD5E0" stroke-width="3" cx="75" cy="75" r="60"></circle>
+        <circle id="Left-Eye" fill="#CBD5E0" cx="55" cy="65" r="5"></circle>
+        <circle id="Right-Eye" fill="#CBD5E0" cx="95" cy="65" r="5"></circle>
+        <path d="M55,100 C55,100 65,90 75,90 C85,90 95,100 95,100" id="Frown" stroke="#CBD5E0" stroke-width="3" stroke-linecap="round"></path>
+    </g>
+</svg> 

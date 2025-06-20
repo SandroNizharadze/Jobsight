@@ -309,7 +309,12 @@
   {% if not jobs %}
     <div class="text-center py-10 px-4 bg-white {% if not request.GET.show_filters %}rounded-t-3xl shadow-lg relative z-20{% endif %}">
       <div class="mx-auto max-w-md">
-        <img src="{% static 'core/images/no_results.svg' %}" alt="No results" class="w-32 h-32 mx-auto mb-4">
+        <svg class="w-32 h-32 mx-auto mb-4" viewBox="0 0 150 150" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="75" cy="75" r="60" stroke="#CBD5E0" stroke-width="3"/>
+          <circle cx="55" cy="65" r="5" fill="#CBD5E0"/>
+          <circle cx="95" cy="65" r="5" fill="#CBD5E0"/>
+          <path d="M55,100 C55,100 65,90 75,90 C85,90 95,100 95,100" stroke="#CBD5E0" stroke-width="3" stroke-linecap="round"/>
+        </svg>
         <h3 class="text-lg font-bold mb-2">{% trans "No jobs found" %}</h3>
         <p class="text-sm text-gray-600 mb-4">{% trans "Try adjusting your search filters" %}</p>
         <a href="{% url 'job_list' %}" class="inline-block bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-md">
