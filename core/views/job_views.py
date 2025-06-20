@@ -94,12 +94,19 @@ def job_list(request):
         active_filters['გამოცდილება'] = experience_display
         filter_remove_urls['გამოცდილება'] = remove_from_query_string(request.GET, 'experience')
     
-    if 'salary_min' in request.GET and request.GET['salary_min'] and int(request.GET['salary_min']) > 0:
-        salary_min = request.GET['salary_min']
-        jobs = jobs.filter(salary_min__gte=salary_min)
-        filtered = True
-        active_filters['მინიმალური ანაზღაურება'] = f"₾ {salary_min}"
-        filter_remove_urls['მინიმალური ანაზღაურება'] = remove_from_query_string(request.GET, 'salary_min')
+    # Fix for salary_min filter - safely convert to int using a try-except block
+    if 'salary_min' in request.GET and request.GET['salary_min']:
+        try:
+            salary_min = int(request.GET['salary_min'])
+            if salary_min > 0:
+                jobs = jobs.filter(salary_min__gte=salary_min)
+                filtered = True
+                active_filters['მინიმალური ანაზღაურება'] = f"₾ {salary_min}"
+                filter_remove_urls['მინიმალური ანაზღაურება'] = remove_from_query_string(request.GET, 'salary_min')
+        except (ValueError, TypeError):
+            # Log the error but don't fail if salary_min is not a valid integer
+            logger.warning(f"Invalid salary_min value: {request.GET['salary_min']}")
+            # Don't apply filter if value is invalid
     
     if 'job_preferences' in request.GET:
         job_preferences_list = request.GET.getlist('job_preferences')
