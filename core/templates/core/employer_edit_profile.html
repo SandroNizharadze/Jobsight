@@ -6,29 +6,25 @@
 {% block head %}
 {{ block.super }}
 {{ employer_form.media }}
+<script src="{% static 'django_ckeditor_5/dist/bundle.js' %}"></script>
+<link rel="stylesheet" href="{% static 'css/ckeditor5-custom.css' %}">
 <style>
-  /* Custom styles for CKEditor placeholder */
-  .ck.ck-editor__editable_inline {
-    position: relative;
-  }
-  
-  /* Georgian placeholder overlay */
-  #georgian-placeholder-overlay {
-    font-family: 'Noto Sans Georgian', 'BPG Arial', sans-serif;
-    font-size: 16px;
-    color: #aaa;
-    font-style: italic;
-    position: absolute;
-    top: 10px;
-    left: 10px;
-    pointer-events: none;
-    z-index: 100;
-    transition: opacity 0.2s ease;
-  }
-  
-  /* Ensure the CKEditor container is properly positioned */
+  /* Custom styles for CKEditor */
   .django_ckeditor_5 {
-    position: relative !important;
+    width: 100%;
+    min-height: 200px;
+  }
+  
+  /* Remove any Georgian placeholder overlay that might interfere with CKEditor */
+  #georgian-placeholder-overlay {
+    display: none;
+  }
+  
+  /* Make sure CKEditor toolbar is visible */
+  .ck.ck-toolbar {
+    visibility: visible !important;
+    opacity: 1 !important;
+    display: flex !important;
   }
   
   /* Custom styles for textarea */
@@ -347,6 +343,7 @@
 {% endblock %}
 
 {% block extra_js %}
+<script src="{% static 'core/js/ckeditor_init.js' %}"></script>
 <script>
   document.addEventListener('DOMContentLoaded', function() {
     // Handle company logo file input changes
@@ -393,6 +390,15 @@
         if (e.target === deleteAccountModal) {
           deleteAccountModal.classList.add('hidden');
         }
+      });
+    }
+    
+    // Make sure the CKEditor form is submitted properly
+    const employerProfileForm = document.getElementById('employer-profile-form');
+    if (employerProfileForm) {
+      employerProfileForm.addEventListener('submit', function() {
+        // CKEditor will handle its own content submission
+        console.log('Form submitted with CKEditor content');
       });
     }
   });

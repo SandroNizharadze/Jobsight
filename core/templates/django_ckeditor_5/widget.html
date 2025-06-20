@@ -1,0 +1,31 @@
+{% load static %}
+<div class="django_ckeditor_5">
+    <textarea name="{{ widget.name }}"{% include "django/forms/widgets/attrs.html" %} data-processed="0" data-config="{{ widget.config }}" data-external-plugin-resources="{{ widget.external_plugin_resources }}" data-id="django_ckeditor_5_{{ widget.attrs.id }}" data-type="django_ckeditor_5" data-csrf="{{ csrf_token }}">{{ widget.value|default_if_none:"" }}</textarea>
+</div>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const textareaElement = document.querySelector('[data-id="django_ckeditor_5_{{ widget.attrs.id }}"]');
+        if (textareaElement && textareaElement.getAttribute('data-processed') === '0') {
+            textareaElement.setAttribute('data-processed', '1');
+            
+            try {
+                ClassicEditor
+                    .create(textareaElement, {
+                        toolbar: ['heading', '|', 'bold', 'italic', 'link', 'bulletedList', 'numberedList', 'blockQuote'],
+                        language: {
+                            ui: 'en',
+                            content: 'ka'
+                        }
+                    })
+                    .then(editor => {
+                        console.log('CKEditor initialized for {{ widget.attrs.id }}');
+                    })
+                    .catch(error => {
+                        console.error('CKEditor initialization failed for {{ widget.attrs.id }}:', error);
+                    });
+            } catch (e) {
+                console.error('Error initializing CKEditor for {{ widget.attrs.id }}:', e);
+            }
+        }
+    });
+</script> 

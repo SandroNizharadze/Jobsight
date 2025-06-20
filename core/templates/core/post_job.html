@@ -6,6 +6,22 @@
 {% block head %}
 {{ block.super }}
 {{ form.media }}
+<script src="{% static 'django_ckeditor_5/dist/bundle.js' %}"></script>
+<link rel="stylesheet" href="{% static 'css/ckeditor5-custom.css' %}">
+<style>
+  /* Custom styles for CKEditor */
+  .django_ckeditor_5 {
+    width: 100%;
+    min-height: 200px;
+  }
+  
+  /* Make sure CKEditor toolbar is visible */
+  .ck.ck-toolbar {
+    visibility: visible !important;
+    opacity: 1 !important;
+    display: flex !important;
+  }
+</style>
 {% endblock %}
 
 {% block title %}{% trans "ვაკანსიის გამოქვეყნება" %} - Jobsight{% endblock %}
@@ -302,6 +318,7 @@
 {% endblock %}
 
 {% block extra_js %}
+<script src="{% static 'core/js/ckeditor_init.js' %}"></script>
 <script>
   document.addEventListener('DOMContentLoaded', function() {
     // Set the premium level from the URL

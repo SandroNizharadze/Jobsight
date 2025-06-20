@@ -185,11 +185,10 @@ class EmployerProfileForm(forms.ModelForm):
                 'class': 'form-control',
                 'placeholder': 'https://www.example.com'
             }),
-            'company_description': forms.Textarea(attrs={
-                'class': 'form-control',
-                'placeholder': 'კომპანიის აღწერა',
-                'rows': 6
-            }),
+            'company_description': CKEditor5Widget(
+                attrs={'class': 'django_ckeditor_5'}, 
+                config_name='default'
+            ),
             'company_logo': forms.FileInput(attrs={
                 'class': 'form-control',
                 'accept': 'image/*'

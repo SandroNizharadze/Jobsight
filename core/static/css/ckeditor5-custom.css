@@ -1,0 +1,48 @@
+/* CKEditor 5 Custom Styles */
+
+/* Make sure the toolbar is visible */
+.ck.ck-toolbar {
+    visibility: visible !important;
+    opacity: 1 !important;
+    display: flex !important;
+    border: 1px solid #c4c4c4 !important;
+    border-radius: 4px 4px 0 0 !important;
+    background: #f8f8f8 !important;
+}
+
+/* Ensure the editor has proper dimensions */
+.ck.ck-editor {
+    width: 100% !important;
+}
+
+.ck.ck-editor__editable {
+    min-height: 200px !important;
+    border: 1px solid #c4c4c4 !important;
+    border-top: none !important;
+    border-radius: 0 0 4px 4px !important;
+}
+
+/* Style for toolbar buttons */
+.ck.ck-button {
+    padding: 6px 10px !important;
+    background: transparent !important;
+    border: none !important;
+    cursor: pointer !important;
+}
+
+.ck.ck-button:hover {
+    background: #e6e6e6 !important;
+}
+
+.ck.ck-button.ck-on {
+    background: #e6e6e6 !important;
+    color: #2271b1 !important;
+}
+
+/* Make sure dropdown panels are visible */
+.ck.ck-dropdown__panel {
+    border: 1px solid #c4c4c4 !important;
+    border-radius: 0 0 4px 4px !important;
+    background: white !important;
+    z-index: 9999 !important;
+}
