@@ -14,6 +14,12 @@ except ImportError:
 # Load environment variables from .env file if it exists
 load_dotenv()
 
+# Function to control logging output to prevent duplication
+def log_setting(message):
+    # Only print during direct invocation with DEBUG on, not during imports
+    if __name__ == '__main__':
+        print(message)
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
@@ -101,9 +107,9 @@ if DATABASE_URL and dj_database_url:
 USE_SUPABASE = os.environ.get('USE_SUPABASE', 'False') == 'True'
 if USE_SUPABASE:
     from .supabase_settings import DATABASES
-    print("Using Supabase database")
+    log_setting("Using Supabase database")
 else:
-    print("Using local PostgreSQL database")
+    log_setting("Using local PostgreSQL database")
     
 # Fallback to SQLite if PostgreSQL connection fails
 USE_SQLITE_FALLBACK = os.environ.get('USE_SQLITE_FALLBACK', 'False') == 'True'
@@ -114,7 +120,7 @@ if USE_SQLITE_FALLBACK:
             'NAME': BASE_DIR / 'db.sqlite3',
         }
     }
-    print("Using SQLite database (fallback mode)")
+    log_setting("Using SQLite database (fallback mode)")
 
 # Authentication
 AUTHENTICATION_BACKENDS = [
@@ -176,8 +182,9 @@ STATICFILES_DIRS = [
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # S3 Settings - Apply when USE_S3 is True
-print(f"USE_S3 value from environment: {os.environ.get('USE_S3', 'NOT SET')}")
+# Only print configuration information when running directly (not via django imports)
 USE_S3 = os.environ.get('USE_S3', 'False') == 'True'
+log_setting(f"USE_S3 value from environment: {os.environ.get('USE_S3', 'NOT SET')}")
 
 # Define media locations for consistency
 PRIVATE_MEDIA_LOCATION = 'media/private'
@@ -186,11 +193,23 @@ PRIVATE_MEDIA_LOCATION = 'media/private'
 if not USE_S3:
     MEDIA_URL = '/media/'
     MEDIA_ROOT = BASE_DIR / 'media'
-    print("Using LOCAL media storage")
+    log_setting("Using LOCAL media storage")
 else:
     # Import S3 settings but don't set MEDIA_URL or MEDIA_ROOT as they'll come from s3_settings.py
-    print("S3 settings are being imported")
-    from .s3_settings import *
+    log_setting("S3 settings are being imported")
+    try:
+        from .s3_settings import *
+        # Only print config status once
+        if DEBUG and __name__ == '__main__':
+            print("S3 Configuration Status:")
+            print(f"AWS_ACCESS_KEY_ID: {'Set' if 'AWS_ACCESS_KEY_ID' in locals() else 'Not set'}")
+            print(f"AWS_SECRET_ACCESS_KEY: {'Set' if 'AWS_SECRET_ACCESS_KEY' in locals() else 'Not set'}")
+            print(f"AWS_STORAGE_BUCKET_NAME: {locals().get('AWS_STORAGE_BUCKET_NAME', 'Not set')}")
+            print(f"AWS_S3_REGION_NAME: {locals().get('AWS_S3_REGION_NAME', 'Not set')}")
+    except ImportError:
+        log_setting("Error importing S3 settings, falling back to local storage")
+        MEDIA_URL = '/media/'
+        MEDIA_ROOT = BASE_DIR / 'media'
 
 # Default primary key field type
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
@@ -327,6 +346,9 @@ CKEDITOR_5_UPLOAD_PATH = 'uploads/ckeditor/'
 CKEDITOR_UPLOAD_PATH = 'uploads/ckeditor/'
 CKEDITOR_JQUERY_URL = '//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js'
 CKEDITOR_IMAGE_BACKEND = 'pillow'
+
+# Silence the CKEditor security warning
+SILENCED_SYSTEM_CHECKS = ["ckeditor.W001"]
 
 CKEDITOR_CONFIGS = {
     'default': {

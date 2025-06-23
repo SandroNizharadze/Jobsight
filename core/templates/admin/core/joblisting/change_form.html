@@ -1,0 +1,22 @@
+{% extends "admin/change_form.html" %}
+{% load static %}
+
+{% block extrahead %}
+{{ block.super }}
+<script src="{% static 'ckeditor/ckeditor/ckeditor.js' %}"></script>
+<script src="{% static 'ckeditor/ckeditor-init.js' %}"></script>
+<style>
+    .cke_chrome {
+        width: 100%;
+        visibility: visible !important;
+    }
+    .cke_top {
+        visibility: visible !important;
+        opacity: 1 !important;
+        display: flex !important;
+    }
+    .cke_contents {
+        min-height: 400px;
+    }
+</style>
+{% endblock %} 

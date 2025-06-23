@@ -1,7 +1,7 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 from django.utils import timezone
-from django_ckeditor_5.fields import CKEditor5Field
+from ckeditor.fields import RichTextField
 from datetime import timedelta
 from core.models.base import SoftDeletionModel
 
@@ -73,7 +73,7 @@ class JobListing(SoftDeletionModel):
 
     title = models.CharField(max_length=100, db_index=True, verbose_name=_("ვაკანსიის დასახელება"))
     company = models.CharField(max_length=100, db_index=True, verbose_name=_("კომპანია"))
-    description = CKEditor5Field(verbose_name=_("ვაკანსიის აღწერა"))
+    description = RichTextField(verbose_name=_("ვაკანსიის აღწერა"))
     salary_min = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True, db_index=True, verbose_name=_("მინიმალური ხელფასი"))
     salary_max = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True, verbose_name=_("მაქსიმალური ხელფასი"))
     salary_type = models.CharField(max_length=50, choices=SALARY_TYPE_CHOICES, default='თვეში', verbose_name=_("ხელფასის ტიპი"))

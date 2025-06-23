@@ -24,6 +24,22 @@ class BlogPostAdminForm(forms.ModelForm):
         model = BlogPost
         fields = '__all__'
 
+# Add a custom form for JobListing with explicit CKEditorWidget
+class JobListingAdminForm(forms.ModelForm):
+    description = forms.CharField(widget=CKEditorWidget())
+    
+    class Meta:
+        model = JobListing
+        fields = '__all__'
+
+# Add a custom form for EmployerProfile with explicit CKEditorWidget
+class EmployerProfileAdminForm(forms.ModelForm):
+    company_description = forms.CharField(widget=CKEditorWidget(), required=False)
+    
+    class Meta:
+        model = EmployerProfile
+        fields = '__all__'
+
 # Add a historical data view to the admin site
 @staff_member_required
 def historical_data_view(request):
@@ -170,6 +186,7 @@ class SoftDeletionAdmin(ImportExportModelAdmin):
 
 @admin.register(EmployerProfile)
 class EmployerProfileAdmin(SoftDeletionAdmin):
+    form = EmployerProfileAdminForm
     resource_class = EmployerProfileResource
     list_display = ('company_name', 'get_employer_email', 'industry', 'company_size', 
                    'location', 'has_cv_database_access', 'get_deleted_state')
@@ -183,6 +200,7 @@ class EmployerProfileAdmin(SoftDeletionAdmin):
 
 @admin.register(JobListing)
 class JobListingAdmin(SoftDeletionAdmin):
+    form = JobListingAdminForm
     resource_class = JobListingResource
     list_display = ('title', 'company', 'get_employer', 'salary_range', 'location', 
                    'category', 'experience', 'job_preferences', 'get_students_status',

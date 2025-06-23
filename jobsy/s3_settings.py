@@ -4,6 +4,11 @@ from dotenv import load_dotenv
 # Load environment variables
 load_dotenv()
 
+# Check if running in main module to prevent duplicate logs during imports
+def log_setting(message):
+    if __name__ == '__main__':
+        print(message)
+
 # AWS S3 Configuration
 AWS_ACCESS_KEY_ID = os.environ.get('AWS_ACCESS_KEY_ID')
 AWS_SECRET_ACCESS_KEY = os.environ.get('AWS_SECRET_ACCESS_KEY')
@@ -28,12 +33,13 @@ DEFAULT_FILE_STORAGE = 'jobsy.storage_backends.PrivateMediaStorage'
 MEDIA_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/'
 MEDIA_ROOT = None  # Don't use local media directory when S3 is enabled
 
-# Print status without revealing secrets
-print("S3 Configuration Status:")
-print(f"AWS_ACCESS_KEY_ID: {'Set' if AWS_ACCESS_KEY_ID else 'NOT SET'}")
-print(f"AWS_SECRET_ACCESS_KEY: {'Set' if AWS_SECRET_ACCESS_KEY else 'NOT SET'}")
-print(f"AWS_STORAGE_BUCKET_NAME: {AWS_STORAGE_BUCKET_NAME}")
-print(f"AWS_S3_REGION_NAME: {AWS_S3_REGION_NAME}")
+# Only log when running as main module
+if __name__ == '__main__':
+    log_setting("S3 Configuration Status:")
+    log_setting(f"AWS_ACCESS_KEY_ID: {'Set' if AWS_ACCESS_KEY_ID else 'NOT SET'}")
+    log_setting(f"AWS_SECRET_ACCESS_KEY: {'Set' if AWS_SECRET_ACCESS_KEY else 'NOT SET'}")
+    log_setting(f"AWS_STORAGE_BUCKET_NAME: {AWS_STORAGE_BUCKET_NAME}")
+    log_setting(f"AWS_S3_REGION_NAME: {AWS_S3_REGION_NAME}")
 
 # Use S3 for static files only if explicitly configured
 USE_S3_FOR_STATIC = os.environ.get('USE_S3_FOR_STATIC', 'False') == 'True'
@@ -42,7 +48,7 @@ if USE_S3_FOR_STATIC:
     # Static files configuration for S3
     STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
     STATIC_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/{AWS_LOCATION}/'
-    print(f"Using S3 for static files: {STATIC_URL}")
+    log_setting(f"Using S3 for static files: {STATIC_URL}")
 else:
     # Keep local static files by default (especially important for admin CSS)
     STATIC_URL = '/static/'
@@ -51,4 +57,4 @@ else:
         os.path.join(os.path.dirname(os.path.dirname(__file__)), 'static'),
     ]
     STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
-    print(f"Using local storage for static files: {STATIC_URL}") 
+    log_setting(f"Using local storage for static files: {STATIC_URL}") 

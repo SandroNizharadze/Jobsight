@@ -3,7 +3,7 @@ from django.conf import settings
 from django.utils.translation import gettext_lazy as _
 from django.db.models.signals import post_save
 from django.dispatch import receiver
-from django_ckeditor_5.fields import CKEditor5Field
+from ckeditor.fields import RichTextField
 from core.models.base import SoftDeletionModel
 
 # Import storage backends if S3 is enabled
@@ -29,7 +29,7 @@ class EmployerProfile(SoftDeletionModel):
     phone_number = models.CharField(max_length=50, blank=True, null=True, verbose_name=_("მობილურის ნომერი"))
     show_phone_number = models.BooleanField(default=False, verbose_name=_("გამოჩნდეს ტელეფონის ნომერი პროფილზე"))
     company_website = models.URLField(blank=True, verbose_name=_("კომპანიის ვებსაიტი"))
-    company_description = CKEditor5Field(blank=True, verbose_name=_("კომპანიის აღწერა"))
+    company_description = RichTextField(blank=True, verbose_name=_("კომპანიის აღწერა"))
     
     # Use PublicMediaStorage for company logos when S3 is enabled
     if PublicMediaStorage:
