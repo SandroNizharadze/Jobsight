@@ -4,7 +4,7 @@ from django.utils.translation import gettext_lazy as _
 from django.utils import timezone
 from django.urls import reverse
 from django.utils.text import slugify
-from django_ckeditor_5.fields import CKEditor5Field
+from ckeditor.fields import RichTextField
 from core.models.base import SoftDeletionModel
 
 # Import storage backends if S3 is enabled
@@ -22,7 +22,7 @@ class BlogPost(SoftDeletionModel):
     
     title = models.CharField(max_length=200, verbose_name=_("სათაური"))
     slug = models.SlugField(max_length=250, unique=True, verbose_name=_("სლაგი"))
-    content = CKEditor5Field(verbose_name=_("კონტენტი"))
+    content = RichTextField(verbose_name=_("კონტენტი"))
     excerpt = models.TextField(max_length=500, blank=True, verbose_name=_("მოკლე აღწერა"))
     meta_description = models.CharField(max_length=160, blank=True, verbose_name=_("მეტა აღწერა"))
     meta_keywords = models.CharField(max_length=255, blank=True, verbose_name=_("მეტა საკვანძო სიტყვები"))

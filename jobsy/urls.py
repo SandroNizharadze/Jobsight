@@ -26,7 +26,8 @@ urlpatterns = [
     path('', include('core.urls')),
     path('auth/', include('social_django.urls', namespace='social')),
     
-    # CKEditor 5 URLs
+    # CKEditor URLs
+    path('ckeditor/', include('ckeditor_uploader.urls')),
     path('ckeditor5/upload/', upload_file, name='ck_editor_5_upload_file'),
     
     # Add sitemap URL

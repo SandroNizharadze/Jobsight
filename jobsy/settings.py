@@ -38,6 +38,8 @@ INSTALLED_APPS = [
     'import_export',
     'rangefilter',
     'storages',
+    'ckeditor',
+    'ckeditor_uploader',
     'core',
     'django_ckeditor_5',
 ]
@@ -253,7 +255,16 @@ if DEBUG:
 # CKEditor 5 Settings
 CKEDITOR_5_CONFIGS = {
     'default': {
-        'toolbar': ['heading', '|', 'bold', 'italic', 'link', 'bulletedList', 'numberedList', 'blockQuote', 'imageUpload'],
+        'toolbar': [
+            'heading', '|', 
+            'bold', 'italic', 'strikethrough', 'underline', 'removeFormat', '|',
+            'fontSize', 'fontFamily', 'fontColor', 'fontBackgroundColor', '|',
+            'bulletedList', 'numberedList', 'todoList', '|',
+            'outdent', 'indent', '|',
+            'blockQuote', 'insertTable', 'mediaEmbed', 'link', 'imageUpload', '|',
+            'alignment', '|',
+            'undo', 'redo'
+        ],
         'heading': {
             'options': [
                 {'model': 'paragraph', 'title': 'Paragraph', 'class': 'ck-heading_paragraph'},
@@ -276,7 +287,7 @@ CKEDITOR_5_CONFIGS = {
         'css': {
             'all': ['/static/css/ckeditor5-custom.css']
         },
-        'extraPlugins': ['Font'],
+        'extraPlugins': ['Font', 'Image', 'Table', 'MediaEmbed', 'Alignment', 'List'],
         'font': {
             'supportAllValues': True
         },
@@ -310,4 +321,47 @@ CKEDITOR_5_CONFIGS = {
 # CKEditor 5 upload folder
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
-CKEDITOR_5_UPLOAD_PATH = 'uploads/ckeditor/' 
+CKEDITOR_5_UPLOAD_PATH = 'uploads/ckeditor/'
+
+# Standard CKEditor configuration
+CKEDITOR_UPLOAD_PATH = 'uploads/ckeditor/'
+CKEDITOR_JQUERY_URL = '//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js'
+CKEDITOR_IMAGE_BACKEND = 'pillow'
+
+CKEDITOR_CONFIGS = {
+    'default': {
+        'skin': 'moono-lisa',
+        'toolbar_Basic': [
+            ['Source', '-', 'Bold', 'Italic']
+        ],
+        'toolbar_Full': [
+            ['Styles', 'Format', 'Bold', 'Italic', 'Underline', 'Strike', 'SpellChecker', 'Undo', 'Redo'],
+            ['Link', 'Unlink', 'Anchor'],
+            ['Image', 'Flash', 'Table', 'HorizontalRule'],
+            ['TextColor', 'BGColor'],
+            ['Smiley', 'SpecialChar'], ['Source'],
+        ],
+        'toolbar': 'Full',
+        'height': 400,
+        'width': '100%',
+        'filebrowserWindowHeight': 725,
+        'filebrowserWindowWidth': 940,
+        'toolbarCanCollapse': True,
+        'mathJaxLib': '//cdn.mathjax.org/mathjax/2.2-latest/MathJax.js?config=TeX-AMS_HTML',
+        'tabSpaces': 4,
+        'extraPlugins': ','.join([
+            'uploadimage',
+            'div',
+            'autolink',
+            'autoembed',
+            'embedsemantic',
+            'autogrow',
+            'widget',
+            'lineutils',
+            'clipboard',
+            'dialog',
+            'dialogui',
+            'elementspath'
+        ]),
+    },
+} 

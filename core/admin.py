@@ -12,6 +12,17 @@ from django.template.response import TemplateResponse
 from django.contrib.admin.views.decorators import staff_member_required
 from django.utils.decorators import method_decorator
 from django.utils.translation import gettext_lazy as _
+from django import forms
+from ckeditor.widgets import CKEditorWidget
+from django_ckeditor_5.widgets import CKEditor5Widget
+
+# Add a custom form for BlogPost with explicit CKEditorWidget
+class BlogPostAdminForm(forms.ModelForm):
+    content = forms.CharField(widget=CKEditorWidget())
+    
+    class Meta:
+        model = BlogPost
+        fields = '__all__'
 
 # Add a historical data view to the admin site
 @staff_member_required
@@ -437,6 +448,7 @@ class BlogPostCategoryInline(admin.TabularInline):
     extra = 1
 
 class BlogPostAdmin(SoftDeletionAdmin):
+    form = BlogPostAdminForm
     list_display = ('title', 'author', 'status', 'published_at', 'view_count', 'get_deleted_state')
     list_filter = ('status', ('published_at', DateRangeFilter), ('deleted_at', admin.EmptyFieldListFilter))
     search_fields = ('title', 'content', 'excerpt', 'meta_description', 'meta_keywords')

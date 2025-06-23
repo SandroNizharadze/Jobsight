@@ -1,0 +1,97 @@
+{% extends "admin/change_form.html" %}
+{% load static %}
+
+{% block extrahead %}
+{{ block.super }}
+<script src="{% static 'django_ckeditor_5/dist/bundle.js' %}"></script>
+<style>
+    .ck-editor__editable {
+        min-height: 400px !important;
+    }
+    .ck.ck-toolbar {
+        visibility: visible !important;
+        opacity: 1 !important;
+        display: flex !important;
+        border: 1px solid #c4c4c4 !important;
+    }
+    .ck.ck-content {
+        min-height: 400px;
+        border: 1px solid #c4c4c4 !important;
+    }
+    .ck.ck-reset.ck-dropdown__panel.ck-dropdown__panel_se {
+        z-index: 10000 !important;
+    }
+    
+    /* Hide textarea once editor is initialized */
+    .django_ckeditor_5 textarea.initialized {
+        display: none;
+    }
+</style>
+{% endblock %}
+
+{% block after_field_sets %}
+{{ block.super }}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Force CKEditor initialization for the content field
+        const contentTextarea = document.querySelector('#id_content');
+        if (contentTextarea) {
+            // Create full toolbar config
+            const editorConfig = {
+                toolbar: [
+                    'heading', '|', 
+                    'bold', 'italic', 'strikethrough', 'underline', 'removeFormat', '|',
+                    'fontSize', 'fontFamily', 'fontColor', 'fontBackgroundColor', '|',
+                    'bulletedList', 'numberedList', 'todoList', '|',
+                    'outdent', 'indent', '|',
+                    'blockQuote', 'insertTable', 'mediaEmbed', 'link', 'imageUpload', '|',
+                    'alignment', '|',
+                    'undo', 'redo'
+                ],
+                language: {
+                    ui: 'en',
+                    content: 'ka'
+                },
+                ckfinder: {
+                    uploadUrl: '/ckeditor5/upload/'
+                },
+                image: {
+                    toolbar: [
+                        'imageStyle:inline',
+                        'imageStyle:block',
+                        'imageStyle:side',
+                        '|',
+                        'toggleImageCaption',
+                        'imageTextAlternative'
+                    ]
+                },
+                table: {
+                    contentToolbar: [
+                        'tableColumn',
+                        'tableRow',
+                        'mergeTableCells',
+                        'tableCellProperties',
+                        'tableProperties'
+                    ]
+                },
+            };
+            
+            try {
+                ClassicEditor
+                    .create(contentTextarea, editorConfig)
+                    .then(editor => {
+                        console.log('CKEditor initialized successfully for blog content');
+                        contentTextarea.classList.add('initialized');
+                    })
+                    .catch(error => {
+                        console.error('CKEditor initialization failed:', error);
+                    });
+            } catch(e) {
+                console.error('Error initializing CKEditor:', e);
+            }
+        } else {
+            console.error('Content textarea not found');
+        }
+    });
+</script>
+{% endblock %} 

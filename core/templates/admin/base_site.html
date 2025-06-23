@@ -6,15 +6,13 @@
 <script src="{% static 'django_ckeditor_5/dist/bundle.js' %}"></script>
 <style>
   /* Make sure CKEditor toolbar is visible */
-  .ck.ck-toolbar {
+  .ck-editor__editable {
+    min-height: 400px;
+  }
+  .ck-toolbar {
     visibility: visible !important;
     opacity: 1 !important;
     display: flex !important;
-  }
-  
-  /* Ensure CKEditor is properly sized */
-  .django_ckeditor_5 {
-    min-height: 200px;
   }
 </style>
 {% endblock %}
