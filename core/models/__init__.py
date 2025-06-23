@@ -1,6 +1,3 @@
-# This file is maintained for backward compatibility
-# The actual models have been moved to the core/models/ directory
-
 from core.models.base import SoftDeletionModel, SoftDeletionQuerySet, SoftDeletionManager
 from core.models.job import JobListing, RejectionReason
 from core.models.user import UserProfile
@@ -19,4 +16,4 @@ __all__ = [
     'BlogPost', 'BlogCategory', 'BlogPostCategory', 'BlogTag',
     'PricingPackage', 'PricingFeature', 'ComparisonTable', 'ComparisonRow',
     'EmailVerificationToken',
-]
+] 

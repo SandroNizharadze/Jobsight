@@ -1,11 +1,23 @@
 from django.core.management.base import BaseCommand
 from django.utils.translation import gettext_lazy as _
-from core.models import PricingPackage, PricingFeature, ComparisonTable, ComparisonRow
+from django.utils import timezone
+from datetime import timedelta
+from core.models import (
+    PricingPackage, PricingFeature, ComparisonTable, ComparisonRow,
+    RejectionReason, JobListing, UserProfile, EmployerProfile
+)
 
 class Command(BaseCommand):
-    help = 'Loads initial data for the pricing packages'
+    help = 'Loads initial data for the pricing packages and rejection reasons'
 
     def handle(self, *args, **kwargs):
+        self._create_pricing_packages()
+        self._create_comparison_table()
+        self._create_rejection_reasons()
+        
+        self.stdout.write(self.style.SUCCESS('Initial data successfully loaded'))
+    
+    def _create_pricing_packages(self):
         self.stdout.write(self.style.SUCCESS('Creating initial pricing packages...'))
         
         # Create Standard Package
@@ -133,7 +145,8 @@ class Command(BaseCommand):
                 is_included=feature['is_included'],
                 display_order=i+1
             )
-            
+    
+    def _create_comparison_table(self):
         # Create Comparison Table
         self.stdout.write(self.style.SUCCESS('Creating comparison table...'))
         
@@ -249,5 +262,31 @@ class Command(BaseCommand):
                 premium_plus_included=row_data['premium_plus_included'],
                 display_order=row_data['display_order']
             )
+    
+    def _create_rejection_reasons(self):
+        """Create standard rejection reasons for job applications"""
+        self.stdout.write(self.style.SUCCESS('Creating rejection reasons...'))
+        
+        reasons = [
+            {'name': 'ენის_ცოდნის_ნაკლებობა'},
+            {'name': 'არასაკმარისი_გამოცდილება'},
+            {'name': 'უნარების_ნაკლებობა'},
+            {'name': 'შეუსაბამო_საცხოვრებელი_ადგილი'},
+            {'name': 'სივიში_არ_არის_საკმარისი_ინფორმაცია'},
+            {'name': 'განათლების_შეუსაბამობა'},
+            {'name': 'კარიერული_მიზნების_შეუსაბამობა'},
+            {'name': 'სივის_ფორმატის_სტრუქტურის_ხარვეზები'},
+            {'name': 'სერთიფიკატების_ლიცენზიების_ნაკლებობა'},
+            {'name': 'არარელევანტური_სამუშაო_ისტორია'},
+            {'name': 'სხვა'},
+        ]
+        
+        for reason_data in reasons:
+            reason, created = RejectionReason.objects.get_or_create(
+                name=reason_data['name']
+            )
             
-        self.stdout.write(self.style.SUCCESS('Initial data loaded successfully')) 
+            if created:
+                self.stdout.write(self.style.SUCCESS(f'Created rejection reason: {reason.get_name_display()}'))
+            else:
+                self.stdout.write(self.style.SUCCESS(f'Rejection reason already exists: {reason.get_name_display()}')) 

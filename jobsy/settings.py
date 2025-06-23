@@ -102,6 +102,17 @@ if USE_SUPABASE:
     print("Using Supabase database")
 else:
     print("Using local PostgreSQL database")
+    
+# Fallback to SQLite if PostgreSQL connection fails
+USE_SQLITE_FALLBACK = os.environ.get('USE_SQLITE_FALLBACK', 'False') == 'True'
+if USE_SQLITE_FALLBACK:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
+    }
+    print("Using SQLite database (fallback mode)")
 
 # Authentication
 AUTHENTICATION_BACKENDS = [
