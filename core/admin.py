@@ -15,6 +15,7 @@ from django.utils.translation import gettext_lazy as _
 from django import forms
 from ckeditor.widgets import CKEditorWidget
 from django_ckeditor_5.widgets import CKEditor5Widget
+from core.models import StaticPage
 
 # Add a custom form for BlogPost with explicit CKEditorWidget
 class BlogPostAdminForm(forms.ModelForm):
@@ -526,3 +527,10 @@ class BlogTagAdmin(admin.ModelAdmin):
 admin.site.register(BlogPost, BlogPostAdmin)
 admin.site.register(BlogCategory, BlogCategoryAdmin)
 admin.site.register(BlogTag, BlogTagAdmin)
+
+@admin.register(StaticPage)
+class StaticPageAdmin(admin.ModelAdmin):
+    list_display = ('title', 'page_type', 'last_updated')
+    list_filter = ('page_type',)
+    search_fields = ('title', 'content')
+    readonly_fields = ('last_updated',)

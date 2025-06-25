@@ -7,6 +7,7 @@ from .views.employer_views import company_profile, application_detail, cv_databa
 from django.views.generic.base import RedirectView
 from .views.blog_views import BlogListView, BlogPostDetailView, BlogCategoryView, BlogTagView
 from .views.email_views import verify_email, resend_verification_email
+from .views.static_pages import StaticPageView
 
 urlpatterns = [
     path('', job_views.job_list, name='job_list'),
@@ -73,4 +74,8 @@ urlpatterns = [
     # API routes
     path('api/applications/<int:application_id>/rejection-reasons/', get_application_rejection_reasons, name='get_application_rejection_reasons'),
     path('jobs/filter/', job_views.filter_jobs, name='filter_jobs'),
+    
+    # Static Pages
+    path('privacy-policy/', StaticPageView.as_view(), {'page_type': 'privacy_policy'}, name='privacy_policy'),
+    path('terms-and-conditions/', StaticPageView.as_view(), {'page_type': 'terms_conditions'}, name='terms_conditions'),
 ]

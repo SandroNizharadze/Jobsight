@@ -1,0 +1,31 @@
+{
+  "name": "jobsy_clean",
+  "version": "1.0.0",
+  "description": "Jobsight is a comprehensive job listing platform built with Django.",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs",
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tailwindcss -i ./static/css/main.css -o ./static/css/output.css --minify",
+    "watch": "tailwindcss -i ./static/css/main.css -o ./static/css/output.css --watch"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SandroNizharadze/Jobsy.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/SandroNizharadze/Jobsy/issues"
+  },
+  "homepage": "https://github.com/SandroNizharadze/Jobsy#readme",
+  "devDependencies": {
+    "autoprefixer": "^10.4.21",
+    "postcss": "^8.5.6",
+    "tailwindcss": "^4.1.10"
+  }
+}

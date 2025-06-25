@@ -24,6 +24,9 @@ class UserProfile(models.Model):
     role = models.CharField(max_length=20, choices=ROLE_CHOICES, default='candidate', db_index=True, verbose_name=_("როლი"))
     is_email_verified = models.BooleanField(default=False, verbose_name=_("ელ-ფოსტა დადასტურებულია"))
     
+    # Field for email notifications consent
+    email_notifications = models.BooleanField(default=False, verbose_name=_("თანახმა ვარ მივიღო ელ-ფოსტის შეტყობინებები"))
+    
     # Use PublicMediaStorage for profile pictures when S3 is enabled
     if PublicMediaStorage:
         profile_picture = models.ImageField(

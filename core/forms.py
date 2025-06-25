@@ -17,10 +17,22 @@ class RegistrationForm(UserCreationForm):
         initial='candidate',
         required=True
     )
+    # Add checkbox for email notifications
+    email_notifications = forms.BooleanField(
+        label=_('I agree to receive email notifications about news'),
+        required=False,
+        widget=forms.CheckboxInput(attrs={'class': 'form-check-input'})
+    )
+    # Add checkbox for terms and conditions
+    terms_agreement = forms.BooleanField(
+        label=_('I agree to the Terms & Conditions and Privacy Policy'),
+        required=True,
+        widget=forms.CheckboxInput(attrs={'class': 'form-check-input'})
+    )
     
     class Meta:
         model = User
-        fields = ['username', 'email', 'first_name', 'password1']  # Don't include user_type here
+        fields = ['username', 'email', 'first_name', 'password1', 'email_notifications', 'terms_agreement']  # Include the new fields
         widgets = {
             'username': forms.HiddenInput(),
             'email': forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'Email'}),

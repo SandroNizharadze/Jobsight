@@ -123,6 +123,10 @@ def register(request):
                                     profile.role = 'employer'
                                     profile.save()
                                     logger.info(f"Updated existing profile for {user.username} to employer role")
+                                
+                                # Save email notification preference
+                                profile.email_notifications = form.cleaned_data.get('email_notifications', False)
+                                profile.save()
                                     
                                 # Now ensure an employer profile exists with our data
                                 employer_profile, created = EmployerProfile.objects.get_or_create(
@@ -148,6 +152,10 @@ def register(request):
                                     company_id=employer_form.cleaned_data.get('company_id'),
                                     phone_number=employer_form.cleaned_data.get('phone_number')
                                 )
+                                # Save email notification preference
+                                employer_profile.user_profile.email_notifications = form.cleaned_data.get('email_notifications', False)
+                                employer_profile.user_profile.save()
+                                
                                 logger.info(f"Created new employer profile for {user.username}")
                         except Exception as e:
                             logger.error(f"Error handling profiles: {str(e)}", exc_info=True)
@@ -202,12 +210,16 @@ def register(request):
                         # Using get_or_create to handle the case where signals already created the profile
                         profile, created = UserProfile.objects.get_or_create(
                             user=user,
-                            defaults={'role': 'candidate'}
+                            defaults={
+                                'role': 'candidate',
+                                'email_notifications': form.cleaned_data.get('email_notifications', False)
+                            }
                         )
                         
                         # Make sure the role is set to candidate regardless
-                        if not created and profile.role != 'candidate':
+                        if not created:
                             profile.role = 'candidate'
+                            profile.email_notifications = form.cleaned_data.get('email_notifications', False)
                             profile.save()
                             
                         logger.info(f"{'Created' if created else 'Using existing'} UserProfile with role 'candidate' for {user.username}")

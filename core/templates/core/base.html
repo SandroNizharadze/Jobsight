@@ -22,9 +22,9 @@
     gtag('config', 'G-28X5PJN9VV');
     </script>
     
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Jobsight{% endblock %}</title>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="{% static 'images/favicon.png' %}">
     <!-- Apple Touch Icon (Webclip) -->
@@ -35,193 +35,80 @@
     <!-- Microsoft Tile Icon -->
     <meta name="msapplication-TileImage" content="{% static 'images/webclip.png' %}">
     <meta name="msapplication-TileColor" content="#09243c">
-    <!-- Google Fonts - Lora for Latin and BPG Arial for Georgian -->
+    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&display=swap" rel="stylesheet">
-    <!-- BPG Arial for Georgian fallback -->
-    <link href="https://cdn.web-fonts.ge/fonts/bpg-arial/css/bpg-arial.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
             theme: {
-                fontFamily: {
-                    'sans': ['Lora', 'Sylfaen', 'BPG Arial', 'serif'],
-                    'serif': ['Lora', 'Sylfaen', 'BPG Arial', 'serif'],
-                    'mono': ['Lora', 'Sylfaen', 'BPG Arial', 'serif'],
-                    'display': ['Lora', 'Sylfaen', 'BPG Arial', 'serif'],
-                    'body': ['Lora', 'Sylfaen', 'BPG Arial', 'serif'],
-                }
-            }
+                extend: {
+                    fontFamily: {
+                        sans: ['Lora', 'serif'],
+                    },
+                },
+            },
         }
     </script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        /* Prevent white overscroll background */
-        html {
-            background-color: rgb(9, 36, 60);
-        }
-        
-        /* Embed Sylfaen font if available */
-        @font-face {
-            font-family: 'Sylfaen Web';
-            src: local('Sylfaen');
-            font-weight: normal;
-            font-style: normal;
-            font-display: swap;
-        }
-        
-        /* Define fonts with unicode ranges */
-        @font-face {
-            font-family: 'Combined';
-            src: local('Sylfaen'), local('BPG Arial');
-            unicode-range: U+10A0-10FF; /* Georgian characters */
-        }
-        
-        @font-face {
-            font-family: 'Combined';
-            src: local('Lora');
-            unicode-range: U+0000-10A0, U+1100-FFFF; /* Everything else */
-        }
-        
-        /* Global font settings */
-        body, html {
-            font-family: 'Combined', 'Lora', 'Sylfaen Web', 'BPG Arial', serif;
-        }
-        
-        /* Apply Sylfaen to Georgian text */
-        :lang(ka) {
-            font-family: 'Sylfaen Web', 'Sylfaen', 'BPG Arial', serif !important;
-        }
-        
-        /* Helper class for Georgian text */
-        .georgian-text {
-            font-family: 'Sylfaen Web', 'Sylfaen', 'BPG Arial', serif !important;
-        }
-        
-        /* Keep Lora for English text */
-        :lang(en) {
+        /* Base styles */
+        html, body {
             font-family: 'Lora', serif;
         }
         
-        /* Global icon sizing fixes */
-        .fas, .far, .fab, .fa {
-            font-size: 1em;
+        /* Icon size fixes */
+        .fas, .far, .fab {
+            font-size: inherit;
             line-height: inherit;
             vertical-align: middle;
         }
         
-        /* Fix for specific icon areas */
-        button .fas, button .far, 
-        a .fas, a .far, 
-        .alert .fas, .alert .far {
-            font-size: 0.875em;
+        /* Form styles */
+        input[type="text"],
+        input[type="email"],
+        input[type="password"] {
+            width: 100%;
+            padding: 0.5rem 1rem;
+            border: 1px solid #d1d5db;
+            border-radius: 0.5rem;
+            outline: none;
         }
-        
-        /* Jobsight logo font */
-        .jobsight-logo {
-            font-family: 'Lora', serif;
+
+        input[type="text"]:focus,
+        input[type="email"]:focus,
+        input[type="password"]:focus {
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
         }
-        
-        /* Add padding to the bottom of the page on mobile for the navigation bar */
-        @media (max-width: 768px) {
-            body {
-                padding-bottom: 4rem; /* Adjust this value based on the height of your mobile nav */
-            }
-            
-            /* Fix for job list page - remove extra space */
-            body.job-list-page .min-h-screen {
-                min-height: auto !important;
-            }
-            
-            body.job-list-page footer {
-                margin-top: 0 !important;
+
+        /* Checkbox styles */
+        input[type="checkbox"] {
+            width: 1rem;
+            height: 1rem;
+            margin-right: 0.5rem;
+            vertical-align: middle;
+        }
+
+        /* Safari-specific fixes */
+        @media not all and (min-resolution:.001dpcm) {
+            @supports (-webkit-appearance:none) {
+                input[type="checkbox"] {
+                    -webkit-appearance: checkbox !important;
+                    appearance: checkbox !important;
+                    opacity: 1 !important;
+                    position: static !important;
+                    width: 16px !important;
+                    height: 16px !important;
+                }
             }
         }
     </style>
-    <!-- Safari detection and fixes -->
-    <script>
-        (function() {
-            const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
-            if (isSafari) {
-                document.documentElement.classList.add('safari');
-                console.log('Safari browser detected');
-            }
-        })();
-    </script>
     
-    <!-- Safari-specific CSS Fixes -->
-    <style>
-        html.safari .rounded-2xl,
-        html.safari .rounded-3xl,
-        html.safari .rounded-xl,
-        html.safari .rounded-full {
-            overflow: hidden !important;
-            -webkit-mask-image: -webkit-radial-gradient(white, black) !important;
-        }
-        
-        html.safari input,
-        html.safari select,
-        html.safari button,
-        html.safari .btn {
-            -webkit-appearance: none !important;
-            appearance: none !important;
-        }
-        
-        html.safari .bg-gradient-to-br {
-            background-image: none !important;
-        }
-        
-        html.safari .from-purple-500.to-blue-500 {
-            background-color: #8b5cf6 !important;
-        }
-        
-        html.safari .from-teal-500.to-teal-700,
-        html.safari .from-teal-500 {
-            background-color: #14b8a6 !important;
-        }
-        
-        html.safari .enhanced-cta-box {
-            border-radius: 1.5rem 1.5rem 0 0 !important;
-            background-image: none !important;
-            background-color: #edf2fa !important;
-        }
-        
-        html.safari .animate-fade-in,
-        html.safari .animate-fade-in-delay,
-        html.safari .animate-fade-in-delay-long,
-        html.safari .animate-slide-up {
-            opacity: 1 !important;
-            transform: none !important;
-            animation: none !important;
-        }
-        
-        html.safari .pulse-animation,
-        html.safari .pulse-animation-delay,
-        html.safari .pulse-animation-delay-long {
-            animation: none !important;
-        }
-    </style>
-    
-    {% block extra_head %}{% endblock %}
-    
-    <!-- Meta Pixel Code -->
-    <script>
-    !function(f,b,e,v,n,t,s)
-    {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-    n.callMethod.apply(n,arguments):n.queue.push(arguments)};
-    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
-    n.queue=[];t=b.createElement(e);t.async=!0;
-    t.src=v;s=b.getElementsByTagName(e)[0];
-    s.parentNode.insertBefore(t,s)}(window, document,'script',
-    'https://connect.facebook.net/en_US/fbevents.js');
-    fbq('init', '9348612505240959');
-    fbq('track', 'PageView');
-    </script>
-    <noscript><img height="1" width="1" style="display:none"
-    src="https://www.facebook.com/tr?id=9348612505240959&ev=PageView&noscript=1"
-    /></noscript>
-    <!-- End Meta Pixel Code -->
+    {% block extra_css %}{% endblock %}
 </head>
 
 <body class="bg-gray-50 {% if request.resolver_match.url_name == 'job_list' %}job-list-page{% endif %}">
