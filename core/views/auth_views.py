@@ -99,8 +99,10 @@ def register(request):
         # We'll use a transaction to ensure everything happens atomically
         from django.db import transaction
         
+        form = RegistrationForm(request.POST)
+        employer_form = None
+        
         if user_type == 'employer':
-            form = RegistrationForm(request.POST)
             employer_form = EmployerRegistrationForm(request.POST)
             
             logger.info(f"Processing employer registration")
@@ -180,25 +182,32 @@ def register(request):
                     messages.error(request, f"Registration error: {str(e)}")
                     return render(request, 'core/register.html', {
                         'form': form,
-                        'employer_form': employer_form
+                        'employer_form': employer_form,
+                        'default_user_type': default_user_type
                     })
                 
                 messages.success(request, "Registration successful! Please check your email to verify your account.")
                 return redirect('profile')
             else:
-                # Handle form errors
-                logger.warning(f"Form validation errors: {form.errors} / {employer_form.errors}")
+                # Handle form errors - avoid duplicate messages
+                error_messages = set()  # Use a set to avoid duplicates
+                
+                # Add form errors
                 for field, errors in form.errors.items():
                     for error in errors:
-                        messages.error(request, f"{error}")
-                for field, errors in employer_form.errors.items():
-                    for error in errors:
-                        messages.error(request, f"{error}")
-                # Re-render the form with the employer form
-                employer_form = EmployerRegistrationForm(request.POST)
+                        error_messages.add(error)
+                
+                # Add employer form errors if applicable
+                if employer_form:
+                    for field, errors in employer_form.errors.items():
+                        for error in errors:
+                            error_messages.add(error)
+                
+                # Display unique error messages
+                for error in error_messages:
+                    messages.error(request, error)
         else:
             # Regular candidate registration
-            form = RegistrationForm(request.POST)
             if form.is_valid():
                 try:
                     with transaction.atomic():
@@ -238,17 +247,24 @@ def register(request):
                     messages.error(request, f"Registration error: {str(e)}")
                     return render(request, 'core/register.html', {
                         'form': form,
-                        'employer_form': None
+                        'employer_form': None,
+                        'default_user_type': default_user_type
                     })
                 
                 messages.success(request, "Registration successful! Please check your email to verify your account.")
                 return redirect('job_list')
             else:
-                # Display form errors
-                logger.warning(f"Form validation errors: {form.errors}")
+                # Handle form errors - avoid duplicate messages
+                error_messages = set()  # Use a set to avoid duplicates
+                
+                # Add form errors
                 for field, errors in form.errors.items():
                     for error in errors:
-                        messages.error(request, f"{error}")
+                        error_messages.add(error)
+                
+                # Display unique error messages
+                for error in error_messages:
+                    messages.error(request, error)
     else:
         form = RegistrationForm()
         employer_form = EmployerRegistrationForm()

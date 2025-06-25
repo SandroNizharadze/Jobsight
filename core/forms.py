@@ -20,13 +20,17 @@ class RegistrationForm(UserCreationForm):
     # Add checkbox for email notifications
     email_notifications = forms.BooleanField(
         label=_('I agree to receive email notifications about news'),
-        required=False,
+        required=False,  # Make it optional
+        initial=False,
         widget=forms.CheckboxInput(attrs={'class': 'form-check-input'})
     )
     # Add checkbox for terms and conditions
     terms_agreement = forms.BooleanField(
         label=_('I agree to the Terms & Conditions and Privacy Policy'),
         required=True,
+        error_messages={
+            'required': _('You must agree to the Terms & Conditions and Privacy Policy to register.')
+        },
         widget=forms.CheckboxInput(attrs={'class': 'form-check-input'})
     )
     

@@ -110,18 +110,21 @@
                     <div class="space-y-3">
                         <label class="flex items-start">
                             <input type="checkbox" name="email_notifications" id="id_email_notifications"
+                                   class="h-4 w-4 text-blue-600 rounded border-gray-300 focus:ring-blue-500"
                                    {% if form.email_notifications.value %}checked{% endif %}>
                             <span class="text-sm text-gray-700 ml-2">{% trans "I agree to receive email notifications about news" %}</span>
                         </label>
                         
                         <label class="flex items-start">
                             <input type="checkbox" name="terms_agreement" id="id_terms_agreement" required
+                                   class="h-4 w-4 text-blue-600 rounded border-gray-300 focus:ring-blue-500"
                                    {% if form.terms_agreement.value %}checked{% endif %}>
                             <span class="text-sm text-gray-700 ml-2">
                                 {% trans "I agree to the" %}
                                 <a href="{% url 'terms_conditions' %}" class="text-blue-600 hover:text-blue-800" target="_blank">{% trans "Terms & Conditions" %}</a>
                                 {% trans "and" %}
                                 <a href="{% url 'privacy_policy' %}" class="text-blue-600 hover:text-blue-800" target="_blank">{% trans "Privacy Policy" %}</a>
+                                <span class="text-red-500 ml-1">*</span>
                             </span>
                         </label>
                     </div>
