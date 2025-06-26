@@ -20,10 +20,11 @@ def company_profile(request, employer_id):
     ).order_by('-posted_at')
     
     context = {
-        'employer_profile': employer_profile,
-        'active_jobs': active_jobs,
+        'company': employer_profile,
+        'jobs': active_jobs,
+        'open_jobs_count': active_jobs.count()
     }
-    return render(request, 'core/company_profile.html', context)
+    return render(request, 'core/employer_profile_public.html', context)
 
 @login_required
 @user_passes_test(is_employer)

@@ -23,31 +23,39 @@ def cv_database(request):
     
     # Get filter parameters from request
     filters = {}
-    if 'desired_field' in request.GET and request.GET['desired_field']:
-        filters['desired_field'] = request.GET['desired_field']
+    
+    # Get field filter - the form uses 'field' but the model uses 'desired_field'
+    field_filter = request.GET.get('field', '')
+    if field_filter:
+        filters['desired_field'] = field_filter
         
-    if 'field_experience' in request.GET and request.GET['field_experience']:
-        filters['field_experience'] = request.GET['field_experience']
+    # Get experience filter - the form uses 'experience' but the model uses 'field_experience'
+    experience_filter = request.GET.get('experience', '')
+    if experience_filter:
+        filters['field_experience'] = experience_filter
         
-    if 'search' in request.GET and request.GET['search']:
-        filters['search'] = request.GET['search']
+    # Get search filter
+    search_filter = request.GET.get('search', '')
+    if search_filter:
+        filters['search'] = search_filter
     
     # Get candidates using the service
-    candidates = EmployerService.get_cv_database_candidates(
+    profiles = EmployerService.get_cv_database_candidates(
         employer_profile=employer_profile,
         filters=filters
     )
     
     # Get choices for filter dropdowns
-    field_choices = JobListing.CATEGORY_CHOICES
-    experience_choices = JobListing.EXPERIENCE_CHOICES
+    field_choices = dict(JobListing.CATEGORY_CHOICES)
+    experience_choices = dict(JobListing.EXPERIENCE_CHOICES)
     
     context = {
         'employer_profile': employer_profile,
-        'candidates': candidates,
+        'profiles': profiles,  # Changed from 'candidates' to 'profiles' to match the template
         'field_choices': field_choices,
         'experience_choices': experience_choices,
-        'filters': filters,
+        'field_filter': field_filter,
+        'experience_filter': experience_filter,
     }
     
     return render(request, 'core/cv_database.html', context) 

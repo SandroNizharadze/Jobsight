@@ -56,7 +56,10 @@ class JobRepository:
         if include_deleted:
             return JobListing.all_objects.filter(employer=employer_profile)
         else:
-            return JobListing.objects.filter(employer=employer_profile)
+            return JobListing.objects.filter(
+                employer=employer_profile,
+                deleted_at__isnull=True  # Explicitly exclude deleted jobs
+            )
     
     @staticmethod
     def search_jobs(query_string, employer_profile=None):

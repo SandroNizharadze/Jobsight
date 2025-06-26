@@ -196,13 +196,35 @@ def employer_dashboard(request):
         employer_profile=employer_profile,
         search_query=search_query,
         sort_option=sort_option
+    ).filter(
+        deleted_at__isnull=True  # Explicitly exclude deleted jobs
+    ).exclude(
+        status='expired'  # Exclude expired jobs
     )
+    
+    # Process jobs to add helper attributes for template
+    all_jobs = []
+    for job in jobs:
+        # Check expiration date and add a convenience attribute
+        if job.expires_at:
+            job.is_expired_status = job.expires_at < timezone.now()
+            job.days_until_expiration_value = max(0, (job.expires_at - timezone.now()).days)
+        else:
+            job.is_expired_status = False
+            job.days_until_expiration_value = None
+            
+        all_jobs.append(job)
     
     context = {
         'employer_profile': employer_profile,
-        'jobs': jobs,
+        'all_jobs': all_jobs,
         'search_query': search_query,
         'sort_option': sort_option,
     }
     
-    return render(request, 'core/employer_dashboard.html', context) 
+    # If this is an AJAX request, only return the jobs container
+    if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+        return render(request, 'core/partials/job_listings.html', context)
+    
+    # Otherwise return the full page
+    return render(request, 'core/employer_profile.html', context) 
