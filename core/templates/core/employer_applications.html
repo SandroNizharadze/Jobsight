@@ -5,6 +5,19 @@
 {% block title %}{% trans "Applications Management" %}{% endblock %}
 
 {% block content %}
+<style>
+  /* Custom fix for search input - ensure text doesn't overlap with icon */
+  #application-search {
+    padding-left: 40px !important; /* Force a large left padding */
+  }
+  #application-search::placeholder {
+    padding-left: 0px; /* Ensure placeholder text doesn't get cut off */
+  }
+  .search-icon-wrapper {
+    left: 10px; /* Position the icon container */
+  }
+</style>
+
 <div class="container mx-auto px-4 py-8 sm:px-6 lg:px-8">
   {% csrf_token %}
   
@@ -227,9 +240,9 @@
         <div class="relative flex-1 w-full md:max-w-xs">
           <input type="text" 
                  id="application-search" 
-                 class="block w-full rounded-md border-gray-300 pl-10 pr-3 py-2 text-sm placeholder-gray-500 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500" 
+                 class="block w-full rounded-md border-gray-300 pr-3 py-2 text-sm placeholder-gray-500 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500" 
                  placeholder="{% trans 'Search applications...' %}">
-          <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+          <div class="absolute inset-y-0 left-0 flex items-center pointer-events-none search-icon-wrapper">
             <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
             </svg>
@@ -500,50 +513,12 @@
         <div class="space-y-2">
           <label class="block text-sm font-medium text-gray-700">{% trans "აირჩიეთ მიზეზები:" %} <span class="text-red-500">*</span></label>
           <div id="reasonsContainer" class="space-y-2">
-            <div class="flex items-center cursor-pointer">
-              <input type="checkbox" name="rejection_reasons" value="ენის_ცოდნის_ნაკლებობა" class="h-4 w-4 text-blue-600 rounded rejection-reason-checkbox pointer-events-auto relative z-20 cursor-pointer appearance-none border border-gray-300 bg-white checked:bg-blue-600 checked:border-transparent focus:outline-none">
-              <label class="ml-2 text-sm text-gray-700 cursor-pointer select-none w-full">{% trans "ენის ცოდნის ნაკლებობა" %}</label>
-            </div>
-            <div class="flex items-center cursor-pointer">
-              <input type="checkbox" name="rejection_reasons" value="არასაკმარისი_გამოცდილება" class="h-4 w-4 text-blue-600 rounded rejection-reason-checkbox pointer-events-auto relative z-20 cursor-pointer appearance-none border border-gray-300 bg-white checked:bg-blue-600 checked:border-transparent focus:outline-none">
-              <label class="ml-2 text-sm text-gray-700 cursor-pointer select-none w-full">{% trans "არასაკმარისი გამოცდილება" %}</label>
-            </div>
-            <div class="flex items-center cursor-pointer">
-              <input type="checkbox" name="rejection_reasons" value="უნარების_ნაკლებობა" class="h-4 w-4 text-blue-600 rounded rejection-reason-checkbox pointer-events-auto relative z-20 cursor-pointer appearance-none border border-gray-300 bg-white checked:bg-blue-600 checked:border-transparent focus:outline-none">
-              <label class="ml-2 text-sm text-gray-700 cursor-pointer select-none w-full">{% trans "უნარების ნაკლებობა" %}</label>
-            </div>
-            <div class="flex items-center cursor-pointer">
-              <input type="checkbox" name="rejection_reasons" value="შეუსაბამო_საცხოვრებელი_ადგილი" class="h-4 w-4 text-blue-600 rounded rejection-reason-checkbox pointer-events-auto relative z-20 cursor-pointer appearance-none border border-gray-300 bg-white checked:bg-blue-600 checked:border-transparent focus:outline-none">
-              <label class="ml-2 text-sm text-gray-700 cursor-pointer select-none w-full">{% trans "შეუსაბამო საცხოვრებელი ადგილი" %}</label>
-            </div>
-            <div class="flex items-center cursor-pointer">
-              <input type="checkbox" name="rejection_reasons" value="სივიში_არ_არის_საკმარისი_ინფორმაცია" class="h-4 w-4 text-blue-600 rounded rejection-reason-checkbox pointer-events-auto relative z-20 cursor-pointer appearance-none border border-gray-300 bg-white checked:bg-blue-600 checked:border-transparent focus:outline-none">
-              <label class="ml-2 text-sm text-gray-700 cursor-pointer select-none w-full">{% trans "სივიში არ არის საკმარისი ინფორმაცია" %}</label>
-            </div>
-            <div class="flex items-center cursor-pointer">
-              <input type="checkbox" name="rejection_reasons" value="განათლების_შეუსაბამობა" class="h-4 w-4 text-blue-600 rounded rejection-reason-checkbox pointer-events-auto relative z-20 cursor-pointer appearance-none border border-gray-300 bg-white checked:bg-blue-600 checked:border-transparent focus:outline-none">
-              <label class="ml-2 text-sm text-gray-700 cursor-pointer select-none w-full">{% trans "განათლების შეუსაბამობა" %}</label>
-            </div>
-            <div class="flex items-center cursor-pointer">
-              <input type="checkbox" name="rejection_reasons" value="კარიერული_მიზნების_შეუსაბამობა" class="h-4 w-4 text-blue-600 rounded rejection-reason-checkbox pointer-events-auto relative z-20 cursor-pointer appearance-none border border-gray-300 bg-white checked:bg-blue-600 checked:border-transparent focus:outline-none">
-              <label class="ml-2 text-sm text-gray-700 cursor-pointer select-none w-full">{% trans "კარიერული მიზნების შეუსაბამობა" %}</label>
-            </div>
-            <div class="flex items-center cursor-pointer">
-              <input type="checkbox" name="rejection_reasons" value="სივის_ფორმატის_სტრუქტურის_ხარვეზები" class="h-4 w-4 text-blue-600 rounded rejection-reason-checkbox pointer-events-auto relative z-20 cursor-pointer appearance-none border border-gray-300 bg-white checked:bg-blue-600 checked:border-transparent focus:outline-none">
-              <label class="ml-2 text-sm text-gray-700 cursor-pointer select-none w-full">{% trans "სივის ფორმატის/სტრუქტურის ხარვეზები" %}</label>
-            </div>
-            <div class="flex items-center cursor-pointer">
-              <input type="checkbox" name="rejection_reasons" value="სერთიფიკატების_ლიცენზიების_ნაკლებობა" class="h-4 w-4 text-blue-600 rounded rejection-reason-checkbox pointer-events-auto relative z-20 cursor-pointer appearance-none border border-gray-300 bg-white checked:bg-blue-600 checked:border-transparent focus:outline-none">
-              <label class="ml-2 text-sm text-gray-700 cursor-pointer select-none w-full">{% trans "სერთიფიკატების/ლიცენზიების ნაკლებობა" %}</label>
-            </div>
-            <div class="flex items-center cursor-pointer">
-              <input type="checkbox" name="rejection_reasons" value="არარელევანტური_სამუშაო_ისტორია" class="h-4 w-4 text-blue-600 rounded rejection-reason-checkbox pointer-events-auto relative z-20 cursor-pointer appearance-none border border-gray-300 bg-white checked:bg-blue-600 checked:border-transparent focus:outline-none">
-              <label class="ml-2 text-sm text-gray-700 cursor-pointer select-none w-full">{% trans "არარელევანტური სამუშაო ისტორია" %}</label>
-            </div>
-            <div class="flex items-center cursor-pointer">
-              <input type="checkbox" name="rejection_reasons" value="სხვა" class="h-4 w-4 text-blue-600 rounded rejection-reason-checkbox pointer-events-auto relative z-20 cursor-pointer appearance-none border border-gray-300 bg-white checked:bg-blue-600 checked:border-transparent focus:outline-none">
-              <label class="ml-2 text-sm text-gray-700 cursor-pointer select-none w-full">{% trans "სხვა" %}</label>
-            </div>
+            {% for reason in rejection_reasons %}
+              <div class="flex items-center cursor-pointer">
+                <input type="checkbox" name="rejection_reasons" value="{{ reason.id }}" class="h-4 w-4 text-blue-600 rounded rejection-reason-checkbox pointer-events-auto relative z-20 cursor-pointer appearance-none border border-gray-300 bg-white checked:bg-blue-600 checked:border-transparent focus:outline-none">
+                <label class="ml-2 text-sm text-gray-700 cursor-pointer select-none w-full">{{ reason.get_name_display }}</label>
+              </div>
+            {% endfor %}
           </div>
           <div id="reasonError" class="text-red-500 text-sm hidden">{% trans "გთხოვთ აირჩიოთ მინიმუმ ერთი მიზეზი" %}</div>
         </div>
@@ -677,35 +652,34 @@
       const formData = new FormData(rejectionForm);
       formData.append('status', 'რეზერვი');
 
+      // Convert to JSON format for proper processing
+      const jsonData = {
+        status: 'რეზერვი',
+        rejection_reasons: Array.from(checkedReasons).map(cb => cb.value),
+        feedback: formData.get('feedback') || ''
+      };
+
       // Send status update with rejection reasons
       fetch(`/employer/applications/${applicationId}/update-status/`, {
         method: 'POST',
         headers: {
+          'Content-Type': 'application/json',
           'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
         },
-        body: formData
+        body: JSON.stringify(jsonData)
       })
       .then(response => {
         // First check if the response is ok before trying to parse JSON
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }
-        return response.text(); // Get as text first to inspect
-      })
-      .then(text => {
-        // Try to parse as JSON, but handle case where it's not valid JSON
-        try {
-          return JSON.parse(text);
-        } catch (e) {
-          console.log('Response is not valid JSON:', text);
-          return { success: true }; // Assume success if we got a response
-        }
+        return response.json();
       })
       .then(data => {
         // Always hide the modal and update styling regardless of success status
-          modal.classList.add('hidden');
-          updateSelectStyling(lastSelectElement, 'რეზერვი');
-          rejectionForm.reset();
+        modal.classList.add('hidden');
+        updateSelectStyling(lastSelectElement, 'რეზერვი');
+        rejectionForm.reset();
         
         // Force a full page refresh
         window.location.href = window.location.href;

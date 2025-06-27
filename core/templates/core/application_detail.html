@@ -1,0 +1,390 @@
+{% extends 'core/base.html' %}
+{% load i18n %}
+{% load static %}
+
+{% block title %}{% trans "Application Details" %}{% endblock %}
+
+{% block content %}
+<style>
+  /* Custom fix for search input - ensure text doesn't overlap with icon */
+  #search {
+    padding-left: 40px !important; /* Force a large left padding */
+  }
+  #search::placeholder {
+    padding-left: 0px; /* Ensure placeholder text doesn't get cut off */
+  }
+  .search-icon-wrapper {
+    left: 10px; /* Position the icon container */
+  }
+</style>
+
+<div class="container mx-auto px-4 py-8 sm:px-6 lg:px-8">
+  {% csrf_token %}
+  
+  <!-- Back button -->
+  <div class="mb-6">
+    <a href="{% url 'job_applications' application.job.id %}" class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50">
+      <svg class="h-4 w-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+      </svg>
+      {% trans "Back to Applications" %}
+    </a>
+  </div>
+  
+  <!-- Application Details Card -->
+  <div class="bg-white rounded-lg shadow-sm overflow-hidden mb-8">
+    <div class="p-6 border-b border-gray-200">
+      <div class="flex flex-col lg:flex-row lg:items-start justify-between gap-6">
+        <!-- Applicant Details -->
+        <div class="flex-1">
+          <!-- Applicant name and image -->
+          <div class="flex items-center mb-4">
+            {% if application.user and application.user.userprofile.profile_picture %}
+              <img src="{{ application.user.userprofile.profile_picture.url }}" alt="{{ application.user.get_full_name }}" class="h-16 w-16 rounded-full object-cover">
+            {% else %}
+              <div class="h-16 w-16 bg-gray-200 rounded-full flex items-center justify-center">
+                <svg class="h-8 w-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                </svg>
+              </div>
+            {% endif %}
+            <div class="ml-4">
+              <h1 class="text-xl sm:text-2xl font-bold text-gray-900">
+                {% if application.user %}
+                  {{ application.user.get_full_name }}
+                {% else %}
+                  {{ application.guest_name }}
+                {% endif %}
+                
+                {% if not application.user %}
+                <span class="ml-2 inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-gray-100 text-gray-800">
+                  {% trans "Guest" %}
+                </span>
+                {% endif %}
+              </h1>
+              <p class="text-sm text-gray-600">
+                {% if application.user %}
+                  {{ application.user.email }}
+                {% else %}
+                  {{ application.guest_email }}
+                {% endif %}
+              </p>
+            </div>
+          </div>
+          
+          <!-- Applied for -->
+          <div class="mb-6">
+            <h2 class="text-sm font-medium text-gray-500 mb-1">{% trans "Applied for" %}</h2>
+            <div class="flex flex-col sm:flex-row sm:items-center">
+              <span class="text-lg font-medium text-gray-900 mr-2">{{ application.job.title }}</span>
+              <a href="{% url 'job_detail' application.job.id %}" class="text-blue-600 hover:text-blue-800 text-sm inline-flex items-center mt-1 sm:mt-0">
+                <svg class="h-4 w-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
+                </svg>
+                {% trans "View Job" %}
+              </a>
+            </div>
+          </div>
+          
+          <!-- Application info -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+            <div>
+              <h2 class="text-sm font-medium text-gray-500 mb-1">{% trans "Applied on" %}</h2>
+              <p class="text-base text-gray-900">{{ application.applied_at|date:"F j, Y" }} at {{ application.applied_at|time:"H:i" }}</p>
+            </div>
+            <div>
+              <h2 class="text-sm font-medium text-gray-500 mb-1">{% trans "Status" %}</h2>
+              <div>
+                <select class="application-status-select text-base rounded-full px-3 py-1 border-0 
+                  {% if application.status == 'განხილვის_პროცესში' %}bg-blue-100 text-blue-800
+                  {% elif application.status == 'გასაუბრება' %}bg-green-100 text-green-800
+                  {% elif application.status == 'რეზერვი' %}bg-yellow-100 text-yellow-800{% endif %}"
+                  data-application-id="{{ application.id }}">
+                  <option value="განხილვის_პროცესში" {% if application.status == 'განხილვის_პროცესში' %}selected{% endif %}>
+                    {% trans "განხილვის პროცესში" %}
+                  </option>
+                  <option value="გასაუბრება" {% if application.status == 'გასაუბრება' %}selected{% endif %}>
+                    {% trans "გასაუბრება" %}
+                  </option>
+                  <option value="რეზერვი" {% if application.status == 'რეზერვი' %}selected{% endif %}>
+                    {% trans "რეზერვი" %}
+                  </option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- CV Section -->
+        <div class="lg:w-64">
+          <div class="border border-gray-200 rounded-lg p-4 text-center">
+            <div class="mb-2">
+              <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
+              </svg>
+            </div>
+            <h3 class="text-sm font-medium text-gray-900 mb-1">{% trans "Curriculum Vitae" %}</h3>
+            {% if application.user and application.user.userprofile.cv %}
+              <a href="{% url 'view_user_cv' application.user.id %}" target="_blank" class="mt-2 inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 w-full justify-center">
+                <svg class="h-4 w-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                </svg>
+                {% trans "View CV" %}
+              </a>
+              <a href="{{ application.user.userprofile.cv.url }}" download class="mt-2 inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 w-full justify-center">
+                <svg class="h-4 w-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+                </svg>
+                {% trans "Download CV" %}
+              </a>
+            {% elif application.resume %}
+              <a href="{{ application.resume.url }}" target="_blank" class="mt-2 inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 w-full justify-center">
+                <svg class="h-4 w-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                </svg>
+                {% trans "View CV" %}
+              </a>
+              <a href="{{ application.resume.url }}" download class="mt-2 inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 w-full justify-center">
+                <svg class="h-4 w-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+                </svg>
+                {% trans "Download CV" %}
+              </a>
+            {% else %}
+              <p class="text-sm text-gray-500 mt-2">{% trans "No CV provided" %}</p>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Cover Letter and Additional Information -->
+    <div class="p-6">
+      {% if application.cover_letter %}
+        <div class="mb-6">
+          <h2 class="text-lg font-medium text-gray-900 mb-3">{% trans "Cover Letter" %}</h2>
+          <div class="bg-gray-50 rounded-lg p-4 whitespace-pre-wrap">{{ application.cover_letter }}</div>
+        </div>
+      {% endif %}
+      
+      {% if application.additional_info %}
+        <div class="mb-6">
+          <h2 class="text-lg font-medium text-gray-900 mb-3">{% trans "Additional Information" %}</h2>
+          <div class="bg-gray-50 rounded-lg p-4 whitespace-pre-wrap">{{ application.additional_info }}</div>
+        </div>
+      {% endif %}
+      
+      {% if application.answers %}
+        <div class="mb-6">
+          <h2 class="text-lg font-medium text-gray-900 mb-3">{% trans "Answers to Screening Questions" %}</h2>
+          <div class="space-y-4">
+            {% for question, answer in application.answers.items %}
+              <div class="bg-gray-50 rounded-lg p-4">
+                <h3 class="font-medium text-gray-800 mb-2">{{ question }}</h3>
+                <p class="whitespace-pre-wrap">{{ answer }}</p>
+              </div>
+            {% endfor %}
+          </div>
+        </div>
+      {% endif %}
+      
+      {% if application.status == 'რეზერვი' %}
+        <div class="mb-6">
+          <h2 class="text-lg font-medium text-gray-900 mb-3">{% trans "Rejection Reasons" %}</h2>
+          {% if application.rejection_reasons.all %}
+            <div class="bg-gray-50 rounded-lg p-4">
+              <ul class="list-disc list-inside space-y-1">
+                {% for reason in application.rejection_reasons.all %}
+                  <li class="text-gray-700">{{ reason.get_name_display }}</li>
+                {% endfor %}
+              </ul>
+              
+              {% if application.feedback %}
+                <div class="mt-4 pt-4 border-t border-gray-200">
+                  <h3 class="font-medium text-gray-800 mb-2">{% trans "Additional Feedback" %}</h3>
+                  <p class="whitespace-pre-wrap">{{ application.feedback }}</p>
+                </div>
+              {% endif %}
+            </div>
+          {% else %}
+            <p class="text-gray-500">{% trans "No specific reasons provided" %}</p>
+          {% endif %}
+        </div>
+      {% endif %}
+      
+      <!-- Rejection Form (initially hidden, shown when status changes to "reserve") -->
+      <div id="rejectionForm" class="hidden bg-gray-50 rounded-lg p-6 border border-gray-200">
+        <h2 class="text-lg font-medium text-gray-900 mb-4">{% trans "Provide Rejection Reasons" %}</h2>
+        <form id="rejection-form">
+          <input type="hidden" name="application_id" value="{{ application.id }}">
+          
+          <div class="mb-4">
+            <label class="block text-sm font-medium text-gray-700 mb-2">{% trans "Select Reasons:" %} <span class="text-red-500">*</span></label>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
+              {% for reason in rejection_reasons %}
+                <div class="flex items-center">
+                  <input type="checkbox" name="rejection_reasons" value="{{ reason.id }}" id="reason-{{ reason.id }}" class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
+                  <label for="reason-{{ reason.id }}" class="ml-2 block text-sm text-gray-700">{{ reason.get_name_display }}</label>
+                </div>
+              {% endfor %}
+            </div>
+            <p id="reasons-error" class="mt-1 text-sm text-red-600 hidden">{% trans "Please select at least one reason" %}</p>
+          </div>
+          
+          <div class="mb-4">
+            <label for="feedback" class="block text-sm font-medium text-gray-700 mb-2">{% trans "Additional Feedback:" %}</label>
+            <textarea name="feedback" id="feedback" rows="4" class="shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full sm:text-sm border-gray-300 rounded-md"></textarea>
+          </div>
+          
+          <div class="flex justify-end">
+            <button type="button" id="cancel-rejection" class="mr-3 inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
+              {% trans "Cancel" %}
+            </button>
+            <button type="submit" class="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+              {% trans "Submit" %}
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const statusSelect = document.querySelector('.application-status-select');
+    const rejectionForm = document.getElementById('rejectionForm');
+    const rejectionFormElement = document.getElementById('rejection-form');
+    const cancelRejection = document.getElementById('cancel-rejection');
+    const reasonsError = document.getElementById('reasons-error');
+    
+    // Store original status
+    let originalStatus = statusSelect.value;
+    
+    // Handle status change
+    statusSelect.addEventListener('change', function() {
+      const newStatus = this.value;
+      
+      if (newStatus === 'რეზერვი') {
+        // Show rejection form
+        rejectionForm.classList.remove('hidden');
+      } else {
+        // For other statuses, update immediately
+        updateApplicationStatus({{ application.id }}, newStatus);
+      }
+    });
+    
+    // Handle form submission
+    rejectionFormElement.addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      // Validate - at least one reason must be selected
+      const selectedReasons = document.querySelectorAll('input[name="rejection_reasons"]:checked');
+      if (selectedReasons.length === 0) {
+        reasonsError.classList.remove('hidden');
+        return;
+      }
+      
+      // Collect selected reason IDs
+      const reasonIds = Array.from(selectedReasons).map(checkbox => checkbox.value);
+      const feedback = document.getElementById('feedback').value;
+      
+      // Update application
+      updateApplicationStatus({{ application.id }}, 'რეზერვი', reasonIds, feedback);
+    });
+    
+    // Cancel rejection
+    cancelRejection.addEventListener('click', function() {
+      // Reset status select
+      statusSelect.value = originalStatus;
+      
+      // Hide form
+      rejectionForm.classList.add('hidden');
+      
+      // Clear the form
+      rejectionFormElement.reset();
+      reasonsError.classList.add('hidden');
+    });
+    
+    // Function to update application status
+    function updateApplicationStatus(applicationId, status, reasons = null, feedback = '') {
+      const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+      
+      let data = {
+        status: status
+      };
+      
+      if (reasons) {
+        data.rejection_reasons = reasons;
+      }
+      
+      if (feedback) {
+        data.feedback = feedback;
+      }
+      
+      fetch(`/employer/applications/${applicationId}/update-status/`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRFToken': csrfToken
+        },
+        body: JSON.stringify(data)
+      })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        return response.json();
+      })
+      .then(data => {
+        if (data.success) {
+          // Hide the rejection form if it's visible
+          if (!rejectionForm.classList.contains('hidden')) {
+            rejectionForm.classList.add('hidden');
+          }
+          
+          // Update the UI to reflect the new status
+          updateStatusDisplay(status);
+          
+          // Store as new original status
+          originalStatus = status;
+          
+          // Show success message (could add a notification here)
+          console.log('Status updated successfully');
+          
+          // Reload the page to show updated rejection reasons section
+          if (status === 'რეზერვი') {
+            window.location.reload();
+          }
+        } else {
+          console.error('Failed to update status:', data.error);
+          // Reset status to original
+          statusSelect.value = originalStatus;
+        }
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        // Reset status to original
+        statusSelect.value = originalStatus;
+      });
+    }
+    
+    // Update the UI to reflect the new status
+    function updateStatusDisplay(status) {
+      // Remove all status classes
+      statusSelect.classList.remove('bg-blue-100', 'text-blue-800', 'bg-green-100', 'text-green-800', 'bg-yellow-100', 'text-yellow-800');
+      
+      // Add appropriate class
+      if (status === 'განხილვის_პროცესში') {
+        statusSelect.classList.add('bg-blue-100', 'text-blue-800');
+      } else if (status === 'გასაუბრება') {
+        statusSelect.classList.add('bg-green-100', 'text-green-800');
+      } else if (status === 'რეზერვი') {
+        statusSelect.classList.add('bg-yellow-100', 'text-yellow-800');
+      }
+    }
+  });
+</script>
+{% endblock %} 

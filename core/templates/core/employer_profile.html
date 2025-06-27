@@ -4,6 +4,19 @@
 {% block title %}Jobsight - {% trans "დამსაქმებლის პანელი" %}{% endblock %}
 
 {% block content %}
+<style>
+  /* Custom fix for search input - ensure text doesn't overlap with icon */
+  #search {
+    padding-left: 40px !important; /* Force a large left padding */
+  }
+  #search::placeholder {
+    padding-left: 0px; /* Ensure placeholder text doesn't get cut off */
+  }
+  .search-icon-wrapper {
+    left: 10px; /* Position the icon container */
+  }
+</style>
+
 <div class="container mx-auto px-4 py-8 sm:px-6 lg:px-8">
   <div class="mb-8 hidden sm:block">
     <h1 class="text-2xl font-bold text-gray-900">{% trans "დამსაქმებლის პანელი" %}</h1>

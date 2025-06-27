@@ -59,7 +59,16 @@ def update_application_status(request, application_id):
     )
     
     try:
-        data = json.loads(request.body)
+        # Try to parse JSON data first
+        if request.content_type == 'application/json':
+            data = json.loads(request.body)
+        else:
+            # Fall back to form data if not JSON
+            data = request.POST.dict()
+            # Handle possible list values from form data
+            if 'rejection_reasons' in request.POST:
+                data['rejection_reasons'] = request.POST.getlist('rejection_reasons')
+        
         new_status = data.get('status')
         rejection_reason_ids = data.get('rejection_reasons', [])
         feedback = data.get('feedback', '')
@@ -86,7 +95,7 @@ def update_application_status(request, application_id):
                     reason = RejectionReason.objects.get(id=reason_id)
                     application.rejection_reasons.add(reason)
                 except RejectionReason.DoesNotExist:
-                    pass
+                    logger.warning(f"Rejection reason with ID {reason_id} does not exist")
         
         return JsonResponse({
             'success': True, 
