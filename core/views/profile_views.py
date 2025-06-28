@@ -21,6 +21,7 @@ from botocore.exceptions import ClientError
 from django.utils import timezone
 from django.contrib.auth import logout
 import uuid
+from core.repositories.employer_repository import EmployerRepository
 
 logger = logging.getLogger(__name__)
 
@@ -278,11 +279,7 @@ def view_cv_employer(request, profile_id):
             return redirect('cv_database')
         
         # Log this access
-        CVAccess.objects.create(
-            employer_profile=employer_profile,
-            candidate_profile=profile,
-            accessed_at=timezone.now()
-        )
+        EmployerRepository.track_cv_access(employer_profile, profile)
         
         # Update application status to "ნანახი" if currently in "განხილვის_პროცესში" state
         if hasattr(profile, 'user'):

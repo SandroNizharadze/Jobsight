@@ -108,6 +108,7 @@ class CVAccess(models.Model):
     accessed_at = models.DateTimeField(auto_now_add=True)
     
     class Meta:
+        unique_together = ('employer_profile', 'candidate_profile')
         verbose_name = _("CV წვდომა")
         verbose_name_plural = _("CV წვდომები")
     

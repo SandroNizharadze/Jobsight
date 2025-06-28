@@ -74,14 +74,21 @@ class EmployerRepository:
         Returns:
             CVAccess: The created or updated CV access record
         """
-        cv_access, created = CVAccess.objects.get_or_create(
+        # First try to get an existing record
+        cv_access = CVAccess.objects.filter(
             employer_profile=employer_profile,
             candidate_profile=candidate_profile
-        )
+        ).first()
         
-        # If not created, update the accessed_at timestamp
-        if not created:
+        if cv_access:
+            # Update the accessed_at timestamp
             cv_access.save(update_fields=['accessed_at'])
+        else:
+            # Create a new record
+            cv_access = CVAccess.objects.create(
+                employer_profile=employer_profile,
+                candidate_profile=candidate_profile
+            )
             
         return cv_access
     
