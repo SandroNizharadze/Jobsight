@@ -2,7 +2,7 @@ from django.shortcuts import render, get_object_or_404
 from django.views.generic import ListView, DetailView
 from django.db.models import Count
 from django.utils import timezone
-from core.models import BlogPost, BlogCategory, BlogTag, BlogPostCategory
+from core.models import BlogPost, BlogCategory, BlogPostCategory
 from django.http import Http404
 
 class BlogListView(ListView):
@@ -23,11 +23,6 @@ class BlogListView(ListView):
         context['categories'] = BlogCategory.objects.annotate(
             post_count=Count('posts__post', distinct=True)
         ).order_by('-post_count')[:10]
-        
-        # Fixed query for popular tags
-        context['popular_tags'] = BlogTag.objects.annotate(
-            post_count=Count('id')
-        ).order_by('-post_count')[:15]
         
         context['recent_posts'] = BlogPost.objects.filter(
             status='published',
@@ -79,11 +74,6 @@ class BlogPostDetailView(DetailView):
             post_count=Count('posts__post', distinct=True)
         ).order_by('-post_count')[:10]
         
-        # Fixed query for popular tags
-        context['popular_tags'] = BlogTag.objects.annotate(
-            post_count=Count('id')
-        ).order_by('-post_count')[:15]
-        
         # SEO metadata
         context['meta_title'] = post.title
         context['meta_description'] = post.meta_description or post.excerpt or f"{post.title} - Jobsight ბლოგი"
@@ -122,11 +112,6 @@ class BlogCategoryView(ListView):
             post_count=Count('posts__post', distinct=True)
         ).order_by('-post_count')[:10]
         
-        # Fixed query for popular tags
-        context['popular_tags'] = BlogTag.objects.annotate(
-            post_count=Count('id')
-        ).order_by('-post_count')[:15]
-        
         # SEO metadata
         context['meta_title'] = f"{self.category.name} - Jobsight ბლოგი"
         context['meta_description'] = self.category.description or f"სტატიები კატეგორიაში {self.category.name} - Jobsight ბლოგი"
@@ -134,37 +119,4 @@ class BlogCategoryView(ListView):
         
         return context
 
-class BlogTagView(ListView):
-    model = BlogPost
-    template_name = 'core/blog/blog_tag.html'
-    context_object_name = 'posts'
-    paginate_by = 10
-    
-    def get_queryset(self):
-        self.tag = get_object_or_404(BlogTag, slug=self.kwargs['slug'])
-        return BlogPost.objects.filter(
-            status='published',
-            published_at__lte=timezone.now(),
-            categories__category__posts__post__tags=self.tag
-        ).distinct()
-    
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['tag'] = self.tag
-        
-        # Get categories for sidebar
-        context['categories'] = BlogCategory.objects.annotate(
-            post_count=Count('posts__post', distinct=True)
-        ).order_by('-post_count')[:10]
-        
-        # Fixed query for popular tags
-        context['popular_tags'] = BlogTag.objects.annotate(
-            post_count=Count('id')
-        ).order_by('-post_count')[:15]
-        
-        # SEO metadata
-        context['meta_title'] = f"#{self.tag.name} - Jobsight ბლოგი"
-        context['meta_description'] = f"სტატიები ტეგით #{self.tag.name} - Jobsight ბლოგი"
-        context['meta_keywords'] = f"{self.tag.name}, ბლოგი, კარიერა, დასაქმება"
-        
-        return context 
+# Remove BlogTagView class and its methods 

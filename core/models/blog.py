@@ -137,25 +137,4 @@ class BlogPostCategory(models.Model):
         unique_together = ('post', 'category')
     
     def __str__(self):
-        return f"{self.post.title} - {self.category.name}"
-
-
-class BlogTag(models.Model):
-    name = models.CharField(max_length=50, unique=True, verbose_name=_("ტეგის სახელი"))
-    slug = models.SlugField(max_length=70, unique=True, verbose_name=_("სლაგი"))
-    
-    class Meta:
-        verbose_name = _("ბლოგის ტეგი")
-        verbose_name_plural = _("ბლოგის ტეგები")
-        ordering = ['name']
-    
-    def __str__(self):
-        return self.name
-    
-    def save(self, *args, **kwargs):
-        if not self.slug:
-            self.slug = slugify(self.name)
-        super().save(*args, **kwargs)
-    
-    def get_absolute_url(self):
-        return reverse('blog_tag', kwargs={'slug': self.slug}) 
+        return f"{self.post.title} - {self.category.name}" 

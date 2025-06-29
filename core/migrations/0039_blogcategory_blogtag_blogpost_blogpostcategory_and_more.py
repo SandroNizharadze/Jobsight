@@ -28,19 +28,6 @@ class Migration(migrations.Migration):
             },
         ),
         migrations.CreateModel(
-            name='BlogTag',
-            fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=50, unique=True, verbose_name='ტეგის სახელი')),
-                ('slug', models.SlugField(max_length=70, unique=True, verbose_name='სლაგი')),
-            ],
-            options={
-                'verbose_name': 'ბლოგის ტეგი',
-                'verbose_name_plural': 'ბლოგის ტეგები',
-                'ordering': ['name'],
-            },
-        ),
-        migrations.CreateModel(
             name='BlogPost',
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),

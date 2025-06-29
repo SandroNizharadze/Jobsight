@@ -6,7 +6,7 @@ from core.models.job import JobListing, RejectionReason
 from core.models.user import UserProfile
 from core.models.employer import EmployerProfile
 from core.models.application import JobApplication, SavedJob, CVAccess
-from core.models.blog import BlogPost, BlogCategory, BlogPostCategory, BlogTag
+from core.models.blog import BlogPost, BlogCategory, BlogPostCategory
 from core.models.pricing import PricingPackage, PricingFeature, ComparisonTable, ComparisonRow
 from core.models.auth import EmailVerificationToken
 from django.db import models
@@ -19,7 +19,7 @@ __all__ = [
     'JobListing', 'RejectionReason',
     'UserProfile', 'EmployerProfile',
     'JobApplication', 'SavedJob', 'CVAccess',
-    'BlogPost', 'BlogCategory', 'BlogPostCategory', 'BlogTag',
+    'BlogPost', 'BlogCategory', 'BlogPostCategory',
     'PricingPackage', 'PricingFeature', 'ComparisonTable', 'ComparisonRow',
     'EmailVerificationToken',
 ]

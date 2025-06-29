@@ -5,7 +5,7 @@ from .views.file_views import serve_cv_file
 from .views.profile_views import get_application_rejection_reasons, view_cv_employer
 from .views.employer_views import company_profile, application_detail, cv_database
 from django.views.generic.base import RedirectView
-from .views.blog_views import BlogListView, BlogPostDetailView, BlogCategoryView, BlogTagView
+from .views.blog_views import BlogListView, BlogPostDetailView, BlogCategoryView
 from .views.email_views import verify_email, resend_verification_email
 from .views.static_pages import StaticPageView
 
@@ -45,7 +45,6 @@ urlpatterns = [
     path('blog/', BlogListView.as_view(), name='blog_list'),
     path('blog/<slug:slug>/', BlogPostDetailView.as_view(), name='blog_post_detail'),
     path('blog/category/<slug:slug>/', BlogCategoryView.as_view(), name='blog_category'),
-    path('blog/tag/<slug:slug>/', BlogTagView.as_view(), name='blog_tag'),
     
     path('cv/view/', serve_cv_file, name='view_cv'),
     path('cv/view/<int:user_id>/', serve_cv_file, name='view_user_cv'),

@@ -56,18 +56,4 @@
         </div>
     </div>
     {% endif %}
-    
-    <!-- Tags -->
-    {% if popular_tags %}
-    <div class="bg-white rounded-lg shadow-md p-6">
-        <h3 class="text-lg font-semibold text-gray-900 mb-4">{% trans "პოპულარული ტეგები" %}</h3>
-        <div class="flex flex-wrap">
-            {% for tag in popular_tags %}
-            <a href="{% url 'blog_tag' tag.slug %}" class="inline-block bg-gray-100 hover:bg-gray-200 text-gray-800 text-sm px-3 py-1 rounded-full mr-2 mb-2">
-                #{{ tag.name }}
-            </a>
-            {% endfor %}
-        </div>
-    </div>
-    {% endif %}
 </div> 

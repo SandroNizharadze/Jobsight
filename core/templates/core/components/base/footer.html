@@ -28,6 +28,7 @@
                 <ul class="space-y-2">
                     <li><a href="{% url 'job_list' %}" class="text-gray-300 hover:text-white">{% trans "მთავარი" %}</a></li>
                     <li><a href="{% url 'job_list' %}" class="text-gray-300 hover:text-white">{% trans "ვაკანსიები" %}</a></li>
+                    <li><a href="{% url 'blog_list' %}" class="text-gray-300 hover:text-white">{% trans "ბლოგი" %}</a></li>
                     <li><a href="{% url 'pricing' %}" class="text-gray-300 hover:text-white">{% trans "გამოქვეყნება" %}</a></li>
                     {% if not user.is_authenticated %}
                     <li><a href="{% url 'login' %}" class="text-gray-300 hover:text-white">{% trans "შესვლა" %}</a></li>

@@ -4,10 +4,10 @@
 {% block title %}{% trans "Employer Metrics" %} | Jobsight{% endblock %}
 
 {% block content %}
-<div class="container mx-auto py-6 sm:py-10 px-4">
+<div class="container mx-auto py-6 sm:py-10 px-4 pb-32 md:pb-10">
   <div class="flex flex-col sm:flex-row justify-between items-center mb-6">
     <h1 class="text-2xl sm:text-3xl font-bold mb-4 sm:mb-0 text-center sm:text-left">
-      {% blocktrans %}Welcome, {{ employer_profile.company_name|default:employer_profile.user_profile.user.first_name }}{% endblocktrans %}
+      {% blocktrans %}Welcome{% endblocktrans %}
     </h1>
     <div class="flex gap-3 w-full sm:w-auto">
       <a href="{% url 'cv_database' %}" class="w-full sm:w-auto inline-flex justify-center items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
@@ -328,167 +328,344 @@
     </div>
   </div>
   
-  <div class="mt-6 flex flex-col sm:flex-row sm:justify-end gap-3">
-    <a href="{% url 'employer_dashboard' %}" class="w-full sm:w-auto inline-flex justify-center items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
+  <div class="mt-6 mb-10 md:mb-0 flex flex-col sm:flex-row sm:justify-end gap-3">
+    <a href="{% url 'employer_dashboard' %}" class="w-full sm:w-auto inline-flex justify-center items-center px-4 py-3 sm:py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
       {% trans "Manage Company Profile" %}
     </a>
-    <a href="{% url 'pricing' %}" class="w-full sm:w-auto inline-flex justify-center items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700">
+    <a href="{% url 'pricing' %}" class="w-full sm:w-auto inline-flex justify-center items-center px-4 py-3 sm:py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700">
       {% trans "Post New Job" %}
     </a>
   </div>
+  
+  <!-- Add a fixed CTA bar for mobile that sits above the bottom navigation -->
+  <style>
+    @media (max-width: 768px) {
+      .mobile-cta-fixed {
+        position: fixed !important;
+        bottom: 56px !important;
+        left: 0 !important;
+        right: 0 !important;
+        background-color: white !important;
+        border-top: 1px solid #e5e7eb !important;
+        z-index: 49 !important;
+        padding: 10px !important;
+      }
+      
+      .mobile-cta-button-primary {
+        flex: 1 !important;
+        display: flex !important;
+        justify-content: center !important;
+        align-items: center !important;
+        padding: 10px !important;
+        border: 1px solid transparent !important;
+        border-radius: 6px !important;
+        color: white !important;
+        background-color: #2563eb !important;
+        text-decoration: none !important;
+        font-weight: 500 !important;
+        font-size: 14px !important;
+      }
+      
+      .mobile-cta-button-secondary {
+        flex: 1 !important;
+        display: flex !important;
+        justify-content: center !important;
+        align-items: center !important;
+        padding: 10px !important;
+        border: 1px solid #d1d5db !important;
+        border-radius: 6px !important;
+        color: #374151 !important;
+        background-color: white !important;
+        text-decoration: none !important;
+        font-weight: 500 !important;
+        font-size: 14px !important;
+      }
+      
+      .mobile-cta-icon {
+        height: 20px !important;
+        width: 20px !important;
+        margin-right: 8px !important;
+      }
+      
+      .mobile-cta-container {
+        display: flex !important;
+        gap: 8px !important;
+      }
+    }
+  </style>
+
+  <div class="md:hidden mobile-cta-fixed">
+    <div class="mobile-cta-container">
+      <a href="{% url 'employer_dashboard' %}" class="mobile-cta-button-secondary">
+        <svg class="mobile-cta-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+        </svg>
+        {% trans "Manage Profile" %}
+      </a>
+      <a href="{% url 'pricing' %}" class="mobile-cta-button-primary">
+        <svg class="mobile-cta-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+        </svg>
+        {% trans "Post Job" %}
+      </a>
+    </div>
+  </div>
 </div>
+
+<!-- Direct script to ensure mobile CTA styling -->
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Force apply styles for mobile CTA
+    var style = document.createElement('style');
+    style.innerHTML = `
+      @media (max-width: 768px) {
+        .mobile-cta-fixed {
+          position: fixed !important;
+          bottom: 56px !important;
+          left: 0 !important;
+          right: 0 !important;
+          background-color: white !important;
+          border-top: 1px solid #e5e7eb !important;
+          z-index: 49 !important;
+          padding: 10px !important;
+        }
+        
+        .mobile-cta-button-primary {
+          flex: 1 !important;
+          display: flex !important;
+          justify-content: center !important;
+          align-items: center !important;
+          padding: 10px !important;
+          border: 1px solid transparent !important;
+          border-radius: 6px !important;
+          color: white !important;
+          background-color: #2563eb !important;
+          text-decoration: none !important;
+          font-weight: 500 !important;
+          font-size: 14px !important;
+        }
+        
+        .mobile-cta-button-secondary {
+          flex: 1 !important;
+          display: flex !important;
+          justify-content: center !important;
+          align-items: center !important;
+          padding: 10px !important;
+          border: 1px solid #d1d5db !important;
+          border-radius: 6px !important;
+          color: #374151 !important;
+          background-color: white !important;
+          text-decoration: none !important;
+          font-weight: 500 !important;
+          font-size: 14px !important;
+        }
+        
+        .mobile-cta-icon {
+          height: 20px !important;
+          width: 20px !important;
+          margin-right: 8px !important;
+        }
+        
+        .mobile-cta-container {
+          display: flex !important;
+          gap: 8px !important;
+        }
+      }
+    `;
+    document.head.appendChild(style);
+  });
+</script>
 
 {% block extra_js %}
 <script>
   document.addEventListener('DOMContentLoaded', function() {
-    // Applications Over Time Chart
-    const applicationsCtx = document.getElementById('applicationsChart').getContext('2d');
-    const applicationsChart = new Chart(applicationsCtx, {
-      type: 'line',
-      data: {
-        labels: JSON.parse('{{ chart_labels|escapejs }}'),
-        datasets: [{
-          label: '{% trans "Applications" %}',
-          data: JSON.parse('{{ chart_data|escapejs }}'),
-          backgroundColor: 'rgba(59, 130, 246, 0.2)',
-          borderColor: 'rgba(59, 130, 246, 1)',
-          borderWidth: 2,
-          tension: 0.3
-        }]
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        scales: {
-          y: {
-            beginAtZero: true,
-            ticks: {
-              precision: 0
-            }
-          }
+    try {
+      // Helper function to safely parse JSON with fallback
+      function safeJSONParse(jsonStr, fallback) {
+        try {
+          return JSON.parse(jsonStr);
+        } catch (e) {
+          console.error('Error parsing JSON:', e);
+          return fallback;
         }
       }
-    });
-    
-    // Application Status Distribution Chart
-    const statusCtx = document.getElementById('statusChart').getContext('2d');
-    const statusChart = new Chart(statusCtx, {
-      type: 'doughnut',
-      data: {
-        labels: JSON.parse('{{ status_labels|escapejs }}'),
-        datasets: [{
-          data: JSON.parse('{{ status_data|escapejs }}'),
-          backgroundColor: JSON.parse('{{ status_colors|escapejs }}'),
-          borderColor: JSON.parse('{{ status_colors|escapejs }}').map(c => c.replace('0.7', '1')),
-          borderWidth: 1
-        }]
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: {
-          legend: {
-            position: 'top',
-            display: true,
-            labels: {
-              font: {
-                size: 12
-              },
-              usePointStyle: true,
-              padding: 20
-            }
-          },
-          tooltip: {
-            callbacks: {
-              label: function(context) {
-                const label = context.label || '';
-                const value = context.raw || 0;
-                const total = context.chart.data.datasets[0].data.reduce((a, b) => a + b, 0);
-                const percentage = total > 0 ? Math.round((value / total) * 100) : 0;
-                return `${label}: ${value} (${percentage}%)`;
+
+      // Helper function to safely initialize a chart
+      function initializeChart(canvasId, config) {
+        const canvas = document.getElementById(canvasId);
+        if (!canvas) {
+          console.error(`Canvas element ${canvasId} not found`);
+          return null;
+        }
+        
+        try {
+          const ctx = canvas.getContext('2d');
+          return new Chart(ctx, config);
+        } catch (e) {
+          console.error(`Error initializing chart ${canvasId}:`, e);
+          return null;
+        }
+      }
+
+      // Applications Over Time Chart
+      const applicationsConfig = {
+        type: 'line',
+        data: {
+          labels: safeJSONParse('{{ chart_labels|escapejs }}', []),
+          datasets: [{
+            label: '{% trans "Applications" %}',
+            data: safeJSONParse('{{ chart_data|escapejs }}', []),
+            backgroundColor: 'rgba(59, 130, 246, 0.2)',
+            borderColor: 'rgba(59, 130, 246, 1)',
+            borderWidth: 2,
+            tension: 0.3
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          scales: {
+            y: {
+              beginAtZero: true,
+              ticks: {
+                precision: 0
               }
             }
           }
         }
-      }
-    });
-    
-    // Job Category Performance Chart
-    const categoryCtx = document.getElementById('categoryChart').getContext('2d');
-    const categoryChart = new Chart(categoryCtx, {
-      type: 'bar',
-      data: {
-        labels: JSON.parse('{{ category_labels|escapejs }}'),
-        datasets: [{
-          label: '{% trans "Applications per Category" %}',
-          data: JSON.parse('{{ category_data|escapejs }}'),
-          backgroundColor: 'rgba(59, 130, 246, 0.7)',
-          borderColor: 'rgba(59, 130, 246, 1)',
-          borderWidth: 1
-        }]
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        scales: {
-          y: {
-            beginAtZero: true,
-            ticks: {
-              precision: 0
+      };
+      const applicationsChart = initializeChart('applicationsChart', applicationsConfig);
+
+      // Application Status Distribution Chart
+      const statusConfig = {
+        type: 'doughnut',
+        data: {
+          labels: safeJSONParse('{{ status_labels|escapejs }}', []),
+          datasets: [{
+            data: safeJSONParse('{{ status_data|escapejs }}', []),
+            backgroundColor: safeJSONParse('{{ status_colors|escapejs }}', []),
+            borderColor: safeJSONParse('{{ status_colors|escapejs }}', []).map(c => c.replace('0.7', '1')),
+            borderWidth: 1
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              position: 'top',
+              display: true,
+              labels: {
+                font: {
+                  size: 12
+                },
+                usePointStyle: true,
+                padding: 20
+              }
+            },
+            tooltip: {
+              callbacks: {
+                label: function(context) {
+                  const label = context.label || '';
+                  const value = context.raw || 0;
+                  const total = context.chart.data.datasets[0].data.reduce((a, b) => a + b, 0);
+                  const percentage = total > 0 ? Math.round((value / total) * 100) : 0;
+                  return `${label}: ${value} (${percentage}%)`;
+                }
+              }
             }
           }
         }
-      }
-    });
-    
-    // Applicant Source Chart
-    const sourceCtx = document.getElementById('sourceChart').getContext('2d');
-    const sourceChart = new Chart(sourceCtx, {
-      type: 'pie',
-      data: {
-        labels: JSON.parse('{{ source_labels|escapejs }}'),
-        datasets: [{
-          data: JSON.parse('{{ source_data|escapejs }}'),
-          backgroundColor: JSON.parse('{{ source_colors|escapejs }}'),
-          borderColor: JSON.parse('{{ source_colors|escapejs }}').map(c => c.replace('0.7', '1')),
-          borderWidth: 1
-        }]
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false
-      }
-    });
-    
-    // Mobile chart selector functionality
-    const chartSelector = document.getElementById('chartSelector');
-    if (chartSelector) {
-      const chartContainers = {
-        'applicationsChart': document.getElementById('applicationsChartContainer'),
-        'statusChart': document.getElementById('statusChartContainer'),
-        'categoryChart': document.getElementById('categoryChartContainer'),
-        'sourceChart': document.getElementById('sourceChartContainer')
       };
-      
-      chartSelector.addEventListener('change', function() {
-        // Hide all chart containers on mobile
-        Object.values(chartContainers).forEach(container => {
-          if (container) {
-            container.classList.add('hidden');
-            container.classList.remove('block');
+      const statusChart = initializeChart('statusChart', statusConfig);
+
+      // Job Category Performance Chart
+      const categoryConfig = {
+        type: 'bar',
+        data: {
+          labels: safeJSONParse('{{ category_labels|escapejs }}', []),
+          datasets: [{
+            label: '{% trans "Applications per Category" %}',
+            data: safeJSONParse('{{ category_data|escapejs }}', []),
+            backgroundColor: 'rgba(59, 130, 246, 0.7)',
+            borderColor: 'rgba(59, 130, 246, 1)',
+            borderWidth: 1
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          scales: {
+            y: {
+              beginAtZero: true,
+              ticks: {
+                precision: 0
+              }
+            }
+          }
+        }
+      };
+      const categoryChart = initializeChart('categoryChart', categoryConfig);
+
+      // Applicant Source Chart
+      const sourceConfig = {
+        type: 'pie',
+        data: {
+          labels: safeJSONParse('{{ source_labels|escapejs }}', []),
+          datasets: [{
+            data: safeJSONParse('{{ source_data|escapejs }}', []),
+            backgroundColor: safeJSONParse('{{ source_colors|escapejs }}', []),
+            borderColor: safeJSONParse('{{ source_colors|escapejs }}', []).map(c => c.replace('0.7', '1')),
+            borderWidth: 1
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false
+        }
+      };
+      const sourceChart = initializeChart('sourceChart', sourceConfig);
+
+      // Mobile chart selector functionality
+      const chartSelector = document.getElementById('chartSelector');
+      if (chartSelector) {
+        const chartContainers = {
+          'applicationsChart': document.getElementById('applicationsChartContainer'),
+          'statusChart': document.getElementById('statusChartContainer'),
+          'categoryChart': document.getElementById('categoryChartContainer'),
+          'sourceChart': document.getElementById('sourceChartContainer')
+        };
+        
+        chartSelector.addEventListener('change', function() {
+          // Hide all chart containers on mobile
+          Object.values(chartContainers).forEach(container => {
+            if (container) {
+              container.classList.add('hidden');
+              container.classList.remove('block');
+            }
+          });
+          
+          // Show the selected chart container
+          const selectedContainer = chartContainers[this.value];
+          if (selectedContainer) {
+            selectedContainer.classList.remove('hidden');
+            selectedContainer.classList.add('block');
           }
         });
         
-        // Show the selected chart container
-        const selectedContainer = chartContainers[this.value];
-        if (selectedContainer) {
-          selectedContainer.classList.remove('hidden');
-          selectedContainer.classList.add('block');
-        }
-      });
+        // Trigger change event to show the first chart initially
+        chartSelector.dispatchEvent(new Event('change'));
+      }
       
-      // Trigger change event to show the first chart initially
-      chartSelector.dispatchEvent(new Event('change'));
+      // Hide the regular CTA buttons on mobile since we have the fixed ones
+      if (window.innerWidth < 768) {
+        const regularCTAContainer = document.querySelector('.mt-6.mb-10');
+        if (regularCTAContainer) {
+          regularCTAContainer.classList.add('md:flex', 'hidden');
+        }
+      }
+    } catch (e) {
+      console.error('Error initializing charts:', e);
     }
   });
 </script>

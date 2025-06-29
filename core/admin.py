@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.models import User
-from .models import JobListing, UserProfile, EmployerProfile, JobApplication, SavedJob, RejectionReason, PricingPackage, PricingFeature, ComparisonTable, ComparisonRow, BlogPost, BlogCategory, BlogTag, BlogPostCategory
+from .models import JobListing, UserProfile, EmployerProfile, JobApplication, SavedJob, RejectionReason, PricingPackage, PricingFeature, ComparisonTable, ComparisonRow, BlogPost, BlogCategory, BlogPostCategory
 from import_export.admin import ImportExportModelAdmin, ImportExportActionModelAdmin
 from import_export import resources
 from rangefilter.filters import DateRangeFilter
@@ -518,15 +518,9 @@ class BlogCategoryAdmin(admin.ModelAdmin):
         return obj.posts.count()
     post_count.short_description = 'Posts'
 
-class BlogTagAdmin(admin.ModelAdmin):
-    list_display = ('name', 'slug')
-    search_fields = ('name',)
-    prepopulated_fields = {'slug': ('name',)}
-
 # Register the blog models
 admin.site.register(BlogPost, BlogPostAdmin)
 admin.site.register(BlogCategory, BlogCategoryAdmin)
-admin.site.register(BlogTag, BlogTagAdmin)
 
 @admin.register(StaticPage)
 class StaticPageAdmin(admin.ModelAdmin):
