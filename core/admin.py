@@ -429,8 +429,8 @@ class ComparisonTableAdmin(admin.ModelAdmin):
 
 @admin.register(UserProfile)
 class UserProfileAdmin(admin.ModelAdmin):
-    list_display = ('user_email', 'user_name', 'role', 'has_cv', 'desired_field_display', 'field_experience_display', 'visible_to_employers')
-    list_filter = ('role', 'visible_to_employers', 'desired_field', 'field_experience')
+    list_display = ('user_email', 'user_name', 'role', 'has_cv', 'desired_field_display', 'field_experience_display', 'visible_to_employers', 'email_notifications')
+    list_filter = ('role', 'visible_to_employers', 'desired_field', 'field_experience', 'email_notifications')
     search_fields = ('user__email', 'user__first_name', 'user__last_name', 'desired_field', 'field_experience')
     
     def user_email(self, obj):
