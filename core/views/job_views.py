@@ -227,6 +227,8 @@ def job_detail(request, job_id):
         'is_saved': is_saved,
         'is_expired': is_expired,
         'days_until_expiration': days_until_expiration,
+        'use_external_link': job.use_external_link,
+        'external_link': job.external_link,
     }
     return render(request, 'core/job_detail.html', context)
 

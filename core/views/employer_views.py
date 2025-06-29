@@ -426,6 +426,10 @@ def post_job(request):
             if job.georgian_language_only is None:
                 job.georgian_language_only = False
             
+            # Save external link fields
+            job.use_external_link = form.cleaned_data.get('use_external_link', False)
+            job.external_link = form.cleaned_data.get('external_link', '')
+            
             # Save to DB
             job.save()
             

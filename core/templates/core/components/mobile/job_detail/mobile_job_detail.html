@@ -198,29 +198,22 @@
   <div class="bg-white p-4">
     <div>
       <h2 class="text-lg font-bold text-gray-800 mb-3">{% trans "აღწერა" %}</h2>
-      <div class="prose max-w-none text-sm">
-        {{ job.description|safe|linebreaks }}
-      </div>
-      
-      {% if job.requirements %}
-        <h2 class="text-lg font-bold text-gray-800 mt-5 mb-3">{% trans "მოთხოვნები" %}</h2>
-        <div class="prose max-w-none text-sm">
-          {{ job.requirements|safe|linebreaks }}
-        </div>
+      {{ job.description|safe|linebreaks }}
+    </div>
+    <div class="mt-6">
+      {% if not is_expired %}
+      {% if job.use_external_link and job.external_link %}
+      <a href="{{ job.external_link }}" target="_blank" rel="noopener noreferrer"
+         class="w-full bg-orange-500 hover:bg-orange-600 text-white font-medium py-3 px-6 rounded-lg transition-colors flex items-center justify-center mt-4"
+         title="{% trans 'გარე ვებ-გვერდზე გადამისამართება' %}">
+        <i class="fas fa-external-link-alt mr-2 text-sm"></i>{% trans "გაგზავნა (გარე ბმული)" %}
+      </a>
+      <p class="text-xs text-orange-600 mt-2 flex items-center"><i class="fas fa-info-circle mr-1"></i> {% trans "ამ ვაკანსიაზე განაცხადის გასაგზავნად გადახვალთ გარე ვებ-გვერდზე." %}</p>
+      {% else %}
+      <button type="button" data-modal-target="applyModal" class="w-full bg-gray-800 hover:bg-gray-700 text-white font-medium py-3 px-6 rounded-lg transition-colors mt-4">
+        <i class="fas fa-paper-plane mr-2 text-sm"></i>{% trans "განაცხადის გაგზავნა" %}
+      </button>
       {% endif %}
-      
-      {% if job.responsibilities %}
-        <h2 class="text-lg font-bold text-gray-800 mt-5 mb-3">{% trans "პასუხისმგებლობები" %}</h2>
-        <div class="prose max-w-none text-sm">
-          {{ job.responsibilities|safe|linebreaks }}
-        </div>
-      {% endif %}
-      
-      {% if job.benefits %}
-        <h2 class="text-lg font-bold text-gray-800 mt-5 mb-3">{% trans "შეთავაზება" %}</h2>
-        <div class="prose max-w-none text-sm">
-          {{ job.benefits|safe|linebreaks }}
-        </div>
       {% endif %}
     </div>
   </div>

@@ -249,13 +249,25 @@ class JobListingForm(forms.ModelForm):
         initial=False,
         widget=forms.RadioSelect(choices=[(True, 'კი'), (False, 'არა')]),
     )
+    use_external_link = forms.BooleanField(
+        required=False,
+        label=_('ვაკანსია ატვირთულია გარე ლინკით'),
+        help_text=_('მონიშნეთ თუ გსურთ კანდიდატები გადამისამართდნენ გარე ვებ-გვერდზე.'),
+        widget=forms.CheckboxInput(attrs={'class': 'form-check-input'})
+    )
+    external_link = forms.URLField(
+        required=False,
+        label=_('External Link'),
+        help_text=_('ჩასვით ვაკანსიის გარე ბმული.'),
+        widget=forms.URLInput(attrs={'class': 'form-control', 'placeholder': 'https://example.com'})
+    )
     
     class Meta:
         model = JobListing
         fields = (
             'title', 'description', 'location', 'salary_min', 'salary_max', 'salary_type',
             'category', 'experience', 'job_preferences', 'considers_students', 'premium_level',
-            'georgian_language_only'
+            'georgian_language_only', 'use_external_link', 'external_link'
         )
         widgets = {
             'title': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Job Title'}),
@@ -288,4 +300,6 @@ class JobListingForm(forms.ModelForm):
         # Ensure georgian_language_only is never None/NULL
         if 'georgian_language_only' not in cleaned_data or cleaned_data['georgian_language_only'] is None:
             cleaned_data['georgian_language_only'] = False
+        if cleaned_data.get('use_external_link') and not cleaned_data.get('external_link'):
+            self.add_error('external_link', _('გთხოვთ ჩასვათ გარე ბმული'))
         return cleaned_data

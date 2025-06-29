@@ -104,6 +104,8 @@ class JobListing(SoftDeletionModel):
     premium_level = models.CharField(max_length=20, choices=PREMIUM_LEVEL_CHOICES, default='standard', db_index=True, verbose_name=_("პრემიუმ დონე"))
     georgian_language_only = models.BooleanField(choices=[(True, 'კი'), (False, 'არა')], default=False, verbose_name=_("პოზიციაზე მოთხოვნილია მხოლოდ ქართული ენის ცოდნა"))
     view_count = models.PositiveIntegerField(default=0, verbose_name=_("ნახვების რაოდენობა"))
+    use_external_link = models.BooleanField(default=False, verbose_name=_('ატვირთულია გარე ლინკით'))
+    external_link = models.URLField(blank=True, verbose_name=_('External Link'))
 
     def __str__(self):
         return f"{self.title} at {self.company}"
