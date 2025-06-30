@@ -283,7 +283,7 @@ class JobListingForm(forms.ModelForm):
             'experience': forms.Select(attrs={'class': 'form-control'}),
             'job_preferences': forms.Select(attrs={'class': 'form-control'}),
             'considers_students': forms.RadioSelect(attrs={'class': 'btn-check'}),
-            'premium_level': forms.Select(attrs={'class': 'form-control'}),
+            'premium_level': forms.HiddenInput(),
         }
 
     def __init__(self, *args, **kwargs):
@@ -294,6 +294,9 @@ class JobListingForm(forms.ModelForm):
         
         # Add btn-check class to the radio buttons
         self.fields['georgian_language_only'].widget.attrs.update({'class': 'btn-check'})
+        
+        # Make premium_level not required in the form validation
+        self.fields['premium_level'].required = False
     
     def clean(self):
         cleaned_data = super().clean()
@@ -302,4 +305,11 @@ class JobListingForm(forms.ModelForm):
             cleaned_data['georgian_language_only'] = False
         if cleaned_data.get('use_external_link') and not cleaned_data.get('external_link'):
             self.add_error('external_link', _('გთხოვთ ჩასვათ გარე ბმული'))
+            
+        # Validate premium_level
+        premium_level = cleaned_data.get('premium_level')
+        if not premium_level or premium_level not in ['standard', 'premium', 'premium_plus']:
+            # Default to standard if not provided or invalid
+            cleaned_data['premium_level'] = 'standard'
+            
         return cleaned_data

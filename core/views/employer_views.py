@@ -407,12 +407,30 @@ def post_job(request):
     # Get premium level from URL parameter if available
     premium_level = request.GET.get('premium_level', 'standard')
     
+    # Debug logging
+    print(f"DEBUG: Request URL: {request.path}")
+    print(f"DEBUG: Request GET params: {request.GET}")
+    print(f"DEBUG: Premium level from URL: {premium_level}")
+    
     # Validate premium level value
     if premium_level not in ['standard', 'premium', 'premium_plus']:
         premium_level = 'standard'
     
     if request.method == 'POST':
-        form = JobListingForm(request.POST)
+        # Create a copy of POST data to modify it
+        post_data = request.POST.copy()
+        
+        # Get premium level from form data or URL parameter
+        form_premium_level = post_data.get('premium_level')
+        print(f"DEBUG: Premium level from form: {form_premium_level}")
+        
+        # Ensure premium_level is set in the form data
+        if not form_premium_level or form_premium_level not in ['standard', 'premium', 'premium_plus']:
+            post_data['premium_level'] = premium_level
+            print(f"DEBUG: Setting premium_level in form to: {premium_level}")
+            
+        form = JobListingForm(post_data)
+        
         if form.is_valid():
             # Create the job but don't save to DB yet
             job = form.save(commit=False)
@@ -422,6 +440,11 @@ def post_job(request):
             job.employer = employer_profile
             job.company = employer_profile.company_name
             
+            # Ensure premium_level is set
+            if not job.premium_level or job.premium_level not in ['standard', 'premium', 'premium_plus']:
+                job.premium_level = premium_level
+                print(f"DEBUG: Setting job.premium_level to: {premium_level}")
+                
             # Ensure georgian_language_only is set
             if job.georgian_language_only is None:
                 job.georgian_language_only = False
@@ -432,17 +455,24 @@ def post_job(request):
             
             # Save to DB
             job.save()
+            print(f"DEBUG: Job saved with premium_level: {job.premium_level}")
             
             messages.success(request, "Job posting submitted for review!")
             return redirect('employer_dashboard')
+        else:
+            # Log form errors for debugging
+            print(f"Form errors: {form.errors}")
     else:
         # Initialize form with premium level from URL
         form = JobListingForm(initial={'premium_level': premium_level})
+        print(f"DEBUG: Form initial data: {form.initial}")
     
     context = {
         'form': form,
         'selected_premium_level': premium_level,
     }
+    
+    print(f"DEBUG: Context selected_premium_level: {context['selected_premium_level']}")
     
     return render(request, 'core/post_job.html', context)
 

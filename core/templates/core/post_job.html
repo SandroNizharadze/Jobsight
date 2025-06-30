@@ -276,7 +276,7 @@
 
         <!-- Premium Level (hidden but maintained for form submission) -->
         <div class="hidden">
-          {{ form.premium_level }}
+          <input type="hidden" name="premium_level" id="id_premium_level" value="{{ selected_premium_level }}">
         </div>
 
         <!-- Premium Features Section -->
@@ -360,10 +360,17 @@
 <script src="{% static 'core/js/ckeditor_init.js' %}"></script>
 <script>
   document.addEventListener('DOMContentLoaded', function() {
-    // Set the premium level from the URL
-    const premiumLevelSelect = document.getElementById('id_premium_level');
-    if (premiumLevelSelect) {
-      premiumLevelSelect.value = '{{ selected_premium_level }}';
+    // Debug information
+    console.log('URL Parameters:', window.location.search);
+    const urlParams = new URLSearchParams(window.location.search);
+    const premiumLevel = urlParams.get('premium_level');
+    console.log('Premium Level from URL:', premiumLevel);
+    
+    // Immediately set the premium level from URL parameter
+    const hiddenInput = document.getElementById('id_premium_level');
+    if (hiddenInput) {
+      hiddenInput.value = premiumLevel;
+      console.log('Premium level set directly from URL to:', premiumLevel);
     }
     
     // Enhance radio button functionality for the georgian_language_only and considers_students fields
