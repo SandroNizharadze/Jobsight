@@ -18,8 +18,6 @@ from django_ckeditor_5.widgets import CKEditor5Widget
 from core.models import StaticPage
 from datetime import timedelta
 from django.utils import timezone
-from django.db.models.functions import Coalesce
-from django.db.models import DateTimeField
 
 # Add a custom form for BlogPost with explicit CKEditorWidget
 class BlogPostAdminForm(forms.ModelForm):
@@ -168,25 +166,7 @@ class SoftDeletionAdmin(ImportExportModelAdmin):
         qs = self.model.all_objects.get_queryset()
         ordering = self.get_ordering(request)
         if ordering:
-            # Handle NULL values in ordering by using Django's Coalesce
-            # Process each ordering field
-            processed_ordering = []
-            for field in ordering:
-                desc = field.startswith('-')
-                field_name = field[1:] if desc else field
-                
-                # If this is a datetime field that might be null (like last_extended_at)
-                if field_name == 'last_extended_at' or field_name.endswith('_at'):
-                    # Use Coalesce to handle nulls - put them at the end
-                    field_expr = Coalesce(field_name, timezone.make_aware(timezone.datetime.min))
-                    if desc:
-                        field_expr = field_expr.desc()
-                    processed_ordering.append(field_expr)
-                else:
-                    # Use the original ordering for other fields
-                    processed_ordering.append(field)
-                    
-            qs = qs.order_by(*processed_ordering)
+            qs = qs.order_by(*ordering)
         return qs
     
     def get_deleted_state(self, obj):
@@ -233,8 +213,7 @@ class JobListingAdmin(SoftDeletionAdmin):
                   'job_preferences', 'considers_students', 'premium_level', 'status')
     search_fields = ('title', 'company', 'description', 'location')
     date_hierarchy = 'posted_at'
-    actions = ['restore_selected', 'extend_expiration', 'extend_expiration_no_top', 'mark_as_expired', 'reactivate_expired_jobs', 'reactivate_expired_jobs_no_top']
-    ordering = ('-last_extended_at', '-posted_at')
+    actions = ['restore_selected', 'extend_expiration', 'extend_expiration_no_bump', 'mark_as_expired', 'reactivate_expired_jobs']
 
     def salary_range(self, obj):
         if obj.salary_min and obj.salary_max:
@@ -307,18 +286,16 @@ class JobListingAdmin(SoftDeletionAdmin):
             if job.status == 'expired':
                 job.status = 'approved'
                 job.expires_at = timezone.now() + timedelta(days=30)
-                job.last_extended_at = timezone.now()  # Move to top
+                job.last_extended_at = timezone.now()  # Set last extended time
                 job.save(update_fields=['expires_at', 'status', 'last_extended_at'])
             else:
-                job.extend_expiration(days=30, move_to_top=True)
+                job.extend_expiration(days=30, bump_to_top=True)
             count += 1
-        
-        # Force refresh of queryset to show the updated ordering
-        self.message_user(request, f"Extended expiration for {count} jobs by 30 days. Jobs have been moved to the top of listings.")
-    extend_expiration.short_description = "Extend expiration by 30 days (move to top)"
+        self.message_user(request, f"Extended expiration for {count} jobs by 30 days and bumped to top.")
+    extend_expiration.short_description = "Extend expiration by 30 days and bump to top"
     
-    def extend_expiration_no_top(self, request, queryset):
-        """Extend the expiration date of selected jobs without moving them to the top"""
+    def extend_expiration_no_bump(self, request, queryset):
+        """Extend the expiration date of selected jobs by 30 days without bumping to top"""
         count = 0
         for job in queryset:
             # If job is expired, also update its status
@@ -327,10 +304,10 @@ class JobListingAdmin(SoftDeletionAdmin):
                 job.expires_at = timezone.now() + timedelta(days=30)
                 job.save(update_fields=['expires_at', 'status'])
             else:
-                job.extend_expiration(days=30, move_to_top=False)
+                job.extend_expiration(days=30, bump_to_top=False)
             count += 1
-        self.message_user(request, f"Extended expiration for {count} jobs by 30 days. Original posting order maintained.")
-    extend_expiration_no_top.short_description = "Extend expiration by 30 days (keep original order)"
+        self.message_user(request, f"Extended expiration for {count} jobs by 30 days without changing position.")
+    extend_expiration_no_bump.short_description = "Extend expiration by 30 days (keep position)"
     
     def mark_as_expired(self, request, queryset):
         """Mark selected jobs as expired"""
@@ -343,25 +320,12 @@ class JobListingAdmin(SoftDeletionAdmin):
         count = 0
         for job in queryset.filter(status__in=['expired', 'extended_review']):
             job.status = 'approved'
-            job.last_extended_at = timezone.now()  # Move to top
             job.expires_at = timezone.now() + timedelta(days=30)
-            job.save(update_fields=['expires_at', 'status', 'last_extended_at'])
+            job.last_extended_at = timezone.now()  # Set last extended time to bump to top
+            job.save(update_fields=['status', 'expires_at', 'last_extended_at'])
             count += 1
-        
-        # Force refresh of queryset to show the updated ordering
-        self.message_user(request, f"Reactivated {count} expired or extended jobs. Jobs have been moved to the top of listings.")
-    reactivate_expired_jobs.short_description = "Reactivate expired jobs (move to top)"
-    
-    def reactivate_expired_jobs_no_top(self, request, queryset):
-        """Reactivate expired or extended jobs without moving them to the top"""
-        count = 0
-        for job in queryset.filter(status__in=['expired', 'extended_review']):
-            job.status = 'approved'
-            job.expires_at = timezone.now() + timedelta(days=30)
-            job.save()
-            count += 1
-        self.message_user(request, f"Reactivated {count} expired or extended jobs. Original posting order maintained.")
-    reactivate_expired_jobs_no_top.short_description = "Reactivate expired jobs (keep original order)"
+        self.message_user(request, f"Reactivated {count} expired or extended jobs.")
+    reactivate_expired_jobs.short_description = "Reactivate expired or extended jobs (extend by 30 days)"
     
     def get_expiration(self, obj):
         if obj.expires_at:
@@ -375,11 +339,6 @@ class JobListingAdmin(SoftDeletionAdmin):
                     return format_html('{} days left', days)
         return '-'
     get_expiration.short_description = 'Expiration'
-    
-    def get_ordering(self, request):
-        """Override the default ordering to ensure extended jobs appear at the top"""
-        # Order by last_extended_at first (nulls last), then by posted_at
-        return ('-last_extended_at', '-posted_at')
 
 @admin.register(JobApplication)
 class JobApplicationAdmin(ImportExportModelAdmin):

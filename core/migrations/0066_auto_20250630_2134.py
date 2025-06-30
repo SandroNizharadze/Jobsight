@@ -3,16 +3,6 @@
 from django.db import migrations
 
 
-def set_last_extended_at(apps, schema_editor):
-    """Set last_extended_at to posted_at for all existing jobs"""
-    JobListing = apps.get_model('core', 'JobListing')
-    for job in JobListing.objects.all():
-        # If last_extended_at is None, set it to posted_at
-        if job.last_extended_at is None:
-            job.last_extended_at = job.posted_at
-            job.save(update_fields=['last_extended_at'])
-
-
 class Migration(migrations.Migration):
 
     dependencies = [
@@ -20,5 +10,4 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.RunPython(set_last_extended_at, migrations.RunPython.noop),
     ]
