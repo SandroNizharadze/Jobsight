@@ -2,17 +2,16 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib import messages
 from django.views.decorators.http import require_POST
-from django.db.models import Count, Prefetch, Q, Case, When, Value, IntegerField, F
-from ..models import JobListing, EmployerProfile, JobApplication, UserProfile, RejectionReason
-from ..forms import JobListingForm, EmployerProfileForm
-import logging
+from django.http import HttpResponseForbidden, JsonResponse
+from django.db.models import Q, Case, When, Value, IntegerField, Count, F, Prefetch
 from django.utils import timezone
 from datetime import timedelta
-from django.http import HttpResponseForbidden, JsonResponse
-import json
-from collections import defaultdict
 import calendar
 from django.core.serializers.json import DjangoJSONEncoder
+from core.services.employer_service import EmployerService
+from core.models import JobListing, JobApplication, EmployerProfile, UserProfile, RejectionReason
+from core.forms import JobListingForm
+import logging
 
 logger = logging.getLogger(__name__)
 
@@ -512,14 +511,24 @@ def extend_job(request, job_id):
     is_expired = job.is_expired()
     
     if is_expired:
-        # If job is expired, change status to pending_review
-        job.status = 'pending_review'
+        # If job is expired, change status to extended_review
+        job.status = 'extended_review'
         # Save the job to update its status
-        job.save()
+        job.save(update_fields=['status'])
         messages.success(request, "Your job has been submitted for review. An admin will extend it soon.")
     else:
         # Extend the job by 30 days
-        job.extend_expiration(days=30)
+        days = int(request.POST.get('days', 30))
+        
+        # If job is not expired, extend from current expiration date
+        if job.expires_at:
+            job.expires_at = job.expires_at + timedelta(days=days)
+        else:
+            job.expires_at = timezone.now() + timedelta(days=days)
+        
+        # Save the job with the new expiration date
+        job.save(update_fields=['expires_at'])
+        
         # Get the new expiration date
         new_expiration = job.expires_at.strftime('%B %d, %Y')
         messages.success(request, f"Job listing expiration extended to {new_expiration}.")

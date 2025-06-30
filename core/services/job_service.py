@@ -41,7 +41,8 @@ class JobService:
         # If job is expired, extend from current date
         if job.is_expired():
             job.expires_at = timezone.now() + timedelta(days=days)
-            job.status = 'approved'  # Reactivate the job
+            # Don't automatically approve expired jobs - they should remain in their current status
+            # (pending_review if set by the view)
         # Otherwise extend from current expiration date
         elif job.expires_at:
             job.expires_at = job.expires_at + timedelta(days=days)
@@ -49,7 +50,8 @@ class JobService:
         else:
             job.expires_at = timezone.now() + timedelta(days=days)
         
-        job.save(update_fields=['expires_at', 'status'])
+        # Only update expires_at, don't change status
+        job.save(update_fields=['expires_at'])
         return job
     
     @staticmethod

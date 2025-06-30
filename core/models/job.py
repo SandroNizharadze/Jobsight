@@ -93,6 +93,7 @@ class JobListing(SoftDeletionModel):
         ('approved', _('Approved')),
         ('rejected', _('Rejected')),
         ('expired', _('Expired')),
+        ('extended_review', _('Extended (Under Review)')),
     ]
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending_review', db_index=True, verbose_name=_("სტატუსი"))
     admin_feedback = models.TextField(blank=True, verbose_name=_("ადმინის უკუკავშირი"))
@@ -106,16 +107,22 @@ class JobListing(SoftDeletionModel):
     view_count = models.PositiveIntegerField(default=0, verbose_name=_("ნახვების რაოდენობა"))
     use_external_link = models.BooleanField(default=False, verbose_name=_('ატვირთულია გარე ლინკით'))
     external_link = models.URLField(blank=True, verbose_name=_('External Link'))
+    # Default to posted_at to ensure proper ordering
+    last_extended_at = models.DateTimeField(null=True, blank=True, db_index=True, verbose_name=_("ბოლოს გაგრძელების თარიღი"))
 
     def __str__(self):
         return f"{self.title} at {self.company}"
 
     def is_expired(self):
         """Check if the job posting has expired"""
+        # If status is explicitly set to 'expired', return True
         if self.status == 'expired':
             return True
+        
+        # Otherwise check the expiration date
         if not self.expires_at:
             return False
+            
         return timezone.now() >= self.expires_at
 
     def days_until_expiration(self):
@@ -129,28 +136,77 @@ class JobListing(SoftDeletionModel):
         delta = self.expires_at - timezone.now()
         return max(0, delta.days)
     
-    def extend_expiration(self, days=30):
-        """Extend the job expiration date by the specified number of days"""
+    def update_status_from_expiration(self):
+        """Update the job status based on expiration date"""
+        # Only update status if job is approved or expired
+        if self.status not in ['approved', 'expired']:
+            return False
+            
+        is_expired_now = timezone.now() >= self.expires_at if self.expires_at else False
+        
+        # If job has expired but status is not 'expired'
+        if is_expired_now and self.status != 'expired':
+            self.status = 'expired'
+            self.save(update_fields=['status'])
+            return True
+            
+        # If job is not expired but status is 'expired'
+        if not is_expired_now and self.status == 'expired':
+            self.status = 'approved'
+            self.save(update_fields=['status'])
+            return True
+            
+        return False
+        
+    def extend_expiration(self, days=30, move_to_top=True):
+        """
+        Extend the job expiration date by the specified number of days
+        
+        Args:
+            days (int): Number of days to extend by
+            move_to_top (bool): Whether to update last_extended_at to move the job to the top
+        """
         if not self.expires_at:
             self.expires_at = timezone.now() + timedelta(days=days)
         else:
             # If job is expired, extend from current date
             if self.is_expired():
                 self.expires_at = timezone.now() + timedelta(days=days)
+                # If the job status is 'expired', update it to 'approved'
+                if self.status == 'expired':
+                    self.status = 'approved'
             # Otherwise extend from current expiration date
             else:
                 self.expires_at = self.expires_at + timedelta(days=days)
         
-        self.save(update_fields=['expires_at'])
+        # Update the last_extended_at field to move the job to the top of listings
+        update_fields = ['expires_at', 'status']
+        if move_to_top:
+            self.last_extended_at = timezone.now()
+            update_fields.append('last_extended_at')
+        
+        self.save(update_fields=update_fields)
+            
+        # Update status based on new expiration date
+        self.update_status_from_expiration()
         return self.expires_at
 
+    def save(self, *args, **kwargs):
+        """Override save to set last_extended_at to posted_at when creating a job"""
+        # If this is a new job (no ID yet) or last_extended_at is not set
+        if not self.pk or not self.last_extended_at:
+            # Set last_extended_at to current time (will match posted_at for new jobs)
+            self.last_extended_at = timezone.now()
+        super().save(*args, **kwargs)
+
     class Meta:
-        ordering = ['-posted_at']
+        ordering = ['-last_extended_at', '-posted_at']
         indexes = [
             models.Index(fields=['status', 'category']),
             models.Index(fields=['status', 'location']),
             models.Index(fields=['employer', 'status']),
             models.Index(fields=['expires_at']),
+            models.Index(fields=['last_extended_at']),
         ]
         verbose_name = _("ვაკანსია")
         verbose_name_plural = _("ვაკანსიები")
