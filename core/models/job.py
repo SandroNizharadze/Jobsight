@@ -83,20 +83,10 @@ class JobListing(SoftDeletionModel):
     posted_at = models.DateTimeField(auto_now_add=True, db_index=True, verbose_name=_("გამოქვეყნების თარიღი"))
     updated_at = models.DateTimeField(auto_now=True, verbose_name=_("განახლების თარიღი"))
     expires_at = models.DateTimeField(null=True, blank=True, db_index=True, verbose_name=_("ვადის გასვლის თარიღი"))
-    interests = models.CharField(max_length=255, blank=True, verbose_name=_("ინტერესები"))
-    fields = models.CharField(max_length=255, blank=True, verbose_name=_("სფეროები"))
     experience = models.CharField(max_length=100, choices=EXPERIENCE_CHOICES, db_index=True, verbose_name=_("გამოცდილება"))
     job_preferences = models.CharField(max_length=255, choices=JOB_PREFERENCE_CHOICES, verbose_name=_("სამუშაო გრაფიკი"))
     considers_students = models.BooleanField(default=False, choices=CONSIDERS_STUDENTS_CHOICES, verbose_name=_("განიხილავს სტუდენტებს"))
-    STATUS_CHOICES = [
-        ('pending_review', _('Pending Review')),
-        ('approved', _('Approved')),
-        ('rejected', _('Rejected')),
-        ('expired', _('Expired')),
-        ('extended_review', _('Extended (Under Review)')),
-    ]
-    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending_review', db_index=True, verbose_name=_("სტატუსი"))
-    admin_feedback = models.TextField(blank=True, verbose_name=_("ადმინის უკუკავშირი"))
+    
     PREMIUM_LEVEL_CHOICES = [
         ('standard', _('Standard')),
         ('premium', _('Premium')),
@@ -109,6 +99,15 @@ class JobListing(SoftDeletionModel):
     external_link = models.URLField(blank=True, verbose_name=_('External Link'))
     last_extended_at = models.DateTimeField(null=True, blank=True, verbose_name=_("ბოლო გაგრძელების თარიღი"))
 
+    STATUS_CHOICES = [
+        ('pending_review', _('Pending Review')),
+        ('approved', _('Approved')),
+        ('rejected', _('Rejected')),
+        ('expired', _('Expired')),
+        ('extended_review', _('Extended (Under Review)')),
+    ]
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending_review', db_index=True, verbose_name=_("სტატუსი"))
+    admin_feedback = models.TextField(blank=True, verbose_name=_("ადმინის უკუკავშირი"))
     def __str__(self):
         return f"{self.title} at {self.company}"
 
