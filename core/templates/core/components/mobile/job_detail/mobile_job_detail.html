@@ -204,13 +204,14 @@
       {% if not is_expired %}
       {% if job.use_external_link and job.external_link %}
       <a href="{{ job.external_link }}" target="_blank" rel="noopener noreferrer"
-         class="w-full bg-orange-500 hover:bg-orange-600 text-white font-medium py-3 px-6 rounded-lg transition-colors flex items-center justify-center mt-4"
+         class="inline-flex bg-gray-800 hover:bg-gray-700 text-white font-medium py-3 px-6 rounded-lg transition-colors items-center justify-center"
+         style="background-color:rgb(9, 36, 60);"
          title="{% trans 'გარე ვებ-გვერდზე გადამისამართება' %}">
         <i class="fas fa-external-link-alt mr-2 text-sm"></i>{% trans "გაგზავნა (გარე ბმული)" %}
       </a>
       <p class="text-xs text-orange-600 mt-2 flex items-center"><i class="fas fa-info-circle mr-1"></i> {% trans "ამ ვაკანსიაზე განაცხადის გასაგზავნად გადახვალთ გარე ვებ-გვერდზე." %}</p>
       {% else %}
-      <button type="button" data-modal-target="applyModal" class="w-full bg-gray-800 hover:bg-gray-700 text-white font-medium py-3 px-6 rounded-lg transition-colors mt-4">
+      <button type="button" data-modal-target="applyModal" class="w-full bg-gray-800 hover:bg-gray-700 text-white font-medium py-3 px-6 rounded-lg transition-colors">
         <i class="fas fa-paper-plane mr-2 text-sm"></i>{% trans "განაცხადის გაგზავნა" %}
       </button>
       {% endif %}
