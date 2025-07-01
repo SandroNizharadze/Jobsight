@@ -285,6 +285,16 @@ def apply_job(request, job_id):
                     resume=resume_file
                 )
             
+            # Create notification for the employer
+            from core.repositories.notification_repository import NotificationRepository
+            applicant_name = f"{request.user.first_name} {request.user.last_name}".strip() or request.user.email
+            message = f"New application from {applicant_name} for your job '{job.title}'."
+            NotificationRepository.create_new_application_notification(
+                employer_profile=job.employer,
+                job=job,
+                message=message
+            )
+            
             messages.success(request, "Your application has been submitted successfully!")
             return redirect('job_detail', job_id=job.id)
         else:
@@ -305,6 +315,15 @@ def apply_job(request, job_id):
                 guest_email=guest_email,
                 cover_letter=cover_letter,
                 resume=resume_file
+            )
+            
+            # Create notification for the employer
+            from core.repositories.notification_repository import NotificationRepository
+            message = f"New application from {guest_name} ({guest_email}) for your job '{job.title}'."
+            NotificationRepository.create_new_application_notification(
+                employer_profile=job.employer,
+                job=job,
+                message=message
             )
             
             messages.success(request, "Your application has been submitted successfully! Consider creating an account for better job tracking.")
@@ -354,7 +373,7 @@ def unsave_job(request, job_id):
             messages.info(request, 'Job was not saved')
             
         return redirect('job_detail', job_id=job_id)
-    return redirect('job_list') 
+    return redirect('job_list')
 
 def filter_jobs(request):
     """

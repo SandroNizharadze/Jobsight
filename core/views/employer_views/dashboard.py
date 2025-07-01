@@ -9,6 +9,7 @@ import calendar
 from collections import defaultdict
 from django.utils import timezone
 from datetime import timedelta
+from core.repositories.notification_repository import NotificationRepository
 
 logger = logging.getLogger(__name__)
 
@@ -204,6 +205,10 @@ def employer_dashboard(request):
     
     # Process jobs to add helper attributes for template
     all_jobs = []
+    
+    # Get notification counts
+    unread_notification_count = NotificationRepository.get_unread_notification_count(employer_profile)
+    
     for job in jobs:
         # Check expiration date and add a convenience attribute
         if job.expires_at:
@@ -212,6 +217,12 @@ def employer_dashboard(request):
         else:
             job.is_expired_status = False
             job.days_until_expiration_value = None
+        
+        # Add unread notification count for this job
+        job.unread_notification_count = NotificationRepository.get_unread_notification_count_by_job(
+            employer_profile=employer_profile,
+            job_id=job.id
+        )
             
         all_jobs.append(job)
     
@@ -220,6 +231,7 @@ def employer_dashboard(request):
         'all_jobs': all_jobs,
         'search_query': search_query,
         'sort_option': sort_option,
+        'unread_notification_count': unread_notification_count,
     }
     
     # If this is an AJAX request, only return the jobs container

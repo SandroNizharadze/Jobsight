@@ -36,6 +36,12 @@ urlpatterns = [
     path('employer/job-applications/<int:job_id>/', employer_views.job_applications, name='job_applications'),
     path('employer/update-application-status/<int:application_id>/', employer_views.update_application_status, name='update_application_status'),
     path('employer/get-job-details/<int:job_id>/', employer_views.get_job_details, name='get_job_details'),
+    
+    # Notification routes
+    path('employer/notifications/mark-all-read/', employer_views.mark_notifications_as_read, name='mark_notifications_as_read'),
+    path('employer/notifications/mark-job-read/<int:job_id>/', employer_views.mark_job_notifications_as_read, name='mark_job_notifications_as_read'),
+    path('employer/notifications/mark-read/<int:notification_id>/', employer_views.mark_notification_as_read, name='mark_notification_as_read'),
+    
     path('admin/create/', admin_views.create_admin, name='create_admin'),
     path('admin/assign-employer/', admin_views.assign_employer, name='assign_employer'),
     path('pricing/', main.pricing, name='pricing'),

@@ -7,6 +7,7 @@ from core.models.blog import BlogPost, BlogCategory, BlogPostCategory
 from core.models.pricing import PricingPackage, PricingFeature, ComparisonTable, ComparisonRow
 from core.models.auth import EmailVerificationToken
 from core.models.static_pages import StaticPage
+from core.models.notification import EmployerNotification
 
 # For backward compatibility, expose all models at the module level
 __all__ = [
@@ -29,4 +30,5 @@ __all__ = [
     'ComparisonRow',
     'EmailVerificationToken',
     'StaticPage',
+    'EmployerNotification',
 ] 

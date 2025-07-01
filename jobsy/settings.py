@@ -77,6 +77,8 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 'core.context_processors.employer_premium_status',
+                'core.context_processors.language_attributes',
+                'core.context_processors.employer_notifications',
             ],
         },
     },

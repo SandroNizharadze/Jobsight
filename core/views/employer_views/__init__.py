@@ -3,6 +3,7 @@ from core.views.employer_views.job_management import post_job, delete_job, exten
 from core.views.employer_views.application_management import update_application_status, application_detail
 from core.views.employer_views.cv_database import cv_database
 from core.views.employer_views.profile import company_profile, get_job_details
+from core.views.employer_views.notification_views import mark_notifications_as_read, mark_job_notifications_as_read, mark_notification_as_read
 
 # Define job_applications directly in this file to avoid circular imports
 from django.shortcuts import render, redirect, get_object_or_404
@@ -60,6 +61,10 @@ def job_applications(request, job_id):
     if unread_applications.exists():
         unread_applications.update(is_read=True)
     
+    # Mark all notifications for this job as read
+    from core.repositories.notification_repository import NotificationRepository
+    NotificationRepository.mark_job_notifications_as_read(employer_profile, job_id)
+    
     # Get counts for each status
     total_applications = applications.count()
     review_applications = applications.filter(status='განხილვის_პროცესში').count()
@@ -85,4 +90,5 @@ __all__ = [
     'job_applications', 'update_application_status', 'application_detail',
     'cv_database',
     'company_profile', 'get_job_details',
+    'mark_notifications_as_read', 'mark_job_notifications_as_read', 'mark_notification_as_read',
 ] 

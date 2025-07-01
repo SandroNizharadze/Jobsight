@@ -1,5 +1,6 @@
 from core.models import JobListing
 from django.utils import timezone
+from core.repositories.notification_repository import NotificationRepository
 
 def employer_premium_status(request):
     """
@@ -29,4 +30,25 @@ def language_attributes(request):
     """
     return {
         'lang_attr': f'lang="{request.LANGUAGE_CODE}"',
-    } 
+    }
+
+def employer_notifications(request):
+    """
+    Add unread notification count for employer users to all templates.
+    """
+    context = {
+        'unread_notification_count': 0
+    }
+    
+    if request.user.is_authenticated:
+        try:
+            # Check if user is an employer
+            if hasattr(request.user, 'userprofile') and request.user.userprofile.role == 'employer':
+                employer_profile = request.user.userprofile.employer_profile
+                
+                # Get unread notification count
+                context['unread_notification_count'] = NotificationRepository.get_unread_notification_count(employer_profile)
+        except:
+            pass
+    
+    return context 

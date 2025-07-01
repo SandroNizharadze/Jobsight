@@ -30,8 +30,16 @@
                     {% if user.is_authenticated %}
                         <div class="relative">
                             <button id="profileDropdownButton" class="flex items-center text-sm text-white focus:outline-none">
-                                <span class="mr-2">{{ user.first_name }}</span>
-                                <svg class="h-4 w-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <div class="flex items-center">
+                                    <span class="mr-1">{{ user.first_name }}</span>
+                                    {% if user.userprofile.role == 'employer' and unread_notification_count > 0 %}
+                                    <span class="relative flex h-2 w-2 mr-1">
+                                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+                                        <span class="relative inline-flex rounded-full h-2 w-2 bg-red-500"></span>
+                                    </span>
+                                    {% endif %}
+                                </div>
+                                <svg class="h-4 w-4 text-white ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
                                 </svg>
                             </button>
@@ -49,11 +57,14 @@
                                     </svg>
                                     {% trans "Metrics" %}
                                 </a>
-                                <a href="{% url 'employer_dashboard' %}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                <a href="{% url 'employer_dashboard' %}" class="relative block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" id="jobManagementLink">
                                     <svg class="inline-block w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
                                     </svg>
                                     {% trans "Job Management" %}
+                                    {% if unread_notification_count > 0 %}
+                                    <span class="absolute right-2 top-2 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-white bg-red-500 rounded-full">!</span>
+                                    {% endif %}
                                 </a>
                                 <a href="{% url 'cv_database' %}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-purple-100 relative">
                                     <div class="flex items-center">
@@ -108,6 +119,30 @@ document.addEventListener('DOMContentLoaded', function() {
             if (profileDropdown && !profileDropdown.contains(e.target) && !profileDropdownButton.contains(e.target)) {
                 profileDropdown.classList.add('hidden');
             }
+        });
+    }
+    
+    // Mark notifications as read when clicking on Job Management
+    const jobManagementLink = document.getElementById('jobManagementLink');
+    if (jobManagementLink) {
+        jobManagementLink.addEventListener('click', function(e) {
+            // Don't prevent the default navigation
+            
+            // Send AJAX request to mark all notifications as read
+            fetch('{% url "mark_notifications_as_read" %}', {
+                method: 'GET',
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            }).then(response => {
+                if (!response.ok) {
+                    console.error('Error marking notifications as read');
+                }
+                // Continue with navigation
+            }).catch(error => {
+                console.error('Error:', error);
+                // Continue with navigation
+            });
         });
     }
 });

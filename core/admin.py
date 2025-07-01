@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.models import User
-from .models import JobListing, UserProfile, EmployerProfile, JobApplication, SavedJob, RejectionReason, PricingPackage, PricingFeature, ComparisonTable, ComparisonRow, BlogPost, BlogCategory, BlogPostCategory
+from .models import JobListing, UserProfile, EmployerProfile, JobApplication, SavedJob, RejectionReason, PricingPackage, PricingFeature, ComparisonTable, ComparisonRow, BlogPost, BlogCategory, BlogPostCategory, EmployerNotification
 from import_export.admin import ImportExportModelAdmin, ImportExportActionModelAdmin
 from import_export import resources
 from rangefilter.filters import DateRangeFilter
@@ -14,6 +14,7 @@ from django.utils.decorators import method_decorator
 from django.utils.translation import gettext_lazy as _
 from django import forms
 from ckeditor.widgets import CKEditorWidget
+from ckeditor_uploader.widgets import CKEditorUploadingWidget
 from django_ckeditor_5.widgets import CKEditor5Widget
 from core.models import StaticPage
 from datetime import timedelta
@@ -265,7 +266,30 @@ class JobListingAdmin(SoftDeletionAdmin):
     def save_model(self, request, obj, form, change):
         """
         Override save_model to grant CV database access when premium+ job is approved
+        and create notifications for status changes
         """
+        # Check if this is a status change
+        if change and 'status' in form.changed_data:
+            old_job = JobListing.objects.get(pk=obj.pk)
+            old_status = old_job.status
+            new_status = obj.status
+            
+            # If status changed from pending_review/extended_review to approved/rejected
+            if old_status in ['pending_review', 'extended_review'] and new_status in ['approved', 'rejected']:
+                # Create notification for the employer
+                from core.repositories.notification_repository import NotificationRepository
+                
+                if new_status == 'approved':
+                    message = f"Your job '{obj.title}' has been approved and is now live."
+                else:  # rejected
+                    message = f"Your job '{obj.title}' has been rejected. Please check admin feedback."
+                
+                NotificationRepository.create_job_status_notification(
+                    employer_profile=obj.employer,
+                    job=obj,
+                    message=message
+                )
+        
         # Check if this is a status change to 'approved' for a premium+ job
         if 'status' in form.changed_data and obj.status == 'approved' and obj.premium_level == 'premium_plus':
             # Grant CV database access to the employer
@@ -555,3 +579,22 @@ class StaticPageAdmin(admin.ModelAdmin):
     list_filter = ('page_type',)
     search_fields = ('title', 'content')
     readonly_fields = ('last_updated',)
+
+class EmployerNotificationResource(resources.ModelResource):
+    class Meta:
+        model = EmployerNotification
+        fields = ('id', 'employer_profile__company_name', 'job_title', 
+                 'notification_type', 'message', 'is_read', 'created_at')
+
+@admin.register(EmployerNotification)
+class EmployerNotificationAdmin(ImportExportModelAdmin):
+    resource_class = EmployerNotificationResource
+    list_display = ('get_employer', 'job_title', 'notification_type', 'is_read', 'created_at')
+    list_filter = ('notification_type', 'is_read', ('created_at', DateRangeFilter))
+    search_fields = ('employer_profile__company_name', 'job_title', 'message')
+    date_hierarchy = 'created_at'
+    
+    def get_employer(self, obj):
+        return obj.employer_profile.company_name
+    get_employer.short_description = 'Employer'
+    get_employer.admin_order_field = 'employer_profile__company_name'
