@@ -42,10 +42,10 @@ def job_list(request):
     show_filters = 'show_filters' in request.GET
     
     # Filter by premium level on main page (when filters are NOT being shown)
-    # Premium filtering logic - only show premium and premium_plus jobs on main page
-    # Removed filter that was hiding standard jobs
-    # if not show_filters:
-    #     jobs = jobs.filter(premium_level__in=['premium', 'premium_plus'])
+    # Only show premium and premium_plus jobs on main page, hide standard jobs
+    # Show standard jobs only when user is searching or filtering
+    if not filtered and not show_filters and not request.GET:
+        jobs = jobs.filter(premium_level__in=['premium', 'premium_plus'])
     
     # Apply filters based on request parameters
     if 'search' in request.GET and request.GET['search']:
