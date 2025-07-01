@@ -158,8 +158,6 @@ class Command(BaseCommand):
                 location=random.choice(locations),
                 employer=employer,
                 expires_at=expires_at,
-                interests='პროგრამირება, ტექნოლოგიები',
-                fields='IT, ტექნოლოგია',
                 experience=random.choice(experiences),
                 job_preferences=random.choice(job_preferences),
                 considers_students=random.choice([True, False]),
