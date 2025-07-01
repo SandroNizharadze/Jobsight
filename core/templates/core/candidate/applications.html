@@ -45,8 +45,8 @@
       
       <div id="applications-container">
         {% if applications %}
-        <!-- Applications List -->
-        <div class="overflow-x-auto">
+        <!-- Desktop View (Table) -->
+        <div class="hidden md:block overflow-x-auto">
           <table class="min-w-full divide-y divide-gray-200">
             <thead class="bg-gray-50">
               <tr>
@@ -150,6 +150,106 @@
               {% endfor %}
             </tbody>
           </table>
+        </div>
+        
+        <!-- Mobile View (Cards) -->
+        <div class="md:hidden space-y-4">
+          {% for application in applications %}
+          <div class="border rounded-lg overflow-hidden shadow-sm {% if application.status == 'გასაუბრება' %}border-green-200 bg-green-50{% elif application.status == 'რეზერვი' %}border-yellow-200 bg-yellow-50{% elif application.is_viewed and application.status == 'განხილვის_პროცესში' %}border-purple-200 bg-purple-50{% else %}border-gray-200{% endif %}">
+            <div class="p-4">
+              <!-- Job Title -->
+              <div class="font-medium text-gray-900 text-base mb-1">
+                {% if application.job %}
+                  {{ application.job.title }}
+                {% else %}
+                  {{ application.job_title|default:"Deleted Job" }}
+                {% endif %}
+              </div>
+              
+              <!-- Company -->
+              <div class="flex items-center mb-3">
+                {% if application.job and application.job.employer_profile.company_logo %}
+                  <img src="{{ application.job.employer_profile.company_logo.url }}" alt="Company Logo" class="h-6 w-6 mr-2 object-contain">
+                {% endif %}
+                <div class="text-sm text-gray-700">
+                  {% if application.job %}
+                    {{ application.job.company }}
+                  {% else %}
+                    {{ application.job_company|default:"Deleted Company" }}
+                  {% endif %}
+                </div>
+              </div>
+              
+              <!-- Status -->
+              <div class="mb-3">
+                <div class="text-xs text-gray-500 uppercase mb-1">{% trans "Status" %}</div>
+                <div>
+                  {% if application.status == 'განხილვის_პროცესში' %}
+                    <span class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">
+                      {% trans "განხილვის პროცესში" %}
+                    </span>
+                    {% if application.is_viewed %}
+                    <span class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-purple-100 text-purple-800 mt-1">
+                      {% trans "ნანახი" %}
+                    </span>
+                    {% endif %}
+                  {% elif application.status == 'გასაუბრება' %}
+                    <span class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                      {% trans "გასაუბრება" %}
+                    </span>
+                  {% elif application.status == 'რეზერვი' %}
+                    <span class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">
+                      {% trans "რეზერვი" %}
+                    </span>
+                  {% elif application.status == 'pending' %}
+                    <span class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-gray-100 text-gray-800">
+                      {% trans "Pending" %}
+                    </span>
+                  {% elif application.status == 'reviewed' %}
+                    <span class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">
+                      {% trans "Reviewed" %}
+                    </span>
+                  {% elif application.status == 'interviewed' %}
+                    <span class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-indigo-100 text-indigo-800">
+                      {% trans "Interviewed" %}
+                    </span>
+                  {% elif application.status == 'offered' %}
+                    <span class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                      {% trans "Offer Extended" %}
+                    </span>
+                  {% endif %}
+                </div>
+                
+                {% if application.status == 'რეზერვი' and application.rejection_reasons.all %}
+                  <button type="button" class="text-xs text-blue-600 hover:text-blue-800 mt-2 view-rejection-reasons" data-application-id="{{ application.id }}">
+                    {% trans "View Reasons" %}
+                  </button>
+                {% endif %}
+              </div>
+              
+              <!-- Applied Date -->
+              <div class="flex items-center text-xs text-gray-500 mb-3">
+                <svg class="h-4 w-4 mr-1 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                </svg>
+                <span>{{ application.applied_at|date:"d M Y" }} {{ application.applied_at|time:"H:i" }}</span>
+              </div>
+              
+              <!-- Actions -->
+              <div class="flex justify-end">
+                {% if application.job %}
+                  <a href="{% url 'job_detail' application.job.id %}" class="inline-flex items-center px-3 py-1.5 border border-transparent text-xs font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                    <svg class="h-4 w-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                    </svg>
+                    {% trans "View Job" %}
+                  </a>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+          {% endfor %}
         </div>
         {% else %}
         <div class="text-center py-12">

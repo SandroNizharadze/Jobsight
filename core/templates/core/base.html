@@ -121,7 +121,7 @@
     
     {% block hero_section %}{% endblock %}
     
-    <div class="min-h-screen {% if request.resolver_match.url_name == 'job_list' %}job-list-content{% endif %}">
+    <div class="min-h-screen {% if request.resolver_match.url_name == 'job_list' %}job-list-content{% endif %}" id="main-content">
         {% include 'core/components/base/alerts.html' %}
         {% block content %}{% endblock %}
     </div>
@@ -132,6 +132,15 @@
     
     <!-- Mobile Bottom Navigation - available on all pages -->
     {% include 'core/components/mobile/base/mobile_bottom_nav.html' %}
+    
+    <style>
+        /* Add padding to main content on mobile to prevent navbar overlap */
+        @media (max-width: 767px) {
+            #main-content {
+                padding-bottom: var(--mobile-navbar-height, 60px);
+            }
+        }
+    </style>
     
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>

@@ -140,6 +140,18 @@
     font-size: 0.65rem;
     line-height: 0.85rem;
 }
+
+/* Define mobile navbar height as CSS variable */
+:root {
+    --mobile-navbar-height: 60px;
+}
+
+/* Ensure the mobile navbar has consistent height */
+@media (max-width: 767px) {
+    .md\:hidden.fixed.bottom-0 {
+        height: var(--mobile-navbar-height);
+    }
+}
 </style>
 
 <script>

@@ -19,16 +19,16 @@
   </div>
 
   <!-- Navigation Tabs -->
-  <div class="border-b border-gray-200 mb-8">
-    <nav class="-mb-px flex space-x-8" aria-label="Tabs">
-      <button class="border-blue-500 text-blue-600 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm" id="profile-tab" data-tab-toggle="tab" data-tab-target="#profile-section" type="button">
-        <svg class="h-5 w-5 inline-block mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <div class="border-b border-gray-200 mb-8 overflow-x-auto">
+    <nav class="-mb-px flex space-x-4 sm:space-x-8" aria-label="Tabs">
+      <button class="border-blue-500 text-blue-600 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-xs sm:text-sm flex items-center" id="profile-tab" data-tab-toggle="tab" data-tab-target="#profile-section" type="button">
+        <svg class="h-4 w-4 sm:h-5 sm:w-5 inline-block mr-1 sm:mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
         </svg>
         {% trans "Profile & CV" %}
       </button>
-      <button class="border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm" id="job-activity-tab" data-tab-toggle="tab" data-tab-target="#job-activity-section" type="button">
-        <svg class="h-5 w-5 inline-block mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <button class="border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-xs sm:text-sm flex items-center" id="job-activity-tab" data-tab-toggle="tab" data-tab-target="#job-activity-section" type="button">
+        <svg class="h-4 w-4 sm:h-5 sm:w-5 inline-block mr-1 sm:mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
         </svg>
         {% trans "Your Job Activity" %}
@@ -70,35 +70,35 @@
           <input type="hidden" name="form_type" value="user_profile">
           
           <!-- Profile Header -->
-          <div class="px-6 py-5 bg-gray-50 border-b border-gray-200">
-            <div class="flex flex-col md:flex-row items-center gap-6">
+          <div class="px-4 sm:px-6 py-5 bg-gray-50 border-b border-gray-200">
+            <div class="flex flex-col sm:flex-row items-center gap-4 sm:gap-6">
               <!-- Profile Picture -->
               <div class="relative">
-                <div class="w-24 h-24 rounded-full overflow-hidden bg-gray-100 flex items-center justify-center">
+                <div class="w-20 h-20 sm:w-24 sm:h-24 rounded-full overflow-hidden bg-gray-100 flex items-center justify-center">
                   {% if user.userprofile.profile_picture %}
                     <img src="{{ user.userprofile.profile_picture.url }}" alt="{% trans 'Profile Picture' %}" class="w-full h-full object-cover">
                   {% else %}
-                    <svg class="w-12 h-12 text-gray-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                    <svg class="w-10 h-10 sm:w-12 sm:h-12 text-gray-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
                       <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"></path>
                     </svg>
                   {% endif %}
                 </div>
                 <label for="{{ profile_form.profile_picture.id_for_label }}" class="absolute inset-0 flex items-center justify-center bg-black bg-opacity-40 text-white opacity-0 hover:opacity-100 rounded-full cursor-pointer transition-opacity">
                   <div class="text-center">
-                    <svg class="w-6 h-6 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <svg class="w-5 h-5 sm:w-6 sm:h-6 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path>
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"></path>
                     </svg>
-                    <span class="text-xs mt-1 block">{% trans "Change Photo" %}</span>
+                    <span class="text-xs mt-1 hidden sm:block">{% trans "Change Photo" %}</span>
                   </div>
                 </label>
                 <input type="file" id="{{ profile_form.profile_picture.id_for_label }}" name="profile_picture" class="hidden" accept="image/*">
               </div>
               
               <!-- Profile Info -->
-              <div>
-                <h2 class="text-xl font-semibold text-gray-900">{{ user.get_full_name|default:user.username }}</h2>
-                <p class="text-gray-600">{{ user.email }}</p>
+              <div class="text-center sm:text-left">
+                <h2 class="text-lg sm:text-xl font-semibold text-gray-900">{{ user.get_full_name|default:user.username }}</h2>
+                <p class="text-sm sm:text-base text-gray-600">{{ user.email }}</p>
                 <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 mt-2">
                   {% trans "Job Seeker" %}
                 </span>
@@ -108,31 +108,32 @@
         </form>
 
         <!-- CV Section -->
-        <div class="p-6">
+        <div class="p-4 sm:p-6">
           <div class="max-w-2xl mx-auto">
             <h3 class="text-lg font-medium text-gray-900 mb-6">{% trans "Your CV" %}</h3>
             
             {% if user.userprofile.cv %}
-              <div class="flex justify-center items-center gap-4 mb-4">
-                <a href="{% url 'view_cv' %}" target="_blank" class="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+              <div class="flex flex-col sm:flex-row justify-center items-center gap-3 sm:gap-4 mb-4">
+                <a href="{% url 'view_cv' %}" target="_blank" class="w-full sm:w-auto inline-flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
                   <svg class="h-5 w-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
                   </svg>
                   {% trans "View Current CV" %}
                 </a>
-                <form action="{% url 'remove_cv' %}" method="post" id="cv-remove-form" class="inline">
+                <form action="{% url 'remove_cv' %}" method="post" id="cv-remove-form" class="inline w-full sm:w-auto">
                   {% csrf_token %}
-                  <button type="submit" class="inline-flex items-center p-2 border border-transparent rounded-full shadow-sm text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500" aria-label="{% trans 'Remove CV' %}">
-                    <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <button type="submit" class="w-full sm:w-auto inline-flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
+                    <svg class="h-5 w-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
                     </svg>
+                    {% trans "Remove CV" %}
                   </button>
                 </form>
               </div>
             {% else %}
               <!-- For users without CV -->
               <div id="cv-initial-btn" class="text-center" style="display: {% if profile_form.cv.errors %}none{% else %}block{% endif %};">
-                <button id="show-cv-form-btn" type="button" class="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                <button id="show-cv-form-btn" type="button" class="w-full sm:w-auto inline-flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
                   <svg class="h-5 w-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path>
                   </svg>
@@ -159,18 +160,18 @@
                   
                   <div id="cv-form-error" class="hidden mt-2 text-sm text-red-600"></div>
                   
-                  <div class="flex justify-end gap-3">
-                    <button type="submit" class="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
-                      <svg class="h-5 w-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-                      </svg>
-                      {% trans "Save" %}
-                    </button>
-                    <button type="button" id="cancel-cv-form-btn" class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                  <div class="flex flex-col sm:flex-row justify-end gap-3 mt-4">
+                    <button type="button" id="cancel-cv-form-btn" class="w-full sm:w-auto order-2 sm:order-1 inline-flex items-center justify-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 mb-2 sm:mb-0">
                       <svg class="h-5 w-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
                       </svg>
                       {% trans "Cancel" %}
+                    </button>
+                    <button type="submit" class="w-full sm:w-auto order-1 sm:order-2 inline-flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 mb-2 sm:mb-0">
+                      <svg class="h-5 w-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                      </svg>
+                      {% trans "Save" %}
                     </button>
                   </div>
                 </form>
