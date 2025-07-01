@@ -79,6 +79,7 @@ TEMPLATES = [
                 'core.context_processors.employer_premium_status',
                 'core.context_processors.language_attributes',
                 'core.context_processors.employer_notifications',
+                'core.context_processors.candidate_notifications',
             ],
         },
     },

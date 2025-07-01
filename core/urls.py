@@ -2,7 +2,7 @@ from django.urls import path
 from .views import main, auth_views, job_views, employer_views, profile_views, admin_views
 from .views.job_views import save_job, unsave_job
 from .views.file_views import serve_cv_file
-from .views.profile_views import get_application_rejection_reasons, view_cv_employer
+from .views.profile_views import get_application_rejection_reasons, view_cv_employer, mark_candidate_notifications_as_read, mark_candidate_notification_as_read, applications, saved_jobs
 from .views.employer_views import company_profile, application_detail, cv_database
 from django.views.generic.base import RedirectView
 from .views.blog_views import BlogListView, BlogPostDetailView, BlogCategoryView
@@ -23,6 +23,10 @@ urlpatterns = [
     path('profile/delete-account/', profile_views.delete_account, name='delete_account'),
     path('profile/update-employer-profile/', profile_views.update_employer_profile, name='update_employer_profile'),
     
+    # Candidate profile pages
+    path('profile/applications/', applications, name='candidate_applications'),
+    path('profile/saved-jobs/', saved_jobs, name='candidate_saved_jobs'),
+    
     # Email verification URLs
     path('verify-email/<str:token>/', verify_email, name='verify_email'),
     path('resend-verification/', resend_verification_email, name='resend_verification'),
@@ -41,6 +45,10 @@ urlpatterns = [
     path('employer/notifications/mark-all-read/', employer_views.mark_notifications_as_read, name='mark_notifications_as_read'),
     path('employer/notifications/mark-job-read/<int:job_id>/', employer_views.mark_job_notifications_as_read, name='mark_job_notifications_as_read'),
     path('employer/notifications/mark-read/<int:notification_id>/', employer_views.mark_notification_as_read, name='mark_notification_as_read'),
+    
+    # Candidate notification routes
+    path('candidate/notifications/mark-all-read/', mark_candidate_notifications_as_read, name='mark_candidate_notifications_as_read'),
+    path('candidate/notifications/mark-read/<int:notification_id>/', mark_candidate_notification_as_read, name='mark_candidate_notification_as_read'),
     
     path('admin/create/', admin_views.create_admin, name='create_admin'),
     path('admin/assign-employer/', admin_views.assign_employer, name='assign_employer'),

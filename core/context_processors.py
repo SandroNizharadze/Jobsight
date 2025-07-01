@@ -51,4 +51,23 @@ def employer_notifications(request):
         except:
             pass
     
+    return context
+
+def candidate_notifications(request):
+    """
+    Add unread notification count for candidate users to all templates.
+    """
+    context = {
+        'candidate_unread_notification_count': 0
+    }
+    
+    if request.user.is_authenticated:
+        try:
+            # Check if user is a candidate
+            if hasattr(request.user, 'userprofile') and request.user.userprofile.role == 'candidate':
+                # Get unread notification count
+                context['candidate_unread_notification_count'] = NotificationRepository.get_candidate_unread_notification_count(request.user)
+        except:
+            pass
+    
     return context 

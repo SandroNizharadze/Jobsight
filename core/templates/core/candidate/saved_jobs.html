@@ -1,0 +1,116 @@
+{% extends 'core/base.html' %}
+{% load i18n %}
+
+{% block title %}{% trans "Saved Jobs" %}{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8 sm:px-6 lg:px-8">
+  <!-- Header Section -->
+  <div class="flex flex-col sm:flex-row justify-between items-center mb-8">
+    <h1 class="text-2xl font-bold text-gray-900 mb-4 sm:mb-0">{% trans "Saved Jobs" %}</h1>
+    <div class="flex gap-3">
+      <a href="{% url 'job_list' %}" class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+        <svg class="h-5 w-5 mr-2 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+        </svg>
+        {% trans "View Jobs" %}
+      </a>
+    </div>
+  </div>
+
+  <div class="bg-white rounded-xl shadow-md overflow-hidden">
+    <div class="p-6">
+      {% if saved_jobs %}
+      <div class="overflow-x-auto">
+        <table class="min-w-full divide-y divide-gray-200">
+          <thead class="bg-gray-50">
+            <tr>
+              <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                {% trans "ვაკანსია" %}
+              </th>
+              <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                {% trans "კომპანია" %}
+              </th>
+              <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                {% trans "შენახვის თარიღი" %}
+              </th>
+              <th scope="col" class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
+                {% trans "ქმედებები" %}
+              </th>
+            </tr>
+          </thead>
+          <tbody class="bg-white divide-y divide-gray-200">
+            {% for saved in saved_jobs %}
+            <tr class="hover:bg-gray-50">
+              <td class="px-6 py-4 whitespace-nowrap">
+                <div class="text-sm font-medium text-gray-900">
+                  {% if saved.job %}
+                    {{ saved.job.title }}
+                  {% else %}
+                    {{ saved.job_title|default:"Deleted Job" }}
+                  {% endif %}
+                </div>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                {% if saved.job %}
+                  <div class="flex items-center">
+                    {% if saved.job.employer_profile.company_logo %}
+                      <img src="{{ saved.job.employer_profile.company_logo.url }}" alt="Company Logo" class="h-8 w-8 mr-2 object-contain">
+                    {% endif %}
+                    <div class="text-sm text-gray-900">{{ saved.job.company }}</div>
+                  </div>
+                {% else %}
+                  <div class="text-sm text-gray-900">{{ saved.job_company|default:"Deleted Company" }}</div>
+                {% endif %}
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <div class="text-sm text-gray-900">{{ saved.saved_at|date:"d M Y" }}</div>
+                <div class="text-sm text-gray-500">{{ saved.saved_at|time:"H:i" }}</div>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-center">
+                <div class="flex justify-center space-x-3">
+                  {% if saved.job %}
+                    <a href="{% url 'job_detail' saved.job.id %}" class="text-blue-600 hover:text-blue-900">
+                      <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                      </svg>
+                    </a>
+                    
+                    <form action="{% url 'unsave_job' saved.job.id %}" method="post" class="inline">
+                      {% csrf_token %}
+                      <button type="submit" class="text-red-600 hover:text-red-900">
+                        <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                        </svg>
+                      </button>
+                    </form>
+                  {% endif %}
+                </div>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      {% else %}
+      <div class="text-center py-12">
+        <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"></path>
+        </svg>
+        <h3 class="mt-2 text-sm font-medium text-gray-900">{% trans "No Saved Jobs" %}</h3>
+        <p class="mt-1 text-sm text-gray-500">{% trans "You haven't saved any jobs yet." %}</p>
+        <div class="mt-6">
+          <a href="{% url 'job_list' %}" class="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+            <svg class="h-5 w-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+            </svg>
+            {% trans "Browse Job Listings" %}
+          </a>
+        </div>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %} 

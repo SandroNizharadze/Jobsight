@@ -360,6 +360,26 @@
 </div>
 
 {% include 'core/components/profile/rejection_reasons_modal.html' %}
+
+{% if user.userprofile.role == 'candidate' and candidate_unread_notification_count > 0 %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  // Mark all candidate notifications as read when the profile page loads
+  fetch('{% url "mark_candidate_notifications_as_read" %}', {
+    method: 'GET',
+    headers: {
+      'X-Requested-With': 'XMLHttpRequest'
+    }
+  }).then(response => {
+    if (!response.ok) {
+      console.error('Error marking notifications as read');
+    }
+  }).catch(error => {
+    console.error('Error:', error);
+  });
+});
+</script>
+{% endif %}
 {% endblock %}
 
 {% block extra_js %}

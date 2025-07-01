@@ -1,5 +1,5 @@
 from django.db.models import Count
-from core.models import EmployerNotification
+from core.models import EmployerNotification, CandidateNotification
 
 class NotificationRepository:
     """
@@ -154,5 +154,119 @@ class NotificationRepository:
         return EmployerNotification.objects.filter(
             employer_profile=employer_profile,
             job_id=job_id,
+            is_read=False
+        ).update(is_read=True)
+        
+    @staticmethod
+    def create_application_status_notification(user, application, message):
+        """
+        Create an application status update notification for a candidate
+        
+        Args:
+            user (User): The user to notify
+            application (JobApplication): The job application
+            message (str): The notification message
+            
+        Returns:
+            CandidateNotification: The created notification
+        """
+        notification = CandidateNotification(
+            user=user,
+            application=application,
+            notification_type='application_status_update',
+            message=message
+        )
+        notification.save()
+        return notification
+    
+    @staticmethod
+    def create_interview_invitation_notification(user, application, message):
+        """
+        Create an interview invitation notification for a candidate
+        
+        Args:
+            user (User): The user to notify
+            application (JobApplication): The job application
+            message (str): The notification message
+            
+        Returns:
+            CandidateNotification: The created notification
+        """
+        notification = CandidateNotification(
+            user=user,
+            application=application,
+            notification_type='interview_invitation',
+            message=message
+        )
+        notification.save()
+        return notification
+    
+    @staticmethod
+    def get_candidate_notifications(user, unread_only=False):
+        """
+        Get notifications for a candidate
+        
+        Args:
+            user (User): The user
+            unread_only (bool): Whether to return only unread notifications
+            
+        Returns:
+            QuerySet: Filtered notifications
+        """
+        query = CandidateNotification.objects.filter(user=user)
+        
+        if unread_only:
+            query = query.filter(is_read=False)
+            
+        return query.order_by('-created_at')
+    
+    @staticmethod
+    def get_candidate_unread_notification_count(user):
+        """
+        Get count of unread notifications for a candidate
+        
+        Args:
+            user (User): The user
+            
+        Returns:
+            int: Count of unread notifications
+        """
+        return CandidateNotification.objects.filter(
+            user=user,
+            is_read=False
+        ).count()
+    
+    @staticmethod
+    def mark_candidate_notification_as_read(notification_id):
+        """
+        Mark a candidate notification as read
+        
+        Args:
+            notification_id (int): ID of the notification
+            
+        Returns:
+            bool: Success status
+        """
+        try:
+            notification = CandidateNotification.objects.get(id=notification_id)
+            notification.is_read = True
+            notification.save(update_fields=['is_read'])
+            return True
+        except CandidateNotification.DoesNotExist:
+            return False
+    
+    @staticmethod
+    def mark_all_candidate_notifications_as_read(user):
+        """
+        Mark all notifications as read for a candidate
+        
+        Args:
+            user (User): The user
+            
+        Returns:
+            int: Number of notifications marked as read
+        """
+        return CandidateNotification.objects.filter(
+            user=user,
             is_read=False
         ).update(is_read=True) 

@@ -6,6 +6,7 @@ from django.http import JsonResponse
 from core.models import JobListing, RejectionReason
 from core.repositories.job_repository import JobRepository
 from core.repositories.application_repository import ApplicationRepository
+from core.repositories.notification_repository import NotificationRepository
 from .dashboard import is_employer
 import json
 import logging
@@ -70,6 +71,7 @@ def update_application_status(request, application_id):
                 data['rejection_reasons'] = request.POST.getlist('rejection_reasons')
         
         new_status = data.get('status')
+        old_status = application.status
         rejection_reason_ids = data.get('rejection_reasons', [])
         feedback = data.get('feedback', '')
         
@@ -96,6 +98,31 @@ def update_application_status(request, application_id):
                     application.rejection_reasons.add(reason)
                 except RejectionReason.DoesNotExist:
                     logger.warning(f"Rejection reason with ID {reason_id} does not exist")
+        
+        # Create notification for candidate if status changed to interview or reserve
+        if application.user and new_status != old_status:
+            job_name = application.job.title if application.job else application.job_title
+            company_name = application.job.company if application.job else application.job_company
+            
+            if new_status == 'გასაუბრება':
+                # Create interview invitation notification
+                message = f"თქვენი განაცხადი '{job_name}' პოზიციაზე კომპანიაში '{company_name}' შეიცვალა. თქვენ მოგიწვიეს გასაუბრებაზე."
+                NotificationRepository.create_interview_invitation_notification(
+                    user=application.user,
+                    application=application,
+                    message=message
+                )
+                logger.info(f"Created interview invitation notification for user {application.user.id}")
+            
+            elif new_status == 'რეზერვი':
+                # Create application status update notification
+                message = f"თქვენი განაცხადი '{job_name}' პოზიციაზე კომპანიაში '{company_name}' შეიცვალა. თქვენი განაცხადი გადავიდა რეზერვში."
+                NotificationRepository.create_application_status_notification(
+                    user=application.user,
+                    application=application,
+                    message=message
+                )
+                logger.info(f"Created application status update notification for user {application.user.id}")
         
         return JsonResponse({
             'success': True, 

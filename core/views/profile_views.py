@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib import messages
 from django.views.decorators.http import require_POST
-from django.http import JsonResponse, HttpResponse, FileResponse
+from django.http import JsonResponse, HttpResponse, FileResponse, HttpResponseRedirect, Http404, HttpResponseForbidden
 from django.db.models import Prefetch, Q
 from ..models import UserProfile, EmployerProfile, JobApplication, SavedJob, JobListing, CVAccess
 from ..forms import UserProfileForm, EmployerProfileForm
@@ -22,6 +22,7 @@ from django.utils import timezone
 from django.contrib.auth import logout
 import uuid
 from core.repositories.employer_repository import EmployerRepository
+from core.repositories.notification_repository import NotificationRepository
 
 logger = logging.getLogger(__name__)
 
@@ -535,3 +536,93 @@ def update_employer_profile(request):
         logger.error(traceback.format_exc())
         messages.error(request, "An error occurred while updating your profile.")
         return redirect('profile')
+
+@login_required
+def mark_candidate_notifications_as_read(request):
+    """
+    Mark all notifications as read for the candidate
+    """
+    if request.user.userprofile.role != 'candidate':
+        return HttpResponseForbidden("Access denied")
+    
+    count = NotificationRepository.mark_all_candidate_notifications_as_read(request.user)
+    
+    if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+        return JsonResponse({'success': True, 'count': count})
+    
+    # Redirect back to the page they came from
+    return redirect(request.META.get('HTTP_REFERER', 'profile'))
+
+@login_required
+def mark_candidate_notification_as_read(request, notification_id):
+    """
+    Mark a specific notification as read
+    """
+    if request.user.userprofile.role != 'candidate':
+        return HttpResponseForbidden("Access denied")
+    
+    success = NotificationRepository.mark_candidate_notification_as_read(notification_id)
+    
+    if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+        return JsonResponse({'success': success})
+    
+    # Redirect back to the page they came from
+    return redirect(request.META.get('HTTP_REFERER', 'profile'))
+
+@login_required
+def applications(request):
+    """
+    Display user's job applications
+    """
+    # Get filters from query params
+    name_filter = request.GET.get('name', '')
+    status_filter = request.GET.get('status', '')
+    
+    # Get user's applications with proper joins
+    applications = JobApplication.objects.filter(
+        user=request.user
+    ).select_related(
+        'job',
+        'job__employer'
+    ).order_by('-applied_at')
+    
+    # Apply name filter if provided
+    if name_filter:
+        name_filter_q = Q(job__title__icontains=name_filter)
+        # Also search in job_title for deleted jobs
+        name_filter_q |= Q(job_title__icontains=name_filter)
+        # Search in company name as well
+        name_filter_q |= Q(job__company__icontains=name_filter)
+        name_filter_q |= Q(job_company__icontains=name_filter)
+        applications = applications.filter(name_filter_q)
+    
+    # Apply status filter if provided
+    if status_filter:
+        applications = applications.filter(status=status_filter)
+    
+    context = {
+        'applications': applications,
+        'name_filter': name_filter,
+        'status_filter': status_filter,
+    }
+    
+    return render(request, 'core/candidate/applications.html', context)
+
+@login_required
+def saved_jobs(request):
+    """
+    Display user's saved jobs
+    """
+    # Get user's saved jobs with proper joins
+    saved_jobs = SavedJob.objects.filter(
+        user=request.user
+    ).select_related(
+        'job',
+        'job__employer'
+    ).order_by('-saved_at')
+    
+    context = {
+        'saved_jobs': saved_jobs,
+    }
+    
+    return render(request, 'core/candidate/saved_jobs.html', context)

@@ -1,43 +1,50 @@
 {% load i18n %}
 
-<!-- Modal for displaying rejection reasons -->
-<div class="fixed inset-0 z-50 hidden overflow-y-auto" id="rejectionReasonsViewModal" aria-labelledby="rejectionReasonsViewModalLabel" aria-hidden="true">
-  <div class="flex items-center justify-center min-h-screen p-4 text-center sm:block sm:p-0">
-    <div class="fixed inset-0 transition-opacity bg-gray-500 bg-opacity-75" aria-hidden="true" id="rejectionModalBackdrop"></div>
-    
-    <!-- Modal panel -->
-    <div class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
-      <div class="bg-yellow-50 px-4 py-3 border-b border-yellow-200">
-        <div class="flex items-center justify-between">
-          <h3 class="text-lg font-medium leading-6 text-yellow-800" id="rejectionReasonsViewModalLabel">
-            {% trans "უარის მიზეზები" %}
-          </h3>
-          <button type="button" class="bg-yellow-50 rounded-md text-yellow-600 hover:text-yellow-800 focus:outline-none" id="closeRejectionModal" aria-label="Close">
-            <span class="sr-only">Close</span>
-            <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-            </svg>
-          </button>
-        </div>
+<!-- Rejection Reasons Modal -->
+<div id="rejectionReasonsModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden overflow-y-auto h-full w-full" aria-hidden="true">
+  <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-xl bg-white">
+    <div class="mt-3">
+      <div class="flex justify-between items-center mb-4">
+        <h3 class="text-lg font-medium leading-6 text-gray-900">{% trans "Rejection Reasons" %}</h3>
+        <button id="closeRejectionModal" class="text-gray-400 hover:text-gray-500">
+          <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+          </svg>
+        </button>
       </div>
       
-      <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
-        <p class="text-sm text-gray-700 mb-3">{% trans "დამსაქმებელმა მიუთითა შემდეგი მიზეზები:" %}</p>
-        <ul id="rejectionReasonsList" class="space-y-2 mb-4">
-          <!-- Reasons will be inserted here dynamically -->
-        </ul>
-        
-        <div id="rejectionFeedbackContainer" class="mt-6">
-          <h6 class="text-sm font-medium text-gray-700 mb-2">{% trans "დამატებითი უკუკავშირი:" %}</h6>
-          <div id="rejectionFeedbackText" class="border-l-4 border-gray-300 bg-gray-50 p-4 text-sm text-gray-600 italic">
-            <!-- Feedback will be inserted here dynamically -->
+      <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-4">
+        <div class="flex">
+          <div class="flex-shrink-0">
+            <svg class="h-5 w-5 text-yellow-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+              <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
+            </svg>
+          </div>
+          <div class="ml-3">
+            <p class="text-sm text-yellow-700">
+              {% trans "The employer has placed your application in reserve. Here's why:" %}
+            </p>
           </div>
         </div>
       </div>
       
-      <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
-        <button type="button" class="w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm" id="closeRejectionModalBtn">
-          {% trans "დახურვა" %}
+      <div class="mb-4">
+        <h4 class="text-sm font-medium text-gray-700 mb-2">{% trans "Reasons:" %}</h4>
+        <ul id="rejectionReasonsList" class="list-disc pl-5 text-sm text-gray-600">
+          <!-- Reasons will be populated by JavaScript -->
+        </ul>
+      </div>
+      
+      <div class="mb-4">
+        <h4 class="text-sm font-medium text-gray-700 mb-2">{% trans "Additional Feedback:" %}</h4>
+        <p id="rejectionFeedback" class="text-sm text-gray-600 italic">
+          <!-- Feedback will be populated by JavaScript -->
+        </p>
+      </div>
+      
+      <div class="mt-5 flex justify-end">
+        <button type="button" id="closeRejectionModalBtn" class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50">
+          {% trans "Close" %}
         </button>
       </div>
     </div>
@@ -45,60 +52,12 @@
 </div>
 
 <script>
-function showRejectionReasons(applicationId) {
-  // Fetch rejection reasons for this application
-  fetch(`/api/applications/${applicationId}/rejection-reasons/`)
-    .then(response => response.json())
-    .then(data => {
-      // Clear previous reasons
-      const reasonsList = document.getElementById('rejectionReasonsList');
-      reasonsList.innerHTML = '';
-      
-      // Add each reason to the list
-      data.reasons.forEach(reason => {
-        const reasonItem = document.createElement('li');
-        reasonItem.className = 'bg-yellow-50 border-l-4 border-yellow-400 p-3 rounded';
-        reasonItem.textContent = reason;
-        reasonsList.appendChild(reasonItem);
-      });
-      
-      // Update feedback if available
-      const feedbackContainer = document.getElementById('rejectionFeedbackContainer');
-      const feedbackText = document.getElementById('rejectionFeedbackText');
-      
-      if (data.feedback) {
-        feedbackText.textContent = data.feedback;
-        feedbackContainer.style.display = 'block';
-      } else {
-        feedbackContainer.style.display = 'none';
-      }
-      
-      // Show the modal
-      const modal = document.getElementById('rejectionReasonsViewModal');
-      modal.classList.remove('hidden');
-    })
-    .catch(error => {
-      console.error('Error fetching rejection reasons:', error);
-    });
-}
-
-// Set up event listeners for the rejection reason buttons
 document.addEventListener('DOMContentLoaded', function() {
-  const rejectionButtons = document.querySelectorAll('.view-rejection-reasons');
-  rejectionButtons.forEach(button => {
-    button.addEventListener('click', function() {
-      const applicationId = this.getAttribute('data-application-id');
-      showRejectionReasons(applicationId);
+  const closeRejectionModalBtn = document.getElementById('closeRejectionModalBtn');
+  if (closeRejectionModalBtn) {
+    closeRejectionModalBtn.addEventListener('click', function() {
+      document.getElementById('rejectionReasonsModal').classList.add('hidden');
     });
-  });
-  
-  // Close modal when clicking the close button
-  const closeButtons = document.querySelectorAll('#closeRejectionModal, #closeRejectionModalBtn, #rejectionModalBackdrop');
-  closeButtons.forEach(button => {
-    button.addEventListener('click', function() {
-      const modal = document.getElementById('rejectionReasonsViewModal');
-      modal.classList.add('hidden');
-    });
-  });
+  }
 });
 </script> 
