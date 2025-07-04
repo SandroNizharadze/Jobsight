@@ -3,13 +3,15 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib import messages
 from django.views.decorators.http import require_POST
 from django.http import JsonResponse
-from core.models import JobListing, RejectionReason
+from core.models import JobListing, JobApplication, RejectionReason
 from core.repositories.job_repository import JobRepository
 from core.repositories.application_repository import ApplicationRepository
 from core.repositories.notification_repository import NotificationRepository
 from .dashboard import is_employer
 import json
 import logging
+from django.contrib.contenttypes.models import ContentType
+from django.db.models import Q
 
 logger = logging.getLogger(__name__)
 
@@ -20,31 +22,43 @@ def job_applications(request, job_id):
     View applications for a specific job
     """
     employer_profile = request.user.userprofile.employer_profile
-    job = get_object_or_404(JobListing, id=job_id, employer=employer_profile)
+    job = get_object_or_404(JobRepository.get_jobs_by_employer(employer_profile), id=job_id)
     
-    # Get status filter from request
-    status_filter = request.GET.get('status')
+    # Get applications for this job
+    applications = ApplicationRepository.get_applications_by_job(job)
     
-    # Get applications using the repository
-    applications = ApplicationRepository.get_applications_by_job(
-        job_id=job_id,
-        status_filter=status_filter
-    )
-    
-    # Get application counts by status
-    status_counts = ApplicationRepository.get_application_counts_by_status(job_id=job_id)
-    
-    # Get all possible rejection reasons
+    # Get all rejection reasons
     rejection_reasons = RejectionReason.objects.all()
     
-    context = {
+    # Filter by status if provided
+    status_filter = request.GET.get('status')
+    if status_filter and status_filter != 'all':
+        applications = applications.filter(status=status_filter)
+    
+    # Search by name or email if provided
+    search_query = request.GET.get('search')
+    if search_query:
+        applications = applications.filter(
+            Q(user__first_name__icontains=search_query) | 
+            Q(user__last_name__icontains=search_query) | 
+            Q(user__email__icontains=search_query) |
+            Q(guest_name__icontains=search_query) |
+            Q(guest_email__icontains=search_query)
+        )
+    
+    # Mark applications as read
+    for application in applications:
+        if not application.is_read:
+            application.is_read = True
+            application.save()
+    
+    return render(request, 'core/job_applications.html', {
         'job': job,
         'applications': applications,
         'rejection_reasons': rejection_reasons,
-        'status_counts': status_counts,
-        'current_status_filter': status_filter,
-    }
-    return render(request, 'core/job_applications.html', context)
+        'status_filter': status_filter,
+        'search_query': search_query,
+    })
 
 @login_required
 @user_passes_test(is_employer)
@@ -66,69 +80,60 @@ def update_application_status(request, application_id):
         else:
             # Fall back to form data if not JSON
             data = request.POST.dict()
-            # Handle possible list values from form data
-            if 'rejection_reasons' in request.POST:
-                data['rejection_reasons'] = request.POST.getlist('rejection_reasons')
         
         new_status = data.get('status')
         old_status = application.status
-        rejection_reason_ids = data.get('rejection_reasons', [])
-        feedback = data.get('feedback', '')
         
-        # Validate the status
-        valid_statuses = [choice[0] for choice in application._meta.get_field('status').choices]
-        if new_status not in valid_statuses:
+        # Validate status
+        if new_status not in ['განხილვის_პროცესში', 'გასაუბრება', 'რეზერვი']:
             return JsonResponse({'success': False, 'error': 'Invalid status'}, status=400)
         
-        # Update the application
+        # Update application status
         application.status = new_status
-        application.feedback = feedback
-        application.is_read = True
-        application.save()
         
-        # Update rejection reasons if provided
-        if rejection_reason_ids:
-            # Clear existing reasons
+        # Handle rejection reasons if provided and status is 'რეზერვი'
+        if new_status == 'რეზერვი' and 'rejection_reasons' in data:
+            # Clear existing rejection reasons
             application.rejection_reasons.clear()
             
-            # Add new reasons
-            for reason_id in rejection_reason_ids:
-                try:
-                    reason = RejectionReason.objects.get(id=reason_id)
+            # Add new rejection reasons
+            reasons = data.get('rejection_reasons', [])
+            if isinstance(reasons, list):
+                for reason_value in reasons:
+                    reason, created = RejectionReason.objects.get_or_create(reason=reason_value)
                     application.rejection_reasons.add(reason)
-                except RejectionReason.DoesNotExist:
-                    logger.warning(f"Rejection reason with ID {reason_id} does not exist")
+            
+            # Add feedback if provided
+            feedback = data.get('feedback', '')
+            if feedback:
+                application.feedback = feedback
         
-        # Create notification for candidate if status changed to interview or reserve
-        if application.user and new_status != old_status:
-            job_name = application.job.title if application.job else application.job_title
-            company_name = application.job.company if application.job else application.job_company
+        application.save()
+        
+        # Mark as read if not already
+        if not application.is_read:
+            application.is_read = True
+            application.save()
+        
+        # Create notification for candidate if status changed
+        if old_status != new_status and application.user:
+            notification_text = ''
             
             if new_status == 'გასაუბრება':
-                # Create interview invitation notification
-                message = f"თქვენი განაცხადი '{job_name}' პოზიციაზე კომპანიაში '{company_name}' შეიცვალა. თქვენ მოგიწვიეს გასაუბრებაზე."
-                NotificationRepository.create_interview_invitation_notification(
-                    user=application.user,
-                    application=application,
-                    message=message
-                )
-                logger.info(f"Created interview invitation notification for user {application.user.id}")
-            
+                notification_text = f"თქვენი განაცხადი ვაკანსიაზე '{application.job.title}' გადავიდა გასაუბრების ეტაპზე"
             elif new_status == 'რეზერვი':
-                # Create application status update notification
-                message = f"თქვენი განაცხადი '{job_name}' პოზიციაზე კომპანიაში '{company_name}' შეიცვალა. თქვენი განაცხადი გადავიდა რეზერვში."
-                NotificationRepository.create_application_status_notification(
+                notification_text = f"თქვენი განაცხადი ვაკანსიაზე '{application.job.title}' გადავიდა რეზერვში"
+            
+            if notification_text:
+                NotificationRepository.create_notification(
                     user=application.user,
-                    application=application,
-                    message=message
+                    text=notification_text,
+                    notification_type='status_change',
+                    related_object_id=application.id,
+                    related_content_type=ContentType.objects.get_for_model(JobApplication)
                 )
-                logger.info(f"Created application status update notification for user {application.user.id}")
         
-        return JsonResponse({
-            'success': True, 
-            'message': 'Application status updated',
-            'new_status': application.get_status_display()
-        })
+        return JsonResponse({'success': True})
     except Exception as e:
         logger.error(f"Error updating application status: {str(e)}")
         return JsonResponse({'success': False, 'error': str(e)}, status=500)
@@ -140,25 +145,20 @@ def application_detail(request, application_id):
     View details of a specific application
     """
     employer_profile = request.user.userprofile.employer_profile
-    
-    # Get the application
     application = get_object_or_404(
         ApplicationRepository.get_applications_by_employer(employer_profile),
         id=application_id
     )
     
-    # Mark as read if not already
-    if not application.is_read:
-        ApplicationRepository.mark_application_as_read(application_id)
-    
-    # Mark as viewed
-    ApplicationRepository.mark_application_as_viewed(application_id)
-    
-    # Get all possible rejection reasons
+    # Get all rejection reasons
     rejection_reasons = RejectionReason.objects.all()
     
-    context = {
+    # Mark as read if not already
+    if not application.is_read:
+        application.is_read = True
+        application.save()
+    
+    return render(request, 'core/application_detail.html', {
         'application': application,
         'rejection_reasons': rejection_reasons,
-    }
-    return render(request, 'core/application_detail.html', context) 
+    }) 

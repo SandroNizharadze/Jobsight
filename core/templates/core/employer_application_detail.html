@@ -166,82 +166,9 @@
   </div>
 </div>
 
-<!-- Rejection Reasons Modal -->
-<div id="rejectionModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden overflow-y-auto h-full w-full" aria-hidden="true">
-  <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
-    <div class="mt-3">
-      <h3 class="text-lg font-medium leading-6 text-gray-900 mb-4">{% trans "უარის მიზეზები" %}</h3>
-      <form id="rejectionForm" class="space-y-4">
-        <input type="hidden" id="currentApplicationId" name="application_id" value="">
-        <input type="hidden" id="isGuestApplication" name="is_guest" value="{% if application.user %}false{% else %}true{% endif %}">
-        <div class="space-y-2">
-          <label class="block text-sm font-medium text-gray-700">{% trans "აირჩიეთ მიზეზები:" %} <span class="text-red-500">*</span></label>
-          <div id="reasonsContainer" class="space-y-2">
-            <div class="flex items-center cursor-pointer">
-              <input type="checkbox" name="rejection_reasons" value="ენის_ცოდნის_ნაკლებობა" class="h-4 w-4 text-blue-600 rounded rejection-reason-checkbox pointer-events-auto relative z-20 cursor-pointer appearance-none border border-gray-300 bg-white checked:bg-blue-600 checked:border-transparent focus:outline-none">
-              <label class="ml-2 text-sm text-gray-700 cursor-pointer select-none w-full">{% trans "ენის ცოდნის ნაკლებობა" %}</label>
-            </div>
-            <div class="flex items-center cursor-pointer">
-              <input type="checkbox" name="rejection_reasons" value="არასაკმარისი_გამოცდილება" class="h-4 w-4 text-blue-600 rounded rejection-reason-checkbox pointer-events-auto relative z-20 cursor-pointer appearance-none border border-gray-300 bg-white checked:bg-blue-600 checked:border-transparent focus:outline-none">
-              <label class="ml-2 text-sm text-gray-700 cursor-pointer select-none w-full">{% trans "არასაკმარისი გამოცდილება" %}</label>
-            </div>
-            <div class="flex items-center cursor-pointer">
-              <input type="checkbox" name="rejection_reasons" value="უნარების_ნაკლებობა" class="h-4 w-4 text-blue-600 rounded rejection-reason-checkbox pointer-events-auto relative z-20 cursor-pointer appearance-none border border-gray-300 bg-white checked:bg-blue-600 checked:border-transparent focus:outline-none">
-              <label class="ml-2 text-sm text-gray-700 cursor-pointer select-none w-full">{% trans "უნარების ნაკლებობა" %}</label>
-            </div>
-            <div class="flex items-center cursor-pointer">
-              <input type="checkbox" name="rejection_reasons" value="შეუსაბამო_საცხოვრებელი_ადგილი" class="h-4 w-4 text-blue-600 rounded rejection-reason-checkbox pointer-events-auto relative z-20 cursor-pointer appearance-none border border-gray-300 bg-white checked:bg-blue-600 checked:border-transparent focus:outline-none">
-              <label class="ml-2 text-sm text-gray-700 cursor-pointer select-none w-full">{% trans "შეუსაბამო საცხოვრებელი ადგილი" %}</label>
-            </div>
-            <div class="flex items-center cursor-pointer">
-              <input type="checkbox" name="rejection_reasons" value="სივიში_არ_არის_საკმარისი_ინფორმაცია" class="h-4 w-4 text-blue-600 rounded rejection-reason-checkbox pointer-events-auto relative z-20 cursor-pointer appearance-none border border-gray-300 bg-white checked:bg-blue-600 checked:border-transparent focus:outline-none">
-              <label class="ml-2 text-sm text-gray-700 cursor-pointer select-none w-full">{% trans "სივიში არ არის საკმარისი ინფორმაცია" %}</label>
-            </div>
-            <div class="flex items-center cursor-pointer">
-              <input type="checkbox" name="rejection_reasons" value="განათლების_შეუსაბამობა" class="h-4 w-4 text-blue-600 rounded rejection-reason-checkbox pointer-events-auto relative z-20 cursor-pointer appearance-none border border-gray-300 bg-white checked:bg-blue-600 checked:border-transparent focus:outline-none">
-              <label class="ml-2 text-sm text-gray-700 cursor-pointer select-none w-full">{% trans "განათლების შეუსაბამობა" %}</label>
-            </div>
-            <div class="flex items-center cursor-pointer">
-              <input type="checkbox" name="rejection_reasons" value="კარიერული_მიზნების_შეუსაბამობა" class="h-4 w-4 text-blue-600 rounded rejection-reason-checkbox pointer-events-auto relative z-20 cursor-pointer appearance-none border border-gray-300 bg-white checked:bg-blue-600 checked:border-transparent focus:outline-none">
-              <label class="ml-2 text-sm text-gray-700 cursor-pointer select-none w-full">{% trans "კარიერული მიზნების შეუსაბამობა" %}</label>
-            </div>
-            <div class="flex items-center cursor-pointer">
-              <input type="checkbox" name="rejection_reasons" value="სივის_ფორმატის_სტრუქტურის_ხარვეზები" class="h-4 w-4 text-blue-600 rounded rejection-reason-checkbox pointer-events-auto relative z-20 cursor-pointer appearance-none border border-gray-300 bg-white checked:bg-blue-600 checked:border-transparent focus:outline-none">
-              <label class="ml-2 text-sm text-gray-700 cursor-pointer select-none w-full">{% trans "სივის ფორმატის/სტრუქტურის ხარვეზები" %}</label>
-            </div>
-            <div class="flex items-center cursor-pointer">
-              <input type="checkbox" name="rejection_reasons" value="სერთიფიკატების_ლიცენზიების_ნაკლებობა" class="h-4 w-4 text-blue-600 rounded rejection-reason-checkbox pointer-events-auto relative z-20 cursor-pointer appearance-none border border-gray-300 bg-white checked:bg-blue-600 checked:border-transparent focus:outline-none">
-              <label class="ml-2 text-sm text-gray-700 cursor-pointer select-none w-full">{% trans "სერთიფიკატების/ლიცენზიების ნაკლებობა" %}</label>
-            </div>
-            <div class="flex items-center cursor-pointer">
-              <input type="checkbox" name="rejection_reasons" value="არარელევანტური_სამუშაო_ისტორია" class="h-4 w-4 text-blue-600 rounded rejection-reason-checkbox pointer-events-auto relative z-20 cursor-pointer appearance-none border border-gray-300 bg-white checked:bg-blue-600 checked:border-transparent focus:outline-none">
-              <label class="ml-2 text-sm text-gray-700 cursor-pointer select-none w-full">{% trans "არარელევანტური სამუშაო ისტორია" %}</label>
-            </div>
-            <div class="flex items-center cursor-pointer">
-              <input type="checkbox" name="rejection_reasons" value="სხვა" class="h-4 w-4 text-blue-600 rounded rejection-reason-checkbox pointer-events-auto relative z-20 cursor-pointer appearance-none border border-gray-300 bg-white checked:bg-blue-600 checked:border-transparent focus:outline-none">
-              <label class="ml-2 text-sm text-gray-700 cursor-pointer select-none w-full">{% trans "სხვა" %}</label>
-            </div>
-          </div>
-          <div id="reasonError" class="text-red-500 text-sm hidden">{% trans "გთხოვთ აირჩიოთ მინიმუმ ერთი მიზეზი" %}</div>
-        </div>
-        <div id="feedbackSection" class="feedback-section" {% if not application.user %}style="display: none;"{% endif %}>
-          <label class="block text-sm font-medium text-gray-700 mb-1">{% trans "დამატებითი უკუკავშირი:" %}</label>
-          <textarea name="feedback" rows="3" class="shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full sm:text-sm border-gray-300 rounded-md"></textarea>
-        </div>
-        <div class="flex justify-end space-x-3">
-          <button type="button" id="cancelRejection" class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50">
-            {% trans "გაუქმება" %}
-          </button>
-          <button type="submit" class="px-4 py-2 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-md hover:bg-blue-700">
-            {% trans "დადასტურება" %}
-          </button>
-        </div>
-      </form>
-    </div>
-  </div>
-</div>
+{% include 'core/components/rejection_reasons_modal.html' %}
 
-<!-- Application scripts -->
+{% block extra_js %}
 <script>
   document.addEventListener('DOMContentLoaded', function() {
     const modal = document.getElementById('rejectionModal');
@@ -249,7 +176,6 @@
     const cancelButton = document.getElementById('cancelRejection');
     const reasonError = document.getElementById('reasonError');
     let lastSelectedStatus = null;
-    let statusSelect = null;
     
     // Make sure checkbox clicks are registered 
     document.querySelectorAll('.rejection-reason-checkbox').forEach(checkbox => {
@@ -277,28 +203,19 @@
     });
     
     // Status select styling and functionality
-    statusSelect = document.querySelector('.application-status-select');
+    const statusSelect = document.querySelector('.application-status-select');
     if (statusSelect) {
       statusSelect.addEventListener('change', function() {
         const status = this.value;
         const applicationId = this.dataset.applicationId;
         lastSelectedStatus = this.dataset.lastValue || statusSelect.options[statusSelect.selectedIndex].value;
         
-        // Update styling
-        this.className = 'application-status-select w-full rounded-lg border-gray-300 text-sm ';
-        if (status === 'განხილვის_პროცესში') {
-          this.classList.add('bg-blue-100', 'text-blue-800');
-        } else if (status === 'გასაუბრება') {
-          this.classList.add('bg-green-100', 'text-green-800');
-        } else if (status === 'რეზერვი') {
-          this.classList.add('bg-yellow-100', 'text-yellow-800');
-        }
-        
         // Check if this is a guest application
-        const isGuest = document.getElementById('isGuestApplication').value === 'true';
+        const isGuest = {% if application.user %}false{% else %}true{% endif %};
+        document.getElementById('isGuestApplication').value = isGuest ? 'true' : 'false';
         
         if (status === 'რეზერვი' && !isGuest) {
-          // Only show modal for rejection reasons for registered users
+          // Set up the modal
           document.getElementById('currentApplicationId').value = applicationId;
           document.getElementById('feedbackSection').style.display = 'block';
           reasonError.classList.add('hidden');
@@ -307,7 +224,7 @@
         }
         
         // For guest users or other statuses, update directly
-        updateApplicationStatus(applicationId, status);
+        sendStatusUpdate(applicationId, status);
       });
       
       // Store the initial value
@@ -326,64 +243,19 @@
       }
       
       const applicationId = document.getElementById('currentApplicationId').value;
-      const formData = new FormData(rejectionForm);
-      formData.append('status', 'რეზერვი');
-
+      
+      // Convert form data to JSON
+      const jsonData = {
+        status: 'რეზერვი',
+        rejection_reasons: Array.from(checkedReasons).map(cb => cb.value),
+        feedback: document.querySelector('textarea[name="feedback"]').value || ''
+      };
+      
       // Send status update with rejection reasons
-      fetch(`/employer/applications/${applicationId}/update-status/`, {
-        method: 'POST',
-        headers: {
-          'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
-        },
-        body: formData
-      })
-      .then(response => {
-        // First check if the response is ok before trying to parse JSON
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
-        return response.text(); // Get as text first to inspect
-      })
-      .then(text => {
-        // Try to parse as JSON, but handle case where it's not valid JSON
-        try {
-          return JSON.parse(text);
-        } catch (e) {
-          console.log('Response is not valid JSON:', text);
-          return { success: true }; // Assume success if we got a response
-        }
-      })
-      .then(data => {
-        // Always hide the modal and reset form
-        modal.classList.add('hidden');
-        rejectionForm.reset();
-        
-        // Update the status explanation
-        const explanationDiv = document.querySelector('.status-explanation');
-        if (explanationDiv) {
-          let explanation = '{% trans "ნიშნავს, რომ განიხილეთ კანდიდატურა, თვლით რომ არ შეესაბამება პოზიციას და ამ ეტაპზე ვერ აიყვანთ, თუმცა მისი სივი შეინახება ბაზაში მომავალში დაინტერესების შემთვევაში დასაკონტაქტებლად" %}';
-          explanationDiv.className = 'mt-4 text-sm status-explanation text-yellow-700';
-          explanationDiv.innerHTML = `<p>${explanation}</p>`;
-        }
-        
-        // Update the select styling
-        if (statusSelect) {
-          statusSelect.className = 'application-status-select w-full rounded-lg border-gray-300 text-sm bg-yellow-100 text-yellow-800';
-          statusSelect.dataset.lastValue = 'რეზერვი';
-        }
-        
-        // Force a full page refresh
-        window.location.href = window.location.href;
-      })
-      .catch(error => {
-        console.error('Error:', error);
-        // Even in case of error, hide the modal
-        modal.classList.add('hidden');
-        rejectionForm.reset();
-        
-        // Even on error, refresh the page to show current state
-        window.location.href = window.location.href;
-      });
+      sendStatusUpdate(applicationId, 'რეზერვი', JSON.stringify(jsonData));
+      
+      // Hide the modal
+      modal.classList.add('hidden');
     });
     
     // Handle modal cancel button
@@ -391,16 +263,6 @@
       modal.classList.add('hidden');
       if (statusSelect) {
         statusSelect.value = statusSelect.dataset.lastValue || 'განხილვის_პროცესში';
-        
-        // Update styling
-        statusSelect.className = 'application-status-select w-full rounded-lg border-gray-300 text-sm ';
-        if (statusSelect.value === 'განხილვის_პროცესში') {
-          statusSelect.classList.add('bg-blue-100', 'text-blue-800');
-        } else if (statusSelect.value === 'გასაუბრება') {
-          statusSelect.classList.add('bg-green-100', 'text-green-800');
-        } else if (statusSelect.value === 'რეზერვი') {
-          statusSelect.classList.add('bg-yellow-100', 'text-yellow-800');
-        }
       }
       rejectionForm.reset();
     });
@@ -412,66 +274,34 @@
       }
     });
     
-    function updateApplicationStatus(applicationId, status) {
-        const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
-        fetch(`/employer/applications/${applicationId}/update-status/`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-            'X-CSRFToken': csrfToken
-          },
-          body: `status=${status}&csrfmiddlewaretoken=${csrfToken}`
-        })
-      .then(response => {
-        // First check if the response is ok before trying to parse JSON
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
-        return response.text(); // Get as text first to inspect
+    // Function to send status update
+    function sendStatusUpdate(applicationId, status, rejectionData = null) {
+      const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+      
+      let headers = {
+        'Content-Type': 'application/json',
+        'X-CSRFToken': csrftoken,
+        'X-Requested-With': 'XMLHttpRequest'
+      };
+      
+      let body = rejectionData ? rejectionData : JSON.stringify({ status: status });
+      
+      fetch(`/employer/update-application-status/${applicationId}/`, {
+        method: 'POST',
+        headers: headers,
+        body: body
       })
-      .then(text => {
-        // Try to parse as JSON, but handle case where it's not valid JSON
-        try {
-          return JSON.parse(text);
-        } catch (e) {
-          console.log('Response is not valid JSON:', text);
-          return { success: true }; // Assume success if we got a response
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          window.location.reload();
         }
       })
-        .then(data => {
-        console.log('Status updated successfully');
-        
-            // Update the status explanation
-            const explanationDiv = document.querySelector('.status-explanation');
-            if (explanationDiv) {
-              let explanation = '';
-              if (status === 'განხილვის_პროცესში') {
-                explanation = '{% trans "ნიშნავს რომ კანდიდატურა ჯერ არ განგიხილავთ" %}';
-            explanationDiv.className = 'mt-4 text-sm status-explanation text-blue-700';
-              } else if (status === 'გასაუბრება') {
-                explanation = '{% trans "ნიშნავს რომ განიხილეთ კანდიდატურა, თვლით რომ შეესაბამება პოზიციას და დაუკავშირდებით გასაუბრებაზე დასაბარებლად" %}';
-            explanationDiv.className = 'mt-4 text-sm status-explanation text-green-700';
-              } else if (status === 'რეზერვი') {
-                explanation = '{% trans "ნიშნავს, რომ განიხილეთ კანდიდატურა, თვლით რომ არ შეესაბამება პოზიციას და ამ ეტაპზე ვერ აიყვანთ, თუმცა მისი სივი შეინახება ბაზაში მომავალში დაინტერესების შემთვევაში დასაკონტაქტებლად" %}';
-            explanationDiv.className = 'mt-4 text-sm status-explanation text-yellow-700';
-              }
-          explanationDiv.innerHTML = `<p>${explanation}</p>`;
-            }
-        
-        // Update the select styling
-        if (statusSelect) {
-          statusSelect.dataset.lastValue = status;
-        }
-        
-        // Force a full page refresh
-        window.location.href = window.location.href;
-        })
-        .catch(error => {
-          console.error('Error:', error);
-        // Even on error, refresh the page to show current state
-        window.location.href = window.location.href;
+      .catch(error => {
+        console.error('Error:', error);
       });
     }
   });
 </script>
-{% endblock content %} 
+{% endblock %}
+{% endblock %} 

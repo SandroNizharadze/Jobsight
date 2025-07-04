@@ -273,8 +273,6 @@
   </div>
 </div>
 
-{% include 'core/components/profile/rejection_reasons_modal.html' %}
-
 {% if user.userprofile.role == 'candidate' and candidate_unread_notification_count > 0 %}
 <script>
 document.addEventListener('DOMContentLoaded', function() {
@@ -299,72 +297,7 @@ document.addEventListener('DOMContentLoaded', function() {
 {% block extra_js %}
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-  // View rejection reasons
-  const rejectionReasonButtons = document.querySelectorAll('.view-rejection-reasons');
-  const rejectionReasonsModal = document.getElementById('rejectionReasonsModal');
-  const rejectionReasonsList = document.getElementById('rejectionReasonsList');
-  const rejectionFeedback = document.getElementById('rejectionFeedback');
-  const closeRejectionModal = document.getElementById('closeRejectionModal');
-  
-  if (rejectionReasonButtons.length > 0 && rejectionReasonsModal && rejectionReasonsList && closeRejectionModal) {
-    rejectionReasonButtons.forEach(button => {
-      button.addEventListener('click', function() {
-        const applicationId = this.getAttribute('data-application-id');
-        
-        // Fetch rejection reasons
-        fetch(`/api/applications/${applicationId}/rejection-reasons/`, {
-          headers: {
-            'X-Requested-With': 'XMLHttpRequest'
-          }
-        })
-        .then(response => response.json())
-        .then(data => {
-          // Clear previous content
-          rejectionReasonsList.innerHTML = '';
-          rejectionFeedback.textContent = '';
-          
-          // Add reasons to the list
-          if (data.reasons && data.reasons.length > 0) {
-            data.reasons.forEach(reason => {
-              const li = document.createElement('li');
-              li.className = 'mb-1';
-              li.textContent = reason;
-              rejectionReasonsList.appendChild(li);
-            });
-          } else {
-            const li = document.createElement('li');
-            li.textContent = 'No specific reasons provided.';
-            rejectionReasonsList.appendChild(li);
-          }
-          
-          // Add feedback if available
-          if (data.feedback) {
-            rejectionFeedback.textContent = data.feedback;
-          } else {
-            rejectionFeedback.textContent = 'No additional feedback provided.';
-          }
-          
-          // Show the modal
-          rejectionReasonsModal.classList.remove('hidden');
-        })
-        .catch(error => {
-          console.error('Error fetching rejection reasons:', error);
-        });
-      });
-    });
-    
-    // Close modal when clicking the close button
-    closeRejectionModal.addEventListener('click', function() {
-      rejectionReasonsModal.classList.add('hidden');
-    });
-    
-    // Close modal when clicking outside
-    rejectionReasonsModal.addEventListener('click', function(e) {
-      if (e.target === rejectionReasonsModal) {
-        rejectionReasonsModal.classList.add('hidden');
-      }
-    });
-  }
+  // Add any other necessary JavaScript here
 });
 </script>
 {% endblock %} 

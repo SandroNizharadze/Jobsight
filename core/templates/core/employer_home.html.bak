@@ -409,133 +409,33 @@
 </div>
 
 {% include 'core/components/rejection_reasons_modal.html' %}
-
-<!-- Direct script to ensure mobile CTA styling -->
-<script>
-  document.addEventListener('DOMContentLoaded', function() {
-    // Force apply styles for mobile CTA
-    var style = document.createElement('style');
-    style.innerHTML = `
-      @media (max-width: 768px) {
-        .mobile-cta-fixed {
-          position: fixed !important;
-          bottom: 56px !important;
-          left: 0 !important;
-          right: 0 !important;
-          background-color: white !important;
-          border-top: 1px solid #e5e7eb !important;
-          z-index: 49 !important;
-          padding: 10px !important;
-        }
-        
-        .mobile-cta-button-primary {
-          flex: 1 !important;
-          display: flex !important;
-          justify-content: center !important;
-          align-items: center !important;
-          padding: 10px !important;
-          border: 1px solid transparent !important;
-          border-radius: 6px !important;
-          color: white !important;
-          background-color: #2563eb !important;
-          text-decoration: none !important;
-          font-weight: 500 !important;
-          font-size: 14px !important;
-        }
-        
-        .mobile-cta-button-secondary {
-          flex: 1 !important;
-          display: flex !important;
-          justify-content: center !important;
-          align-items: center !important;
-          padding: 10px !important;
-          border: 1px solid #d1d5db !important;
-          border-radius: 6px !important;
-          color: #374151 !important;
-          background-color: white !important;
-          text-decoration: none !important;
-          font-weight: 500 !important;
-          font-size: 14px !important;
-        }
-        
-        .mobile-cta-icon {
-          height: 20px !important;
-          width: 20px !important;
-          margin-right: 8px !important;
-        }
-        
-        .mobile-cta-container {
-          display: flex !important;
-          gap: 8px !important;
-        }
-      }
-    `;
-    document.head.appendChild(style);
-  });
-</script>
+{% endblock %}
 
 {% block extra_js %}
 <script>
   document.addEventListener('DOMContentLoaded', function() {
     try {
-      // Helper function to safely parse JSON with fallback
-      function safeJSONParse(jsonStr, fallback) {
-        try {
-          return JSON.parse(jsonStr);
-        } catch (e) {
-          console.error('Error parsing JSON:', e);
-          return fallback;
-        }
-      }
-      
-      const modal = document.getElementById('rejectionModal');
-      const rejectionForm = document.getElementById('rejectionForm');
-      const cancelButton = document.getElementById('cancelRejection');
-      const reasonError = document.getElementById('reasonError');
-      let lastSelectedStatus = null;
-      let lastSelectElement = null;
-      
-      // Make sure checkbox clicks are registered 
-      document.querySelectorAll('.rejection-reason-checkbox').forEach(checkbox => {
-        checkbox.addEventListener('click', function(e) {
-          // Toggle checked state manually
-          this.checked = !this.checked;
-          // Prevent event propagation
-          e.stopPropagation();
-        });
-      });
-      
-      // Add click handlers for the entire container of each checkbox
-      document.querySelectorAll('#reasonsContainer > div').forEach(container => {
-        container.addEventListener('click', function(e) {
-          // Find the checkbox inside this container
-          const checkbox = this.querySelector('input[type="checkbox"]');
-          if (checkbox) {
-            // Toggle the checkbox state
-            checkbox.checked = !checkbox.checked;
-          }
-          // Prevent default behavior
-          e.preventDefault();
-          e.stopPropagation();
-        });
-      });
-
       // Function to send status update
       function sendStatusUpdate(applicationId, status, rejectionData = null) {
         const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
         
-        let headers = {
-          'Content-Type': 'application/json',
-          'X-CSRFToken': csrftoken,
-          'X-Requested-With': 'XMLHttpRequest'
+        let data = {
+          status: status
         };
         
-        let body = rejectionData ? rejectionData : JSON.stringify({ status: status });
+        // If rejection data is provided, merge it with the data object
+        if (rejectionData) {
+          data = { ...data, ...rejectionData };
+        }
         
         fetch(`/employer/update-application-status/${applicationId}/`, {
           method: 'POST',
-          headers: headers,
-          body: body
+          headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': csrftoken,
+            'X-Requested-With': 'XMLHttpRequest'
+          },
+          body: JSON.stringify(data)
         })
         .then(response => response.json())
         .then(data => {
@@ -551,256 +451,100 @@
 
       // Add event listeners to status selects
       document.querySelectorAll('.application-status-select').forEach(select => {
+        // Store the initial value
+        select.dataset.lastValue = select.options[select.selectedIndex].value;
+        
         select.addEventListener('change', function() {
           const applicationId = this.dataset.applicationId;
           const newStatus = this.value;
-          lastSelectedStatus = this.dataset.lastValue || select.options[select.selectedIndex].value;
-          lastSelectElement = this;
+          const lastValue = this.dataset.lastValue;
           
-          // Check if this is a guest application
-          const row = this.closest('tr') || this.closest('.bg-white');
-          const isGuest = row.querySelector('.guest-badge') !== null;
-          document.getElementById('isGuestApplication').value = isGuest ? 'true' : 'false';
-          
-          if (newStatus === 'რეზერვი' && !isGuest) {
-            // Only show modal for rejection reasons for registered users
-            document.getElementById('currentApplicationId').value = applicationId;
-            document.getElementById('feedbackSection').style.display = 'block';
-            reasonError.classList.add('hidden');
+          // Check if the new status is "რეზერვი"
+          if (newStatus === 'რეზერვი') {
+            // Show the rejection reasons modal
+            const modal = document.getElementById('rejectionModal');
+            const currentApplicationIdField = document.getElementById('currentApplicationId');
+            const isGuestField = document.getElementById('isGuestApplication');
+            
+            // Set the application ID in the hidden field
+            currentApplicationIdField.value = applicationId;
+            
+            // Check if this is a guest application (you may need to add a data attribute to the select)
+            const isGuest = this.dataset.isGuest === 'true';
+            isGuestField.value = isGuest;
+            
+            // Show or hide the feedback section based on whether it's a guest application
+            const feedbackSection = document.getElementById('feedbackSection');
+            feedbackSection.style.display = isGuest ? 'none' : 'block';
+            
+            // Reset any previous error messages
+            document.getElementById('reasonError').classList.add('hidden');
+            
+            // Show the modal
             modal.classList.remove('hidden');
             
-            // Reset form
-            rejectionForm.reset();
-            return;
-          }
-          
-          // For guest users or other statuses, update directly
-          sendStatusUpdate(applicationId, newStatus);
-        });
-        
-        // Store the initial value
-        select.dataset.lastValue = select.options[select.selectedIndex].value;
-      });
-      
-      // Handle modal form submission
-      rejectionForm.addEventListener('submit', function(e) {
-        e.preventDefault();
-        
-        // Validate at least one reason is selected
-        const checkedReasons = document.querySelectorAll('.rejection-reason-checkbox:checked');
-        if (checkedReasons.length === 0) {
-          reasonError.classList.remove('hidden');
-          return;
-        }
-        
-        const applicationId = document.getElementById('currentApplicationId').value;
-        
-        // Convert form data to JSON
-        const jsonData = {
-          status: 'რეზერვი',
-          rejection_reasons: Array.from(checkedReasons).map(cb => cb.value),
-          feedback: document.querySelector('textarea[name="feedback"]').value || ''
-        };
-        
-        // Send status update with rejection reasons
-        sendStatusUpdate(applicationId, 'რეზერვი', JSON.stringify(jsonData));
-        
-        // Hide the modal
-        modal.classList.add('hidden');
-      });
-      
-      // Handle modal cancel button
-      cancelButton.addEventListener('click', function() {
-        modal.classList.add('hidden');
-        if (lastSelectElement) {
-          lastSelectElement.value = lastSelectElement.dataset.lastValue || 'განხილვის_პროცესში';
-        }
-        rejectionForm.reset();
-      });
-      
-      // Close modal when clicking outside
-      modal.addEventListener('click', function(e) {
-        if (e.target === modal) {
-          cancelButton.click();
-        }
-      });
-
-      // Helper function to safely initialize a chart
-      function initializeChart(canvasId, config) {
-        const canvas = document.getElementById(canvasId);
-        if (!canvas) {
-          console.error(`Canvas element ${canvasId} not found`);
-          return null;
-        }
-        
-        try {
-          const ctx = canvas.getContext('2d');
-          return new Chart(ctx, config);
-        } catch (e) {
-          console.error(`Error initializing chart ${canvasId}:`, e);
-          return null;
-        }
-      }
-
-      // Applications Over Time Chart
-      const applicationsConfig = {
-        type: 'line',
-        data: {
-          labels: safeJSONParse('{{ chart_labels|escapejs }}', []),
-          datasets: [{
-            label: '{% trans "Applications" %}',
-            data: safeJSONParse('{{ chart_data|escapejs }}', []),
-            backgroundColor: 'rgba(59, 130, 246, 0.2)',
-            borderColor: 'rgba(59, 130, 246, 1)',
-            borderWidth: 2,
-            tension: 0.3
-          }]
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          scales: {
-            y: {
-              beginAtZero: true,
-              ticks: {
-                precision: 0
+            // Handle form submission
+            const rejectionForm = document.getElementById('rejectionForm');
+            
+            // Remove any existing submit event listeners
+            const newRejectionForm = rejectionForm.cloneNode(true);
+            rejectionForm.parentNode.replaceChild(newRejectionForm, rejectionForm);
+            
+            newRejectionForm.addEventListener('submit', function(e) {
+              e.preventDefault();
+              
+              // Validate at least one reason is selected
+              const checkedReasons = document.querySelectorAll('.rejection-reason-checkbox:checked');
+              if (checkedReasons.length === 0) {
+                document.getElementById('reasonError').classList.remove('hidden');
+                return;
               }
-            }
-          }
-        }
-      };
-      const applicationsChart = initializeChart('applicationsChart', applicationsConfig);
-
-      // Application Status Distribution Chart
-      const statusConfig = {
-        type: 'doughnut',
-        data: {
-          labels: safeJSONParse('{{ status_labels|escapejs }}', []),
-          datasets: [{
-            data: safeJSONParse('{{ status_data|escapejs }}', []),
-            backgroundColor: safeJSONParse('{{ status_colors|escapejs }}', []),
-            borderColor: safeJSONParse('{{ status_colors|escapejs }}', []).map(c => c.replace('0.7', '1')),
-            borderWidth: 1
-          }]
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          plugins: {
-            legend: {
-              position: 'top',
-              display: true,
-              labels: {
-                font: {
-                  size: 12
-                },
-                usePointStyle: true,
-                padding: 20
-              }
-            },
-            tooltip: {
-              callbacks: {
-                label: function(context) {
-                  const label = context.label || '';
-                  const value = context.raw || 0;
-                  const total = context.chart.data.datasets[0].data.reduce((a, b) => a + b, 0);
-                  const percentage = total > 0 ? Math.round((value / total) * 100) : 0;
-                  return `${label}: ${value} (${percentage}%)`;
-                }
-              }
-            }
-          }
-        }
-      };
-      const statusChart = initializeChart('statusChart', statusConfig);
-
-      // Job Category Performance Chart
-      const categoryConfig = {
-        type: 'bar',
-        data: {
-          labels: safeJSONParse('{{ category_labels|escapejs }}', []),
-          datasets: [{
-            label: '{% trans "Applications per Category" %}',
-            data: safeJSONParse('{{ category_data|escapejs }}', []),
-            backgroundColor: 'rgba(59, 130, 246, 0.7)',
-            borderColor: 'rgba(59, 130, 246, 1)',
-            borderWidth: 1
-          }]
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          scales: {
-            y: {
-              beginAtZero: true,
-              ticks: {
-                precision: 0
-              }
-            }
-          }
-        }
-      };
-      const categoryChart = initializeChart('categoryChart', categoryConfig);
-
-      // Applicant Source Chart
-      const sourceConfig = {
-        type: 'pie',
-        data: {
-          labels: safeJSONParse('{{ source_labels|escapejs }}', []),
-          datasets: [{
-            data: safeJSONParse('{{ source_data|escapejs }}', []),
-            backgroundColor: safeJSONParse('{{ source_colors|escapejs }}', []),
-            borderColor: safeJSONParse('{{ source_colors|escapejs }}', []).map(c => c.replace('0.7', '1')),
-            borderWidth: 1
-          }]
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false
-        }
-      };
-      const sourceChart = initializeChart('sourceChart', sourceConfig);
-
-      // Mobile chart selector functionality
-      const chartSelector = document.getElementById('chartSelector');
-      if (chartSelector) {
-        const chartContainers = {
-          'applicationsChart': document.getElementById('applicationsChartContainer'),
-          'statusChart': document.getElementById('statusChartContainer'),
-          'categoryChart': document.getElementById('categoryChartContainer'),
-          'sourceChart': document.getElementById('sourceChartContainer')
-        };
-        
-        chartSelector.addEventListener('change', function() {
-          // Hide all chart containers on mobile
-          Object.values(chartContainers).forEach(container => {
-            if (container) {
-              container.classList.add('hidden');
-              container.classList.remove('block');
-            }
-          });
-          
-          // Show the selected chart container
-          const selectedContainer = chartContainers[this.value];
-          if (selectedContainer) {
-            selectedContainer.classList.remove('hidden');
-            selectedContainer.classList.add('block');
+              
+              // Collect the rejection reasons
+              const rejectionReasons = Array.from(checkedReasons).map(checkbox => checkbox.value);
+              
+              // Get the feedback if provided
+              const feedback = this.querySelector('textarea[name="feedback"]').value;
+              
+              // Create the rejection data object
+              const rejectionData = {
+                rejection_reasons: rejectionReasons,
+                feedback: feedback
+              };
+              
+              // Send the status update with rejection reasons
+              sendStatusUpdate(applicationId, 'რეზერვი', rejectionData);
+              
+              // Hide the modal
+              modal.classList.add('hidden');
+              
+              // Reset the form
+              this.reset();
+            });
+            
+            // Handle cancel button
+            const cancelButton = document.getElementById('cancelRejection');
+            cancelButton.addEventListener('click', function() {
+              // Hide the modal
+              modal.classList.add('hidden');
+              
+              // Reset the select to its previous value
+              select.value = lastValue;
+              
+              // Reset the form
+              newRejectionForm.reset();
+            });
+          } else {
+            // For other statuses, just update directly
+            sendStatusUpdate(applicationId, newStatus);
+            
+            // Update the last value
+            this.dataset.lastValue = newStatus;
           }
         });
-        
-        // Trigger change event to show the first chart initially
-        chartSelector.dispatchEvent(new Event('change'));
-      }
-      
-      // Hide the regular CTA buttons on mobile since we have the fixed ones
-      if (window.innerWidth < 768) {
-        const regularCTAContainer = document.querySelector('.mt-6.mb-10');
-        if (regularCTAContainer) {
-          regularCTAContainer.classList.add('md:flex', 'hidden');
-        }
-      }
-    } catch (e) {
-      console.error('Error initializing charts:', e);
+      });
+    } catch (error) {
+      console.error('Error in employer home script:', error);
     }
   });
 </script>
@@ -863,5 +607,4 @@
     }
   }
 </style>
-{% endblock %}
 {% endblock %} 

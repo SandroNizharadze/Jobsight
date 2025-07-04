@@ -16,6 +16,46 @@
   .search-icon-wrapper {
     left: 10px; /* Position the icon container */
   }
+  .applicant-card {
+    transition: transform 0.2s, box-shadow 0.2s;
+    cursor: pointer;
+  }
+  .applicant-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+  }
+  .status-badge {
+    font-size: 12px;
+    padding: 3px 10px;
+    border-radius: 12px;
+    text-transform: uppercase;
+    font-weight: 600;
+    display: inline-block;
+    margin-right: 5px;
+  }
+  .status-reviewing {
+    background-color: #f0f0f0;
+    color: #555;
+  }
+  .status-interview {
+    background-color: #d1ecf1;
+    color: #0c5460;
+  }
+  .status-reserve {
+    background-color: #f8d7da;
+    color: #721c24;
+  }
+  .filter-btn {
+    border: 1px solid #ddd;
+    background-color: #f8f9fa;
+    color: #495057;
+    transition: all 0.2s;
+  }
+  .filter-btn:hover, .filter-btn.active {
+    background-color: #007bff;
+    border-color: #007bff;
+    color: white;
+  }
 </style>
 
 <div class="container mx-auto px-4 py-8 sm:px-6 lg:px-8">
@@ -502,53 +542,10 @@
   </div>
 </div>
 
-<!-- Rejection Reasons Modal -->
-<div id="rejectionModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden overflow-y-auto h-full w-full" aria-hidden="true">
-  <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
-    <div class="mt-3">
-      <h3 class="text-lg font-medium leading-6 text-gray-900 mb-4">{% trans "უარის მიზეზები" %}</h3>
-      <form id="rejectionForm" class="space-y-4">
-        <input type="hidden" id="currentApplicationId" name="application_id" value="">
-        <input type="hidden" id="isGuestApplication" name="is_guest" value="false">
-        <div class="space-y-2">
-          <label class="block text-sm font-medium text-gray-700">{% trans "აირჩიეთ მიზეზები:" %} <span class="text-red-500">*</span></label>
-          <div id="reasonsContainer" class="space-y-2">
-            {% for reason in rejection_reasons %}
-              <div class="flex items-center cursor-pointer">
-                <input type="checkbox" name="rejection_reasons" value="{{ reason.id }}" class="h-4 w-4 text-blue-600 rounded rejection-reason-checkbox pointer-events-auto relative z-20 cursor-pointer appearance-none border border-gray-300 bg-white checked:bg-blue-600 checked:border-transparent focus:outline-none">
-                <label class="ml-2 text-sm text-gray-700 cursor-pointer select-none w-full">{{ reason.get_name_display }}</label>
-              </div>
-            {% endfor %}
-          </div>
-          <div id="reasonError" class="text-red-500 text-sm hidden">{% trans "გთხოვთ აირჩიოთ მინიმუმ ერთი მიზეზი" %}</div>
-        </div>
-        <div id="feedbackSection" class="feedback-section">
-          <label class="block text-sm font-medium text-gray-700 mb-1">{% trans "დამატებითი უკუკავშირი:" %}</label>
-          <textarea name="feedback" rows="3" class="shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full sm:text-sm border-gray-300 rounded-md"></textarea>
-        </div>
-        <div class="flex justify-end space-x-3">
-          <button type="button" id="cancelRejection" class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50">
-            {% trans "გაუქმება" %}
-          </button>
-          <button type="submit" class="px-4 py-2 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-md hover:bg-blue-700">
-            {% trans "დადასტურება" %}
-          </button>
-        </div>
-      </form>
-    </div>
-  </div>
-</div>
+{% include 'core/components/rejection_reasons_modal.html' %}
 
-<!-- Application scripts -->
 <script>
   document.addEventListener('DOMContentLoaded', function() {
-    const modal = document.getElementById('rejectionModal');
-    const rejectionForm = document.getElementById('rejectionForm');
-    const cancelButton = document.getElementById('cancelRejection');
-    const reasonError = document.getElementById('reasonError');
-    let lastSelectedStatus = null;
-    let lastSelectElement = null;
-    
     // Toggle status explanation on mobile
     const toggleStatusInfoButton = document.getElementById('toggleStatusInfo');
     const statusExplanations = document.getElementById('statusExplanations');
@@ -577,6 +574,143 @@
         filterApplicationsByStatus(status);
       });
     });
+
+    const modal = document.getElementById('rejectionModal');
+    const rejectionForm = document.getElementById('rejectionForm');
+    const cancelButton = document.getElementById('cancelRejection');
+    const reasonError = document.getElementById('reasonError');
+    let lastSelectedStatus = null;
+    let lastSelectElement = null;
+    
+    // Make sure checkbox clicks are registered 
+    document.querySelectorAll('.rejection-reason-checkbox').forEach(checkbox => {
+      checkbox.addEventListener('click', function(e) {
+        // Toggle checked state manually
+        this.checked = !this.checked;
+        // Prevent event propagation
+        e.stopPropagation();
+      });
+    });
+    
+    // Add click handlers for the entire container of each checkbox
+    document.querySelectorAll('#reasonsContainer > div').forEach(container => {
+      container.addEventListener('click', function(e) {
+        // Find the checkbox inside this container
+        const checkbox = this.querySelector('input[type="checkbox"]');
+        if (checkbox) {
+          // Toggle the checkbox state
+          checkbox.checked = !checkbox.checked;
+        }
+        // Prevent default behavior
+        e.preventDefault();
+        e.stopPropagation();
+      });
+    });
+
+    // Status select functionality
+    const statusSelects = document.querySelectorAll('.application-status-select');
+    statusSelects.forEach(select => {
+      select.addEventListener('change', function() {
+        const status = this.value;
+        const applicationId = this.dataset.applicationId;
+        lastSelectedStatus = this.dataset.lastValue || select.options[select.selectedIndex].value;
+        lastSelectElement = this;
+        
+        // Check if this is a guest application
+        const row = this.closest('tr') || this.closest('.bg-white');
+        const isGuest = row.querySelector('.guest-badge') !== null;
+        document.getElementById('isGuestApplication').value = isGuest ? 'true' : 'false';
+        
+        if (status === 'რეზერვი' && !isGuest) {
+          // Only show modal for rejection reasons for registered users
+          document.getElementById('currentApplicationId').value = applicationId;
+          document.getElementById('feedbackSection').style.display = 'block';
+          reasonError.classList.add('hidden');
+          modal.classList.remove('hidden');
+          
+          // Reset form
+          rejectionForm.reset();
+          return;
+        }
+        
+        // For guest users or other statuses, update directly
+        sendStatusUpdate(applicationId, status);
+      });
+      
+      // Store the initial value
+      select.dataset.lastValue = select.options[select.selectedIndex].value;
+    });
+    
+    // Handle modal form submission
+    rejectionForm.addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      // Validate at least one reason is selected
+      const checkedReasons = document.querySelectorAll('.rejection-reason-checkbox:checked');
+      if (checkedReasons.length === 0) {
+        reasonError.classList.remove('hidden');
+        return;
+      }
+      
+      const applicationId = document.getElementById('currentApplicationId').value;
+      
+      // Convert form data to JSON
+      const jsonData = {
+        status: 'რეზერვი',
+        rejection_reasons: Array.from(checkedReasons).map(cb => cb.value),
+        feedback: document.querySelector('textarea[name="feedback"]').value || ''
+      };
+      
+      // Send status update with rejection reasons
+      sendStatusUpdate(applicationId, 'რეზერვი', JSON.stringify(jsonData));
+      
+      // Hide the modal
+      modal.classList.add('hidden');
+    });
+    
+    // Handle modal cancel button
+    cancelButton.addEventListener('click', function() {
+      modal.classList.add('hidden');
+      if (lastSelectElement) {
+        lastSelectElement.value = lastSelectElement.dataset.lastValue || 'განხილვის_პროცესში';
+      }
+      rejectionForm.reset();
+    });
+    
+    // Close modal when clicking outside
+    modal.addEventListener('click', function(e) {
+      if (e.target === modal) {
+        cancelButton.click();
+      }
+    });
+
+    // Function to send status update
+    function sendStatusUpdate(applicationId, status, rejectionData = null) {
+      const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+      
+      let headers = {
+        'Content-Type': 'application/json',
+        'X-CSRFToken': csrftoken,
+        'X-Requested-With': 'XMLHttpRequest'
+      };
+      
+      let body = rejectionData ? rejectionData : JSON.stringify({ status: status });
+      
+      fetch(`/employer/applications/${applicationId}/update-status/`, {
+        method: 'POST',
+        headers: headers,
+        body: body
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          window.location.reload();
+        }
+      })
+      .catch(error => {
+        console.error('Error:', error);
+      });
+    }
 
     // Function to filter applications by status
     function filterApplicationsByStatus(status) {
@@ -607,159 +741,6 @@
         url.searchParams.set('status', status);
       }
       window.history.pushState({}, '', url);
-    }
-
-    // Status select styling and functionality
-    const statusSelects = document.querySelectorAll('.application-status-select');
-    statusSelects.forEach(select => {
-      select.addEventListener('change', function() {
-        const status = this.value;
-        const applicationId = this.dataset.applicationId;
-        lastSelectedStatus = status;
-        lastSelectElement = this;
-
-        // Check if this is a guest application
-        const row = this.closest('tr');
-        const isGuest = row.querySelector('.guest-badge') !== null;
-
-        if (status === 'რეზერვი' && !isGuest) {
-          // Only show modal for rejection reasons for registered users
-          document.getElementById('currentApplicationId').value = applicationId;
-          document.getElementById('isGuestApplication').value = false;
-          document.getElementById('feedbackSection').style.display = 'block';
-          reasonError.classList.add('hidden');
-          modal.classList.remove('hidden');
-          return;
-        }
-        
-        // For guest users or other statuses, update directly
-        updateApplicationStatus(applicationId, status);
-      });
-    });
-
-    // Handle modal form submission
-    rejectionForm.addEventListener('submit', function(e) {
-      e.preventDefault();
-      
-      // Validate at least one reason is selected
-      const checkedReasons = document.querySelectorAll('.rejection-reason-checkbox:checked');
-      if (checkedReasons.length === 0) {
-        reasonError.classList.remove('hidden');
-        return;
-      }
-      
-      const applicationId = document.getElementById('currentApplicationId').value;
-      const formData = new FormData(rejectionForm);
-      formData.append('status', 'რეზერვი');
-
-      // Convert to JSON format for proper processing
-      const jsonData = {
-        status: 'რეზერვი',
-        rejection_reasons: Array.from(checkedReasons).map(cb => cb.value),
-        feedback: formData.get('feedback') || ''
-      };
-
-      // Send status update with rejection reasons
-      fetch(`/employer/applications/${applicationId}/update-status/`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
-        },
-        body: JSON.stringify(jsonData)
-      })
-      .then(response => {
-        // First check if the response is ok before trying to parse JSON
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
-        return response.json();
-      })
-      .then(data => {
-        // Always hide the modal and update styling regardless of success status
-        modal.classList.add('hidden');
-        updateSelectStyling(lastSelectElement, 'რეზერვი');
-        rejectionForm.reset();
-        
-        // Force a full page refresh
-        window.location.href = window.location.href;
-      })
-      .catch(error => {
-        console.error('Error:', error);
-        // Even in case of error, hide the modal
-        modal.classList.add('hidden');
-        rejectionForm.reset();
-        
-        // Even on error, refresh the page to show current state
-        window.location.href = window.location.href;
-      });
-    });
-
-    // Handle modal cancel button
-    cancelButton.addEventListener('click', function() {
-      modal.classList.add('hidden');
-      if (lastSelectElement) {
-        lastSelectElement.value = lastSelectElement.dataset.lastValue || 'განხილვის_პროცესში';
-        updateSelectStyling(lastSelectElement, lastSelectElement.value);
-      }
-      rejectionForm.reset();
-    });
-
-    // Close modal when clicking outside
-    modal.addEventListener('click', function(e) {
-      if (e.target === modal) {
-        cancelButton.click();
-      }
-    });
-
-    function updateApplicationStatus(applicationId, status) {
-      const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
-      fetch(`/employer/applications/${applicationId}/update-status/`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded',
-          'X-CSRFToken': csrfToken
-        },
-        body: `status=${status}&csrfmiddlewaretoken=${csrfToken}`
-      })
-      .then(response => {
-        // First check if the response is ok before trying to parse JSON
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
-        return response.text(); // Get as text first to inspect
-      })
-      .then(text => {
-        // Try to parse as JSON, but handle case where it's not valid JSON
-        try {
-          return JSON.parse(text);
-        } catch (e) {
-          console.log('Response is not valid JSON:', text);
-          return { success: true }; // Assume success if we got a response
-        }
-      })
-      .then(data => {
-          console.log('Status updated successfully');
-        // Force a full page refresh
-        window.location.href = window.location.href;
-      })
-      .catch(error => {
-        console.error('Error:', error);
-        // Even on error, refresh the page to show current state
-        window.location.href = window.location.href;
-      });
-    }
-
-    function updateSelectStyling(select, status) {
-      select.className = 'application-status-select text-sm rounded-full px-3 py-1 border-0 ';
-      if (status === 'განხილვის_პროცესში') {
-        select.classList.add('bg-blue-100', 'text-blue-800');
-      } else if (status === 'გასაუბრება') {
-        select.classList.add('bg-green-100', 'text-green-800');
-      } else if (status === 'რეზერვი') {
-        select.classList.add('bg-yellow-100', 'text-yellow-800');
-      }
-      select.dataset.lastValue = status;
     }
 
     // Search functionality
@@ -866,44 +847,6 @@
     
     // Call this function to apply any filters from URL parameters
     applyInitialFilters();
-
-    // Clear checkboxes when modal is opened
-    statusSelects.forEach(select => {
-      select.addEventListener('change', function() {
-        // Reset checkboxes when modal is opened
-        if (this.value === 'რეზერვი') {
-          document.querySelectorAll('.rejection-reason-checkbox').forEach(checkbox => {
-            checkbox.checked = false;
-          });
-        }
-        // ... rest of existing code ...
-      });
-    });
-    
-    // Make sure checkbox clicks are registered
-    document.querySelectorAll('.rejection-reason-checkbox').forEach(checkbox => {
-      checkbox.addEventListener('click', function(e) {
-        // Toggle checked state manually
-        this.checked = !this.checked;
-        // Prevent event propagation to avoid issues
-        e.stopPropagation();
-      });
-    });
-    
-    // Add click handlers for the entire container of each checkbox
-    document.querySelectorAll('#reasonsContainer > div').forEach(container => {
-      container.addEventListener('click', function(e) {
-        // Find the checkbox inside this container
-        const checkbox = this.querySelector('input[type="checkbox"]');
-        if (checkbox) {
-          // Toggle the checkbox state
-          checkbox.checked = !checkbox.checked;
-        }
-        // Prevent default behavior
-        e.preventDefault();
-        e.stopPropagation();
-      });
-    });
   });
 </script>
 {% endblock content %} 

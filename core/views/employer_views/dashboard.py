@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.db.models import Count, Q
-from core.models import JobApplication
+from core.models import JobApplication, RejectionReason
 from core.services.employer_service import EmployerService
 import json
 import logging
@@ -10,6 +10,7 @@ from collections import defaultdict
 from django.utils import timezone
 from datetime import timedelta
 from core.repositories.notification_repository import NotificationRepository
+from django.core.serializers.json import DjangoJSONEncoder
 
 logger = logging.getLogger(__name__)
 
@@ -46,6 +47,9 @@ def employer_home(request):
     recent_applicants = JobApplication.objects.filter(
         job__employer=employer_profile
     ).select_related('job', 'user').order_by('-applied_at')[:5]
+
+    # Get all rejection reasons
+    rejection_reasons = RejectionReason.objects.all()
 
     # Chart data - Applications over time (last 6 months)
     now = timezone.now()
@@ -164,6 +168,7 @@ def employer_home(request):
         'avg_applicants': metrics['avg_applicants'],
         'all_jobs': all_jobs,
         'recent_applicants': recent_applicants,
+        'rejection_reasons': rejection_reasons,
         # Chart data
         'chart_labels': chart_labels_json,
         'chart_data': chart_data_json,

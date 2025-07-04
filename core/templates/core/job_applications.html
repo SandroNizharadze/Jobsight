@@ -213,31 +213,6 @@
                                   {% trans "რეზერვი" %}
                                 </option>
                               </select>
-                              
-                              {% if application.status == 'რეზერვი' and application.rejection_reasons.all %}
-                                <div class="rejection-reasons-tooltip mt-1">
-                                  <button type="button" class="text-xs text-gray-600 hover:text-gray-800 flex items-center show-reasons-btn" data-application-id="{{ application.id }}">
-                                    <svg class="h-3 w-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                                    </svg>
-                                    {% trans "Show reasons" %}
-                                  </button>
-                                  <div class="hidden absolute z-10 mt-1 bg-white rounded-md shadow-lg p-3 border border-gray-200 w-64 text-sm text-gray-700 reasons-popup" id="reasons-popup-{{ application.id }}">
-                                    <h4 class="font-medium mb-2">{% trans "Rejection Reasons" %}:</h4>
-                                    <ul class="list-disc list-inside space-y-1">
-                                      {% for reason in application.rejection_reasons.all %}
-                                        <li>{{ reason.get_name_display }}</li>
-                                      {% endfor %}
-                                    </ul>
-                                    {% if application.feedback %}
-                                      <div class="mt-2 pt-2 border-t border-gray-200">
-                                        <h5 class="font-medium mb-1">{% trans "Feedback" %}:</h5>
-                                        <p class="text-gray-600">{{ application.feedback }}</p>
-                                      </div>
-                                    {% endif %}
-                                  </div>
-                                </div>
-                              {% endif %}
                             </div>
                           </td>
                           <td class="px-6 py-4 whitespace-nowrap">
@@ -380,31 +355,6 @@
                                 {% trans "რეზერვი" %}
                               </option>
                             </select>
-                            
-                            {% if application.status == 'რეზერვი' and application.rejection_reasons.all %}
-                              <div class="mt-2">
-                                <button type="button" class="text-xs text-gray-600 hover:text-gray-800 flex items-center show-reasons-btn-mobile" data-application-id="{{ application.id }}">
-                                  <svg class="h-3 w-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                                  </svg>
-                                  {% trans "Show rejection reasons" %}
-                                </button>
-                                <div class="hidden bg-gray-50 rounded-md p-3 mt-2 text-sm text-gray-700 reasons-popup-mobile" id="reasons-popup-mobile-{{ application.id }}">
-                                  <h4 class="font-medium mb-2">{% trans "Rejection Reasons" %}:</h4>
-                                  <ul class="list-disc list-inside space-y-1">
-                                    {% for reason in application.rejection_reasons.all %}
-                                      <li>{{ reason.get_name_display }}</li>
-                                    {% endfor %}
-                                  </ul>
-                                  {% if application.feedback %}
-                                    <div class="mt-2 pt-2 border-t border-gray-200">
-                                      <h5 class="font-medium mb-1">{% trans "Feedback" %}:</h5>
-                                      <p class="text-gray-600">{{ application.feedback }}</p>
-                                    </div>
-                                  {% endif %}
-                                </div>
-                              </div>
-                            {% endif %}
                           </div>
                         </div>
                         
@@ -441,565 +391,57 @@
                     </p>
                 </div>
             {% endif %}
-        </div>
-    </div>
-</div>
-
-<!-- Rejection Reason Modal -->
-<div id="rejectionModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden overflow-y-auto h-full w-full" aria-hidden="true">
-  <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
-    <div class="mt-3">
-      <h3 class="text-lg font-medium leading-6 text-gray-900 mb-4">{% trans "უარის მიზეზები" %}</h3>
-      <form id="rejectionForm" class="space-y-4">
-        {% csrf_token %}
-        <input type="hidden" id="currentApplicationId" name="application_id" value="">
-        <input type="hidden" id="isGuestApplication" name="is_guest" value="false">
-        <div class="space-y-2">
-          <label class="block text-sm font-medium text-gray-700">{% trans "აირჩიეთ მიზეზები:" %} <span class="text-red-500">*</span></label>
-          <div id="reasonsContainer" class="space-y-2">
-            {% for reason in rejection_reasons %}
-              <div class="flex items-center cursor-pointer">
-                <input type="checkbox" name="rejection_reasons" value="{{ reason.id }}" class="h-4 w-4 text-blue-600 rounded rejection-reason-checkbox pointer-events-auto relative z-20 cursor-pointer appearance-none border border-gray-300 bg-white checked:bg-blue-600 checked:border-transparent focus:outline-none">
-                <label class="ml-2 text-sm text-gray-700 cursor-pointer select-none w-full">{{ reason.get_name_display }}</label>
-              </div>
-            {% endfor %}
-          </div>
-          <div id="reasonError" class="text-red-500 text-sm hidden">{% trans "გთხოვთ აირჩიოთ მინიმუმ ერთი მიზეზი" %}</div>
-        </div>
-        <div id="feedbackSection" class="feedback-section">
-          <label class="block text-sm font-medium text-gray-700 mb-1">{% trans "დამატებითი უკუკავშირი:" %}</label>
-          <textarea name="feedback" rows="3" class="shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full sm:text-sm border-gray-300 rounded-md"></textarea>
-        </div>
-        <div class="flex justify-end space-x-3">
-          <button type="button" id="cancelRejection" class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50">
-            {% trans "გაუქმება" %}
-          </button>
-          <button type="submit" class="px-4 py-2 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-md hover:bg-blue-700">
-            {% trans "დადასტურება" %}
-          </button>
-        </div>
-      </form>
     </div>
   </div>
 </div>
 {% endblock %}
 
+{% include 'core/components/rejection_reasons_modal.html' %}
+
 {% block extra_js %}
 <script>
-    // Debug information
-    console.log("Rejection reasons available:", {{ rejection_reasons|length }});
-    
-    // Global variables
-    let currentApplicationId = null;
-    let isGuestUser = false;
-
-    // Function to view application details
-    function viewApplication(applicationId) {
-        window.location.href = `/employer/application-detail/${applicationId}/`;
-    }
-
-    // Function to update application status
-    function updateStatus(event, applicationId, status) {
-        event.stopPropagation();  // Prevent clicking on parent card
-        
-        currentApplicationId = applicationId;
-        
-        // If status is reserve, show rejection reasons modal
-        if (status === 'რეზერვი') {
-            // Set the application ID in the hidden field
-            document.getElementById('currentApplicationId').value = applicationId;
-            
-            // Show the modal
-            const modal = document.getElementById('rejectionModal');
-            if (modal) {
-                console.log("Showing rejection modal for application:", applicationId);
-                modal.classList.remove('hidden');
-            } else {
-                console.error("Rejection modal not found!");
-                // Fallback to direct update
-                sendStatusUpdate(applicationId, status);
-            }
-            return;
-        }
-        
-        // Otherwise, update status directly
-        sendStatusUpdate(applicationId, status);
-    }
-
     // Function to send status update to server
-    function sendStatusUpdate(applicationId, status, rejectionReasons = [], feedback = '') {
-        // Get CSRF token
+    function sendStatusUpdate(applicationId, status, rejectionData = null) {
         const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
         
-        const data = {
-            status: status,
-            rejection_reasons: rejectionReasons,
-            feedback: feedback
+        let headers = {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': csrftoken,
+            'X-Requested-With': 'XMLHttpRequest'
         };
         
-        fetch(`/employer/update-application-status/${applicationId}/`, {
+        let body = rejectionData ? rejectionData : JSON.stringify({ status: status });
+        
+        fetch(`/employer/applications/${applicationId}/update-status/`, {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRFToken': csrftoken
-            },
-            body: JSON.stringify(data)
+            headers: headers,
+            body: body
         })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            return response.json();
-        })
+        .then(response => response.json())
         .then(data => {
-            console.log('Status updated successfully:', data);
-            
-            // Reload the page to reflect changes
-            window.location.reload();
+            if (data.success) {
+                window.location.reload();
+            }
         })
         .catch(error => {
-            console.error('Error updating status:', error);
-            alert('Error updating application status. Please try again.');
+            console.error('Error:', error);
         });
     }
 
-    // Add event listener to the rejection form
-    document.addEventListener('DOMContentLoaded', function() {
-        const rejectionForm = document.getElementById('rejectionForm');
-        if (rejectionForm) {
-            rejectionForm.addEventListener('submit', function(e) {
-                e.preventDefault();
-                
-                // Get the application ID
-                const applicationId = document.getElementById('currentApplicationId').value;
-                
-                // Collect selected reasons
-                const selectedReasons = [];
-                document.querySelectorAll('input[name="rejection_reasons"]:checked').forEach(function(checkbox) {
-                    selectedReasons.push(checkbox.value);
-                });
-                
-                // Validate at least one reason is selected
-                if (selectedReasons.length === 0) {
-                    const reasonError = document.getElementById('reasonError');
-                    if (reasonError) {
-                        reasonError.classList.remove('hidden');
-                    }
-                    return;
-                }
-                
-                // Get feedback
-                const feedback = document.querySelector('textarea[name="feedback"]').value;
-                
-                // Hide the modal
-                const modal = document.getElementById('rejectionModal');
-                if (modal) {
-                    modal.classList.add('hidden');
-                }
-                
-                // Reset form
-                rejectionForm.reset();
-                
-                // Send status update with reasons
-                sendStatusUpdate(applicationId, 'რეზერვი', selectedReasons, feedback);
-            });
-        }
-        
-        // Add event listener to cancel button
-        const cancelButton = document.getElementById('cancelRejection');
-        if (cancelButton) {
-            cancelButton.addEventListener('click', function() {
-                // Hide the modal
-                const modal = document.getElementById('rejectionModal');
-                if (modal) {
-                    modal.classList.add('hidden');
-                }
-                
-                // Reset form
-                const rejectionForm = document.getElementById('rejectionForm');
-                if (rejectionForm) {
-                    rejectionForm.reset();
-                }
-            });
-        }
-    });
-
-    // Helper function to get cookie value
-    function getCookie(name) {
-        let cookieValue = null;
-        if (document.cookie && document.cookie !== '') {
-            const cookies = document.cookie.split(';');
-            for (let i = 0; i < cookies.length; i++) {
-                const cookie = cookies[i].trim();
-                if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                    break;
-                }
-            }
-        }
-        return cookieValue;
-    }
-
-    // Application scripts
     document.addEventListener('DOMContentLoaded', function() {
         const modal = document.getElementById('rejectionModal');
-        console.log("Rejection modal found:", modal !== null);
-        
         const rejectionForm = document.getElementById('rejectionForm');
-        console.log("Rejection form found:", rejectionForm !== null);
-        
         const cancelButton = document.getElementById('cancelRejection');
         const reasonError = document.getElementById('reasonError');
         let lastSelectedStatus = null;
         let lastSelectElement = null;
         
-        // Toggle status explanation on mobile
-        const toggleStatusInfoButton = document.getElementById('toggleStatusInfo');
-        const statusExplanations = document.getElementById('statusExplanations');
-        const toggleStatusArrow = document.getElementById('toggleStatusArrow');
-        
-        if (toggleStatusInfoButton && statusExplanations) {
-            toggleStatusInfoButton.addEventListener('click', function() {
-                statusExplanations.classList.toggle('hidden');
-                toggleStatusArrow.classList.toggle('rotate-180');
-            });
-        }
-
-        // Status filter buttons
-        const statusButtons = document.querySelectorAll('.status-filter');
-        statusButtons.forEach(button => {
-            button.addEventListener('click', function() {
-                statusButtons.forEach(btn => {
-                    btn.classList.remove('bg-blue-100', 'text-blue-800');
-                    btn.classList.add('text-gray-600', 'hover:bg-gray-100');
-                });
-                this.classList.remove('text-gray-600', 'hover:bg-gray-100');
-                this.classList.add('bg-blue-100', 'text-blue-800');
-                
-                // Add filter logic here
-                const status = this.dataset.status;
-                filterApplicationsByStatus(status);
-            });
-        });
-
-        // Function to filter applications by status
-        function filterApplicationsByStatus(status) {
-            const rows = document.querySelectorAll('tbody tr');
-            
-            if (status === 'all') {
-                // Show all rows
-                rows.forEach(row => {
-                    row.style.display = '';
-                });
-            } else {
-                // Filter rows based on status
-                rows.forEach(row => {
-                    const select = row.querySelector('.application-status-select');
-                    if (select && select.value === status) {
-                        row.style.display = '';
-                    } else {
-                        row.style.display = 'none';
-                    }
-                });
-            }
-            
-            // Update URL with filter parameter without page reload
-            const url = new URL(window.location.href);
-            if (status === 'all') {
-                url.searchParams.delete('status');
-            } else {
-                url.searchParams.set('status', status);
-            }
-            window.history.pushState({}, '', url);
-        }
-
-        // Status select styling and functionality
-        const statusSelects = document.querySelectorAll('.application-status-select');
-        statusSelects.forEach(select => {
-            select.addEventListener('change', function() {
-                const status = this.value;
-                const applicationId = this.dataset.applicationId;
-                lastSelectedStatus = status;
-                lastSelectElement = this;
-                
-                console.log("Status changed to:", status, "for application:", applicationId);
-                
-                // If status is reserve, show rejection reasons modal
-                if (status === 'რეზერვი') {
-                    // Set the application ID in the hidden field
-                    document.getElementById('currentApplicationId').value = applicationId;
-                    
-                    // Show the modal
-                    if (modal) {
-                        console.log("Showing rejection modal for application:", applicationId);
-                        modal.classList.remove('hidden');
-                        
-                        // Reset any previous error messages
-                        if (reasonError) {
-                            reasonError.classList.add('hidden');
-                        }
-                    } else {
-                        console.error("Rejection modal not found!");
-                        // Fallback to direct update
-                        sendStatusUpdate(applicationId, status);
-                    }
-                    return;
-                }
-                
-                // For other statuses, update directly
-                sendStatusUpdate(applicationId, status);
-            });
-        });
-
-        // Handle modal form submission
-        rejectionForm.addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            // Validate at least one reason is selected
-            const checkedReasons = document.querySelectorAll('.rejection-reason-checkbox:checked');
-            if (checkedReasons.length === 0) {
-                reasonError.classList.remove('hidden');
-                return;
-            }
-            
-            const applicationId = document.getElementById('currentApplicationId').value;
-            const formData = new FormData(rejectionForm);
-            formData.append('status', 'რეზერვი');
-
-            // Convert to JSON format for proper processing
-            const jsonData = {
-                status: 'რეზერვი',
-                rejection_reasons: Array.from(checkedReasons).map(cb => cb.value),
-                feedback: formData.get('feedback') || ''
-            };
-
-            // Send status update with rejection reasons
-            fetch(`/employer/update-application-status/${applicationId}/`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
-                },
-                body: JSON.stringify(jsonData)
-            })
-            .then(response => {
-                // First check if the response is ok before trying to parse JSON
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                return response.json();
-            })
-            .then(data => {
-                // Always hide the modal and update styling regardless of success status
-                modal.classList.add('hidden');
-                updateSelectStyling(lastSelectElement, 'რეზერვი');
-                rejectionForm.reset();
-                
-                // Force a full page refresh
-                window.location.href = window.location.href;
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                // Even in case of error, hide the modal
-                modal.classList.add('hidden');
-                rejectionForm.reset();
-                
-                // Even on error, refresh the page to show current state
-                window.location.href = window.location.href;
-            });
-        });
-
-        // Handle modal cancel button
-        cancelButton.addEventListener('click', function() {
-            modal.classList.add('hidden');
-            if (lastSelectElement) {
-                lastSelectElement.value = lastSelectElement.dataset.lastValue || 'განხილვის_პროცესში';
-                updateSelectStyling(lastSelectElement, lastSelectElement.value);
-            }
-            rejectionForm.reset();
-        });
-
-        // Close modal when clicking outside
-        modal.addEventListener('click', function(e) {
-            if (e.target === modal) {
-                cancelButton.click();
-            }
-        });
-
-        function updateApplicationStatus(applicationId, status) {
-            const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
-            fetch(`/employer/applications/${applicationId}/update-status/`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                    'X-CSRFToken': csrfToken
-                },
-                body: `status=${status}&csrfmiddlewaretoken=${csrfToken}`
-            })
-            .then(response => {
-                // First check if the response is ok before trying to parse JSON
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                return response.text(); // Get as text first to inspect
-            })
-            .then(text => {
-                // Try to parse as JSON, but handle case where it's not valid JSON
-                try {
-                    return JSON.parse(text);
-                } catch (e) {
-                    console.log('Response is not valid JSON:', text);
-                    return { success: true }; // Assume success if we got a response
-                }
-            })
-            .then(data => {
-                console.log('Status updated successfully');
-                // Force a full page refresh
-                window.location.href = window.location.href;
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                // Even on error, refresh the page to show current state
-                window.location.href = window.location.href;
-            });
-        }
-
-        function updateSelectStyling(select, status) {
-            select.className = 'application-status-select text-sm rounded-full px-3 py-1 border-0 ';
-            if (status === 'განხილვის_პროცესში') {
-                select.classList.add('bg-blue-100', 'text-blue-800');
-            } else if (status === 'გასაუბრება') {
-                select.classList.add('bg-green-100', 'text-green-800');
-            } else if (status === 'რეზერვი') {
-                select.classList.add('bg-yellow-100', 'text-yellow-800');
-            }
-            select.dataset.lastValue = status;
-        }
-
-        // Search functionality
-        const searchInput = document.getElementById('application-search');
-        if (searchInput) {
-            searchInput.addEventListener('input', function() {
-                const searchTerm = this.value.toLowerCase();
-                filterApplicationsBySearch(searchTerm);
-            });
-        }
-        
-        // Function to filter applications by search term
-        function filterApplicationsBySearch(searchTerm) {
-            const rows = document.querySelectorAll('tbody tr');
-            
-            rows.forEach(row => {
-                const nameElement = row.querySelector('.text-sm.font-medium.text-gray-900');
-                const emailElement = row.querySelector('.text-sm.text-gray-500');
-                
-                if (!nameElement && !emailElement) {
-                    // This might be the "No applications found" row
-                    return;
-                }
-                
-                const name = nameElement ? nameElement.textContent.toLowerCase() : '';
-                const email = emailElement ? emailElement.textContent.toLowerCase() : '';
-                
-                if (name.includes(searchTerm) || email.includes(searchTerm)) {
-                    row.style.display = '';
-                } else {
-                    row.style.display = 'none';
-                }
-            });
-            
-            // Update URL with search parameter without page reload
-            const url = new URL(window.location.href);
-            if (searchTerm === '') {
-                url.searchParams.delete('search');
-            } else {
-                url.searchParams.set('search', searchTerm);
-            }
-            window.history.pushState({}, '', url);
-            
-            // Check if any rows are visible
-            let visibleRows = 0;
-            rows.forEach(row => {
-                if (row.style.display !== 'none') {
-                    visibleRows++;
-                }
-            });
-            
-            // Show or hide the "No applications found" message
-            const noResultsRow = document.querySelector('tbody tr td[colspan="5"]');
-            if (noResultsRow) {
-                if (visibleRows === 0 && searchTerm !== '') {
-                    // Create a new row for no search results if it doesn't exist
-                    if (!document.getElementById('no-search-results')) {
-                        const tbody = document.querySelector('tbody');
-                        const noResultsRow = document.createElement('tr');
-                        noResultsRow.id = 'no-search-results';
-                        noResultsRow.innerHTML = `
-                            <td colspan="5" class="px-6 py-10 text-center">
-                                <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" 
-                                        d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
-                                </svg>
-                                <h3 class="mt-2 text-sm font-medium text-gray-900">{% trans "No matching applications" %}</h3>
-                                <p class="mt-1 text-sm text-gray-500">{% trans "Try a different search term." %}</p>
-                            </td>
-                        `;
-                        tbody.appendChild(noResultsRow);
-                    } else {
-                        document.getElementById('no-search-results').style.display = '';
-                    }
-                } else if (document.getElementById('no-search-results')) {
-                    document.getElementById('no-search-results').style.display = 'none';
-                }
-            }
-        }
-        
-        // Apply initial filters from URL parameters
-        function applyInitialFilters() {
-            const urlParams = new URLSearchParams(window.location.search);
-            
-            // Apply status filter if in URL
-            const statusParam = urlParams.get('status');
-            if (statusParam) {
-                const statusButton = document.querySelector(`.status-filter[data-status="${statusParam}"]`);
-                if (statusButton) {
-                    statusButton.click();
-                }
-            }
-            
-            // Apply search filter if in URL
-            const searchParam = urlParams.get('search');
-            if (searchParam) {
-                const searchInput = document.getElementById('application-search');
-                if (searchInput) {
-                    searchInput.value = searchParam;
-                    filterApplicationsBySearch(searchParam.toLowerCase());
-                }
-            }
-        }
-        
-        // Call this function to apply any filters from URL parameters
-        applyInitialFilters();
-
-        // Clear checkboxes when modal is opened
-        statusSelects.forEach(select => {
-            select.addEventListener('change', function() {
-                // Reset checkboxes when modal is opened
-                if (this.value === 'რეზერვი') {
-                    document.querySelectorAll('.rejection-reason-checkbox').forEach(checkbox => {
-                        checkbox.checked = false;
-                    });
-                }
-                // ... rest of existing code ...
-            });
-        });
-        
-        // Make sure checkbox clicks are registered
+        // Make sure checkbox clicks are registered 
         document.querySelectorAll('.rejection-reason-checkbox').forEach(checkbox => {
             checkbox.addEventListener('click', function(e) {
                 // Toggle checked state manually
                 this.checked = !this.checked;
-                // Prevent event propagation to avoid issues
+                // Prevent event propagation
                 e.stopPropagation();
             });
         });
@@ -1019,47 +461,79 @@
             });
         });
         
-        // Handle showing and hiding rejection reasons popups
-        document.querySelectorAll('.show-reasons-btn').forEach(button => {
-            button.addEventListener('click', function(e) {
-                e.preventDefault();
-                e.stopPropagation();
-                
+        // Add event listeners to status selects
+        document.querySelectorAll('.application-status-select').forEach(select => {
+            select.addEventListener('change', function() {
                 const applicationId = this.dataset.applicationId;
-                const popup = document.getElementById(`reasons-popup-${applicationId}`);
+                const newStatus = this.value;
+                lastSelectedStatus = this.dataset.lastValue || select.options[select.selectedIndex].value;
+                lastSelectElement = this;
                 
-                // Hide all other popups first
-                document.querySelectorAll('.reasons-popup').forEach(p => {
-                    if (p.id !== `reasons-popup-${applicationId}`) {
-                        p.classList.add('hidden');
-                    }
-                });
+                // Check if this is a guest application
+                const row = this.closest('tr') || this.closest('.bg-white');
+                const isGuest = row.querySelector('.guest-badge') !== null;
+                document.getElementById('isGuestApplication').value = isGuest ? 'true' : 'false';
                 
-                // Toggle this popup
-                popup.classList.toggle('hidden');
+                if (newStatus === 'რეზერვი' && !isGuest) {
+                    // Only show modal for rejection reasons for registered users
+                    document.getElementById('currentApplicationId').value = applicationId;
+                    document.getElementById('feedbackSection').style.display = 'block';
+                    reasonError.classList.add('hidden');
+                    modal.classList.remove('hidden');
+                    
+                    // Reset form
+                    rejectionForm.reset();
+                    return;
+                }
+                
+                // For guest users or other statuses, update directly
+                sendStatusUpdate(applicationId, newStatus);
             });
+            
+            // Store the initial value
+            select.dataset.lastValue = select.options[select.selectedIndex].value;
         });
         
-        // Handle showing and hiding rejection reasons popups on mobile
-        document.querySelectorAll('.show-reasons-btn-mobile').forEach(button => {
-            button.addEventListener('click', function(e) {
-                e.preventDefault();
-                e.stopPropagation();
-                
-                const applicationId = this.dataset.applicationId;
-                const popup = document.getElementById(`reasons-popup-mobile-${applicationId}`);
-                
-                // Toggle this popup
-                popup.classList.toggle('hidden');
-            });
+        // Handle modal form submission
+        rejectionForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Validate at least one reason is selected
+            const checkedReasons = document.querySelectorAll('.rejection-reason-checkbox:checked');
+            if (checkedReasons.length === 0) {
+                reasonError.classList.remove('hidden');
+                return;
+            }
+            
+            const applicationId = document.getElementById('currentApplicationId').value;
+            
+            // Convert form data to JSON
+            const jsonData = {
+                status: 'რეზერვი',
+                rejection_reasons: Array.from(checkedReasons).map(cb => cb.value),
+                feedback: document.querySelector('textarea[name="feedback"]').value || ''
+            };
+            
+            // Send status update with rejection reasons
+            sendStatusUpdate(applicationId, 'რეზერვი', JSON.stringify(jsonData));
+            
+            // Hide the modal
+            modal.classList.add('hidden');
         });
         
-        // Close popups when clicking elsewhere on the page
-        document.addEventListener('click', function(e) {
-            if (!e.target.closest('.rejection-reasons-tooltip') && !e.target.closest('.show-reasons-btn-mobile')) {
-                document.querySelectorAll('.reasons-popup, .reasons-popup-mobile').forEach(popup => {
-                    popup.classList.add('hidden');
-                });
+        // Handle modal cancel button
+        cancelButton.addEventListener('click', function() {
+            modal.classList.add('hidden');
+            if (lastSelectElement) {
+                lastSelectElement.value = lastSelectElement.dataset.lastValue || 'განხილვის_პროცესში';
+            }
+            rejectionForm.reset();
+        });
+        
+        // Close modal when clicking outside
+        modal.addEventListener('click', function(e) {
+            if (e.target === modal) {
+                cancelButton.click();
             }
         });
     });
