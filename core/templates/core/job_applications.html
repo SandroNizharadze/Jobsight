@@ -412,7 +412,7 @@
         
         let body = rejectionData ? rejectionData : JSON.stringify({ status: status });
         
-        fetch(`/employer/applications/${applicationId}/update-status/`, {
+        fetch(`/employer/update-application-status/${applicationId}/`, {
             method: 'POST',
             headers: headers,
             body: body
@@ -436,30 +436,36 @@
         let lastSelectedStatus = null;
         let lastSelectElement = null;
         
-        // Make sure checkbox clicks are registered 
-        document.querySelectorAll('.rejection-reason-checkbox').forEach(checkbox => {
-            checkbox.addEventListener('click', function(e) {
-                // Toggle checked state manually
-                this.checked = !this.checked;
-                // Prevent event propagation
-                e.stopPropagation();
+        // Initialize checkbox click handlers
+        function initializeCheckboxHandlers() {
+            // Make sure checkbox clicks are registered 
+            document.querySelectorAll('.rejection-reason-checkbox').forEach(checkbox => {
+                checkbox.addEventListener('click', function(e) {
+                    // Don't toggle here, just let the native checkbox behavior work
+                    // and prevent event bubbling to the container
+                    e.stopPropagation();
+                });
             });
-        });
+            
+            // Add click handlers for the entire container of each checkbox
+            document.querySelectorAll('.reason-item').forEach(container => {
+                container.addEventListener('click', function(e) {
+                    // Find the checkbox inside this container
+                    const checkbox = this.querySelector('input[type="checkbox"]');
+                    if (checkbox) {
+                        // Toggle the checkbox state
+                        checkbox.checked = !checkbox.checked;
+                        
+                        // Trigger change event to update counter
+                        const event = new Event('change');
+                        checkbox.dispatchEvent(event);
+                    }
+                });
+            });
+        }
         
-        // Add click handlers for the entire container of each checkbox
-        document.querySelectorAll('#reasonsContainer > div').forEach(container => {
-            container.addEventListener('click', function(e) {
-                // Find the checkbox inside this container
-                const checkbox = this.querySelector('input[type="checkbox"]');
-                if (checkbox) {
-                    // Toggle the checkbox state
-                    checkbox.checked = !checkbox.checked;
-                }
-                // Prevent default behavior
-                e.preventDefault();
-                e.stopPropagation();
-            });
-        });
+        // Initialize handlers when the DOM is loaded
+        initializeCheckboxHandlers();
         
         // Add event listeners to status selects
         document.querySelectorAll('.application-status-select').forEach(select => {
@@ -475,14 +481,31 @@
                 document.getElementById('isGuestApplication').value = isGuest ? 'true' : 'false';
                 
                 if (newStatus === 'რეზერვი' && !isGuest) {
+                    // Reset form and clear any previously selected checkboxes
+                    rejectionForm.reset();
+                    
                     // Only show modal for rejection reasons for registered users
                     document.getElementById('currentApplicationId').value = applicationId;
                     document.getElementById('feedbackSection').style.display = 'block';
                     reasonError.classList.add('hidden');
-                    modal.classList.remove('hidden');
                     
-                    // Reset form
-                    rejectionForm.reset();
+                    // Clear search box if it exists
+                    const searchBox = document.getElementById('reasonSearch');
+                    if (searchBox) {
+                        searchBox.value = '';
+                        // Trigger input event to show all items
+                        const event = new Event('input');
+                        searchBox.dispatchEvent(event);
+                    }
+                    
+                    // Update the counter
+                    const reasonsCount = document.getElementById('reasonsCount');
+                    if (reasonsCount) {
+                        reasonsCount.textContent = '0 {% trans "არჩეული" %}';
+                    }
+                    
+                    // Show modal
+                    modal.classList.remove('hidden');
                     return;
                 }
                 

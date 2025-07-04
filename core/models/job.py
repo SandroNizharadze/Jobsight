@@ -204,24 +204,21 @@ class JobListing(SoftDeletionModel):
 
 class RejectionReason(models.Model):
     """Model for predefined rejection reasons"""
-    REASON_CHOICES = [
-        ('ენის_ცოდნის_ნაკლებობა', _("ენის ცოდნის ნაკლებობა")),
-        ('არასაკმარისი_გამოცდილება', _("არასაკმარისი გამოცდილება")),
-        ('უნარების_ნაკლებობა', _("უნარების ნაკლებობა")),
-        ('შეუსაბამო_საცხოვრებელი_ადგილი', _("შეუსაბამო საცხოვრებელი ადგილი")),
-        ('სივიში_არ_არის_საკმარისი_ინფორმაცია', _("სივიში არ არის საკმარისი ინფორმაცია")),
-        ('განათლების_შეუსაბამობა', _("განათლების შეუსაბამობა")),
-        ('კარიერული_მიზნების_შეუსაბამობა', _("კარიერული მიზნების შეუსაბამობა")),
-        ('სივის_ფორმატის_სტრუქტურის_ხარვეზები', _("სივის ფორმატის/სტრუქტურის ხარვეზები")),
-        ('სერთიფიკატების_ლიცენზიების_ნაკლებობა', _("სერთიფიკატების/ლიცენზიების ნაკლებობა")),
-        ('არარელევანტური_სამუშაო_ისტორია', _("არარელევანტური სამუშაო ისტორია")),
-        ('სხვა', _("სხვა")),
-    ]
-    
-    name = models.CharField(max_length=100, choices=REASON_CHOICES, unique=True, verbose_name=_("მიზეზი"))
+    code = models.CharField(max_length=100, unique=True, verbose_name=_("კოდი"), default='code')
+    name = models.CharField(max_length=255, verbose_name=_("მიზეზი"))
     
     def __str__(self):
-        return self.get_name_display()
+        return self.name
+    
+    def save(self, *args, **kwargs):
+        # If no code is provided, generate one from the name
+        if not self.code or self.code == 'code':
+            # Convert name to lowercase, replace spaces with underscores
+            import re
+            self.code = re.sub(r'\s+', '_', self.name.lower())
+            # Remove any special characters
+            self.code = re.sub(r'[^\w_]', '', self.code)
+        super().save(*args, **kwargs)
     
     class Meta:
         verbose_name = _("უარის მიზეზი")

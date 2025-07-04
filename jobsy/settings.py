@@ -80,6 +80,7 @@ TEMPLATES = [
                 'core.context_processors.language_attributes',
                 'core.context_processors.employer_notifications',
                 'core.context_processors.candidate_notifications',
+                'core.context_processors.rejection_reasons',
             ],
         },
     },

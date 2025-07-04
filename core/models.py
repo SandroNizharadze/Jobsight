@@ -54,21 +54,11 @@ class RejectionReason(models.Model):
     """
     Predefined reasons for rejecting a job application
     """
-    REASON_CHOICES = [
-        ('არასაკმარისი_კვალიფიკაცია', 'არასაკმარისი კვალიფიკაცია'),
-        ('გამოცდილების_ნაკლებობა', 'გამოცდილების ნაკლებობა'),
-        ('უნარების_შეუსაბამობა', 'უნარების შეუსაბამობა'),
-        ('სხვა_კანდიდატი_შეირჩა', 'სხვა კანდიდატი შეირჩა'),
-        ('პოზიცია_შეივსო', 'პოზიცია შეივსო'),
-        ('ანაზღაურების_მოლოდინები', 'ანაზღაურების მოლოდინები'),
-        ('კომუნიკაციის_პრობლემები', 'კომუნიკაციის პრობლემები'),
-        ('პოზიცია_გაუქმდა', 'პოზიცია გაუქმდა'),
-    ]
-    
-    reason = models.CharField(max_length=100, choices=REASON_CHOICES, unique=True)
+    reason = models.CharField(max_length=100, unique=True)
+    name = models.CharField(max_length=255)
     
     def __str__(self):
-        return self.get_reason_display()
+        return self.name
 
 class JobApplication(models.Model):
     """

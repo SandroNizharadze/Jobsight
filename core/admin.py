@@ -421,11 +421,11 @@ class SavedJobAdmin(ImportExportModelAdmin):
         return obj.job_company or "Deleted Company"
     get_company.short_description = 'Company'
 
+@admin.register(RejectionReason)
 class RejectionReasonAdmin(admin.ModelAdmin):
-    list_display = ('name',)
-    search_fields = ('name',)
-
-admin.site.register(RejectionReason, RejectionReasonAdmin)
+    list_display = ('name', 'code')
+    search_fields = ('name', 'code')
+    ordering = ('name',)
 
 class PricingFeatureInline(admin.TabularInline):
     model = PricingFeature

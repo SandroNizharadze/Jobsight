@@ -1,4 +1,4 @@
-from core.models import JobListing
+from core.models import JobListing, RejectionReason
 from django.utils import timezone
 from core.repositories.notification_repository import NotificationRepository
 
@@ -71,3 +71,11 @@ def candidate_notifications(request):
             pass
     
     return context 
+
+def rejection_reasons(request):
+    """
+    Add rejection reasons to the context of all templates
+    """
+    return {
+        'rejection_reasons': RejectionReason.objects.all()
+    } 
