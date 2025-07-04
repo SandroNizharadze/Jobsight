@@ -423,8 +423,8 @@ class SavedJobAdmin(ImportExportModelAdmin):
 
 @admin.register(RejectionReason)
 class RejectionReasonAdmin(admin.ModelAdmin):
-    list_display = ('name', 'code')
-    search_fields = ('name', 'code')
+    list_display = ('name',)
+    search_fields = ('name',)
     ordering = ('name',)
 
 class PricingFeatureInline(admin.TabularInline):

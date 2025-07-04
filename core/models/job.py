@@ -204,21 +204,10 @@ class JobListing(SoftDeletionModel):
 
 class RejectionReason(models.Model):
     """Model for predefined rejection reasons"""
-    code = models.CharField(max_length=100, unique=True, verbose_name=_("კოდი"), default='code')
-    name = models.CharField(max_length=255, verbose_name=_("მიზეზი"))
+    name = models.CharField(max_length=255, unique=True, verbose_name=_("მიზეზი"))
     
     def __str__(self):
         return self.name
-    
-    def save(self, *args, **kwargs):
-        # If no code is provided, generate one from the name
-        if not self.code or self.code == 'code':
-            # Convert name to lowercase, replace spaces with underscores
-            import re
-            self.code = re.sub(r'\s+', '_', self.name.lower())
-            # Remove any special characters
-            self.code = re.sub(r'[^\w_]', '', self.code)
-        super().save(*args, **kwargs)
     
     class Meta:
         verbose_name = _("უარის მიზეზი")

@@ -99,16 +99,13 @@ def update_application_status(request, application_id):
             # Add new rejection reasons
             reasons = data.get('rejection_reasons', [])
             if isinstance(reasons, list):
-                for reason_code in reasons:
+                for reason_name in reasons:
                     try:
-                        reason = RejectionReason.objects.get(code=reason_code)
+                        reason = RejectionReason.objects.get(name=reason_name)
                         application.rejection_reasons.add(reason)
                     except RejectionReason.DoesNotExist:
-                        # If the reason doesn't exist, create it with the code as both code and name
-                        reason = RejectionReason.objects.create(
-                            code=reason_code,
-                            name=reason_code.replace('_', ' ').capitalize()
-                        )
+                        # If the reason doesn't exist, create it
+                        reason = RejectionReason.objects.create(name=reason_name)
                         application.rejection_reasons.add(reason)
             
             # Add feedback if provided

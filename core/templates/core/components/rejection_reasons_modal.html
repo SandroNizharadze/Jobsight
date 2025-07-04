@@ -14,44 +14,44 @@
             <span id="reasonsCount" class="text-xs text-gray-500">0 {% trans "არჩეული" %}</span>
           </div>
           <div id="reasonError" class="text-sm text-red-600 hidden">{% trans "გთხოვთ აირჩიოთ მინიმუმ ერთი მიზეზი" %}</div>
-          <div id="reasonsContainer" class="space-y-2 max-h-60 overflow-y-auto grid grid-cols-1 md:grid-cols-2 gap-2 border border-gray-200 rounded-md p-2">
+          <div id="reasonsContainer" class="space-y-2 max-h-60 overflow-y-auto grid grid-cols-1 gap-2 border border-gray-200 rounded-md p-2">
             {% for reason in rejection_reasons %}
             <div class="flex items-center p-2 rounded-md hover:bg-gray-50 cursor-pointer reason-item">
-              <input type="checkbox" name="rejection_reasons[]" value="{{ reason.code }}" class="rejection-reason-checkbox h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
+              <input type="checkbox" name="rejection_reasons[]" value="{{ reason.name }}" class="rejection-reason-checkbox h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
               <label class="ml-3 block text-sm font-medium text-gray-700 cursor-pointer reason-label">{{ reason.name }}</label>
             </div>
             {% empty %}
             <!-- Default reasons if none are defined in the database -->
             <div class="flex items-center p-2 rounded-md hover:bg-gray-50 cursor-pointer reason-item">
-              <input type="checkbox" name="rejection_reasons[]" value="არასაკმარისი_კვალიფიკაცია" class="rejection-reason-checkbox h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
+              <input type="checkbox" name="rejection_reasons[]" value="არასაკმარისი კვალიფიკაცია" class="rejection-reason-checkbox h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
               <label class="ml-3 block text-sm font-medium text-gray-700 cursor-pointer reason-label">{% trans "არასაკმარისი კვალიფიკაცია" %}</label>
             </div>
             <div class="flex items-center p-2 rounded-md hover:bg-gray-50 cursor-pointer reason-item">
-              <input type="checkbox" name="rejection_reasons[]" value="გამოცდილების_ნაკლებობა" class="rejection-reason-checkbox h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
+              <input type="checkbox" name="rejection_reasons[]" value="გამოცდილების ნაკლებობა" class="rejection-reason-checkbox h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
               <label class="ml-3 block text-sm font-medium text-gray-700 cursor-pointer reason-label">{% trans "გამოცდილების ნაკლებობა" %}</label>
             </div>
             <div class="flex items-center p-2 rounded-md hover:bg-gray-50 cursor-pointer reason-item">
-              <input type="checkbox" name="rejection_reasons[]" value="უნარების_შეუსაბამობა" class="rejection-reason-checkbox h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
+              <input type="checkbox" name="rejection_reasons[]" value="უნარების შეუსაბამობა" class="rejection-reason-checkbox h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
               <label class="ml-3 block text-sm font-medium text-gray-700 cursor-pointer reason-label">{% trans "უნარების შეუსაბამობა" %}</label>
             </div>
             <div class="flex items-center p-2 rounded-md hover:bg-gray-50 cursor-pointer reason-item">
-              <input type="checkbox" name="rejection_reasons[]" value="სხვა_კანდიდატი_შეირჩა" class="rejection-reason-checkbox h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
+              <input type="checkbox" name="rejection_reasons[]" value="სხვა კანდიდატი შეირჩა" class="rejection-reason-checkbox h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
               <label class="ml-3 block text-sm font-medium text-gray-700 cursor-pointer reason-label">{% trans "სხვა კანდიდატი შეირჩა" %}</label>
             </div>
             <div class="flex items-center p-2 rounded-md hover:bg-gray-50 cursor-pointer reason-item">
-              <input type="checkbox" name="rejection_reasons[]" value="პოზიცია_შეივსო" class="rejection-reason-checkbox h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
+              <input type="checkbox" name="rejection_reasons[]" value="პოზიცია შეივსო" class="rejection-reason-checkbox h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
               <label class="ml-3 block text-sm font-medium text-gray-700 cursor-pointer reason-label">{% trans "პოზიცია შეივსო" %}</label>
             </div>
             <div class="flex items-center p-2 rounded-md hover:bg-gray-50 cursor-pointer reason-item">
-              <input type="checkbox" name="rejection_reasons[]" value="ანაზღაურების_მოლოდინები" class="rejection-reason-checkbox h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
+              <input type="checkbox" name="rejection_reasons[]" value="ანაზღაურების მოლოდინები" class="rejection-reason-checkbox h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
               <label class="ml-3 block text-sm font-medium text-gray-700 cursor-pointer reason-label">{% trans "ანაზღაურების მოლოდინები" %}</label>
             </div>
             <div class="flex items-center p-2 rounded-md hover:bg-gray-50 cursor-pointer reason-item">
-              <input type="checkbox" name="rejection_reasons[]" value="კომუნიკაციის_პრობლემები" class="rejection-reason-checkbox h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
+              <input type="checkbox" name="rejection_reasons[]" value="კომუნიკაციის პრობლემები" class="rejection-reason-checkbox h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
               <label class="ml-3 block text-sm font-medium text-gray-700 cursor-pointer reason-label">{% trans "კომუნიკაციის პრობლემები" %}</label>
             </div>
             <div class="flex items-center p-2 rounded-md hover:bg-gray-50 cursor-pointer reason-item">
-              <input type="checkbox" name="rejection_reasons[]" value="პოზიცია_გაუქმდა" class="rejection-reason-checkbox h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
+              <input type="checkbox" name="rejection_reasons[]" value="პოზიცია გაუქმდა" class="rejection-reason-checkbox h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
               <label class="ml-3 block text-sm font-medium text-gray-700 cursor-pointer reason-label">{% trans "პოზიცია გაუქმდა" %}</label>
             </div>
             {% endfor %}
