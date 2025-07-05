@@ -116,7 +116,7 @@ else:
     log_setting("Using local PostgreSQL database")
     
 # Fallback to SQLite if PostgreSQL connection fails
-USE_SQLITE_FALLBACK = os.environ.get('USE_SQLITE_FALLBACK', 'False') == 'True'
+USE_SQLITE_FALLBACK = False
 if USE_SQLITE_FALLBACK:
     DATABASES = {
         'default': {

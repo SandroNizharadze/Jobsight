@@ -197,7 +197,7 @@
             <div class="bg-gray-50 rounded-lg p-4">
               <ul class="list-disc list-inside space-y-1">
                 {% for reason in application.rejection_reasons.all %}
-                  <li class="text-gray-700">{{ reason.get_name_display }}</li>
+                  <li class="text-gray-700">{{ reason.name }}</li>
                 {% endfor %}
               </ul>
               
