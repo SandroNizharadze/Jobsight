@@ -1,121 +1,101 @@
 {% load i18n %}
 
 <!-- Rejection Reasons Modal -->
-<div id="rejectionModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden overflow-y-auto h-full w-full z-50" aria-hidden="true">
-  <div class="relative top-10 mx-auto p-5 border w-full max-w-lg shadow-lg rounded-md bg-white">
+<div id="rejectionReasonsModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden overflow-y-auto h-full w-full" aria-hidden="true">
+  <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-xl bg-white">
     <div class="mt-3">
-      <h3 class="text-lg font-medium leading-6 text-gray-900 mb-4">{% trans "უარის მიზეზები" %}</h3>
-      <form id="rejectionForm" class="space-y-4">
-        <input type="hidden" id="currentApplicationId" name="application_id" value="">
-        <input type="hidden" id="isGuestApplication" name="is_guest" value="false">
-        <div class="space-y-2">
-          <div class="flex justify-between items-center">
-            <label class="block text-sm font-medium text-gray-700">{% trans "აირჩიეთ მიზეზები:" %} <span class="text-red-500">*</span></label>
-            <span id="reasonsCount" class="text-xs text-gray-500">0 {% trans "არჩეული" %}</span>
-          </div>
-          <div id="reasonError" class="text-sm text-red-600 hidden">{% trans "გთხოვთ აირჩიოთ მინიმუმ ერთი მიზეზი" %}</div>
-          <div id="reasonsContainer" class="space-y-2 max-h-60 overflow-y-auto grid grid-cols-1 gap-2 border border-gray-200 rounded-md p-2">
-            {% for reason in rejection_reasons %}
-            <div class="flex items-center p-2 rounded-md hover:bg-gray-50 cursor-pointer reason-item">
-              <input type="checkbox" name="rejection_reasons[]" value="{{ reason.name }}" class="rejection-reason-checkbox h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
-              <label class="ml-3 block text-sm font-medium text-gray-700 cursor-pointer reason-label">{{ reason.name }}</label>
-            </div>
-            {% empty %}
-            <!-- Default reasons if none are defined in the database -->
-            <div class="flex items-center p-2 rounded-md hover:bg-gray-50 cursor-pointer reason-item">
-              <input type="checkbox" name="rejection_reasons[]" value="არასაკმარისი კვალიფიკაცია" class="rejection-reason-checkbox h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
-              <label class="ml-3 block text-sm font-medium text-gray-700 cursor-pointer reason-label">{% trans "არასაკმარისი კვალიფიკაცია" %}</label>
-            </div>
-            <div class="flex items-center p-2 rounded-md hover:bg-gray-50 cursor-pointer reason-item">
-              <input type="checkbox" name="rejection_reasons[]" value="გამოცდილების ნაკლებობა" class="rejection-reason-checkbox h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
-              <label class="ml-3 block text-sm font-medium text-gray-700 cursor-pointer reason-label">{% trans "გამოცდილების ნაკლებობა" %}</label>
-            </div>
-            <div class="flex items-center p-2 rounded-md hover:bg-gray-50 cursor-pointer reason-item">
-              <input type="checkbox" name="rejection_reasons[]" value="უნარების შეუსაბამობა" class="rejection-reason-checkbox h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
-              <label class="ml-3 block text-sm font-medium text-gray-700 cursor-pointer reason-label">{% trans "უნარების შეუსაბამობა" %}</label>
-            </div>
-            <div class="flex items-center p-2 rounded-md hover:bg-gray-50 cursor-pointer reason-item">
-              <input type="checkbox" name="rejection_reasons[]" value="სხვა კანდიდატი შეირჩა" class="rejection-reason-checkbox h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
-              <label class="ml-3 block text-sm font-medium text-gray-700 cursor-pointer reason-label">{% trans "სხვა კანდიდატი შეირჩა" %}</label>
-            </div>
-            <div class="flex items-center p-2 rounded-md hover:bg-gray-50 cursor-pointer reason-item">
-              <input type="checkbox" name="rejection_reasons[]" value="პოზიცია შეივსო" class="rejection-reason-checkbox h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
-              <label class="ml-3 block text-sm font-medium text-gray-700 cursor-pointer reason-label">{% trans "პოზიცია შეივსო" %}</label>
-            </div>
-            <div class="flex items-center p-2 rounded-md hover:bg-gray-50 cursor-pointer reason-item">
-              <input type="checkbox" name="rejection_reasons[]" value="ანაზღაურების მოლოდინები" class="rejection-reason-checkbox h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
-              <label class="ml-3 block text-sm font-medium text-gray-700 cursor-pointer reason-label">{% trans "ანაზღაურების მოლოდინები" %}</label>
-            </div>
-            <div class="flex items-center p-2 rounded-md hover:bg-gray-50 cursor-pointer reason-item">
-              <input type="checkbox" name="rejection_reasons[]" value="კომუნიკაციის პრობლემები" class="rejection-reason-checkbox h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
-              <label class="ml-3 block text-sm font-medium text-gray-700 cursor-pointer reason-label">{% trans "კომუნიკაციის პრობლემები" %}</label>
-            </div>
-            <div class="flex items-center p-2 rounded-md hover:bg-gray-50 cursor-pointer reason-item">
-              <input type="checkbox" name="rejection_reasons[]" value="პოზიცია გაუქმდა" class="rejection-reason-checkbox h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
-              <label class="ml-3 block text-sm font-medium text-gray-700 cursor-pointer reason-label">{% trans "პოზიცია გაუქმდა" %}</label>
-            </div>
-            {% endfor %}
-          </div>
-        </div>
-        
-        <div id="feedbackSection" class="space-y-2">
-          <label for="feedback" class="block text-sm font-medium text-gray-700">{% trans "დამატებითი კომენტარი:" %}</label>
-          <textarea name="feedback" rows="3" class="shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full sm:text-sm border-gray-300 rounded-md"></textarea>
-        </div>
-        
-        <div class="flex justify-end space-x-3 pt-3 border-t">
-          <button type="button" id="cancelRejection" class="inline-flex justify-center py-2 px-4 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
-            {% trans "გაუქმება" %}
-          </button>
-          <button type="submit" class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
-            {% trans "შენახვა" %}
-          </button>
-        </div>
-      </form>
+      <h3 class="text-lg font-medium leading-6 text-gray-900 mb-4">{% trans "Rejection Reasons" %}</h3>
+      
+      <div class="mb-4">
+        <h4 class="text-sm font-medium text-gray-700 mb-2">{% trans "Reasons:" %}</h4>
+        <ul id="rejectionReasonsList" class="list-disc pl-5 text-sm text-gray-600">
+          <!-- Reasons will be populated here -->
+        </ul>
+      </div>
+      
+      <div class="mb-4">
+        <h4 class="text-sm font-medium text-gray-700 mb-2">{% trans "Additional Feedback:" %}</h4>
+        <p id="rejectionFeedback" class="text-sm text-gray-600 italic">
+          <!-- Feedback will be populated here -->
+        </p>
+      </div>
+      
+      <div class="flex justify-end">
+        <button type="button" id="closeRejectionModal" class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50">
+          {% trans "Close" %}
+        </button>
+      </div>
     </div>
   </div>
 </div>
 
-<!-- JavaScript for search functionality -->
 <script>
-  document.addEventListener('DOMContentLoaded', function() {
-    // Search functionality
-    const searchInput = document.getElementById('reasonSearch');
-    const reasonItems = document.querySelectorAll('.reason-item');
-    const reasonsCount = document.getElementById('reasonsCount');
-    
-    if (searchInput) {
-      searchInput.addEventListener('input', function() {
-        const searchTerm = this.value.toLowerCase();
+document.addEventListener('DOMContentLoaded', function() {
+  // View rejection reasons
+  const rejectionReasonButtons = document.querySelectorAll('.view-rejection-reasons');
+  const rejectionReasonsModal = document.getElementById('rejectionReasonsModal');
+  const rejectionReasonsList = document.getElementById('rejectionReasonsList');
+  const rejectionFeedback = document.getElementById('rejectionFeedback');
+  const closeRejectionModal = document.getElementById('closeRejectionModal');
+  
+  if (rejectionReasonButtons.length > 0 && rejectionReasonsModal && rejectionReasonsList && closeRejectionModal) {
+    rejectionReasonButtons.forEach(button => {
+      button.addEventListener('click', function() {
+        const applicationId = this.getAttribute('data-application-id');
         
-        reasonItems.forEach(item => {
-          const label = item.querySelector('.reason-label');
-          if (label) {
-            const text = label.textContent.toLowerCase();
-            if (text.includes(searchTerm)) {
-              item.style.display = '';
-            } else {
-              item.style.display = 'none';
-            }
+        // Fetch rejection reasons
+        fetch(`/api/applications/${applicationId}/rejection-reasons/`, {
+          headers: {
+            'X-Requested-With': 'XMLHttpRequest'
           }
+        })
+        .then(response => response.json())
+        .then(data => {
+          // Clear previous content
+          rejectionReasonsList.innerHTML = '';
+          rejectionFeedback.textContent = '';
+          
+          // Add reasons to the list
+          if (data.reasons && data.reasons.length > 0) {
+            data.reasons.forEach(reason => {
+              const li = document.createElement('li');
+              li.className = 'mb-1';
+              li.textContent = reason;
+              rejectionReasonsList.appendChild(li);
+            });
+          } else {
+            const li = document.createElement('li');
+            li.textContent = 'No specific reasons provided.';
+            rejectionReasonsList.appendChild(li);
+          }
+          
+          // Add feedback if available
+          if (data.feedback) {
+            rejectionFeedback.textContent = data.feedback;
+          } else {
+            rejectionFeedback.textContent = 'No additional feedback provided.';
+          }
+          
+          // Show the modal
+          rejectionReasonsModal.classList.remove('hidden');
+        })
+        .catch(error => {
+          console.error('Error fetching rejection reasons:', error);
         });
       });
-    }
-    
-    // Update selected count
-    function updateSelectedCount() {
-      const checkedCount = document.querySelectorAll('.rejection-reason-checkbox:checked').length;
-      if (reasonsCount) {
-        reasonsCount.textContent = checkedCount + ' {% trans "არჩეული" %}';
-      }
-    }
-    
-    // Add event listeners to checkboxes
-    document.querySelectorAll('.rejection-reason-checkbox').forEach(checkbox => {
-      checkbox.addEventListener('change', updateSelectedCount);
     });
     
-    // Initialize count
-    updateSelectedCount();
-  });
+    // Close modal when clicking the close button
+    closeRejectionModal.addEventListener('click', function() {
+      rejectionReasonsModal.classList.add('hidden');
+    });
+    
+    // Close modal when clicking outside
+    rejectionReasonsModal.addEventListener('click', function(e) {
+      if (e.target === rejectionReasonsModal) {
+        rejectionReasonsModal.classList.add('hidden');
+      }
+    });
+  }
+});
 </script> 

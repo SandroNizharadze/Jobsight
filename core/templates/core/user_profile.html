@@ -386,47 +386,88 @@ document.addEventListener('DOMContentLoaded', function() {
 
 <script>
   document.addEventListener('DOMContentLoaded', function() {
+    // Get URL parameters to determine which tab to show
+    const urlParams = new URLSearchParams(window.location.search);
+    const tabParam = urlParams.get('tab');
+    
     // Tab functionality
     const tabToggles = document.querySelectorAll('[data-tab-toggle="tab"]');
+    
+    // Function to activate a specific tab
+    function activateTab(tabId) {
+      // Hide all tab panes
+      document.querySelectorAll('.tab-pane').forEach(pane => {
+        pane.classList.add('hidden');
+        pane.classList.remove('block');
+      });
+      
+      // Show the target tab pane
+      const targetPane = document.querySelector(tabId);
+      if (targetPane) {
+        targetPane.classList.remove('hidden');
+        targetPane.classList.add('block');
+        
+        // If switching to job activity tab, determine which subtab to show
+        if (tabId === '#job-activity-section') {
+          let activitySubtab = 'applications';
+          
+          // If the tab param is specifically 'saved_jobs', show that subtab
+          if (tabParam === 'saved_jobs') {
+            activitySubtab = 'saved';
+          }
+          
+          // Show the appropriate activity pane
+          document.querySelectorAll('[data-activity-pane]').forEach(pane => {
+            pane.classList.add('hidden');
+            pane.classList.remove('block');
+          });
+          
+          const activityPane = document.querySelector(`[data-activity-pane="${activitySubtab}"]`);
+          if (activityPane) {
+            activityPane.classList.remove('hidden');
+            activityPane.classList.add('block');
+          }
+          
+          // Update activity tab styling
+          document.querySelectorAll('[data-activity-tab]').forEach(t => {
+            t.classList.remove('bg-blue-500', 'text-white');
+            t.classList.add('bg-gray-100', 'text-gray-700');
+          });
+          
+          const activeActivityTab = document.querySelector(`[data-activity-tab="${activitySubtab}"]`);
+          if (activeActivityTab) {
+            activeActivityTab.classList.remove('bg-gray-100', 'text-gray-700');
+            activeActivityTab.classList.add('bg-blue-500', 'text-white');
+          }
+        }
+      }
+      
+      // Update the active tab styling
+      tabToggles.forEach(t => {
+        t.classList.remove('border-blue-500', 'text-blue-600');
+        t.classList.add('border-transparent', 'text-gray-500', 'hover:text-gray-700', 'hover:border-gray-300');
+      });
+      
+      // Find the tab toggle that corresponds to the active tab
+      const activeTabToggle = document.querySelector(`[data-tab-target="${tabId}"]`);
+      if (activeTabToggle) {
+        activeTabToggle.classList.remove('border-transparent', 'text-gray-500', 'hover:text-gray-700', 'hover:border-gray-300');
+        activeTabToggle.classList.add('border-blue-500', 'text-blue-600');
+      }
+    }
+    
+    // Handle tab selection from URL parameter
+    if (tabParam === 'applications' || tabParam === 'saved_jobs') {
+      activateTab('#job-activity-section');
+    } else {
+      activateTab('#profile-section');
+    }
+    
+    // Add click event listeners to tab toggles
     tabToggles.forEach(toggle => {
       toggle.addEventListener('click', function() {
         const targetId = this.dataset.tabTarget;
-        
-        // Hide all tab panes
-        document.querySelectorAll('.tab-pane').forEach(pane => {
-          pane.classList.add('hidden');
-          pane.classList.remove('block');
-        });
-        
-        // Show the target tab pane
-        const targetPane = document.querySelector(targetId);
-        if (targetPane) {
-          targetPane.classList.remove('hidden');
-          targetPane.classList.add('block');
-          
-          // If switching to job activity tab, make sure applications are shown by default
-          if (targetId === '#job-activity-section') {
-            // Show applications tab content and hide saved jobs content
-            document.querySelector('[data-activity-pane="applications"]').classList.remove('hidden');
-            document.querySelector('[data-activity-pane="applications"]').classList.add('block');
-            document.querySelector('[data-activity-pane="saved"]').classList.add('hidden');
-            document.querySelector('[data-activity-pane="saved"]').classList.remove('block');
-            
-            // Update activity tab styling
-            document.querySelector('[data-activity-tab="applications"]').classList.add('bg-blue-500', 'text-white');
-            document.querySelector('[data-activity-tab="applications"]').classList.remove('bg-gray-100', 'text-gray-700');
-            document.querySelector('[data-activity-tab="saved"]').classList.add('bg-gray-100', 'text-gray-700');
-            document.querySelector('[data-activity-tab="saved"]').classList.remove('bg-blue-500', 'text-white');
-          }
-        }
-        
-        // Update the active tab styling
-        tabToggles.forEach(t => {
-          t.classList.remove('border-blue-500', 'text-blue-600');
-          t.classList.add('border-transparent', 'text-gray-500', 'hover:text-gray-700', 'hover:border-gray-300');
-        });
-        this.classList.remove('border-transparent', 'text-gray-500', 'hover:text-gray-700', 'hover:border-gray-300');
-        this.classList.add('border-blue-500', 'text-blue-600');
+        activateTab(targetId);
       });
     });
     

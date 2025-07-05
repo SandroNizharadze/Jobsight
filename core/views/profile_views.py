@@ -148,6 +148,10 @@ def profile(request):
         except EmployerProfile.DoesNotExist:
             pass
     
+    # If tab is applications or saved_jobs and user is a candidate, mark notifications as read
+    if user_profile.role == 'candidate' and tab in ['applications', 'saved_jobs'] and tab == 'applications':
+        NotificationRepository.mark_all_candidate_notifications_as_read(request.user)
+    
     context = {
         'user_profile': user_profile,
         'profile_form': form,
@@ -244,8 +248,8 @@ def get_application_rejection_reasons(request, application_id):
     if application.user != request.user:
         return JsonResponse({'error': 'You do not have permission to view this application'}, status=403)
     
-    # Get rejection reasons with their display names
-    reasons = [reason.get_name_display() for reason in application.rejection_reasons.all()]
+    # Get rejection reasons names
+    reasons = [reason.name for reason in application.rejection_reasons.all()]
     
     # Return as JSON
     return JsonResponse({
@@ -568,61 +572,3 @@ def mark_candidate_notification_as_read(request, notification_id):
     
     # Redirect back to the page they came from
     return redirect(request.META.get('HTTP_REFERER', 'profile'))
-
-@login_required
-def applications(request):
-    """
-    Display user's job applications
-    """
-    # Get filters from query params
-    name_filter = request.GET.get('name', '')
-    status_filter = request.GET.get('status', '')
-    
-    # Get user's applications with proper joins
-    applications = JobApplication.objects.filter(
-        user=request.user
-    ).select_related(
-        'job',
-        'job__employer'
-    ).order_by('-applied_at')
-    
-    # Apply name filter if provided
-    if name_filter:
-        name_filter_q = Q(job__title__icontains=name_filter)
-        # Also search in job_title for deleted jobs
-        name_filter_q |= Q(job_title__icontains=name_filter)
-        # Search in company name as well
-        name_filter_q |= Q(job__company__icontains=name_filter)
-        name_filter_q |= Q(job_company__icontains=name_filter)
-        applications = applications.filter(name_filter_q)
-    
-    # Apply status filter if provided
-    if status_filter:
-        applications = applications.filter(status=status_filter)
-    
-    context = {
-        'applications': applications,
-        'name_filter': name_filter,
-        'status_filter': status_filter,
-    }
-    
-    return render(request, 'core/candidate/applications.html', context)
-
-@login_required
-def saved_jobs(request):
-    """
-    Display user's saved jobs
-    """
-    # Get user's saved jobs with proper joins
-    saved_jobs = SavedJob.objects.filter(
-        user=request.user
-    ).select_related(
-        'job',
-        'job__employer'
-    ).order_by('-saved_at')
-    
-    context = {
-        'saved_jobs': saved_jobs,
-    }
-    
-    return render(request, 'core/candidate/saved_jobs.html', context)

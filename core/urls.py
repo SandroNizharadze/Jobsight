@@ -2,7 +2,7 @@ from django.urls import path
 from .views import main, auth_views, job_views, employer_views, profile_views, admin_views
 from .views.job_views import save_job, unsave_job
 from .views.file_views import serve_cv_file
-from .views.profile_views import get_application_rejection_reasons, view_cv_employer, mark_candidate_notifications_as_read, mark_candidate_notification_as_read, applications, saved_jobs
+from .views.profile_views import get_application_rejection_reasons, view_cv_employer, mark_candidate_notifications_as_read, mark_candidate_notification_as_read
 from .views.employer_views import company_profile, application_detail, cv_database
 from django.views.generic.base import RedirectView
 from .views.blog_views import BlogListView, BlogPostDetailView, BlogCategoryView
@@ -23,9 +23,9 @@ urlpatterns = [
     path('profile/delete-account/', profile_views.delete_account, name='delete_account'),
     path('profile/update-employer-profile/', profile_views.update_employer_profile, name='update_employer_profile'),
     
-    # Candidate profile pages
-    path('profile/applications/', applications, name='candidate_applications'),
-    path('profile/saved-jobs/', saved_jobs, name='candidate_saved_jobs'),
+    # Redirect applications and saved jobs to profile with tab parameter
+    path('profile/applications/', RedirectView.as_view(url='/profile/?tab=applications', permanent=False), name='candidate_applications'),
+    path('profile/saved-jobs/', RedirectView.as_view(url='/profile/?tab=saved_jobs', permanent=False), name='candidate_saved_jobs'),
     
     # Email verification URLs
     path('verify-email/<str:token>/', verify_email, name='verify_email'),
