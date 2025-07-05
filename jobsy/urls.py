@@ -9,6 +9,8 @@ from django.contrib.sitemaps.views import sitemap
 from core.sitemap import JobListingSitemap, BlogSitemap, StaticViewSitemap
 from django_ckeditor_5.views import upload_file
 from django.views.generic.base import TemplateView
+from django.views.static import serve
+import os
 
 # Define the sitemaps dictionary
 sitemaps = {
@@ -16,6 +18,14 @@ sitemaps = {
     'blog': BlogSitemap,
     'static': StaticViewSitemap,
 }
+
+# Custom view to serve static sitemap or fall back to dynamic sitemap
+def serve_sitemap(request):
+    static_sitemap_path = os.path.join(settings.BASE_DIR, 'static', 'sitemap.xml')
+    if os.path.exists(static_sitemap_path):
+        return serve(request, 'sitemap.xml', document_root=os.path.join(settings.BASE_DIR, 'static'))
+    else:
+        return sitemap(request, {'sitemaps': sitemaps})
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -30,8 +40,8 @@ urlpatterns = [
     path('ckeditor/', include('ckeditor_uploader.urls')),
     path('ckeditor5/upload/', upload_file, name='ck_editor_5_upload_file'),
     
-    # Add sitemap URL
-    path('sitemap.xml', sitemap, {'sitemaps': sitemaps}, name='sitemap'),
+    # Add sitemap URL - will serve static file if it exists, otherwise use dynamic sitemap
+    path('sitemap.xml', serve_sitemap, name='sitemap'),
     
     # Add robots.txt
     path('robots.txt', TemplateView.as_view(template_name="robots.txt", content_type="text/plain")),
