@@ -1,0 +1,91 @@
+{% load i18n %}
+
+<!-- Rejection Form Modal -->
+<div id="rejectionModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden overflow-y-auto h-full w-full" aria-hidden="true">
+  <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-xl bg-white">
+    <div class="mt-3">
+      <h3 class="text-lg font-medium leading-6 text-gray-900 mb-4">{% trans "Select Rejection Reasons" %}</h3>
+      
+      <form id="rejectionForm">
+        <input type="hidden" id="currentApplicationId" value="">
+        <input type="hidden" id="isGuestApplication" value="false">
+        
+        <div id="reasonError" class="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded mb-4 hidden">
+          {% trans "Please select at least one reason" %}
+        </div>
+        
+        <!-- Search box for reasons -->
+        <div class="mb-4">
+          <input type="text" id="reasonSearch" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" 
+                 placeholder="{% trans 'Search reasons...' %}">
+        </div>
+        
+        <!-- Reasons container -->
+        <div id="reasonsContainer" class="max-h-60 overflow-y-auto mb-4">
+          {% for reason in rejection_reasons %}
+          <div class="reason-item flex items-center p-2 hover:bg-gray-100 rounded cursor-pointer">
+            <input type="checkbox" id="reason_{{ reason.id }}" value="{{ reason.id }}" class="rejection-reason-checkbox">
+            <label for="reason_{{ reason.id }}" class="ml-2 text-gray-700 flex-grow cursor-pointer">{{ reason.name }}</label>
+          </div>
+          {% endfor %}
+        </div>
+        
+        <!-- Counter for selected reasons -->
+        <div class="text-sm text-gray-600 mb-4">
+          <span id="reasonsCount">0 {% trans "არჩეული" %}</span>
+        </div>
+        
+        <!-- Feedback section -->
+        <div id="feedbackSection" class="mb-4">
+          <label for="feedback" class="block text-sm font-medium text-gray-700 mb-1">{% trans "Additional Feedback" %} ({% trans "Optional" %})</label>
+          <textarea name="feedback" id="feedback" rows="3" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
+        </div>
+        
+        <!-- Buttons -->
+        <div class="flex justify-end space-x-2">
+          <button type="button" id="cancelRejection" class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50">
+            {% trans "Cancel" %}
+          </button>
+          <button type="submit" class="px-4 py-2 text-sm font-medium text-white bg-red-600 border border-transparent rounded-md hover:bg-red-700">
+            {% trans "Confirm" %}
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  // Search functionality for reasons
+  const searchBox = document.getElementById('reasonSearch');
+  if (searchBox) {
+    searchBox.addEventListener('input', function() {
+      const searchTerm = this.value.toLowerCase();
+      const reasonItems = document.querySelectorAll('.reason-item');
+      
+      reasonItems.forEach(item => {
+        const label = item.querySelector('label').textContent.toLowerCase();
+        if (label.includes(searchTerm)) {
+          item.style.display = 'flex';
+        } else {
+          item.style.display = 'none';
+        }
+      });
+    });
+  }
+  
+  // Counter for selected reasons
+  const reasonCheckboxes = document.querySelectorAll('.rejection-reason-checkbox');
+  const reasonsCount = document.getElementById('reasonsCount');
+  
+  if (reasonCheckboxes.length > 0 && reasonsCount) {
+    reasonCheckboxes.forEach(checkbox => {
+      checkbox.addEventListener('change', function() {
+        const checkedCount = document.querySelectorAll('.rejection-reason-checkbox:checked').length;
+        reasonsCount.textContent = checkedCount + ' {% trans "არჩეული" %}';
+      });
+    });
+  }
+});
+</script> 
