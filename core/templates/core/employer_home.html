@@ -478,13 +478,219 @@
 <script>
   document.addEventListener('DOMContentLoaded', function() {
     try {
+      // Check if Chart.js is loaded
+      if (typeof Chart === 'undefined') {
+        console.error('Chart.js is not loaded. Loading it now...');
+        // Dynamically load Chart.js if not available
+        var script = document.createElement('script');
+        script.src = 'https://cdn.jsdelivr.net/npm/chart.js';
+        script.onload = initializeCharts;
+        document.head.appendChild(script);
+      } else {
+        // Chart.js is available, initialize charts
+        initializeCharts();
+      }
+      
       // Helper function to safely parse JSON with fallback
       function safeJSONParse(jsonStr, fallback) {
+        if (!jsonStr) {
+          console.warn('Empty JSON string provided');
+          return fallback;
+        }
+        
         try {
           return JSON.parse(jsonStr);
         } catch (e) {
-          console.error('Error parsing JSON:', e);
+          console.error('Error parsing JSON:', e, 'Raw JSON:', jsonStr);
           return fallback;
+        }
+      }
+      
+      function initializeCharts() {
+        console.log('Initializing charts...');
+        
+        // Helper function to safely initialize a chart
+        function initializeChart(canvasId, config) {
+          const canvas = document.getElementById(canvasId);
+          if (!canvas) {
+            console.error(`Canvas element ${canvasId} not found`);
+            return null;
+          }
+          
+          try {
+            const ctx = canvas.getContext('2d');
+            return new Chart(ctx, config);
+          } catch (e) {
+            console.error(`Error initializing chart ${canvasId}:`, e);
+            return null;
+          }
+        }
+        
+        // Get chart data from template variables
+        const chartLabels = safeJSONParse('{{ chart_labels|escapejs }}', []);
+        const chartData = safeJSONParse('{{ chart_data|escapejs }}', []);
+        const statusLabels = safeJSONParse('{{ status_labels|escapejs }}', []);
+        const statusData = safeJSONParse('{{ status_data|escapejs }}', []);
+        const statusColors = safeJSONParse('{{ status_colors|escapejs }}', []);
+        const categoryLabels = safeJSONParse('{{ category_labels|escapejs }}', []);
+        const categoryData = safeJSONParse('{{ category_data|escapejs }}', []);
+        const sourceLabels = safeJSONParse('{{ source_labels|escapejs }}', []);
+        const sourceData = safeJSONParse('{{ source_data|escapejs }}', []);
+        const sourceColors = safeJSONParse('{{ source_colors|escapejs }}', []);
+        
+        console.log('Chart data loaded:', {
+          chartLabels, chartData, statusLabels, statusData, 
+          categoryLabels, categoryData, sourceLabels, sourceData
+        });
+
+        // Applications Over Time Chart
+        const applicationsConfig = {
+          type: 'line',
+          data: {
+            labels: chartLabels,
+            datasets: [{
+              label: '{% trans "Applications" %}',
+              data: chartData,
+              backgroundColor: 'rgba(59, 130, 246, 0.2)',
+              borderColor: 'rgba(59, 130, 246, 1)',
+              borderWidth: 2,
+              tension: 0.3
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+              y: {
+                beginAtZero: true,
+                ticks: {
+                  precision: 0
+                }
+              }
+            }
+          }
+        };
+        const applicationsChart = initializeChart('applicationsChart', applicationsConfig);
+
+        // Application Status Distribution Chart
+        const statusConfig = {
+          type: 'doughnut',
+          data: {
+            labels: statusLabels,
+            datasets: [{
+              data: statusData,
+              backgroundColor: statusColors,
+              borderColor: statusColors.map(c => c ? c.replace('0.7', '1') : 'rgba(0,0,0,1)'),
+              borderWidth: 1
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: {
+                position: 'top',
+                display: true,
+                labels: {
+                  font: {
+                    size: 12
+                  },
+                  usePointStyle: true,
+                  padding: 20
+                }
+              },
+              tooltip: {
+                callbacks: {
+                  label: function(context) {
+                    const label = context.label || '';
+                    const value = context.raw || 0;
+                    const total = context.chart.data.datasets[0].data.reduce((a, b) => a + b, 0);
+                    const percentage = total > 0 ? Math.round((value / total) * 100) : 0;
+                    return `${label}: ${value} (${percentage}%)`;
+                  }
+                }
+              }
+            }
+          }
+        };
+        const statusChart = initializeChart('statusChart', statusConfig);
+
+        // Job Category Performance Chart
+        const categoryConfig = {
+          type: 'bar',
+          data: {
+            labels: categoryLabels,
+            datasets: [{
+              label: '{% trans "Applications per Category" %}',
+              data: categoryData,
+              backgroundColor: 'rgba(59, 130, 246, 0.7)',
+              borderColor: 'rgba(59, 130, 246, 1)',
+              borderWidth: 1
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+              y: {
+                beginAtZero: true,
+                ticks: {
+                  precision: 0
+                }
+              }
+            }
+          }
+        };
+        const categoryChart = initializeChart('categoryChart', categoryConfig);
+
+        // Applicant Source Chart
+        const sourceConfig = {
+          type: 'pie',
+          data: {
+            labels: sourceLabels,
+            datasets: [{
+              data: sourceData,
+              backgroundColor: sourceColors || ['rgba(59, 130, 246, 0.7)', 'rgba(16, 185, 129, 0.7)'],
+              borderColor: (sourceColors || ['rgba(59, 130, 246, 0.7)', 'rgba(16, 185, 129, 0.7)']).map(c => c ? c.replace('0.7', '1') : 'rgba(0,0,0,1)'),
+              borderWidth: 1
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false
+          }
+        };
+        const sourceChart = initializeChart('sourceChart', sourceConfig);
+
+        // Mobile chart selector functionality
+        const chartSelector = document.getElementById('chartSelector');
+        if (chartSelector) {
+          const chartContainers = {
+            'applicationsChart': document.getElementById('applicationsChartContainer'),
+            'statusChart': document.getElementById('statusChartContainer'),
+            'categoryChart': document.getElementById('categoryChartContainer'),
+            'sourceChart': document.getElementById('sourceChartContainer')
+          };
+          
+          chartSelector.addEventListener('change', function() {
+            // Hide all chart containers on mobile
+            Object.values(chartContainers).forEach(container => {
+              if (container) {
+                container.classList.add('hidden');
+                container.classList.remove('block');
+              }
+            });
+            
+            // Show the selected chart container
+            const selectedContainer = chartContainers[this.value];
+            if (selectedContainer) {
+              selectedContainer.classList.remove('hidden');
+              selectedContainer.classList.add('block');
+            }
+          });
+          
+          // Trigger change event to show the first chart initially
+          chartSelector.dispatchEvent(new Event('change'));
         }
       }
       
@@ -583,213 +789,52 @@
       });
       
       // Handle modal form submission
-      rejectionForm.addEventListener('submit', function(e) {
-        e.preventDefault();
-        
-        // Validate at least one reason is selected
-        const checkedReasons = document.querySelectorAll('.rejection-reason-checkbox:checked');
-        if (checkedReasons.length === 0) {
-          reasonError.classList.remove('hidden');
-          return;
-        }
-        
-        const applicationId = document.getElementById('currentApplicationId').value;
-        
-        // Convert form data to JSON
-        const jsonData = {
-          status: 'რეზერვი',
-          rejection_reasons: Array.from(checkedReasons).map(cb => cb.value),
-          feedback: document.querySelector('textarea[name="feedback"]').value || ''
-        };
-        
-        // Send status update with rejection reasons
-        sendStatusUpdate(applicationId, 'რეზერვი', JSON.stringify(jsonData));
-        
-        // Hide the modal
-        modal.classList.add('hidden');
-      });
+      if (rejectionForm) {
+        rejectionForm.addEventListener('submit', function(e) {
+          e.preventDefault();
+          
+          // Validate at least one reason is selected
+          const checkedReasons = document.querySelectorAll('.rejection-reason-checkbox:checked');
+          if (checkedReasons.length === 0) {
+            reasonError.classList.remove('hidden');
+            return;
+          }
+          
+          const applicationId = document.getElementById('currentApplicationId').value;
+          
+          // Convert form data to JSON
+          const jsonData = {
+            status: 'რეზერვი',
+            rejection_reasons: Array.from(checkedReasons).map(cb => cb.value),
+            feedback: document.querySelector('textarea[name="feedback"]').value || ''
+          };
+          
+          // Send status update with rejection reasons
+          sendStatusUpdate(applicationId, 'რეზერვი', JSON.stringify(jsonData));
+          
+          // Hide the modal
+          modal.classList.add('hidden');
+        });
+      }
       
       // Handle modal cancel button
-      cancelButton.addEventListener('click', function() {
-        modal.classList.add('hidden');
-        if (lastSelectElement) {
-          lastSelectElement.value = lastSelectElement.dataset.lastValue || 'განხილვის_პროცესში';
-        }
-        rejectionForm.reset();
-      });
+      if (cancelButton) {
+        cancelButton.addEventListener('click', function() {
+          modal.classList.add('hidden');
+          if (lastSelectElement) {
+            lastSelectElement.value = lastSelectElement.dataset.lastValue || 'განხილვის_პროცესში';
+          }
+          rejectionForm.reset();
+        });
+      }
       
       // Close modal when clicking outside
-      modal.addEventListener('click', function(e) {
-        if (e.target === modal) {
-          cancelButton.click();
-        }
-      });
-
-      // Helper function to safely initialize a chart
-      function initializeChart(canvasId, config) {
-        const canvas = document.getElementById(canvasId);
-        if (!canvas) {
-          console.error(`Canvas element ${canvasId} not found`);
-          return null;
-        }
-        
-        try {
-          const ctx = canvas.getContext('2d');
-          return new Chart(ctx, config);
-        } catch (e) {
-          console.error(`Error initializing chart ${canvasId}:`, e);
-          return null;
-        }
-      }
-
-      // Applications Over Time Chart
-      const applicationsConfig = {
-        type: 'line',
-        data: {
-          labels: safeJSONParse('{{ chart_labels|escapejs }}', []),
-          datasets: [{
-            label: '{% trans "Applications" %}',
-            data: safeJSONParse('{{ chart_data|escapejs }}', []),
-            backgroundColor: 'rgba(59, 130, 246, 0.2)',
-            borderColor: 'rgba(59, 130, 246, 1)',
-            borderWidth: 2,
-            tension: 0.3
-          }]
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          scales: {
-            y: {
-              beginAtZero: true,
-              ticks: {
-                precision: 0
-              }
-            }
-          }
-        }
-      };
-      const applicationsChart = initializeChart('applicationsChart', applicationsConfig);
-
-      // Application Status Distribution Chart
-      const statusConfig = {
-        type: 'doughnut',
-        data: {
-          labels: safeJSONParse('{{ status_labels|escapejs }}', []),
-          datasets: [{
-            data: safeJSONParse('{{ status_data|escapejs }}', []),
-            backgroundColor: safeJSONParse('{{ status_colors|escapejs }}', []),
-            borderColor: safeJSONParse('{{ status_colors|escapejs }}', []).map(c => c.replace('0.7', '1')),
-            borderWidth: 1
-          }]
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          plugins: {
-            legend: {
-              position: 'top',
-              display: true,
-              labels: {
-                font: {
-                  size: 12
-                },
-                usePointStyle: true,
-                padding: 20
-              }
-            },
-            tooltip: {
-              callbacks: {
-                label: function(context) {
-                  const label = context.label || '';
-                  const value = context.raw || 0;
-                  const total = context.chart.data.datasets[0].data.reduce((a, b) => a + b, 0);
-                  const percentage = total > 0 ? Math.round((value / total) * 100) : 0;
-                  return `${label}: ${value} (${percentage}%)`;
-                }
-              }
-            }
-          }
-        }
-      };
-      const statusChart = initializeChart('statusChart', statusConfig);
-
-      // Job Category Performance Chart
-      const categoryConfig = {
-        type: 'bar',
-        data: {
-          labels: safeJSONParse('{{ category_labels|escapejs }}', []),
-          datasets: [{
-            label: '{% trans "Applications per Category" %}',
-            data: safeJSONParse('{{ category_data|escapejs }}', []),
-            backgroundColor: 'rgba(59, 130, 246, 0.7)',
-            borderColor: 'rgba(59, 130, 246, 1)',
-            borderWidth: 1
-          }]
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          scales: {
-            y: {
-              beginAtZero: true,
-              ticks: {
-                precision: 0
-              }
-            }
-          }
-        }
-      };
-      const categoryChart = initializeChart('categoryChart', categoryConfig);
-
-      // Applicant Source Chart
-      const sourceConfig = {
-        type: 'pie',
-        data: {
-          labels: safeJSONParse('{{ source_labels|escapejs }}', []),
-          datasets: [{
-            data: safeJSONParse('{{ source_data|escapejs }}', []),
-            backgroundColor: safeJSONParse('{{ source_colors|escapejs }}', []),
-            borderColor: safeJSONParse('{{ source_colors|escapejs }}', []).map(c => c.replace('0.7', '1')),
-            borderWidth: 1
-          }]
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false
-        }
-      };
-      const sourceChart = initializeChart('sourceChart', sourceConfig);
-
-      // Mobile chart selector functionality
-      const chartSelector = document.getElementById('chartSelector');
-      if (chartSelector) {
-        const chartContainers = {
-          'applicationsChart': document.getElementById('applicationsChartContainer'),
-          'statusChart': document.getElementById('statusChartContainer'),
-          'categoryChart': document.getElementById('categoryChartContainer'),
-          'sourceChart': document.getElementById('sourceChartContainer')
-        };
-        
-        chartSelector.addEventListener('change', function() {
-          // Hide all chart containers on mobile
-          Object.values(chartContainers).forEach(container => {
-            if (container) {
-              container.classList.add('hidden');
-              container.classList.remove('block');
-            }
-          });
-          
-          // Show the selected chart container
-          const selectedContainer = chartContainers[this.value];
-          if (selectedContainer) {
-            selectedContainer.classList.remove('hidden');
-            selectedContainer.classList.add('block');
+      if (modal) {
+        modal.addEventListener('click', function(e) {
+          if (e.target === modal) {
+            cancelButton.click();
           }
         });
-        
-        // Trigger change event to show the first chart initially
-        chartSelector.dispatchEvent(new Event('change'));
       }
       
       // Hide the regular CTA buttons on mobile since we have the fixed ones
@@ -801,6 +846,14 @@
       }
     } catch (e) {
       console.error('Error initializing charts:', e);
+      // Display error message in charts
+      document.querySelectorAll('canvas').forEach(canvas => {
+        const ctx = canvas.getContext('2d');
+        ctx.font = '14px Arial';
+        ctx.fillStyle = 'red';
+        ctx.textAlign = 'center';
+        ctx.fillText('Error loading chart data', canvas.width/2, canvas.height/2);
+      });
     }
   });
 </script>

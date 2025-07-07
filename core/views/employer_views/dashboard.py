@@ -147,17 +147,31 @@ def employer_home(request):
         'rgba(16, 185, 129, 0.7)'
     ]
 
-    # Convert Python lists to JSON for the template
-    chart_labels_json = json.dumps(chart_labels)
-    chart_data_json = json.dumps(chart_data)
-    status_labels_json = json.dumps(status_labels)
-    status_data_json = json.dumps(status_data)
-    status_colors_json = json.dumps(status_colors)
-    category_labels_json = json.dumps(category_labels)
-    category_data_json = json.dumps(category_data)
-    source_labels_json = json.dumps(source_labels)
-    source_data_json = json.dumps(source_data)
-    source_colors_json = json.dumps(source_colors)
+    # Convert Python lists to JSON for the template with proper error handling
+    try:
+        chart_labels_json = json.dumps(chart_labels, cls=DjangoJSONEncoder)
+        chart_data_json = json.dumps(chart_data, cls=DjangoJSONEncoder)
+        status_labels_json = json.dumps(status_labels, cls=DjangoJSONEncoder)
+        status_data_json = json.dumps(status_data, cls=DjangoJSONEncoder)
+        status_colors_json = json.dumps(status_colors, cls=DjangoJSONEncoder)
+        category_labels_json = json.dumps(category_labels, cls=DjangoJSONEncoder)
+        category_data_json = json.dumps(category_data, cls=DjangoJSONEncoder)
+        source_labels_json = json.dumps(source_labels, cls=DjangoJSONEncoder)
+        source_data_json = json.dumps(source_data, cls=DjangoJSONEncoder)
+        source_colors_json = json.dumps(source_colors, cls=DjangoJSONEncoder)
+    except Exception as e:
+        logger.error(f"Error encoding chart data to JSON: {e}")
+        # Provide fallback empty arrays if JSON encoding fails
+        chart_labels_json = "[]"
+        chart_data_json = "[]"
+        status_labels_json = "[]"
+        status_data_json = "[]"
+        status_colors_json = "[]"
+        category_labels_json = "[]"
+        category_data_json = "[]"
+        source_labels_json = "[]"
+        source_data_json = "[]"
+        source_colors_json = "[]"
 
     context = {
         'employer_profile': employer_profile,
