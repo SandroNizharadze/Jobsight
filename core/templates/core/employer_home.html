@@ -739,20 +739,40 @@
         
         let body = rejectionData ? rejectionData : JSON.stringify({ status: status });
         
+        // Show loading state
+        if (lastSelectElement) {
+          lastSelectElement.disabled = true;
+        }
+        
         fetch(`/employer/update-application-status/${applicationId}/`, {
           method: 'POST',
           headers: headers,
           body: body
         })
-        .then(response => response.json())
+        .then(response => {
+          if (!response.ok) {
+            throw new Error('Network response was not ok');
+          }
+          return response.json();
+        })
         .then(data => {
           if (data.success) {
-            // Refresh the page to show updated status
-            window.location.reload();
+            // Force a hard refresh to ensure all data is updated
+            window.location.href = window.location.href;
+          } else {
+            console.error('Error updating status:', data.error);
+            // Re-enable the select element if there was an error
+            if (lastSelectElement) {
+              lastSelectElement.disabled = false;
+            }
           }
         })
         .catch(error => {
           console.error('Error:', error);
+          // Re-enable the select element if there was an error
+          if (lastSelectElement) {
+            lastSelectElement.disabled = false;
+          }
         });
       }
 
@@ -809,6 +829,8 @@
             rejection_reasons: Array.from(checkedReasons).map(cb => cb.value),
             feedback: document.querySelector('textarea[name="feedback"]').value || ''
           };
+          
+          console.log('Submitting rejection reasons:', jsonData);
           
           // Send status update with rejection reasons
           sendStatusUpdate(applicationId, 'რეზერვი', JSON.stringify(jsonData));

@@ -23,8 +23,8 @@
         <!-- Reasons container -->
         <div id="reasonsContainer" class="max-h-60 overflow-y-auto mb-4">
           {% for reason in rejection_reasons %}
-          <div class="reason-item flex items-center p-2 hover:bg-gray-100 rounded cursor-pointer">
-            <input type="checkbox" id="reason_{{ reason.id }}" value="{{ reason.id }}" class="rejection-reason-checkbox">
+          <div class="reason-item flex items-center p-2 hover:bg-gray-100 rounded">
+            <input type="checkbox" id="reason_{{ reason.id }}" name="rejection_reasons" value="{{ reason.id }}" class="rejection-reason-checkbox">
             <label for="reason_{{ reason.id }}" class="ml-2 text-gray-700 flex-grow cursor-pointer">{{ reason.name }}</label>
           </div>
           {% endfor %}
@@ -46,7 +46,7 @@
           <button type="button" id="cancelRejection" class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50">
             {% trans "Cancel" %}
           </button>
-          <button type="submit" class="px-4 py-2 text-sm font-medium text-white bg-red-600 border border-transparent rounded-md hover:bg-red-700">
+          <button type="submit" id="confirmRejection" class="px-4 py-2 text-sm font-medium text-white bg-red-600 border border-transparent rounded-md hover:bg-red-700">
             {% trans "Confirm" %}
           </button>
         </div>
@@ -57,35 +57,160 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-  // Search functionality for reasons
+  // Get elements
+  const modal = document.getElementById('rejectionModal');
+  const form = document.getElementById('rejectionForm');
   const searchBox = document.getElementById('reasonSearch');
+  const reasonsContainer = document.getElementById('reasonsContainer');
+  const reasonsCount = document.getElementById('reasonsCount');
+  const reasonError = document.getElementById('reasonError');
+  const cancelButton = document.getElementById('cancelRejection');
+  const confirmButton = document.getElementById('confirmRejection');
+  const checkboxes = document.querySelectorAll('.rejection-reason-checkbox');
+  
+  // Function to update the counter
+  function updateCounter() {
+    const checkedCount = document.querySelectorAll('.rejection-reason-checkbox:checked').length;
+    reasonsCount.textContent = checkedCount + ' {% trans "არჩეული" %}';
+  }
+  
+  // Add search functionality
   if (searchBox) {
     searchBox.addEventListener('input', function() {
       const searchTerm = this.value.toLowerCase();
-      const reasonItems = document.querySelectorAll('.reason-item');
+      const reasonItems = reasonsContainer.querySelectorAll('.reason-item');
       
       reasonItems.forEach(item => {
         const label = item.querySelector('label').textContent.toLowerCase();
-        if (label.includes(searchTerm)) {
-          item.style.display = 'flex';
-        } else {
-          item.style.display = 'none';
-        }
+        item.style.display = label.includes(searchTerm) ? 'flex' : 'none';
       });
     });
   }
   
-  // Counter for selected reasons
-  const reasonCheckboxes = document.querySelectorAll('.rejection-reason-checkbox');
-  const reasonsCount = document.getElementById('reasonsCount');
-  
-  if (reasonCheckboxes.length > 0 && reasonsCount) {
-    reasonCheckboxes.forEach(checkbox => {
-      checkbox.addEventListener('change', function() {
-        const checkedCount = document.querySelectorAll('.rejection-reason-checkbox:checked').length;
-        reasonsCount.textContent = checkedCount + ' {% trans "არჩეული" %}';
-      });
+  // Setup checkbox functionality
+  checkboxes.forEach(checkbox => {
+    // Add change event listener to update counter
+    checkbox.addEventListener('change', updateCounter);
+    
+    // Make sure checkbox clicks work properly
+    checkbox.addEventListener('click', function(e) {
+      // Stop propagation to prevent the label click handler from toggling it again
+      e.stopPropagation();
     });
-  }
+  });
+  
+  // Add click handlers for labels
+  document.querySelectorAll('.reason-item label').forEach(label => {
+    label.addEventListener('click', function(e) {
+      const checkbox = document.getElementById(this.getAttribute('for'));
+      if (checkbox) {
+        checkbox.checked = !checkbox.checked;
+        updateCounter();
+      }
+      // Prevent default behavior and stop propagation
+      e.preventDefault();
+      e.stopPropagation();
+    });
+  });
+  
+  // Add click handlers for the entire container of each checkbox
+  document.querySelectorAll('.reason-item').forEach(container => {
+    container.addEventListener('click', function(e) {
+      const checkbox = this.querySelector('input[type="checkbox"]');
+      if (checkbox) {
+        checkbox.checked = !checkbox.checked;
+        updateCounter();
+      }
+      // Prevent default behavior
+      e.preventDefault();
+      e.stopPropagation();
+    });
+  });
+  
+  // Handle form submission
+  form.addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    // Get all checked checkboxes
+    const checkedReasons = document.querySelectorAll('.rejection-reason-checkbox:checked');
+    
+    // Validate at least one reason is selected
+    if (checkedReasons.length === 0) {
+      reasonError.classList.remove('hidden');
+      return;
+    }
+    
+    // Hide error message if it was shown
+    reasonError.classList.add('hidden');
+    
+    // Get application ID
+    const applicationId = document.getElementById('currentApplicationId').value;
+    
+    // Collect form data
+    const formData = {
+      status: 'რეზერვი',
+      rejection_reasons: Array.from(checkedReasons).map(cb => cb.value),
+      feedback: document.getElementById('feedback').value || ''
+    };
+    
+    console.log('Submitting rejection reasons:', formData);
+    
+    // Disable the submit button to prevent double submission
+    confirmButton.disabled = true;
+    confirmButton.classList.add('opacity-50');
+    confirmButton.textContent = '{% trans "Processing..." %}';
+    
+    // Send status update with rejection reasons
+    const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+    
+    fetch(`/employer/update-application-status/${applicationId}/`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRFToken': csrftoken,
+        'X-Requested-With': 'XMLHttpRequest'
+      },
+      body: JSON.stringify(formData)
+    })
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      return response.json();
+    })
+    .then(data => {
+      if (data.success) {
+        // Force a hard refresh to ensure all data is updated
+        window.location.href = window.location.href;
+      } else {
+        console.error('Error updating status:', data.error);
+        // Re-enable the submit button if there was an error
+        confirmButton.disabled = false;
+        confirmButton.classList.remove('opacity-50');
+        confirmButton.textContent = '{% trans "Confirm" %}';
+        
+        // Show error message
+        reasonError.textContent = data.error || '{% trans "An error occurred. Please try again." %}';
+        reasonError.classList.remove('hidden');
+      }
+    })
+    .catch(error => {
+      console.error('Error:', error);
+      // Re-enable the submit button if there was an error
+      confirmButton.disabled = false;
+      confirmButton.classList.remove('opacity-50');
+      confirmButton.textContent = '{% trans "Confirm" %}';
+      
+      // Show error message
+      reasonError.textContent = '{% trans "An error occurred. Please try again." %}';
+      reasonError.classList.remove('hidden');
+    });
+    
+    // Hide the modal
+    modal.classList.add('hidden');
+  });
+  
+  // Initialize counter
+  updateCounter();
 });
 </script> 

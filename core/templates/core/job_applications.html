@@ -413,19 +413,40 @@
         
         let body = rejectionData ? rejectionData : JSON.stringify({ status: status });
         
+        // Show loading state
+        if (lastSelectElement) {
+            lastSelectElement.disabled = true;
+        }
+        
         fetch(`/employer/update-application-status/${applicationId}/`, {
             method: 'POST',
             headers: headers,
             body: body
         })
-        .then(response => response.json())
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
         .then(data => {
             if (data.success) {
-                window.location.reload();
+                // Force a hard refresh to ensure all data is updated
+                window.location.href = window.location.href;
+            } else {
+                console.error('Error updating status:', data.error);
+                // Re-enable the select element if there was an error
+                if (lastSelectElement) {
+                    lastSelectElement.disabled = false;
+                }
             }
         })
         .catch(error => {
             console.error('Error:', error);
+            // Re-enable the select element if there was an error
+            if (lastSelectElement) {
+                lastSelectElement.disabled = false;
+            }
         });
     }
 
@@ -436,37 +457,6 @@
         const reasonError = document.getElementById('reasonError');
         let lastSelectedStatus = null;
         let lastSelectElement = null;
-        
-        // Initialize checkbox click handlers
-        function initializeCheckboxHandlers() {
-            // Make sure checkbox clicks are registered 
-            document.querySelectorAll('.rejection-reason-checkbox').forEach(checkbox => {
-                checkbox.addEventListener('click', function(e) {
-                    // Don't toggle here, just let the native checkbox behavior work
-                    // and prevent event bubbling to the container
-                    e.stopPropagation();
-                });
-            });
-            
-            // Add click handlers for the entire container of each checkbox
-            document.querySelectorAll('.reason-item').forEach(container => {
-                container.addEventListener('click', function(e) {
-                    // Find the checkbox inside this container
-                    const checkbox = this.querySelector('input[type="checkbox"]');
-                    if (checkbox) {
-                        // Toggle the checkbox state
-                        checkbox.checked = !checkbox.checked;
-                        
-                        // Trigger change event to update counter
-                        const event = new Event('change');
-                        checkbox.dispatchEvent(event);
-                    }
-                });
-            });
-        }
-        
-        // Initialize handlers when the DOM is loaded
-        initializeCheckboxHandlers();
         
         // Add event listeners to status selects
         document.querySelectorAll('.application-status-select').forEach(select => {
@@ -516,33 +506,6 @@
             
             // Store the initial value
             select.dataset.lastValue = select.options[select.selectedIndex].value;
-        });
-        
-        // Handle modal form submission
-        rejectionForm.addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            // Validate at least one reason is selected
-            const checkedReasons = document.querySelectorAll('.rejection-reason-checkbox:checked');
-            if (checkedReasons.length === 0) {
-                reasonError.classList.remove('hidden');
-                return;
-            }
-            
-            const applicationId = document.getElementById('currentApplicationId').value;
-            
-            // Convert form data to JSON
-            const jsonData = {
-                status: 'რეზერვი',
-                rejection_reasons: Array.from(checkedReasons).map(cb => cb.value),
-                feedback: document.querySelector('textarea[name="feedback"]').value || ''
-            };
-            
-            // Send status update with rejection reasons
-            sendStatusUpdate(applicationId, 'რეზერვი', JSON.stringify(jsonData));
-            
-            // Hide the modal
-            modal.classList.add('hidden');
         });
         
         // Handle modal cancel button

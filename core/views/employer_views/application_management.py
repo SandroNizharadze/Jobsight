@@ -99,14 +99,16 @@ def update_application_status(request, application_id):
             # Add new rejection reasons
             reasons = data.get('rejection_reasons', [])
             if isinstance(reasons, list):
-                for reason_name in reasons:
+                for reason_id in reasons:
                     try:
-                        reason = RejectionReason.objects.get(name=reason_name)
+                        # Get reason by ID instead of name
+                        reason = RejectionReason.objects.get(id=reason_id)
                         application.rejection_reasons.add(reason)
                     except RejectionReason.DoesNotExist:
-                        # If the reason doesn't exist, create it
-                        reason = RejectionReason.objects.create(name=reason_name)
-                        application.rejection_reasons.add(reason)
+                        logger.warning(f"Rejection reason with ID {reason_id} not found")
+                    except ValueError:
+                        # Handle case where the value might not be a valid integer
+                        logger.warning(f"Invalid rejection reason ID format: {reason_id}")
             
             # Add feedback if provided
             feedback = data.get('feedback', '')
@@ -130,12 +132,10 @@ def update_application_status(request, application_id):
                 notification_text = f"თქვენი განაცხადი ვაკანსიაზე '{application.job.title}' გადავიდა რეზერვში"
             
             if notification_text:
-                NotificationRepository.create_notification(
+                NotificationRepository.create_application_status_notification(
                     user=application.user,
-                    text=notification_text,
-                    notification_type='status_change',
-                    related_object_id=application.id,
-                    related_content_type=ContentType.objects.get_for_model(JobApplication)
+                    application=application,
+                    message=notification_text
                 )
         
         return JsonResponse({'success': True})

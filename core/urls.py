@@ -72,7 +72,7 @@ urlpatterns = [
     path('employer/jobs/<int:job_id>/extend/', main.extend_job, name='extend_job'),
     path('employer/home/', main.employer_home, name='employer_home'),
     path('employer/applications/<int:application_id>/', application_detail, name='application_detail'),
-    path('employer/applications/<int:application_id>/update-status/', main.update_application_status, name='update_application_status'),
+    path('employer/applications/<int:application_id>/update-status/', main.update_application_status, name='legacy_update_application_status'),
     path('company/<int:employer_id>/', company_profile, name='company_profile'),
     
     # CV Database routes
