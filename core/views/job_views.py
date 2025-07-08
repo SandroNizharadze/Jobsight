@@ -41,12 +41,6 @@ def job_list(request):
     filter_remove_urls = {}
     show_filters = 'show_filters' in request.GET
     
-    # Filter by premium level on main page (when filters are NOT being shown)
-    # Only show premium and premium_plus jobs on main page, hide standard jobs
-    # Show standard jobs only when user is searching or filtering
-    if not filtered and not show_filters:
-        jobs = jobs.filter(premium_level__in=['premium', 'premium_plus'])
-    
     # Apply filters based on request parameters
     if 'search' in request.GET and request.GET['search']:
         search_term = request.GET['search']
@@ -95,34 +89,23 @@ def job_list(request):
         active_filters['გამოცდილება'] = experience_display
         filter_remove_urls['გამოცდილება'] = remove_from_query_string(request.GET, 'experience')
     
-    # Fix for salary_min filter - safely convert to int using a try-except block
-    if 'salary_min' in request.GET and request.GET['salary_min']:
-        try:
-            salary_min = int(request.GET['salary_min'])
-            if salary_min > 0:
-                jobs = jobs.filter(salary_min__gte=salary_min)
-                filtered = True
-                active_filters['მინიმალური ანაზღაურება'] = f"₾ {salary_min}"
-                filter_remove_urls['მინიმალური ანაზღაურება'] = remove_from_query_string(request.GET, 'salary_min')
-        except (ValueError, TypeError):
-            # Log the error but don't fail if salary_min is not a valid integer
-            logger.warning(f"Invalid salary_min value: {request.GET['salary_min']}")
-            # Don't apply filter if value is invalid
-    
-    if 'job_preferences' in request.GET:
-        job_preferences_list = request.GET.getlist('job_preferences')
-        if job_preferences_list:
-            jobs = jobs.filter(job_preferences__in=job_preferences_list)
-            filtered = True
-            active_filters['სამუშაო გრაფიკი'] = ', '.join(job_preferences_list)
-            filter_remove_urls['სამუშაო გრაფიკი'] = remove_from_query_string(request.GET, 'job_preferences')
+    # Filter by job_preferences
+    if 'job_preferences' in request.GET and request.GET['job_preferences']:
+        job_preferences = request.GET['job_preferences']
+        jobs = jobs.filter(job_preferences=job_preferences)
+        filtered = True
+        # Get the display name for the job preference
+        job_preferences_dict = dict(JobListing.JOB_PREFERENCE_CHOICES)
+        job_preference_display = job_preferences_dict.get(job_preferences, job_preferences)
+        active_filters['სამუშაო გრაფიკი'] = job_preference_display
+        filter_remove_urls['სამუშაო გრაფიკი'] = remove_from_query_string(request.GET, 'job_preferences')
     
     # Filter by considers_students
     if 'considers_students' in request.GET and request.GET['considers_students'] == 'true':
         jobs = jobs.filter(considers_students=True)
         filtered = True
-        active_filters['სტუდენტური'] = 'კი'
-        filter_remove_urls['სტუდენტური'] = remove_from_query_string(request.GET, 'considers_students')
+        active_filters['განიხილავს სტუდენტებს'] = 'კი'
+        filter_remove_urls['განიხილავს სტუდენტებს'] = remove_from_query_string(request.GET, 'considers_students')
     
     # Filter by georgian_language_only
     if 'georgian_language_only' in request.GET and request.GET['georgian_language_only'] == 'true':
@@ -137,6 +120,12 @@ def job_list(request):
         filtered = True
         active_filters['Show Expired'] = 'Yes'
         filter_remove_urls['Show Expired'] = remove_from_query_string(request.GET, 'show_expired')
+    
+    # Filter by premium level on main page (when filters are NOT being shown and no search is active)
+    # Only show premium and premium_plus jobs on main page, hide standard jobs
+    # Show standard jobs only when user is searching or filtering
+    if not filtered and not show_filters:
+        jobs = jobs.filter(premium_level__in=['premium', 'premium_plus'])
     
     # After all filters are applied, ensure premium ordering is preserved
     # This guarantees premium jobs always appear at the top even after filtering
