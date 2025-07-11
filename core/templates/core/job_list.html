@@ -83,14 +83,17 @@
   
   /* Enhanced button style */
   .enhanced-cta-button {
-    background-color: #0d9488 !important;
+    background: linear-gradient(to right, #0f766e, #0d9488) !important;
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15) !important;
     transition: transform 0.2s ease, box-shadow 0.2s ease !important;
+    font-weight: 600 !important;
   }
   
   .enhanced-cta-button:hover {
     transform: translateY(-2px) !important;
     box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.2), 0 4px 6px -2px rgba(0, 0, 0, 0.1) !important;
-    background-color: #0a8477 !important;
+    background: linear-gradient(to right, #115e59, #0f766e) !important;
   }
   
   /* Add spacing between job cards and CTA */
@@ -175,7 +178,6 @@
       justify-content: center;
     }
   }
-}
 </style>
 {% endblock %}
 
@@ -206,8 +208,7 @@
                                     <p>{% trans "გამოაქვეყნეთ ვაკანსია ჯობსიზე და იპოვეთ საუკეთესო კანდიდატები თქვენი კომპანიისთვის." %}</p>
                                     <p>{% trans "ათასობით პროფესიონალი ეძებს ახალ შესაძლებლობებს ყოველდღე." %}</p>
                                 </div>
-                                <a href="{% url 'pricing' %}" 
-                                   class="enhanced-cta-button inline-block text-white font-medium px-6 py-3 rounded-xl transition-colors shadow-md hover:shadow-lg">
+                                <a href="{% url 'pricing' %}" class="inline-block bg-gradient-to-r from-[#0f766e] to-[#0d9488] hover:from-[#115e59] hover:to-[#0f766e] text-white font-medium px-6 py-3 rounded-xl transition-colors shadow-md hover:shadow-lg border border-[rgba(255,255,255,0.2)]">   
                                     {% trans "შეიტყვეთ მეტი" %}
                                 </a>
                             </div>
@@ -268,12 +269,24 @@ document.addEventListener('DOMContentLoaded', function() {
         // Add animation to CTA button
         const ctaButton = document.querySelector('.enhanced-cta-button');
         if (ctaButton) {
+            // Initial pulse animation
             setTimeout(() => {
                 ctaButton.classList.add('animate-pulse');
                 setTimeout(() => {
                     ctaButton.classList.remove('animate-pulse');
                 }, 1500);
-            }, 2000);
+            }, 1000);
+            
+            // Add additional styling to make button more visible
+            ctaButton.style.boxShadow = '0 4px 12px rgba(13, 148, 136, 0.5)';
+            
+            // Add periodic pulse effect every 8 seconds
+            setInterval(() => {
+                ctaButton.classList.add('animate-pulse');
+                setTimeout(() => {
+                    ctaButton.classList.remove('animate-pulse');
+                }, 1500);
+            }, 8000);
         }
         
         // Detect Safari browser and add class to body
