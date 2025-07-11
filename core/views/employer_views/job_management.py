@@ -83,29 +83,18 @@ def extend_job(request, job_id):
     employer_profile = request.user.userprofile.employer_profile
     job = get_object_or_404(JobListing, id=job_id, employer=employer_profile)
     
-    # Only allow extension if job is approved
-    if job.status != 'approved':
-        messages.error(request, "Only approved jobs can have their expiration date extended.")
+    # Only allow extension if job is approved or expired
+    if job.status not in ['approved', 'expired']:
+        messages.error(request, "Only approved or expired jobs can have their expiration date extended.")
         return redirect('employer_dashboard')
     
-    # Check if job is expired
-    is_expired = job.is_expired()
+    # Set job to extended_review status without changing expiration date
+    # This way the job remains visible until its original expiration date
+    # but is marked for admin review
+    job.status = 'extended_review'
+    job.save(update_fields=['status'])
     
-    if is_expired:
-        # If job is expired, change status to extended_review
-        job.status = 'extended_review'
-        # Save the job to update its status
-        job.save(update_fields=['status'])
-        messages.success(request, "Your job has been submitted for review. An admin will extend it soon.")
-    else:
-        # Use the service to extend the job
-        days = int(request.POST.get('days', 30))
-        updated_job = JobService.extend_job_expiration(job_id=job_id, days=days)
-        
-        if updated_job:
-            messages.success(request, f"Job listing extended by {days} days.")
-        else:
-            messages.error(request, "Failed to extend job listing.")
+    messages.success(request, "Your extension request has been submitted. The job will remain active until its current expiration date, and an admin will review your extension request.")
     
     return redirect('employer_dashboard')
 

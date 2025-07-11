@@ -308,9 +308,9 @@ class JobListingAdmin(SoftDeletionAdmin):
         """Extend the expiration date of selected jobs by 30 days"""
         count = 0
         for job in queryset:
-            # If job is expired, also update its status
+            # If job is expired, set to extended_review status
             if job.status == 'expired':
-                job.status = 'approved'
+                job.status = 'extended_review'
                 job.expires_at = timezone.now() + timedelta(days=30)
                 job.last_extended_at = timezone.now()  # Set last extended time
                 job.save(update_fields=['expires_at', 'status', 'last_extended_at'])
@@ -324,9 +324,9 @@ class JobListingAdmin(SoftDeletionAdmin):
         """Extend the expiration date of selected jobs by 30 days without bumping to top"""
         count = 0
         for job in queryset:
-            # If job is expired, also update its status
+            # If job is expired, set to extended_review status
             if job.status == 'expired':
-                job.status = 'approved'
+                job.status = 'extended_review'
                 job.expires_at = timezone.now() + timedelta(days=30)
                 job.save(update_fields=['expires_at', 'status'])
             else:
@@ -346,6 +346,7 @@ class JobListingAdmin(SoftDeletionAdmin):
         count = 0
         for job in queryset.filter(status__in=['expired', 'extended_review']):
             job.status = 'approved'
+            # For extended_review jobs, add 30 days from current date
             job.expires_at = timezone.now() + timedelta(days=30)
             job.last_extended_at = timezone.now()  # Set last extended time to bump to top
             job.save(update_fields=['status', 'expires_at', 'last_extended_at'])

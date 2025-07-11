@@ -1,5 +1,6 @@
 from django.db.models import Q
 from core.models import JobListing
+from django.utils import timezone
 
 class JobRepository:
     """
@@ -18,7 +19,12 @@ class JobRepository:
         Returns:
             QuerySet: Filtered job listings
         """
-        query = JobListing.objects.filter(status='approved')
+        # Include both approved jobs and extended_review jobs that haven't expired yet
+        query = JobListing.objects.filter(
+            Q(status='approved') | 
+            # Include extended_review jobs that haven't expired yet
+            Q(status='extended_review', expires_at__gt=timezone.now())
+        )
         
         if filters:
             query = JobRepository._apply_job_filters(query, filters)

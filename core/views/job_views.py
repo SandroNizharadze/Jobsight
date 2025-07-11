@@ -21,10 +21,13 @@ def job_list(request):
     """
     Display the job listing page with filtering options
     """
-    # Only show approved jobs to the public
+    # Show approved jobs and extended_review jobs that haven't expired yet
     # Use select_related to fetch employer in the same query
     # Order by premium level (premium_plus first, then premium, then standard)
-    jobs = JobListing.objects.filter(status='approved').select_related('employer').order_by(
+    jobs = JobListing.objects.filter(
+        Q(status='approved') | 
+        Q(status='extended_review', expires_at__gt=timezone.now())
+    ).select_related('employer').order_by(
         # Custom ordering for premium levels
         # This will put premium_plus first, then premium, then standard
         # Since it's in reverse alphabetical order: standard < premium < premium_plus
@@ -200,7 +203,13 @@ def job_detail(request, job_id):
     Display details for a specific job listing
     """
     # Use select_related to fetch employer in the same query
-    job = get_object_or_404(JobListing.objects.select_related('employer'), id=job_id, status='approved')
+    # Allow viewing both approved jobs and extended_review jobs that haven't expired
+    job = get_object_or_404(
+        JobListing.objects.select_related('employer').filter(
+            Q(status='approved') | Q(status='extended_review', expires_at__gt=timezone.now())
+        ),
+        id=job_id
+    )
     
     # Increment view count
     job.view_count += 1

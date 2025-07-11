@@ -170,9 +170,8 @@ class JobListing(SoftDeletionModel):
             # If job is expired, extend from current date
             if self.is_expired():
                 self.expires_at = timezone.now() + timedelta(days=days)
-                # If the job status is 'expired', update it to 'approved'
-                if self.status == 'expired':
-                    self.status = 'approved'
+                # Don't automatically change status - the view should handle this
+                # by setting the appropriate status (extended_review for expired jobs)
             # Otherwise extend from current expiration date
             else:
                 self.expires_at = self.expires_at + timedelta(days=days)
@@ -184,8 +183,10 @@ class JobListing(SoftDeletionModel):
         else:
             self.save(update_fields=['expires_at', 'status'])
         
-        # Update status based on new expiration date
-        self.update_status_from_expiration()
+        # Only update status based on expiration if the job is approved
+        # (don't change extended_review status)
+        if self.status == 'approved':
+            self.update_status_from_expiration()
         return self.expires_at
 
     class Meta:

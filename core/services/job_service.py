@@ -38,11 +38,12 @@ class JobService:
         if not job:
             return None
             
+        # Only update the expiration date, don't change status
+        # Status changes should be handled by the view
+        
         # If job is expired, extend from current date
         if job.is_expired():
             job.expires_at = timezone.now() + timedelta(days=days)
-            # Don't automatically approve expired jobs - they should remain in their current status
-            # (pending_review if set by the view)
         # Otherwise extend from current expiration date
         elif job.expires_at:
             job.expires_at = job.expires_at + timedelta(days=days)
