@@ -52,6 +52,13 @@ def job_applications(request, job_id):
             application.is_read = True
             application.save()
     
+    # Mark applications as viewed
+    for application in applications:
+        if not application.is_viewed:
+            application.is_viewed = True
+            application.save()
+            logger.info(f"Marked application {application.id} as viewed for job {job_id}")
+    
     return render(request, 'core/job_applications.html', {
         'job': job,
         'applications': applications,
@@ -162,6 +169,12 @@ def application_detail(request, application_id):
     if not application.is_read:
         application.is_read = True
         application.save()
+    
+    # Mark as viewed if not already
+    if not application.is_viewed:
+        application.is_viewed = True
+        application.save(update_fields=['is_viewed'])
+        logger.info(f"Marked application {application.id} as viewed when accessed by employer {employer_profile.id}")
     
     return render(request, 'core/application_detail.html', {
         'application': application,
