@@ -41,7 +41,7 @@ def profile(request):
         user_profile = UserProfile(user=request.user)
         user_profile.save()
     
-    # Check if it's an AJAX request for CV upload
+    # Check if it's an AJAX request
     is_ajax = request.headers.get('X-Requested-With') == 'XMLHttpRequest'
     
     # Initialize form
@@ -52,6 +52,25 @@ def profile(request):
         form_type = request.POST.get('form_type')
         
         if form_type == 'user_profile':
+            # Handle AJAX single field updates
+            if is_ajax and len(request.POST) <= 3:  # Only csrfmiddlewaretoken, form_type, and one field
+                field_name = None
+                field_value = None
+                
+                # Find the field being updated
+                for key in request.POST:
+                    if key not in ['csrfmiddlewaretoken', 'form_type']:
+                        field_name = key
+                        field_value = request.POST[key]
+                        break
+                
+                if field_name and field_name in ['desired_field', 'field_experience', 'visible_to_employers']:
+                    # Directly update the field on the model
+                    setattr(user_profile, field_name, field_value)
+                    user_profile.save(update_fields=[field_name])
+                    return JsonResponse({'success': True, 'message': f"{field_name} updated successfully."})
+            
+            # Handle regular form submission or file uploads
             form = UserProfileForm(request.POST, request.FILES, instance=user_profile)
             
             # Handle profile picture update for candidates

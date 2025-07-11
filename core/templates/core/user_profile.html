@@ -562,6 +562,8 @@ document.addEventListener('DOMContentLoaded', function() {
         formData.append(this.name, this.type === 'checkbox' ? (this.checked ? 'on' : '') : this.value);
         formData.append('csrfmiddlewaretoken', document.querySelector('[name=csrfmiddlewaretoken]').value);
         
+        console.log('Auto-saving field:', this.name, 'with value:', this.value);
+        
         // Update toggle switch appearance for checkboxes
         if (this.type === 'checkbox') {
           const dot = this.parentElement.querySelector('.dot');
@@ -581,14 +583,20 @@ document.addEventListener('DOMContentLoaded', function() {
             'X-Requested-With': 'XMLHttpRequest'
           }
         })
-        .then(response => response.json())
+        .then(response => {
+          console.log('Response status:', response.status);
+          return response.json();
+        })
         .then(data => {
-          if (!data.success) {
-            console.error('Error saving field:', data.errors);
+          console.log('Response data:', data);
+          if (data.success) {
+            console.log('Field saved successfully:', this.name);
+          } else {
+            console.error('Error saving field:', this.name, data.errors);
           }
         })
         .catch(error => {
-          console.error('Error:', error);
+          console.error('Error during auto-save:', error);
         });
       });
     });
