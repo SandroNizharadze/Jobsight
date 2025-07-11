@@ -102,7 +102,7 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 
   // Handle form submissions
-  const filterForms = document.querySelectorAll('#filter-form, #mobile-filter-form');
+  const filterForms = document.querySelectorAll('#filter-form, #mobile-filter-form, #filter-form-modal');
   filterForms.forEach(form => {
     // Prevent default form submission
     form.addEventListener('submit', (e) => {
@@ -121,7 +121,11 @@ document.addEventListener('DOMContentLoaded', function() {
       } else if (input.type === 'range') {
         // Update value display immediately
         input.addEventListener('input', function() {
-          const valueDisplay = document.getElementById(input.id === 'salary-slider' ? 'salary-value' : 'mobile-salary-value');
+          const valueDisplay = document.getElementById(
+            input.id === 'salary-slider' ? 'salary-value' : 
+            input.id === 'mobile-salary-slider' ? 'mobile-salary-value' : 
+            'salary-value-modal'
+          );
           if (valueDisplay) {
             valueDisplay.textContent = '₾ ' + this.value;
           }

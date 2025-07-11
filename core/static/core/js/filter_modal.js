@@ -8,6 +8,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const salaryValue = document.getElementById('salary-value-modal');
     const modalBody = filterModal ? filterModal.querySelector('.modal-body') : null;
     const isMobile = window.innerWidth < 768;
+    const filterFormModal = document.getElementById('filter-form-modal');
 
     // Function to open modal with animation
     function openModal() {
@@ -78,6 +79,14 @@ document.addEventListener('DOMContentLoaded', function () {
     if (salarySlider && salaryValue) {
         salarySlider.addEventListener('input', function () {
             salaryValue.textContent = '₾ ' + this.value;
+        });
+    }
+
+    // Close modal after form submission
+    if (filterFormModal) {
+        filterFormModal.addEventListener('submit', function (e) {
+            e.preventDefault();
+            closeModal();
         });
     }
 

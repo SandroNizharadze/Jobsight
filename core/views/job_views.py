@@ -114,6 +114,19 @@ def job_list(request):
         active_filters['მხოლოდ ქართულენოვანი'] = 'კი'
         filter_remove_urls['მხოლოდ ქართულენოვანი'] = remove_from_query_string(request.GET, 'georgian_language_only')
     
+    # Filter by salary_min
+    if 'salary_min' in request.GET and request.GET['salary_min']:
+        try:
+            salary_min = float(request.GET['salary_min'])
+            if salary_min > 0:  # Only apply filter if value is greater than 0
+                jobs = jobs.filter(salary_min__gte=salary_min)
+                filtered = True
+                active_filters['მინიმალური ანაზღაურება'] = f'₾ {salary_min}'
+                filter_remove_urls['მინიმალური ანაზღაურება'] = remove_from_query_string(request.GET, 'salary_min')
+        except (ValueError, TypeError):
+            # If the value is not a valid number, ignore this filter
+            pass
+    
     # Include expired jobs only if explicitly requested
     if 'show_expired' in request.GET and request.GET['show_expired'] == '1':
         jobs = JobListing.objects.filter(status='approved').select_related('employer')

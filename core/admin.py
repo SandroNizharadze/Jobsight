@@ -280,6 +280,8 @@ class JobListingAdmin(SoftDeletionAdmin):
                 from core.repositories.notification_repository import NotificationRepository
                 
                 if new_status == 'approved':
+                    # Set expiration date to 30 days from now when approving a job
+                    obj.expires_at = timezone.now() + timedelta(days=30)
                     message = f"Your job '{obj.title}' has been approved and is now live."
                 else:  # rejected
                     message = f"Your job '{obj.title}' has been rejected. Please check admin feedback."
