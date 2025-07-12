@@ -27,6 +27,9 @@ class UserProfile(models.Model):
     # Field for email notifications consent
     email_notifications = models.BooleanField(default=False, verbose_name=_("თანახმა ვარ მივიღო ელ-ფოსტის შეტყობინებები"))
     
+    # Phone number field
+    phone_number = models.CharField(max_length=50, blank=True, null=True, verbose_name=_("მობილურის ნომერი"))
+    
     # Use PublicMediaStorage for profile pictures when S3 is enabled
     if PublicMediaStorage:
         profile_picture = models.ImageField(

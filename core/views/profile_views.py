@@ -29,112 +29,70 @@ logger = logging.getLogger(__name__)
 @login_required
 def profile(request):
     """
-    Display and manage user profile based on role
+    View for user profile page
     """
-    if not request.user.is_authenticated:
-        return redirect('login')
-    
-    # Get or create user profile
-    try:
-        user_profile = request.user.userprofile
-    except UserProfile.DoesNotExist:
-        user_profile = UserProfile(user=request.user)
-        user_profile.save()
-    
-    # Check if it's an AJAX request
-    is_ajax = request.headers.get('X-Requested-With') == 'XMLHttpRequest'
-    
-    # Initialize form
-    form = UserProfileForm(instance=user_profile)
+    user_profile = request.user.userprofile
     
     # Handle form submission
     if request.method == 'POST':
         form_type = request.POST.get('form_type')
+        is_ajax = request.headers.get('X-Requested-With') == 'XMLHttpRequest'
         
         if form_type == 'user_profile':
-            # Handle AJAX single field updates
-            if is_ajax and len(request.POST) <= 3:  # Only csrfmiddlewaretoken, form_type, and one field
-                field_name = None
-                field_value = None
-                
-                # Find the field being updated
-                for key in request.POST:
-                    if key not in ['csrfmiddlewaretoken', 'form_type']:
-                        field_name = key
-                        field_value = request.POST[key]
-                        break
-                
-                if field_name and field_name in ['desired_field', 'field_experience', 'visible_to_employers']:
-                    # Directly update the field on the model
-                    if field_name == 'visible_to_employers':
-                        # Convert string values to boolean for checkbox fields
-                        field_value = field_value in ['true', 'on', 'yes', 'True', '1']
-                        logger.info(f"Setting visible_to_employers to {field_value} for user {request.user.username}")
-                    
-                    setattr(user_profile, field_name, field_value)
-                    user_profile.save(update_fields=[field_name])
-                    logger.info(f"Updated {field_name} to {field_value} for user {request.user.username}")
-                    return JsonResponse({'success': True, 'message': f"{field_name} updated successfully."})
+            # Get first_name and last_name from the form
+            first_name = request.POST.get('first_name', '')
+            last_name = request.POST.get('last_name', '')
             
-            # Handle regular form submission or file uploads
+            # Update User model fields
+            if first_name or last_name:
+                user = request.user
+                if first_name:
+                    user.first_name = first_name
+                if last_name:
+                    user.last_name = last_name
+                user.save(update_fields=['first_name', 'last_name'])
+            
+            # Handle regular form submission for UserProfile
             form = UserProfileForm(request.POST, request.FILES, instance=user_profile)
-            
-            # Handle profile picture update for candidates
-            profile_picture = request.FILES.get('profile_picture')
-            if profile_picture:
-                user_profile.profile_picture = profile_picture
-                user_profile.save()
-            
             if form.is_valid():
                 form.save()
                 if is_ajax:
-                    return JsonResponse({'success': True, 'message': "Profile updated successfully."})
-                messages.success(request, "Profile updated successfully!")
-                return redirect('profile')
+                    return JsonResponse({'success': True, 'message': 'Profile updated successfully'})
+                messages.success(request, _("Profile updated successfully"))
+                return redirect(request.path_info + ('?tab=settings' if request.GET.get('tab') == 'settings' else ''))
             else:
                 if is_ajax:
-                    return JsonResponse({'success': False, 'errors': form.errors}, status=400)
-                messages.error(request, "Error updating profile. Please check the form and try again.")
+                    return JsonResponse({'success': False, 'errors': form.errors})
+                messages.error(request, _("Error updating profile. Please check the form and try again."))
         
-        elif form_type == 'employer_form' and user_profile.role == 'employer':
-            employer_form = EmployerProfileForm(request.POST, request.FILES, instance=user_profile.employer_profile)
+        elif form_type == 'cv_settings':
+            # Handle CV settings form submission
+            desired_field = request.POST.get('desired_field', '')
+            field_experience = request.POST.get('field_experience', '')
+            visible_to_employers = request.POST.get('visible_to_employers') == 'on'
             
-            # Also handle profile picture update
-            profile_picture = request.FILES.get('profile_picture')
-            if profile_picture:
-                user_profile.profile_picture = profile_picture
-                user_profile.save()
+            # Update user profile
+            user_profile.desired_field = desired_field
+            user_profile.field_experience = field_experience
+            user_profile.visible_to_employers = visible_to_employers
+            user_profile.save(update_fields=['desired_field', 'field_experience', 'visible_to_employers'])
             
-            # Get the company description directly from the form
-            company_description = request.POST.get('company_description', '')
-            
-            # Log the company description for debugging
-            logger.info(f"Company description: {company_description[:50]}...")
-            
-            if employer_form.is_valid():
-                # Save the form but don't commit yet
-                employer_profile = employer_form.save(commit=False)
-                
-                # Ensure the company description is properly set
-                if company_description:
-                    employer_profile.company_description = company_description
-                
-                # Now save the profile
-                employer_profile.save()
-                messages.success(request, "Company profile updated successfully!")
-                return redirect('profile')
-            else:
-                # If the form is invalid, log the errors
-                logger.error(f"Employer form errors: {employer_form.errors}")
-                messages.error(request, "Error updating company profile. Please check the form and try again.")
+            messages.success(request, _("Settings saved successfully"), extra_tags='settings_saved')
+            return redirect(request.path_info + ('?tab=profile' if not request.GET.get('tab') else ''))
+        
+        # If not AJAX, continue to render the page with the updated form
+    else:
+        form = UserProfileForm(instance=user_profile)
     
-    # Get filters from query params
-    name_filter = request.GET.get('name', '')
-    status_filter = request.GET.get('status', '')
-    tab = request.GET.get('tab', 'profile')
+    # Get tab from URL parameter
+    tab = request.GET.get('tab', '')
     template_param = request.GET.get('template', '')
     
-    # Get user's applications with proper joins
+    # Get filters for applications
+    name_filter = request.GET.get('name', '')
+    status_filter = request.GET.get('status', '')
+    
+    # Get applications with proper joins
     applications = JobApplication.objects.filter(
         user=request.user
     ).select_related(
@@ -142,17 +100,10 @@ def profile(request):
         'job__employer'
     ).order_by('-applied_at')
     
-    # Apply name filter if provided
+    # Apply filters if provided
     if name_filter:
-        name_filter_q = Q(job__title__icontains=name_filter)
-        # Also search in job_title for deleted jobs
-        name_filter_q |= Q(job_title__icontains=name_filter)
-        # Search in company name as well
-        name_filter_q |= Q(job__company__icontains=name_filter)
-        name_filter_q |= Q(job_company__icontains=name_filter)
-        applications = applications.filter(name_filter_q)
+        applications = applications.filter(job__title__icontains=name_filter)
     
-    # Apply status filter if provided
     if status_filter:
         applications = applications.filter(status=status_filter)
     
@@ -183,7 +134,7 @@ def profile(request):
         'applications': applications,
         'saved_jobs': saved_jobs,
         'employer_form': employer_form,
-        'active_tab': tab,
+        'active_tab': tab or 'profile',
         'name_filter': name_filter,
         'status_filter': status_filter,
         'using_s3': hasattr(settings, 'USE_S3') and settings.USE_S3,
@@ -195,11 +146,25 @@ def profile(request):
     if template_param == 'employer':
         template = 'core/employer_edit_profile.html'
     elif template_param == 'user':
-        template = 'core/user_profile.html'
+        if tab == 'applications':
+            template = 'core/user_profile_applications.html'
+        elif tab == 'saved_jobs':
+            template = 'core/user_profile_saved_jobs.html'
+        elif tab == 'settings':
+            template = 'core/user_profile_settings.html'
+        else:
+            template = 'core/user_profile_cv.html'
     elif is_employer:
         template = 'core/employer_edit_profile.html'
     else:
-        template = 'core/user_profile.html'
+        if tab == 'applications':
+            template = 'core/user_profile_applications.html'
+        elif tab == 'saved_jobs':
+            template = 'core/user_profile_saved_jobs.html'
+        elif tab == 'settings':
+            template = 'core/user_profile_settings.html'
+        else:
+            template = 'core/user_profile_cv.html'
     
     return render(request, template, context)
 

@@ -1,0 +1,95 @@
+{% extends 'core/user_profile_base.html' %}
+{% load i18n %}
+
+{% block profile_content %}
+<div class="p-4 sm:p-6">
+  <div class="max-w-2xl mx-auto">
+    <h3 class="text-lg font-medium text-gray-900 mb-6">{% trans "Account Settings" %}</h3>
+    
+    <!-- Personal Information -->
+    <div class="mb-8">
+      <h4 class="text-md font-medium text-gray-700 mb-4">{% trans "Personal Information" %}</h4>
+      
+      <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <input type="hidden" name="form_type" value="user_profile">
+        
+        <div class="space-y-4">
+          <div>
+            <label for="first_name" class="block text-sm font-medium text-gray-700">{% trans "First Name" %}</label>
+            <input type="text" name="first_name" id="first_name" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm" value="{{ user.first_name }}" placeholder="{% trans 'Enter your first name' %}">
+          </div>
+          
+          <div>
+            <label for="last_name" class="block text-sm font-medium text-gray-700">{% trans "Last Name" %}</label>
+            <input type="text" name="last_name" id="last_name" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm" value="{{ user.last_name }}" placeholder="{% trans 'Enter your last name' %}">
+          </div>
+          
+          <div>
+            <label for="phone_number" class="block text-sm font-medium text-gray-700">{% trans "Phone Number" %}</label>
+            <input type="text" name="phone_number" id="phone_number" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm" value="{{ user.userprofile.phone_number|default:'' }}" placeholder="{% trans 'Enter your phone number' %}">
+          </div>
+          
+          <div class="pt-4">
+            <button type="submit" class="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+              <svg class="h-5 w-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+              </svg>
+              {% trans "Save Changes" %}
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+    
+    <!-- Password Reset -->
+    <div class="mb-8 pt-6 border-t border-gray-200">
+      <h4 class="text-md font-medium text-gray-700 mb-4">{% trans "Password Reset" %}</h4>
+      
+      <form method="post" action="{% url 'password_change' %}" class="space-y-4">
+        {% csrf_token %}
+        
+        <div>
+          <label for="current_password" class="block text-sm font-medium text-gray-700">{% trans "Current Password" %}</label>
+          <input type="password" name="old_password" id="current_password" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm" required>
+        </div>
+        
+        <div>
+          <label for="new_password1" class="block text-sm font-medium text-gray-700">{% trans "New Password" %}</label>
+          <input type="password" name="new_password1" id="new_password1" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm" required>
+        </div>
+        
+        <div>
+          <label for="new_password2" class="block text-sm font-medium text-gray-700">{% trans "Confirm New Password" %}</label>
+          <input type="password" name="new_password2" id="new_password2" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm" required>
+        </div>
+        
+        <div>
+          <button type="submit" class="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+            <svg class="h-5 w-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+            </svg>
+            {% trans "Change Password" %}
+          </button>
+        </div>
+      </form>
+    </div>
+    
+    <!-- Delete Account -->
+    <div class="pt-6 border-t border-gray-200">
+      <h4 class="text-md font-medium text-gray-700 mb-4">{% trans "Delete Account" %}</h4>
+      
+      
+      
+      <div>
+        <button id="delete-account-btn" type="button" class="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
+          <svg class="h-5 w-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+          </svg>
+          {% trans "წაშალე ექაუნთი" %}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %} 

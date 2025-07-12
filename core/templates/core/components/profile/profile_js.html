@@ -181,10 +181,22 @@
     const tabParam = urlParams.get('tab');
     
     // Activate main section tab if specified in URL
-    if (tabParam === 'applications') {
+    if (tabParam === 'applications' || tabParam === 'saved_jobs') {
       const jobActivityTab = document.getElementById('job-activity-tab');
       if (jobActivityTab) {
         jobActivityTab.click();
+      }
+    } else if (tabParam === 'settings') {
+      const profileTab = document.getElementById('profile-tab');
+      if (profileTab) {
+        profileTab.click();
+        // Also activate the settings subtab
+        setTimeout(() => {
+          const settingsTab = document.getElementById('profile-settings-tab');
+          if (settingsTab) {
+            settingsTab.click();
+          }
+        }, 100);
       }
     }
 
@@ -219,6 +231,42 @@
         
         this.classList.remove('bg-gray-100', 'text-gray-700');
         this.classList.add('bg-blue-500', 'text-white');
+      });
+    });
+
+    // Setup profile subtabs
+    const profileTabButtons = document.querySelectorAll('[data-profile-tab]');
+    const profilePanes = document.querySelectorAll('.profile-pane');
+
+    profileTabButtons.forEach(button => {
+      button.addEventListener('click', function() {
+        const targetId = this.getAttribute('data-profile-tab');
+        console.log(`Clicked profile subtab: ${targetId}`);
+        
+        // Hide all profile panes
+        profilePanes.forEach(pane => {
+          pane.classList.add('hidden');
+          pane.classList.remove('block');
+        });
+        
+        // Show target pane
+        const targetPane = document.getElementById(`profile-${targetId}-pane`);
+        if (targetPane) {
+          targetPane.classList.remove('hidden');
+          targetPane.classList.add('block');
+          console.log(`Showing profile pane: ${targetId}`);
+        } else {
+          console.log(`Profile pane not found for: ${targetId}`);
+        }
+        
+        // Update active state
+        profileTabButtons.forEach(btn => {
+          btn.classList.remove('border-blue-500', 'text-blue-600');
+          btn.classList.add('border-transparent', 'text-gray-500', 'hover:text-gray-700', 'hover:border-gray-300');
+        });
+        
+        this.classList.remove('border-transparent', 'text-gray-500', 'hover:text-gray-700', 'hover:border-gray-300');
+        this.classList.add('border-blue-500', 'text-blue-600');
       });
     });
 

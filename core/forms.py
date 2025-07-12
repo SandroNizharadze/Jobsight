@@ -120,7 +120,8 @@ class UserProfileForm(forms.ModelForm):
             'cv', 
             'desired_field', 
             'field_experience', 
-            'visible_to_employers'
+            'visible_to_employers',
+            'phone_number'
         ]
         widgets = {
             'profile_picture': forms.FileInput(attrs={
@@ -139,6 +140,10 @@ class UserProfileForm(forms.ModelForm):
             }),
             'visible_to_employers': forms.CheckboxInput(attrs={
                 'class': 'form-check-input'
+            }),
+            'phone_number': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': _('Enter your phone number')
             }),
         }
         help_texts = {
@@ -168,6 +173,13 @@ class UserProfileForm(forms.ModelForm):
             if not profile_picture.content_type.startswith('image/'):
                 raise forms.ValidationError("File is not an image")
         return profile_picture
+        
+    def clean_visible_to_employers(self):
+        """Handle string values for visible_to_employers from toggle button"""
+        value = self.cleaned_data.get('visible_to_employers')
+        if isinstance(value, str):
+            return value.lower() in ('true', 'yes', '1', 'on')
+        return bool(value)
 
     def save(self, commit=True):
         instance = super().save(commit=False)

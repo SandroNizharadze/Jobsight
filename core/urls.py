@@ -8,6 +8,7 @@ from django.views.generic.base import RedirectView
 from .views.blog_views import BlogListView, BlogPostDetailView, BlogCategoryView
 from .views.email_views import verify_email, resend_verification_email
 from .views.static_pages import StaticPageView
+from django.contrib.auth import views as django_auth_views
 
 urlpatterns = [
     path('', job_views.job_list, name='job_list'),
@@ -22,10 +23,15 @@ urlpatterns = [
     path('profile/remove-cv/', profile_views.remove_cv, name='remove_cv'),
     path('profile/delete-account/', profile_views.delete_account, name='delete_account'),
     path('profile/update-employer-profile/', profile_views.update_employer_profile, name='update_employer_profile'),
+    path('password-change/', django_auth_views.PasswordChangeView.as_view(
+        template_name='core/auth/password_change.html',
+        success_url='/profile/?tab=settings'
+    ), name='password_change'),
     
     # Redirect applications and saved jobs to profile with tab parameter
     path('profile/applications/', RedirectView.as_view(url='/profile/?tab=applications', permanent=False), name='candidate_applications'),
     path('profile/saved-jobs/', RedirectView.as_view(url='/profile/?tab=saved_jobs', permanent=False), name='candidate_saved_jobs'),
+    path('profile/settings/', RedirectView.as_view(url='/profile/?tab=settings', permanent=False), name='candidate_settings'),
     
     # Email verification URLs
     path('verify-email/<str:token>/', verify_email, name='verify_email'),
