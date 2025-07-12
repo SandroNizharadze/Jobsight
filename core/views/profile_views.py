@@ -66,8 +66,14 @@ def profile(request):
                 
                 if field_name and field_name in ['desired_field', 'field_experience', 'visible_to_employers']:
                     # Directly update the field on the model
+                    if field_name == 'visible_to_employers':
+                        # Convert string values to boolean for checkbox fields
+                        field_value = field_value in ['true', 'on', 'yes', 'True', '1']
+                        logger.info(f"Setting visible_to_employers to {field_value} for user {request.user.username}")
+                    
                     setattr(user_profile, field_name, field_value)
                     user_profile.save(update_fields=[field_name])
+                    logger.info(f"Updated {field_name} to {field_value} for user {request.user.username}")
                     return JsonResponse({'success': True, 'message': f"{field_name} updated successfully."})
             
             # Handle regular form submission or file uploads

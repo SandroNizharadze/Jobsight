@@ -243,9 +243,9 @@
                     <!-- Toggle switch instead of checkbox -->
                     <label for="{{ profile_form.visible_to_employers.id_for_label }}" class="flex items-center cursor-pointer">
                       <div class="relative">
-                        <input id="{{ profile_form.visible_to_employers.id_for_label }}" name="visible_to_employers" type="checkbox" class="sr-only auto-save-field" {% if user.userprofile.visible_to_employers %}checked{% endif %}>
-                        <div class="w-10 h-5 bg-gray-200 rounded-full shadow-inner"></div>
-                        <div class="dot absolute w-5 h-5 bg-white rounded-full shadow top-0 left-0 transition-transform duration-300 ease-in-out {% if user.userprofile.visible_to_employers %}transform translate-x-5 bg-blue-600{% endif %}"></div>
+                        <input id="{{ profile_form.visible_to_employers.id_for_label }}" name="visible_to_employers" type="checkbox" class="sr-only auto-save-field" {% if user.userprofile.visible_to_employers %}checked{% endif %} onchange="this.dispatchEvent(new Event('change'))">
+                        <div class="w-10 h-5 bg-gray-200 rounded-full shadow-inner" onclick="document.getElementById('{{ profile_form.visible_to_employers.id_for_label }}').click()"></div>
+                        <div class="dot absolute w-5 h-5 bg-white rounded-full shadow top-0 left-0 transition-transform duration-300 ease-in-out {% if user.userprofile.visible_to_employers %}transform translate-x-5 bg-blue-600{% endif %}" onclick="document.getElementById('{{ profile_form.visible_to_employers.id_for_label }}').click()"></div>
                       </div>
                       <div class="ml-3 text-sm">
                         <span class="font-medium text-gray-700">{% trans "მსურს ჩემი CV ხილვადი იყოს დამსაქმებლისთვის" %}</span>
@@ -562,9 +562,9 @@ document.addEventListener('DOMContentLoaded', function() {
         formData.append(this.name, this.type === 'checkbox' ? (this.checked ? 'on' : '') : this.value);
         formData.append('csrfmiddlewaretoken', document.querySelector('[name=csrfmiddlewaretoken]').value);
         
-        console.log('Auto-saving field:', this.name, 'with value:', this.value);
+        console.log('Auto-saving field:', this.name, 'with value:', this.type === 'checkbox' ? this.checked : this.value);
         
-        // Update toggle switch appearance for checkboxes
+        // Update toggle switch appearance for checkboxes immediately
         if (this.type === 'checkbox') {
           const dot = this.parentElement.querySelector('.dot');
           if (dot) {
@@ -574,6 +574,15 @@ document.addEventListener('DOMContentLoaded', function() {
               dot.classList.remove('transform', 'translate-x-5', 'bg-blue-600');
             }
           }
+        }
+        
+        // Show auto-save status message
+        const statusElement = document.getElementById('auto-save-status');
+        if (statusElement) {
+          statusElement.classList.remove('hidden');
+          setTimeout(() => {
+            statusElement.classList.add('hidden');
+          }, 2000);
         }
         
         fetch(window.location.href, {
@@ -593,10 +602,34 @@ document.addEventListener('DOMContentLoaded', function() {
             console.log('Field saved successfully:', this.name);
           } else {
             console.error('Error saving field:', this.name, data.errors);
+            // If there was an error, revert the UI change
+            if (this.type === 'checkbox') {
+              this.checked = !this.checked;
+              const dot = this.parentElement.querySelector('.dot');
+              if (dot) {
+                if (this.checked) {
+                  dot.classList.add('transform', 'translate-x-5', 'bg-blue-600');
+                } else {
+                  dot.classList.remove('transform', 'translate-x-5', 'bg-blue-600');
+                }
+              }
+            }
           }
         })
         .catch(error => {
           console.error('Error during auto-save:', error);
+          // If there was an error, revert the UI change
+          if (this.type === 'checkbox') {
+            this.checked = !this.checked;
+            const dot = this.parentElement.querySelector('.dot');
+            if (dot) {
+              if (this.checked) {
+                dot.classList.add('transform', 'translate-x-5', 'bg-blue-600');
+              } else {
+                dot.classList.remove('transform', 'translate-x-5', 'bg-blue-600');
+              }
+            }
+          }
         });
       });
     });
@@ -638,6 +671,16 @@ document.addEventListener('DOMContentLoaded', function() {
   
   input[type="checkbox"].sr-only:checked + div + .dot {
     transform: translateX(1.25rem);
+    background-color: #2563eb; /* blue-600 */
+  }
+  
+  /* Make toggle more responsive */
+  input[type="checkbox"].auto-save-field {
+    cursor: pointer;
+  }
+  
+  input[type="checkbox"].auto-save-field + div {
+    cursor: pointer;
   }
 </style>
 {% endblock %}
