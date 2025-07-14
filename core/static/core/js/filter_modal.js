@@ -9,6 +9,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const modalBody = filterModal ? filterModal.querySelector('.modal-body') : null;
     const isMobile = window.innerWidth < 768;
     const filterFormModal = document.getElementById('filter-form-modal');
+    const dragHandle = document.getElementById('modal-drag-handle');
 
     // Function to open modal with animation
     function openModal() {
@@ -117,5 +118,77 @@ document.addEventListener('DOMContentLoaded', function () {
 
             startY = currentY;
         }, { passive: false });
+    }
+
+    // Make drag handle close the modal
+    if (dragHandle) {
+        dragHandle.addEventListener('click', closeModal);
+    }
+
+    // Drag-to-close functionality
+    let startY = null;
+    let currentY = null;
+    let dragging = false;
+    let modalStartTransform = '';
+    let dragThreshold = 100; // px to trigger close
+
+    const modalDragHeader = document.getElementById('modal-drag-header');
+    if (modalDragHeader && filterModal) {
+        // Touch events
+        modalDragHeader.addEventListener('touchstart', function (e) {
+            dragging = true;
+            startY = e.touches[0].clientY;
+            modalStartTransform = filterModal.querySelector('.modal-content').style.transform || '';
+        });
+        modalDragHeader.addEventListener('touchmove', function (e) {
+            if (!dragging) return;
+            currentY = e.touches[0].clientY;
+            let deltaY = currentY - startY;
+            if (deltaY > 0) {
+                filterModal.querySelector('.modal-content').style.transform = `translateY(${deltaY}px)`;
+            }
+        });
+        modalDragHeader.addEventListener('touchend', function (e) {
+            if (!dragging) return;
+            dragging = false;
+            let deltaY = currentY - startY;
+            if (deltaY > dragThreshold) {
+                closeModal();
+                setTimeout(() => {
+                    filterModal.querySelector('.modal-content').style.transform = '';
+                }, 300);
+            } else {
+                filterModal.querySelector('.modal-content').style.transform = '';
+            }
+        });
+        // Mouse events for desktop
+        modalDragHeader.addEventListener('mousedown', function (e) {
+            dragging = true;
+            startY = e.clientY;
+            modalStartTransform = filterModal.querySelector('.modal-content').style.transform || '';
+            document.body.style.userSelect = 'none';
+        });
+        window.addEventListener('mousemove', function (e) {
+            if (!dragging) return;
+            currentY = e.clientY;
+            let deltaY = currentY - startY;
+            if (deltaY > 0) {
+                filterModal.querySelector('.modal-content').style.transform = `translateY(${deltaY}px)`;
+            }
+        });
+        window.addEventListener('mouseup', function (e) {
+            if (!dragging) return;
+            dragging = false;
+            let deltaY = currentY - startY;
+            document.body.style.userSelect = '';
+            if (deltaY > dragThreshold) {
+                closeModal();
+                setTimeout(() => {
+                    filterModal.querySelector('.modal-content').style.transform = '';
+                }, 300);
+            } else {
+                filterModal.querySelector('.modal-content').style.transform = '';
+            }
+        });
     }
 });
