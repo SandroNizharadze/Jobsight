@@ -92,30 +92,39 @@ def job_list(request):
         active_filters['გამოცდილება'] = experience_display
         filter_remove_urls['გამოცდილება'] = remove_from_query_string(request.GET, 'experience')
     
-    # Filter by job_preferences
-    if 'job_preferences' in request.GET and request.GET['job_preferences']:
-        job_preferences = request.GET['job_preferences']
-        jobs = jobs.filter(job_preferences=job_preferences)
+    # --- OR logic for considers_students and georgian_language_only ---
+    considers_students_checked = request.GET.get('considers_students') == 'true'
+    georgian_language_only_checked = request.GET.get('georgian_language_only') == 'true'
+    if considers_students_checked and georgian_language_only_checked:
+        jobs = jobs.filter(Q(considers_students=True) | Q(georgian_language_only=True))
         filtered = True
-        # Get the display name for the job preference
-        job_preferences_dict = dict(JobListing.JOB_PREFERENCE_CHOICES)
-        job_preference_display = job_preferences_dict.get(job_preferences, job_preferences)
-        active_filters['სამუშაო გრაფიკი'] = job_preference_display
-        filter_remove_urls['სამუშაო გრაფიკი'] = remove_from_query_string(request.GET, 'job_preferences')
-    
-    # Filter by considers_students
-    if 'considers_students' in request.GET and request.GET['considers_students'] == 'true':
+        active_filters['განიხილავს სტუდენტებს'] = 'კი'
+        filter_remove_urls['განიხილავს სტუდენტებს'] = remove_from_query_string(request.GET, 'considers_students')
+        active_filters['მხოლოდ ქართულენოვანი'] = 'კი'
+        filter_remove_urls['მხოლოდ ქართულენოვანი'] = remove_from_query_string(request.GET, 'georgian_language_only')
+    elif considers_students_checked:
         jobs = jobs.filter(considers_students=True)
         filtered = True
         active_filters['განიხილავს სტუდენტებს'] = 'კი'
         filter_remove_urls['განიხილავს სტუდენტებს'] = remove_from_query_string(request.GET, 'considers_students')
-    
-    # Filter by georgian_language_only
-    if 'georgian_language_only' in request.GET and request.GET['georgian_language_only'] == 'true':
+    elif georgian_language_only_checked:
         jobs = jobs.filter(georgian_language_only=True)
         filtered = True
         active_filters['მხოლოდ ქართულენოვანი'] = 'კი'
         filter_remove_urls['მხოლოდ ქართულენოვანი'] = remove_from_query_string(request.GET, 'georgian_language_only')
+
+    # --- OR logic for job_preferences ---
+    selected_job_preferences = request.GET.getlist('job_preferences')
+    if selected_job_preferences:
+        q_obj = Q()
+        for pref in selected_job_preferences:
+            q_obj |= Q(job_preferences=pref)
+        jobs = jobs.filter(q_obj)
+        filtered = True
+        # Show all selected preferences in active_filters
+        job_preferences_dict = dict(JobListing.JOB_PREFERENCE_CHOICES)
+        active_filters['სამუშაო გრაფიკი'] = ', '.join([str(job_preferences_dict.get(p, p)) for p in selected_job_preferences])
+        filter_remove_urls['სამუშაო გრაფიკი'] = remove_from_query_string(request.GET, 'job_preferences')
     
     # Filter by salary_min
     if 'salary_min' in request.GET and request.GET['salary_min']:
