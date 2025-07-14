@@ -10,18 +10,20 @@
             <!-- Search/Company -->
             <div class="mb-4">
                 <input type="text" 
-                       class="w-full px-3 py-2 rounded-lg border border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 filter-auto-submit" 
+                       class="w-full px-3 py-2 rounded-lg border border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50" 
                        name="search" 
                        placeholder="{% trans "მოძებნა / კომპანია" %}" 
-                       value="{{ request.GET.search|default:'' }}">
+                       value="{{ request.GET.search|default:'' }}"
+                       onchange="this.form.submit();">
             </div>
             
             <!-- Main Filters Grid -->
             <div class="grid grid-cols-1 gap-3">
                 <!-- Category -->
                 <div>
-                    <select class="w-full px-3 py-2 text-sm rounded-lg border border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 filter-auto-submit" 
-                            name="category">
+                    <select class="w-full px-3 py-2 text-sm rounded-lg border border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50" 
+                            name="category"
+                            onchange="this.form.submit();">
                         <option value="">{% trans "კატეგორია" %}</option>
                         {% for category_value, category_label in job_categories %}
                             <option value="{{ category_value }}" {% if request.GET.category == category_value %}selected{% endif %}>{{ category_label }}</option>
@@ -31,8 +33,9 @@
                 
                 <!-- Location -->
                 <div>
-                    <select class="w-full px-3 py-2 text-sm rounded-lg border border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 filter-auto-submit" 
-                            name="location">
+                    <select class="w-full px-3 py-2 text-sm rounded-lg border border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50" 
+                            name="location"
+                            onchange="this.form.submit();">
                         <option value="">{% trans "ლოკაცია" %}</option>
                         {% for location_value, location_label in job_locations %}
                             <option value="{{ location_value }}" {% if request.GET.location == location_value %}selected{% endif %}>{{ location_label }}</option>
@@ -42,8 +45,9 @@
                 
                 <!-- Experience -->
                 <div>
-                    <select class="w-full px-3 py-2 text-sm rounded-lg border border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 filter-auto-submit" 
-                            name="experience">
+                    <select class="w-full px-3 py-2 text-sm rounded-lg border border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50" 
+                            name="experience"
+                            onchange="this.form.submit();">
                         <option value="">{% trans "გამოცდილება" %}</option>
                         {% for exp_value, exp_label in job_experiences %}
                             <option value="{{ exp_value }}" {% if request.GET.experience == exp_value %}selected{% endif %}>{{ exp_label }}</option>
@@ -56,13 +60,14 @@
             <div class="mt-5">
                 <label class="block text-sm font-medium text-gray-700 mb-1">{% trans "მინიმალური ანაზღაურება" %}</label>
                 <input type="range" 
-                       class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer filter-auto-submit" 
+                       class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer" 
                        min="0" 
                        max="10000" 
                        step="500" 
                        name="salary_min" 
                        value="{{ request.GET.salary_min|default:0 }}" 
-                       id="mobile-salary-slider">
+                       id="mobile-salary-slider"
+                       onchange="this.form.submit();">
                 <div class="flex justify-between mt-1 text-xs text-gray-600">
                     <span id="mobile-salary-value">₾ {{ request.GET.salary_min|default:0 }}</span>
                     <span>₾ 10,000+</span>
@@ -76,10 +81,11 @@
                     {% for pref_value, pref_label in job_preferences %}
                         <label class="inline-flex items-center text-sm">
                             <input type="checkbox" 
-                                   class="rounded border-gray-300 text-blue-600 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50 filter-auto-submit" 
+                                   class="rounded border-gray-300 text-blue-600 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50" 
                                    name="job_preferences" 
                                    value="{{ pref_value }}" 
-                                   {% if pref_value in selected_job_preferences %}checked{% endif %}>
+                                   {% if pref_value in selected_job_preferences %}checked{% endif %}
+                                   onchange="this.form.submit();">
                             <span class="ml-1">{{ pref_label }}</span>
                         </label>
                     {% endfor %}
@@ -92,31 +98,32 @@
                     <!-- Student Positions -->
                     <label class="inline-flex items-center text-sm">
                         <input type="checkbox" 
-                               class="rounded border-gray-300 text-blue-600 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50 filter-auto-submit" 
+                               class="rounded border-gray-300 text-blue-600 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50" 
                                name="considers_students" 
                                value="true" 
-                               {% if request.GET.considers_students == 'true' %}checked{% endif %}>
+                               {% if request.GET.considers_students == 'true' %}checked{% endif %}
+                               onchange="this.form.submit();">
                         <span class="ml-1">{% trans "სტუდენტური" %}</span>
                     </label>
                     
                     <!-- Georgian Language Only -->
                     <label class="inline-flex items-center text-sm">
                         <input type="checkbox" 
-                               class="rounded border-gray-300 text-blue-600 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50 filter-auto-submit" 
+                               class="rounded border-gray-300 text-blue-600 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50" 
                                name="georgian_language_only" 
                                value="true" 
-                               {% if request.GET.georgian_language_only == 'true' %}checked{% endif %}>
+                               {% if request.GET.georgian_language_only == 'true' %}checked{% endif %}
+                               onchange="this.form.submit();">
                         <span class="ml-1">{% trans "მხოლოდ ქართულენოვანი" %}</span>
                     </label>
                 </div>
             </div>
             
             <div class="flex justify-end mt-5">
-                <button type="button" 
-                        id="mobile-reset-filters" 
-                        class="px-4 py-2 text-sm border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-100 transition-colors">
+                <a href="{% url 'job_list' %}?show_filters=1" 
+                   class="px-4 py-2 text-sm border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-100 transition-colors">
                     <i class="fas fa-redo mr-1"></i>{% trans "გასუფთავება" %}
-                </button>
+                </a>
             </div>
         </form>
     </div>
@@ -146,9 +153,8 @@
             {% for filter_name, filter_value in active_filters.items %}
                 <div class="bg-gray-100 text-gray-800 px-2 py-1 text-xs rounded-full flex items-center">
                     <span>{{ filter_name }}: {{ filter_value }}</span>
-                    <a href="{{ filter_remove_urls.filter_name }}" 
-                       class="ml-1 text-red-500 hover:text-red-700 filter-remove-link" 
-                       data-filter="{{ filter_name }}">
+                    <a href="{{ filter_remove_urls|get_item:filter_name }}" 
+                       class="ml-1 text-red-500 hover:text-red-700">
                         <i class="fas fa-times"></i>
                     </a>
                 </div>
@@ -156,37 +162,4 @@
         </div>
         {% endif %}
     </div>
-</div>
-
-<!-- Mobile JS -->
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    // Mobile Salary slider functionality
-    const mobileSalarySlider = document.getElementById('mobile-salary-slider');
-    const mobileSalaryValue = document.getElementById('mobile-salary-value');
-    
-    if (mobileSalarySlider && mobileSalaryValue) {
-        // Update value display on slider change
-        mobileSalarySlider.addEventListener('input', function() {
-            mobileSalaryValue.textContent = '₾ ' + this.value;
-        });
-        
-        // Improve touch experience - don't submit immediately while dragging on mobile
-        let touchTimeout;
-        mobileSalarySlider.addEventListener('touchend', function() {
-            clearTimeout(touchTimeout);
-            touchTimeout = setTimeout(function() {
-                document.getElementById('mobile-filter-form').submit();
-            }, 500); // Small delay to prevent multiple submissions
-        });
-    }
-    
-    // Reset filters button
-    const mobileResetButton = document.getElementById('mobile-reset-filters');
-    if (mobileResetButton) {
-        mobileResetButton.addEventListener('click', function() {
-            window.location.href = '{% url 'job_list' %}?show_filters=1';
-        });
-    }
-});
-</script> 
+</div> 

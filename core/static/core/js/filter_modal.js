@@ -85,8 +85,8 @@ document.addEventListener('DOMContentLoaded', function () {
     // Close modal after form submission
     if (filterFormModal) {
         filterFormModal.addEventListener('submit', function (e) {
-            e.preventDefault();
             closeModal();
+            // Allow form to submit naturally
         });
     }
 

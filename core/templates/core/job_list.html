@@ -255,21 +255,38 @@
 {% block extra_js %}
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // Fix for empty space after CTA on mobile
+    // Salary slider value display for desktop
+    const salarySlider = document.getElementById('salary-slider');
+    const salaryValue = document.getElementById('salary-value');
+    
+    if (salarySlider && salaryValue) {
+        salarySlider.addEventListener('input', function() {
+            salaryValue.textContent = '₾ ' + this.value;
+        });
+    }
+    
+    // Salary slider value display for mobile
+    const mobileSalarySlider = document.getElementById('mobile-salary-slider');
+    const mobileSalaryValue = document.getElementById('mobile-salary-value');
+    
+    if (mobileSalarySlider && mobileSalaryValue) {
+        mobileSalarySlider.addEventListener('input', function() {
+            mobileSalaryValue.textContent = '₾ ' + this.value;
+        });
+    }
+
+    // Mobile-specific styling
     if (window.innerWidth < 768) {
         document.querySelector('.min-h-screen').style.minHeight = 'auto';
         
-        // Add padding to the last element to account for mobile nav
         const lastElement = document.querySelector('.job-list-last-element');
         if (lastElement) {
             lastElement.style.marginBottom = '0';
             lastElement.style.paddingBottom = '0';
         }
         
-        // Add animation to CTA button
         const ctaButton = document.querySelector('.enhanced-cta-button');
         if (ctaButton) {
-            // Initial pulse animation
             setTimeout(() => {
                 ctaButton.classList.add('animate-pulse');
                 setTimeout(() => {
@@ -277,10 +294,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 }, 1500);
             }, 1000);
             
-            // Add additional styling to make button more visible
             ctaButton.style.boxShadow = '0 4px 12px rgba(13, 148, 136, 0.5)';
             
-            // Add periodic pulse effect every 8 seconds
             setInterval(() => {
                 ctaButton.classList.add('animate-pulse');
                 setTimeout(() => {
@@ -289,12 +304,10 @@ document.addEventListener('DOMContentLoaded', function() {
             }, 8000);
         }
         
-        // Detect Safari browser and add class to body
         const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
         if (isSafari) {
             document.body.classList.add('safari');
             
-            // Fix Safari-specific issues with JS
             document.querySelectorAll('.bg-gradient-to-br').forEach(el => {
                 if (el.classList.contains('from-purple-500')) {
                     el.style.backgroundColor = '#8b5cf6';
@@ -303,73 +316,12 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             });
             
-            // Ensure proper rendering of enhanced-cta-box in Safari
             const ctaBox = document.querySelector('.enhanced-cta-box');
             if (ctaBox) {
                 ctaBox.style.borderRadius = '1.5rem 1.5rem 0 0';
             }
         }
     }
-
-    // Salary slider functionality for desktop
-    const salarySlider = document.getElementById('salary-slider');
-    const salaryValue = document.getElementById('salary-value');
-    
-    if (salarySlider && salaryValue) {
-        // Update value display on slider change
-        salarySlider.addEventListener('input', function() {
-            salaryValue.textContent = '₾ ' + this.value;
-        });
-        
-        // Improve touch experience - don't submit immediately while dragging on mobile
-        let touchTimeout;
-        salarySlider.addEventListener('touchend', function() {
-            clearTimeout(touchTimeout);
-            touchTimeout = setTimeout(function() {
-                document.getElementById('filter-form').submit();
-            }, 500); // Small delay to prevent multiple submissions
-        });
-    }
-    
-    // Auto-submit filters
-    const autoSubmitFilters = document.querySelectorAll('.filter-auto-submit');
-    autoSubmitFilters.forEach(function(filter) {
-        if (filter.type === 'range') {
-            // For range sliders, don't auto-submit on desktop
-            filter.addEventListener('change', function() {
-                // Only submit if not a touch device (to avoid double submission)
-                if (!('ontouchstart' in window)) {
-                    // Check which form to submit
-                    const formId = window.innerWidth < 768 ? 'mobile-filter-form' : 'filter-form';
-                    document.getElementById(formId).submit();
-                }
-            });
-        } else {
-            // For other inputs (select, checkbox), auto-submit on change
-            filter.addEventListener('change', function() {
-                // Check which form to submit
-                const formId = window.innerWidth < 768 ? 'mobile-filter-form' : 'filter-form';
-                document.getElementById(formId).submit();
-            });
-        }
-    });
-    
-    // Reset filters button
-    const resetButton = document.getElementById('reset-filters');
-    if (resetButton) {
-        resetButton.addEventListener('click', function() {
-            window.location.href = '{% url 'job_list' %}';
-        });
-    }
-    
-    // Filter remove links
-    const filterRemoveLinks = document.querySelectorAll('.filter-remove-link');
-    filterRemoveLinks.forEach(function(link) {
-        link.addEventListener('click', function(e) {
-            e.preventDefault();
-            window.location.href = this.getAttribute('href');
-        });
-    });
 });
 </script>
 {% endblock %} 
