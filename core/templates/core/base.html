@@ -109,6 +109,138 @@
     </style>
     
     {% block extra_css %}{% endblock %}
+    
+    <!-- Session Management Script -->
+    {% if user.is_authenticated %}
+    <script>
+        // Session management for authenticated users
+        (function() {
+            const SESSION_WARNING_TIME = 5 * 60 * 1000; // 5 minutes before expiry
+            const SESSION_CHECK_INTERVAL = 60 * 1000; // Check every minute
+            
+            let sessionWarningShown = false;
+            
+            function checkSessionStatus() {
+                fetch('/api/session-status/', {
+                    method: 'GET',
+                    credentials: 'same-origin',
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest'
+                    }
+                })
+                .then(response => {
+                    if (response.status === 401) {
+                        // Session expired, redirect to login
+                        window.location.href = '/login/?next=' + encodeURIComponent(window.location.pathname);
+                    } else if (response.status === 200) {
+                        return response.json();
+                    }
+                })
+                .then(data => {
+                    if (data && data.session_expires_in) {
+                        const timeUntilExpiry = data.session_expires_in * 1000; // Convert to milliseconds
+                        
+                        if (timeUntilExpiry <= SESSION_WARNING_TIME && !sessionWarningShown) {
+                            showSessionWarning(timeUntilExpiry);
+                        }
+                    }
+                })
+                .catch(error => {
+                    console.log('Session check failed:', error);
+                });
+            }
+            
+            function showSessionWarning(timeUntilExpiry) {
+                sessionWarningShown = true;
+                
+                const warningDiv = document.createElement('div');
+                warningDiv.id = 'session-warning';
+                warningDiv.className = 'fixed top-4 right-4 bg-yellow-100 border border-yellow-400 text-yellow-700 px-4 py-3 rounded z-50 max-w-sm';
+                warningDiv.innerHTML = `
+                    <div class="flex items-center">
+                        <div class="flex-shrink-0">
+                            <svg class="h-5 w-5 text-yellow-400" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
+                            </svg>
+                        </div>
+                        <div class="ml-3">
+                            <p class="text-sm font-medium">
+                                ${Math.floor(timeUntilExpiry / 60000)} minutes until session expires
+                            </p>
+                            <div class="mt-2">
+                                <button onclick="extendSession()" class="text-sm bg-yellow-500 hover:bg-yellow-600 text-white px-3 py-1 rounded">
+                                    Stay Logged In
+                                </button>
+                                <button onclick="logout()" class="text-sm text-yellow-600 hover:text-yellow-800 ml-2">
+                                    Logout Now
+                                </button>
+                            </div>
+                        </div>
+                        <div class="ml-auto pl-3">
+                            <button onclick="dismissWarning()" class="text-yellow-400 hover:text-yellow-600">
+                                <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                    <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" />
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                `;
+                
+                document.body.appendChild(warningDiv);
+                
+                // Auto-remove after 30 seconds
+                setTimeout(() => {
+                    dismissWarning();
+                }, 30000);
+            }
+            
+            function dismissWarning() {
+                const warning = document.getElementById('session-warning');
+                if (warning) {
+                    warning.remove();
+                }
+            }
+            
+            function extendSession() {
+                fetch('/api/extend-session/', {
+                    method: 'POST',
+                    credentials: 'same-origin',
+                    headers: {
+                        'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]')?.value || '',
+                        'X-Requested-With': 'XMLHttpRequest'
+                    }
+                })
+                .then(response => {
+                    if (response.ok) {
+                        dismissWarning();
+                        sessionWarningShown = false;
+                        // Reset the warning timer
+                        setTimeout(checkSessionStatus, SESSION_WARNING_TIME);
+                    }
+                })
+                .catch(error => {
+                    console.log('Failed to extend session:', error);
+                });
+            }
+            
+            function logout() {
+                window.location.href = '/logout/';
+            }
+            
+            // Make functions globally available
+            window.extendSession = extendSession;
+            window.logout = logout;
+            window.dismissWarning = dismissWarning;
+            
+            // Start session monitoring
+            setInterval(checkSessionStatus, SESSION_CHECK_INTERVAL);
+            
+            // Check on page load
+            setTimeout(checkSessionStatus, 1000);
+            
+        })();
+    </script>
+    {% endif %}
 </head>
 
 <body class="bg-gray-50 {% if request.resolver_match.url_name == 'job_list' %}job-list-page{% endif %}">

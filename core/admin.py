@@ -214,7 +214,7 @@ class JobListingAdmin(SoftDeletionAdmin):
                   'job_preferences', 'considers_students', 'premium_level', 'status')
     search_fields = ('title', 'company', 'description', 'location')
     date_hierarchy = 'posted_at'
-    actions = ['restore_selected', 'extend_expiration', 'extend_expiration_no_bump', 'mark_as_expired', 'reactivate_expired_jobs']
+    actions = ['restore_selected', 'mark_as_expired', 'reactivate_expired_jobs']
 
     def salary_range(self, obj):
         if obj.salary_min and obj.salary_max:
@@ -304,37 +304,6 @@ class JobListingAdmin(SoftDeletionAdmin):
         # Call the parent class save_model method to save the job
         super().save_model(request, obj, form, change)
 
-    def extend_expiration(self, request, queryset):
-        """Extend the expiration date of selected jobs by 30 days"""
-        count = 0
-        for job in queryset:
-            # If job is expired, set to extended_review status
-            if job.status == 'expired':
-                job.status = 'extended_review'
-                job.expires_at = timezone.now() + timedelta(days=30)
-                job.last_extended_at = timezone.now()  # Set last extended time
-                job.save(update_fields=['expires_at', 'status', 'last_extended_at'])
-            else:
-                job.extend_expiration(days=30, bump_to_top=True)
-            count += 1
-        self.message_user(request, f"Extended expiration for {count} jobs by 30 days and bumped to top.")
-    extend_expiration.short_description = "Extend expiration by 30 days and bump to top"
-    
-    def extend_expiration_no_bump(self, request, queryset):
-        """Extend the expiration date of selected jobs by 30 days without bumping to top"""
-        count = 0
-        for job in queryset:
-            # If job is expired, set to extended_review status
-            if job.status == 'expired':
-                job.status = 'extended_review'
-                job.expires_at = timezone.now() + timedelta(days=30)
-                job.save(update_fields=['expires_at', 'status'])
-            else:
-                job.extend_expiration(days=30, bump_to_top=False)
-            count += 1
-        self.message_user(request, f"Extended expiration for {count} jobs by 30 days without changing position.")
-    extend_expiration_no_bump.short_description = "Extend expiration by 30 days (keep position)"
-    
     def mark_as_expired(self, request, queryset):
         """Mark selected jobs as expired"""
         count = queryset.update(status='expired')
@@ -352,7 +321,7 @@ class JobListingAdmin(SoftDeletionAdmin):
             job.save(update_fields=['status', 'expires_at', 'last_extended_at'])
             count += 1
         self.message_user(request, f"Reactivated {count} expired or extended jobs.")
-    reactivate_expired_jobs.short_description = "Reactivate expired or extended jobs (extend by 30 days)"
+    reactivate_expired_jobs.short_description = "Extend job expiration by 30 days"
     
     def get_expiration(self, obj):
         if obj.expires_at:

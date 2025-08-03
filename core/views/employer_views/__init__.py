@@ -65,10 +65,10 @@ def job_applications(request, job_id):
         unread_applications.update(is_read=True)
     
     # Mark all applications as viewed
-    unviewed_applications = applications.filter(is_viewed=False)
-    if unviewed_applications.exists():
-        unviewed_applications.update(is_viewed=True)
-        logger.info(f"Marked {unviewed_applications.count()} applications as viewed for job {job_id}")
+    # unviewed_applications = applications.filter(is_viewed=False)
+    # if unviewed_applications.exists():
+    #     unviewed_applications.update(is_viewed=True)
+    #     logger.info(f"Marked {unviewed_applications.count()} applications as viewed for job {job_id}")
     
     # Mark all notifications for this job as read
     from core.repositories.notification_repository import NotificationRepository

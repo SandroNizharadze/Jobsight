@@ -53,11 +53,11 @@ def job_applications(request, job_id):
             application.save()
     
     # Mark applications as viewed
-    for application in applications:
-        if not application.is_viewed:
-            application.is_viewed = True
-            application.save()
-            logger.info(f"Marked application {application.id} as viewed for job {job_id}")
+    # for application in applications:
+    #     if not application.is_viewed:
+    #         application.is_viewed = True
+    #         application.save()
+    #         logger.info(f"Marked application {application.id} as viewed for job {job_id}")
     
     return render(request, 'core/job_applications.html', {
         'job': job,

@@ -218,9 +218,8 @@ def employer_dashboard(request):
         sort_option=sort_option
     ).filter(
         deleted_at__isnull=True  # Explicitly exclude deleted jobs
-    ).exclude(
-        status='expired'  # Exclude expired jobs
     )
+    # Removed the .exclude(status='expired') to show expired jobs
     
     # Process jobs to add helper attributes for template
     all_jobs = []
@@ -231,8 +230,19 @@ def employer_dashboard(request):
     for job in jobs:
         # Check expiration date and add a convenience attribute
         if job.expires_at:
-            job.is_expired_status = job.expires_at < timezone.now()
-            job.days_until_expiration_value = max(0, (job.expires_at - timezone.now()).days)
+            # Calculate days until expiration
+            days_until_expiration = (job.expires_at - timezone.now()).days
+            
+            # Job is expired if it's past the expiration date
+            job.is_expired_status = days_until_expiration < 0
+            
+            # Show days remaining (minimum 0)
+            job.days_until_expiration_value = max(0, days_until_expiration)
+            
+            # Update the status to 'expired' if the expiration date has passed but status isn't 'expired' yet
+            if job.is_expired_status and job.status != 'expired':
+                job.status = 'expired'
+                job.save(update_fields=['status'])
         else:
             job.is_expired_status = False
             job.days_until_expiration_value = None

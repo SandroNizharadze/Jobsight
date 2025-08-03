@@ -24,7 +24,7 @@ class JobRepository:
             Q(status='approved') | 
             # Include extended_review jobs that haven't expired yet
             Q(status='extended_review', expires_at__gt=timezone.now())
-        )
+        ).exclude(status='expired')  # Explicitly exclude expired jobs from public listings
         
         if filters:
             query = JobRepository._apply_job_filters(query, filters)

@@ -136,7 +136,7 @@
                 <div class="mt-2">
                   <button type="button" 
                          class="inline-flex items-center px-3 py-1 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
-                         onclick="openExtendModal('{{ job.id }}', '{{ job.title }}', '{{ job.premium_level }}', 'True')">
+                         onclick="openExtendModal('{{ job.id }}', '{{ job.title }}', '{{ job.premium_level }}', 'False')">
                     <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                     </svg>
@@ -416,7 +416,7 @@
     // Set job title
     document.getElementById('jobTitle').textContent = jobTitle;
     
-    // Set form action
+    // Set form action - Fix URL to match the correct pattern
     document.getElementById('extendJobForm').action = `/employer/jobs/${jobId}/extend/`;
     
     // Show appropriate package info

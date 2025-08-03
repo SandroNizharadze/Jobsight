@@ -3,11 +3,17 @@ from django.contrib.auth import login, logout, authenticate
 from django.contrib import messages
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.models import User
+from django.http import JsonResponse
+from django.views.decorators.http import require_http_methods
+from django.contrib.auth.decorators import login_required
+from django.utils import timezone
+from django.conf import settings
 from ..forms import RegistrationForm, EmployerRegistrationForm
 from ..models import UserProfile, EmployerProfile
 from .email_views import send_verification_email
 import logging
 from django.urls import reverse
+from django.utils.translation import gettext_lazy as _
 
 logger = logging.getLogger(__name__)
 
@@ -117,51 +123,47 @@ def register(request):
                         # Use the updated helper method to safely create/update profiles
                         # This handles any possible race conditions with signals
                         # First check if a UserProfile exists before calling create_for_user
-                        try:
-                            if UserProfile.objects.filter(user=user).exists():
-                                # If a profile exists but is not an employer, update it
-                                profile = UserProfile.objects.get(user=user)
-                                if profile.role != 'employer':
-                                    profile.role = 'employer'
-                                    profile.save()
-                                    logger.info(f"Updated existing profile for {user.username} to employer role")
-                                
-                                # Save email notification preference
-                                profile.email_notifications = form.cleaned_data.get('email_notifications', False)
+                        if UserProfile.objects.filter(user=user).exists():
+                            # If a profile exists but is not an employer, update it
+                            profile = UserProfile.objects.get(user=user)
+                            if profile.role != 'employer':
+                                profile.role = 'employer'
                                 profile.save()
-                                    
-                                # Now ensure an employer profile exists with our data
-                                employer_profile, created = EmployerProfile.objects.get_or_create(
-                                    user_profile=profile,
-                                    defaults={
-                                        'company_name': employer_form.cleaned_data.get('company_name'),
-                                        'company_id': employer_form.cleaned_data.get('company_id'),
-                                        'phone_number': employer_form.cleaned_data.get('phone_number')
-                                    }
-                                )
-                                if not created:
-                                    # Update existing employer profile
-                                    employer_profile.company_name = employer_form.cleaned_data.get('company_name')
-                                    employer_profile.company_id = employer_form.cleaned_data.get('company_id')
-                                    employer_profile.phone_number = employer_form.cleaned_data.get('phone_number')
-                                    employer_profile.save()
-                                logger.info(f"{'Created' if created else 'Updated'} employer profile for {user.username}")
-                            else:
-                                # No profile exists, use our helper method
-                                employer_profile = EmployerProfile.create_for_user(
-                                    user=user,
-                                    company_name=employer_form.cleaned_data.get('company_name'),
-                                    company_id=employer_form.cleaned_data.get('company_id'),
-                                    phone_number=employer_form.cleaned_data.get('phone_number')
-                                )
-                                # Save email notification preference
-                                employer_profile.user_profile.email_notifications = form.cleaned_data.get('email_notifications', False)
-                                employer_profile.user_profile.save()
+                                logger.info(f"Updated existing profile for {user.username} to employer role")
+                            
+                            # Save email notification preference
+                            profile.email_notifications = form.cleaned_data.get('email_notifications', False)
+                            profile.save()
                                 
-                                logger.info(f"Created new employer profile for {user.username}")
-                        except Exception as e:
-                            logger.error(f"Error handling profiles: {str(e)}", exc_info=True)
-                            raise
+                            # Now ensure an employer profile exists with our data
+                            employer_profile, created = EmployerProfile.objects.get_or_create(
+                                user_profile=profile,
+                                defaults={
+                                    'company_name': employer_form.cleaned_data.get('company_name'),
+                                    'company_id': employer_form.cleaned_data.get('company_id'),
+                                    'phone_number': employer_form.cleaned_data.get('phone_number')
+                                }
+                            )
+                            if not created:
+                                # Update existing employer profile
+                                employer_profile.company_name = employer_form.cleaned_data.get('company_name')
+                                employer_profile.company_id = employer_form.cleaned_data.get('company_id')
+                                employer_profile.phone_number = employer_form.cleaned_data.get('phone_number')
+                                employer_profile.save()
+                            logger.info(f"{'Created' if created else 'Updated'} employer profile for {user.username}")
+                        else:
+                            # No profile exists, use our helper method
+                            employer_profile = EmployerProfile.create_for_user(
+                                user=user,
+                                company_name=employer_form.cleaned_data.get('company_name'),
+                                company_id=employer_form.cleaned_data.get('company_id'),
+                                phone_number=employer_form.cleaned_data.get('phone_number')
+                            )
+                            # Save email notification preference
+                            employer_profile.user_profile.email_notifications = form.cleaned_data.get('email_notifications', False)
+                            employer_profile.user_profile.save()
+                            
+                            logger.info(f"Created new employer profile for {user.username}")
                             
                         # Verify the role was set correctly
                         user.refresh_from_db()
@@ -177,35 +179,14 @@ def register(request):
                         # Final verification after login
                         logger.info(f"After login: User {user.username} has role {user.userprofile.role}")
                         
+                        messages.success(request, _("Registration successful! Please check your email to verify your account."))
+                        return redirect('job_list')
                 except Exception as e:
-                    logger.error(f"Error during employer registration: {str(e)}", exc_info=True)
-                    messages.error(request, f"Registration error: {str(e)}")
-                    return render(request, 'core/register.html', {
-                        'form': form,
-                        'employer_form': employer_form,
-                        'default_user_type': default_user_type
-                    })
-                
-                messages.success(request, "Registration successful! Please check your email to verify your account.")
-                return redirect('profile')
+                    logger.error(f"Error during registration: {str(e)}", exc_info=True)
+                    messages.error(request, _("An error occurred during registration. Please try again."))
+                    return render(request, 'core/register.html', {'form': form, 'employer_form': employer_form})
             else:
-                # Handle form errors - avoid duplicate messages
-                error_messages = set()  # Use a set to avoid duplicates
-                
-                # Add form errors
-                for field, errors in form.errors.items():
-                    for error in errors:
-                        error_messages.add(error)
-                
-                # Add employer form errors if applicable
-                if employer_form:
-                    for field, errors in employer_form.errors.items():
-                        for error in errors:
-                            error_messages.add(error)
-                
-                # Display unique error messages
-                for error in error_messages:
-                    messages.error(request, error)
+                messages.error(request, _("Please correct the errors below."))
         else:
             # Regular candidate registration
             if form.is_valid():
@@ -216,7 +197,6 @@ def register(request):
                         logger.info(f"Created candidate user {user.username}")
                         
                         # Create or get UserProfile with candidate role
-                        # Using get_or_create to handle the case where signals already created the profile
                         profile, created = UserProfile.objects.get_or_create(
                             user=user,
                             defaults={
@@ -242,35 +222,85 @@ def register(request):
                         
                         # Final verification after login
                         logger.info(f"After login: User {user.username} has role {user.userprofile.role}")
+                        
+                        messages.success(request, _("Registration successful! Please check your email to verify your account."))
+                        return redirect('job_list')
                 except Exception as e:
                     logger.error(f"Error during candidate registration: {str(e)}", exc_info=True)
-                    messages.error(request, f"Registration error: {str(e)}")
-                    return render(request, 'core/register.html', {
-                        'form': form,
-                        'employer_form': None,
-                        'default_user_type': default_user_type
-                    })
-                
-                messages.success(request, "Registration successful! Please check your email to verify your account.")
-                return redirect('job_list')
+                    messages.error(request, _("An error occurred during registration. Please try again."))
+                    return render(request, 'core/register.html', {'form': form, 'employer_form': None})
             else:
-                # Handle form errors - avoid duplicate messages
-                error_messages = set()  # Use a set to avoid duplicates
-                
-                # Add form errors
-                for field, errors in form.errors.items():
-                    for error in errors:
-                        error_messages.add(error)
-                
-                # Display unique error messages
-                for error in error_messages:
-                    messages.error(request, error)
+                messages.error(request, _("Please correct the errors below."))
     else:
         form = RegistrationForm()
         employer_form = EmployerRegistrationForm()
     
-    return render(request, 'core/register.html', {
-        'form': form,
-        'employer_form': employer_form,
-        'default_user_type': default_user_type
-    }) 
+    return render(request, 'core/register.html', {'form': form, 'employer_form': employer_form})
+
+
+@login_required
+@require_http_methods(["GET"])
+def session_status(request):
+    """
+    API endpoint to check session status and return time until expiry
+    """
+    try:
+        # Get session expiry time
+        session_expiry = request.session.get_expiry_date()
+        if session_expiry:
+            # Calculate seconds until expiry
+            now = timezone.now()
+            if session_expiry.tzinfo is None:
+                session_expiry = timezone.make_aware(session_expiry)
+            
+            seconds_until_expiry = int((session_expiry - now).total_seconds())
+            
+            return JsonResponse({
+                'session_expires_in': max(0, seconds_until_expiry),
+                'session_expiry_date': session_expiry.isoformat(),
+                'is_active': seconds_until_expiry > 0
+            })
+        else:
+            return JsonResponse({
+                'session_expires_in': None,
+                'session_expiry_date': None,
+                'is_active': True
+            })
+    except Exception as e:
+        logger.error(f"Error checking session status: {str(e)}")
+        return JsonResponse({'error': 'Failed to check session status'}, status=500)
+
+
+@login_required
+@require_http_methods(["POST"])
+def extend_session(request):
+    """
+    API endpoint to extend the current session
+    """
+    try:
+        # Update session expiry by accessing it (this triggers SESSION_SAVE_EVERY_REQUEST)
+        request.session.modified = True
+        
+        # Get new expiry time
+        session_expiry = request.session.get_expiry_date()
+        if session_expiry:
+            now = timezone.now()
+            if session_expiry.tzinfo is None:
+                session_expiry = timezone.make_aware(session_expiry)
+            
+            seconds_until_expiry = int((session_expiry - now).total_seconds())
+            
+            return JsonResponse({
+                'success': True,
+                'session_expires_in': max(0, seconds_until_expiry),
+                'session_expiry_date': session_expiry.isoformat()
+            })
+        else:
+            return JsonResponse({
+                'success': True,
+                'session_expires_in': None,
+                'session_expiry_date': None
+            })
+    except Exception as e:
+        logger.error(f"Error extending session: {str(e)}")
+        return JsonResponse({'error': 'Failed to extend session'}, status=500) 

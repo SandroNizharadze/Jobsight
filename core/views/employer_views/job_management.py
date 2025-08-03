@@ -88,9 +88,8 @@ def extend_job(request, job_id):
         messages.error(request, "Only approved or expired jobs can have their expiration date extended.")
         return redirect('employer_dashboard')
     
-    # Set job to extended_review status without changing expiration date
-    # This way the job remains visible until its original expiration date
-    # but is marked for admin review
+    # For employer-initiated extensions, we still want admin review
+    # This is different from admin-initiated extensions which set status directly to approved
     job.status = 'extended_review'
     job.save(update_fields=['status'])
     

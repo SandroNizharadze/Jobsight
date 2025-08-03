@@ -136,11 +136,11 @@ class JobListing(SoftDeletionModel):
     
     def update_status_from_expiration(self):
         """Update the job status based on expiration date"""
-        # Only update status if job is approved or expired
-        if self.status not in ['approved', 'expired']:
+        # Skip if no expiration date is set
+        if not self.expires_at:
             return False
             
-        is_expired_now = timezone.now() >= self.expires_at if self.expires_at else False
+        is_expired_now = timezone.now() >= self.expires_at
         
         # If job has expired but status is not 'expired'
         if is_expired_now and self.status != 'expired':
@@ -150,6 +150,7 @@ class JobListing(SoftDeletionModel):
             
         # If job is not expired but status is 'expired'
         if not is_expired_now and self.status == 'expired':
+            # Revert to approved status if not expired
             self.status = 'approved'
             self.save(update_fields=['status'])
             return True

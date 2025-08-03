@@ -22,9 +22,9 @@ class Command(BaseCommand):
         
         self.stdout.write(self.style.NOTICE('Checking for expired jobs...'))
         
-        # Find all jobs that have expired but still have 'approved' status
+        # Find all jobs that have expired but don't have 'expired' status
         expired_jobs = JobListing.objects.filter(
-            status='approved',
+            ~Q(status='expired'),  # Any status except 'expired'
             expires_at__lt=now,
             deleted_at__isnull=True
         )

@@ -584,10 +584,10 @@ def job_applications(request, job_id):
         unread_applications.update(is_read=True)
     
     # Mark all applications as viewed
-    unviewed_applications = applications.filter(is_viewed=False)
-    if unviewed_applications.exists():
-        unviewed_applications.update(is_viewed=True)
-        logger.info(f"Marked {unviewed_applications.count()} applications as viewed for job {job_id}")
+    # unviewed_applications = applications.filter(is_viewed=False)
+    # if unviewed_applications.exists():
+    #     unviewed_applications.update(is_viewed=True)
+    #     logger.info(f"Marked {unviewed_applications.count()} applications as viewed for job {job_id}")
     
     # Get counts for each status
     total_applications = applications.count()

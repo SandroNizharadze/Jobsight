@@ -28,6 +28,10 @@ urlpatterns = [
         success_url='/profile/?tab=settings'
     ), name='password_change'),
     
+    # Session Management API endpoints
+    path('api/session-status/', auth_views.session_status, name='session_status'),
+    path('api/extend-session/', auth_views.extend_session, name='extend_session'),
+    
     # Redirect applications and saved jobs to profile with tab parameter
     path('profile/applications/', RedirectView.as_view(url='/profile/?tab=applications', permanent=False), name='candidate_applications'),
     path('profile/saved-jobs/', RedirectView.as_view(url='/profile/?tab=saved_jobs', permanent=False), name='candidate_saved_jobs'),
