@@ -92,7 +92,14 @@
         <div class="w-full sm:w-auto mb-3 sm:mb-0">
           {% if job.expires_at %}
             <div class="bg-gray-50 rounded-lg px-3 py-2 inline-block">
-              {% if job.is_expired_status %}
+              {% if job.status == 'extended_review' %}
+                <p class="text-sm text-blue-600 font-medium flex items-center">
+                  <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                  </svg>
+                  გაგრძელების მოლოდინში
+                </p>
+              {% elif job.is_expired_status %}
                 <p class="text-sm text-red-600 font-medium flex items-center">
                   <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
@@ -169,11 +176,11 @@
       <!-- Mobile action buttons row -->
       <div class="flex justify-between items-center mt-3 sm:hidden border-t border-gray-100 pt-3">
         <!-- Extend Expiration Button -->
-        {% if not job.is_deleted and job.status == 'approved' and job.expires_at and job.days_until_expiration_value <= 7 or not job.is_deleted and job.status == 'expired' %}
+        {% if not job.is_deleted and job.status != 'extended_review' and job.status == 'approved' and job.expires_at and job.days_until_expiration_value <= 7 or not job.is_deleted and job.status != 'extended_review' and job.status == 'expired' %}
         <button type="button" 
                class="inline-flex items-center p-2 border border-green-300 rounded-md shadow-sm text-sm font-medium text-green-700 bg-green-50 hover:bg-green-100" 
                title="30 დღით გაგრძელება"
-               onclick="openExtendModal('{{ job.id }}', '{{ job.title }}', '{{ job.premium_level }}', '{% if job.is_expired_status %}True{% else %}False{% endif %}')">
+               onclick="submitExtendJob('{{ job.id }}')">
           <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
           </svg>
@@ -215,11 +222,11 @@
       <!-- Desktop action buttons - Hidden on mobile -->
       <div class="hidden sm:flex space-x-1 mt-3 justify-end">
         <!-- Extend Expiration Button -->
-        {% if not job.is_deleted and job.status == 'approved' and job.expires_at and job.days_until_expiration_value <= 7 or not job.is_deleted and job.status == 'expired' %}
+        {% if not job.is_deleted and job.status != 'extended_review' and job.status == 'approved' and job.expires_at and job.days_until_expiration_value <= 7 or not job.is_deleted and job.status != 'extended_review' and job.status == 'expired' %}
         <button type="button" 
                class="inline-flex items-center p-2 border border-green-300 rounded-md shadow-sm text-sm font-medium text-green-700 bg-green-50 hover:bg-green-100" 
                title="30 დღით გაგრძელება"
-               onclick="openExtendModal('{{ job.id }}', '{{ job.title }}', '{{ job.premium_level }}', '{% if job.is_expired_status %}True{% else %}False{% endif %}')">
+               onclick="submitExtendJob('{{ job.id }}')">
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
           </svg>

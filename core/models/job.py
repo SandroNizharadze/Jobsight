@@ -136,8 +136,8 @@ class JobListing(SoftDeletionModel):
     
     def update_status_from_expiration(self):
         """Update the job status based on expiration date"""
-        # Skip if no expiration date is set
-        if not self.expires_at:
+        # Skip if no expiration date is set or if job is in extended_review
+        if not self.expires_at or self.status == 'extended_review':
             return False
             
         is_expired_now = timezone.now() >= self.expires_at

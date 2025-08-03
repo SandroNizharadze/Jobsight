@@ -233,14 +233,15 @@ def employer_dashboard(request):
             # Calculate days until expiration
             days_until_expiration = (job.expires_at - timezone.now()).days
             
-            # Job is expired if it's past the expiration date
+            # Job is expired if it's past the expiration date (but don't override extended_review status)
             job.is_expired_status = days_until_expiration < 0
             
             # Show days remaining (minimum 0)
             job.days_until_expiration_value = max(0, days_until_expiration)
             
             # Update the status to 'expired' if the expiration date has passed but status isn't 'expired' yet
-            if job.is_expired_status and job.status != 'expired':
+            # Don't change status if it's already in extended_review
+            if job.is_expired_status and job.status != 'expired' and job.status != 'extended_review':
                 job.status = 'expired'
                 job.save(update_fields=['status'])
         else:

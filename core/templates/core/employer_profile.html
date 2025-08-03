@@ -17,6 +17,9 @@
   }
 </style>
 
+<!-- Add CSRF token for AJAX requests -->
+{% csrf_token %}
+
 <div class="container mx-auto px-4 py-8 sm:px-6 lg:px-8">
   <div class="mb-8 hidden sm:block">
     <h1 class="text-2xl font-bold text-gray-900">{% trans "დამსაქმებლის პანელი" %}</h1>
@@ -570,12 +573,42 @@
 </div>
 
 <script>
+  // Direct job extension function
+  function submitExtendJob(jobId) {
+    if (confirm('Are you sure you want to extend this job? It will be submitted for admin review.')) {
+      const url = `/employer/jobs/${jobId}/extend/`;
+      const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+      
+      fetch(url, {
+        method: 'POST',
+        headers: {
+          'X-CSRFToken': csrfToken,
+          'X-Requested-With': 'XMLHttpRequest',
+          'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        credentials: 'same-origin'
+      })
+      .then(response => {
+        if (response.ok) {
+          window.location.reload();
+        } else {
+          alert('Error extending job. Please try again.');
+        }
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        alert('Error extending job. Please try again.');
+      });
+    }
+  }
+
   function openExtendModal(jobId, jobTitle, packageType, isExpired) {
     // Set job title
     document.getElementById('jobTitle').textContent = jobTitle;
     
     // Set form action - Fix URL to match the correct pattern
-    document.getElementById('extendJobForm').action = `/employer/jobs/${jobId}/extend/`;
+    const form = document.getElementById('extendJobForm');
+    form.action = `/employer/jobs/${jobId}/extend/`;
     
     // Show appropriate package info
     document.querySelectorAll('.package-info').forEach(el => el.classList.add('hidden'));
@@ -590,6 +623,46 @@
     
     // Show modal
     document.getElementById('extendJobModal').classList.remove('hidden');
+    
+    // Add form submit handler
+    form.onsubmit = async function(e) {
+      e.preventDefault();
+      console.log('Form submitted');
+      console.log('Form action:', form.action);
+      
+      const formData = new FormData(form);
+      const csrfToken = form.querySelector('[name=csrfmiddlewaretoken]').value;
+      console.log('CSRF Token:', csrfToken);
+      
+      try {
+        const response = await fetch(form.action, {
+          method: 'POST',
+          headers: {
+            'X-CSRFToken': csrfToken,
+            'X-Requested-With': 'XMLHttpRequest',
+            'Accept': 'application/json',
+            'Content-Type': 'application/x-www-form-urlencoded'
+          },
+          credentials: 'same-origin',
+          body: new URLSearchParams(formData)
+        });
+        
+        console.log('Response status:', response.status);
+        const responseData = await response.json();
+        console.log('Response data:', responseData);
+        
+        if (response.ok) {
+          console.log('Success! Reloading page...');
+          window.location.reload();
+        } else {
+          console.error('Server returned error:', response.status, responseData);
+          alert('Error extending job. Please try again. Server returned: ' + (responseData.message || response.status));
+        }
+      } catch (error) {
+        console.error('Fetch error:', error);
+        alert('Error extending job. Please check console for details.');
+      }
+    };
   }
   
   function closeExtendModal() {
