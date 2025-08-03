@@ -292,7 +292,8 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 </script>
 {% endif %}
-{% endblock %}
+
+{% include 'core/components/rejection_reasons_modal.html' %}
 
 {% block extra_js %}
 <script>
