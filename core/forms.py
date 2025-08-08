@@ -12,7 +12,7 @@ class RegistrationForm(UserCreationForm):
     first_name = forms.CharField(required=True)
     # Define user_type as a separate field - not a model field
     user_type = forms.ChoiceField(
-        choices=[('candidate', _('Job Seeker')), ('employer', _('Employer'))],
+        choices=[('candidate', _('სამუშაოს მაძიებელი')), ('employer', _('დამსაქმებელი'))],
         widget=forms.RadioSelect,
         initial='candidate',
         required=True

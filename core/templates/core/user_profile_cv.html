@@ -4,7 +4,7 @@
 {% block profile_content %}
 <div class="p-4 sm:p-6">
   <div class="max-w-2xl mx-auto">
-    <h3 class="text-lg font-medium text-gray-900 mb-6">{% trans "Your CV" %}</h3>
+    <h3 class="text-lg font-medium text-gray-900 mb-6">{% trans "თქვენი CV" %}</h3>
     
     {% if user.userprofile.cv %}
       <div class="flex flex-col sm:flex-row justify-center items-center gap-3 sm:gap-4 mb-4">
@@ -12,7 +12,7 @@
           <svg class="h-5 w-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
           </svg>
-          {% trans "View Current CV" %}
+          {% trans "ნახვა" %}
         </a>
         <form action="{% url 'remove_cv' %}" method="post" id="cv-remove-form" class="inline w-full sm:w-auto">
           {% csrf_token %}
@@ -20,7 +20,7 @@
             <svg class="h-5 w-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
             </svg>
-            {% trans "Remove CV" %}
+            {% trans "წაშლა" %}
           </button>
         </form>
       </div>
@@ -30,7 +30,7 @@
           <svg class="h-5 w-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
           </svg>
-          {% trans "Add/Upload CV" %}
+          {% trans "დამატება/გამოსატანი CV" %}
         </button>
       </div>
     {% endif %}
@@ -45,7 +45,7 @@
             {% trans "Upload CV" %}
           </label>
           <input type="file" name="cv" id="{{ profile_form.cv.id_for_label }}" class="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-medium file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100" accept=".pdf,.doc,.docx" required>
-          <p class="mt-2 text-sm text-gray-500">{% trans "Upload your CV (PDF, DOC, DOCX)." %}</p>
+          <p class="mt-2 text-sm text-gray-500">{% trans "ატვირთე თქვენი CV (PDF, DOC, DOCX)." %}</p>
           {% if profile_form.cv.errors %}
             <div class="mt-2 text-sm text-red-600">{{ profile_form.cv.errors|join:", " }}</div>
           {% endif %}
@@ -55,20 +55,20 @@
         
         <div class="flex justify-end space-x-3">
           <button type="button" id="cancel-cv-form-btn" class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
-            {% trans "Cancel" %}
+            {% trans "გაუქმება" %}
           </button>
           <button type="submit" class="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
             <svg class="h-5 w-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
             </svg>
-            {% trans "Save" %}
+            {% trans "შენახვა" %}
           </button>
         </div>
       </form>
     </div>
     
     <div class="mt-8 pt-6 border-t border-gray-200">
-      <h4 class="text-lg font-medium text-gray-900 mb-4">{% trans "CV Database Settings" %}</h4>
+      <h4 class="text-lg font-medium text-gray-900 mb-4">{% trans "CV-ის ბაზების პარამეტრები" %}</h4>
       
       <!-- Info box about CV database -->
       <div class="mb-6 bg-blue-50 p-4 rounded-md">
@@ -142,7 +142,7 @@
                 <svg class="h-5 w-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
                 </svg>
-                {% trans "Save Settings" %}
+                {% trans "შენახვა" %}
               </button>
               {% if messages %}
                 {% for message in messages %}

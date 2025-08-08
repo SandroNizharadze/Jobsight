@@ -49,7 +49,8 @@
     </nav>
   </div>
 
-  <!-- Profile Picture and Basic Info -->
+  <!-- Profile Picture and Basic Info - Only show for Profile and Settings tabs -->
+  {% if active_tab == 'profile' or active_tab == 'settings' %}
   <div class="bg-white rounded-xl shadow-md overflow-hidden mb-8">
     <form method="post" enctype="multipart/form-data" class="p-4 sm:p-6" id="profile-picture-form">
       {% csrf_token %}
@@ -91,6 +92,7 @@
       </div>
     </form>
   </div>
+  {% endif %}
 
   <!-- Content Area -->
   <div class="bg-white rounded-xl shadow-md overflow-hidden">

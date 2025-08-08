@@ -98,7 +98,7 @@
                 </span>
                 {% if application.rejection_reasons.all %}
                   <button type="button" class="text-xs text-blue-600 hover:text-blue-800 mt-1 block view-rejection-reasons" data-application-id="{{ application.id }}">
-                    {% trans "View Reasons" %}
+                    {% trans "მიზეზის ნახვა" %}
                   </button>
                 {% endif %}
               {% elif application.status == 'pending' %}

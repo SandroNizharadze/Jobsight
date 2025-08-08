@@ -23,15 +23,6 @@ def employer_premium_status(request):
     
     return context 
 
-def language_attributes(request):
-    """
-    Add language-specific HTML attributes to the context.
-    This helps with font selection based on language.
-    """
-    return {
-        'lang_attr': f'lang="{request.LANGUAGE_CODE}"',
-    }
-
 def employer_notifications(request):
     """
     Add unread notification count for employer users to all templates.

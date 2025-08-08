@@ -54,7 +54,6 @@ MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.locale.LocaleMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -77,7 +76,6 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 'core.context_processors.employer_premium_status',
-                'core.context_processors.language_attributes',
                 'core.context_processors.employer_notifications',
                 'core.context_processors.candidate_notifications',
                 'core.context_processors.rejection_reasons',
@@ -166,18 +164,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 LANGUAGE_CODE = 'ka'
 TIME_ZONE = 'Asia/Tbilisi'
-USE_I18N = True
-USE_L10N = True
 USE_TZ = True
-
-LANGUAGES = [
-    ('en', 'English'),
-    ('ka', 'ქართული'),
-]
-
-LOCALE_PATHS = [
-    os.path.join(BASE_DIR, 'locale'),
-]
 
 # Static files
 STATIC_URL = 'static/'

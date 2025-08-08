@@ -53,13 +53,6 @@
                         <span>{% trans "ბლოგი" %}</span>
                     </a>
                     
-                    <!-- Language Switcher in mobile dropdown -->
-                    <div class="flex items-center space-x-2 py-2.5 px-3 mt-1 border-t border-gray-700">
-                        <span class="text-gray-300">{% trans "ენა" %}:</span>
-                        <a href="/en{{ request.path|cut:'/en' }}" class="px-2 py-1 text-sm text-white hover:bg-gray-700 rounded {% if LANGUAGE_CODE == 'en' %}bg-gray-700 font-bold{% endif %} transition-colors">EN</a>
-                        <a href="{{ request.path|cut:'/en' }}" class="px-2 py-1 text-sm text-white hover:bg-gray-700 rounded {% if LANGUAGE_CODE == 'ka' %}bg-gray-700 font-bold{% endif %} transition-colors">KA</a>
-                    </div>
-                    
                     <!-- Auth buttons for mobile -->
                     {% if not user.is_authenticated %}
                     <div class="pt-2 border-t border-gray-700">
