@@ -1,0 +1,60 @@
+{% load i18n %}
+
+<div class="language-switcher-mobile">
+  {% get_current_language as CURRENT_LANGUAGE %}
+  {% get_available_languages as LANGUAGES %}
+  
+  <div class="language-toggle-mobile">
+    {% for code, name in LANGUAGES %}
+      <form action="{% url 'set_language' %}" method="post" class="language-toggle-form-mobile {% if code == CURRENT_LANGUAGE %}active{% endif %}">
+        {% csrf_token %}
+        <input name="next" type="hidden" value="{{ request.path }}">
+        <input type="hidden" name="language" value="{{ code }}">
+        <button type="submit" class="language-button-mobile {% if code == CURRENT_LANGUAGE %}active{% endif %}">
+          {{ code|upper }}
+        </button>
+      </form>
+    {% endfor %}
+  </div>
+</div>
+
+<style>
+  .language-switcher-mobile {
+    display: inline-block;
+    width: 100%;
+    text-align: center;
+  }
+  
+  .language-toggle-mobile {
+    display: inline-flex;
+    background-color: rgba(9, 36, 60, 0.1);
+    border-radius: 20px;
+    padding: 2px;
+    margin: 0 auto;
+  }
+  
+  .language-toggle-form-mobile {
+    margin: 0;
+  }
+  
+  .language-button-mobile {
+    border: none;
+    background: transparent;
+    color: rgba(9, 36, 60, 0.7);
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 4px 12px;
+    border-radius: 16px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  
+  .language-button-mobile.active {
+    background-color: rgb(9, 36, 60);
+    color: white;
+  }
+  
+  .language-button-mobile:hover:not(.active) {
+    color: rgb(9, 36, 60);
+  }
+</style> 

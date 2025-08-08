@@ -3,7 +3,8 @@
 
 <!-- Mobile Bottom Navigation Bar (only visible on mobile) -->
 <div class="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 z-50">
-    <div class="flex justify-around items-center py-1">
+    <!-- Navigation Buttons -->
+    <div class="flex justify-around items-center py-2">
         <!-- Home Button -->
         <a href="{% url 'job_list' %}" class="flex flex-col items-center space-y-0.5 px-2 py-1.5 {% if request.resolver_match.url_name == 'job_list' %}text-teal-600 font-medium{% else %}text-gray-600{% endif %}">
             <div class="rounded-full bg-teal-600 p-1.5 flex items-center justify-center">
@@ -33,6 +34,14 @@
             </div>
             <span class="text-2xs">{% trans "ბლოგი" %}</span>
         </a>
+
+        <!-- Language Switcher -->
+        <div class="flex flex-col items-center space-y-0.5 px-2 py-1.5">
+            <div class="rounded-full bg-teal-600 p-1 flex items-center justify-center">
+                {% include "core/components/mobile/language_switcher.html" %}
+            </div>
+            <span class="text-2xs text-gray-600">{% trans "ენა" %}</span>
+        </div>
 
         <!-- Profile Button -->
         {% if user.is_authenticated %}
@@ -150,13 +159,18 @@
 
 /* Define mobile navbar height as CSS variable */
 :root {
-    --mobile-navbar-height: 60px;
+    --mobile-navbar-height: 75px; /* Adjusted height */
 }
 
 /* Ensure the mobile navbar has consistent height */
 @media (max-width: 767px) {
     .md\:hidden.fixed.bottom-0 {
         height: var(--mobile-navbar-height);
+    }
+    
+    /* Add bottom padding to the page content to prevent overlap with navbar */
+    body {
+        padding-bottom: var(--mobile-navbar-height);
     }
 }
 </style>

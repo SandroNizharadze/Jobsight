@@ -1,0 +1,57 @@
+{% load i18n %}
+
+<div class="language-switcher">
+  {% get_current_language as CURRENT_LANGUAGE %}
+  {% get_available_languages as LANGUAGES %}
+  
+  <div class="language-toggle">
+    {% for code, name in LANGUAGES %}
+      <form action="{% url 'set_language' %}" method="post" class="language-toggle-form {% if code == CURRENT_LANGUAGE %}active{% endif %}">
+        {% csrf_token %}
+        <input name="next" type="hidden" value="{{ request.path }}">
+        <input type="hidden" name="language" value="{{ code }}">
+        <button type="submit" class="language-button {% if code == CURRENT_LANGUAGE %}active{% endif %}">
+          {{ code|upper }}
+        </button>
+      </form>
+    {% endfor %}
+  </div>
+</div>
+
+<style>
+  .language-switcher {
+    display: inline-block;
+  }
+  
+  .language-toggle {
+    display: flex;
+    background-color: rgba(255, 255, 255, 0.2);
+    border-radius: 20px;
+    padding: 2px;
+  }
+  
+  .language-toggle-form {
+    margin: 0;
+  }
+  
+  .language-button {
+    border: none;
+    background: transparent;
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 4px 10px;
+    border-radius: 16px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  
+  .language-button.active {
+    background-color: white;
+    color: rgb(9, 36, 60);
+  }
+  
+  .language-button:hover:not(.active) {
+    color: white;
+  }
+</style> 

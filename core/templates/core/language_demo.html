@@ -1,0 +1,72 @@
+{% extends "core/base.html" %}
+{% load i18n %}
+
+{% block title %}{% trans "Language Demo" %}{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+    <div class="max-w-4xl mx-auto">
+        <h1 class="text-3xl font-bold mb-6">{% trans "Language Switching Demo" %}</h1>
+        
+        <div class="mb-6">
+            <h2 class="text-xl font-semibold mb-2">{% trans "Current Language" %}</h2>
+            <p>{% get_current_language as CURRENT_LANGUAGE %}
+            {% if CURRENT_LANGUAGE == 'en' %}
+                English
+            {% elif CURRENT_LANGUAGE == 'ka' %}
+                ქართული (Georgian)
+            {% endif %}</p>
+        </div>
+        
+        <div class="mb-6">
+            <h2 class="text-xl font-semibold mb-2">{% trans "Language Switcher" %}</h2>
+            {% include "core/components/language_switcher.html" %}
+        </div>
+        
+        <div class="mt-10">
+            <h2 class="text-xl font-semibold mb-4">{% trans "Sample Translations" %}</h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="border p-4 rounded-lg">
+                    <h3 class="font-medium mb-2">{% trans "Navigation" %}</h3>
+                    <ul class="list-disc pl-5 space-y-1">
+                        <li>{% trans "მთავარი" %}</li>
+                        <li>{% trans "გამოქვეყნება" %}</li>
+                        <li>{% trans "ბლოგი" %}</li>
+                        <li>{% trans "პროფილი" %}</li>
+                    </ul>
+                </div>
+                
+                <div class="border p-4 rounded-lg">
+                    <h3 class="font-medium mb-2">{% trans "User Profile" %}</h3>
+                    <ul class="list-disc pl-5 space-y-1">
+                        <li>{% trans "თქვენი CV" %}</li>
+                        <li>{% trans "შენახვა" %}</li>
+                        <li>{% trans "წაშლა" %}</li>
+                        <li>{% trans "გაუქმება" %}</li>
+                    </ul>
+                </div>
+                
+                <div class="border p-4 rounded-lg">
+                    <h3 class="font-medium mb-2">{% trans "Applications" %}</h3>
+                    <ul class="list-disc pl-5 space-y-1">
+                        <li>{% trans "განხილვის პროცესში" %}</li>
+                        <li>{% trans "ნანახი" %}</li>
+                        <li>{% trans "გასაუბრება" %}</li>
+                        <li>{% trans "რეზერვი" %}</li>
+                    </ul>
+                </div>
+                
+                <div class="border p-4 rounded-lg">
+                    <h3 class="font-medium mb-2">{% trans "Pricing" %}</h3>
+                    <ul class="list-disc pl-5 space-y-1">
+                        <li>{% trans "ჩვენი პაკეტები" %}</li>
+                        <li>{% trans "აირჩიეთ თქვენთვის შესაფერისი პაკეტი" %}</li>
+                        <li>{% trans "შეადარე პაკეტები სრულად" %}</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

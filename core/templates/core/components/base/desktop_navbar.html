@@ -27,6 +27,11 @@
 
                 <!-- User Menu for Desktop -->
                 <div class="flex items-center">
+                    <!-- Language switcher -->
+                    <div class="mr-4">
+                        {% include "core/components/language_switcher.html" %}
+                    </div>
+                    
                     {% if user.is_authenticated %}
                         <div class="relative">
                             <button id="profileDropdownButton" class="flex items-center text-sm text-white focus:outline-none">

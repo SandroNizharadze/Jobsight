@@ -7,7 +7,7 @@ from .views.employer_views import company_profile, application_detail, cv_databa
 from django.views.generic.base import RedirectView
 from .views.blog_views import BlogListView, BlogPostDetailView, BlogCategoryView
 from .views.email_views import verify_email, resend_verification_email
-from .views.static_pages import StaticPageView
+from .views.static_pages import StaticPageView, language_demo
 from django.contrib.auth import views as django_auth_views
 
 urlpatterns = [

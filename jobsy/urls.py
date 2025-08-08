@@ -9,6 +9,7 @@ from django_ckeditor_5.views import upload_file
 from django.views.generic.base import TemplateView
 from django.views.static import serve
 import os
+from django.conf.urls.i18n import i18n_patterns  # Add this import
 
 # Define the sitemaps dictionary
 sitemaps = {
@@ -25,10 +26,11 @@ def serve_sitemap(request):
     else:
         return sitemap(request, {'sitemaps': sitemaps})
 
+# Non-localized URLs
 urlpatterns = [
+    path('i18n/', include('django.conf.urls.i18n')),  # Add this for language switching
     path('admin/', admin.site.urls),
     path('admin/historical-data/', historical_data_view, name='admin_historical_data'),
-    path('', include('core.urls')),
     path('auth/', include('social_django.urls', namespace='social')),
     
     # CKEditor URLs
@@ -41,6 +43,12 @@ urlpatterns = [
     # Add robots.txt
     path('robots.txt', TemplateView.as_view(template_name="robots.txt", content_type="text/plain")),
 ]
+
+# Wrap core app URLs with i18n_patterns
+urlpatterns += i18n_patterns(
+    path('', include('core.urls')),
+    prefix_default_language=True,
+)
 
 # Only serve media files locally if S3 is disabled and we're in debug mode
 if settings.DEBUG and not getattr(settings, 'USE_S3', False):
