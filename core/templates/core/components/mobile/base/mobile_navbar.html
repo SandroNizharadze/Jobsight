@@ -12,91 +12,24 @@
                     <img src="{% static 'images/jobsight.png' %}" alt="Jobsight" class="h-6">
                 </a>
                 
-                <!-- Mobile hamburger menu button -->
-                <button id="mobile-menu-button" class="flex items-center justify-center p-2 rounded-md text-white hover:text-gray-300 focus:outline-none">
-                    <span class="sr-only">Open main menu</span>
-                    <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-                    </svg>
-                </button>
-            </div>
-            
-            <!-- Mobile menu dropdown -->
-            <div id="mobile-menu-dropdown" class="hidden absolute top-full left-0 right-0 z-40 bg-black shadow-lg max-h-[80vh] overflow-y-auto" style="background-color:rgb(9, 36, 60);">
-                <div class="px-4 py-3 space-y-2">
-                    {% if user.is_authenticated and user.userprofile.role == 'employer' %}
-                    <a href="{% url 'employer_home' %}" class="flex items-center px-3 py-2.5 text-white hover:bg-gray-700 rounded-md transition-colors">
-                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
-                        </svg>
-                        <span>{% trans "მთავარი" %}</span>
-                    </a>
-                    {% else %}
-                    <a href="{% url 'job_list' %}" class="flex items-center px-3 py-2.5 text-white hover:bg-gray-700 rounded-md transition-colors">
-                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
-                        </svg>
-                        <span>{% trans "მთავარი" %}</span>
-                    </a>
-                    {% endif %}
-                    <a href="{% url 'pricing' %}" class="flex items-center px-3 py-2.5 text-white hover:bg-gray-700 rounded-md transition-colors">
-                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                        </svg>
-                        <span>{% trans "გამოქვეყნება" %}</span>
-                    </a>
-                    
-                    <a href="{% url 'blog_list' %}" class="flex items-center px-3 py-2.5 text-white hover:bg-gray-700 rounded-md transition-colors">
-                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z" />
-                        </svg>
-                        <span>{% trans "ბლოგი" %}</span>
-                    </a>
-                    
-                    <!-- Auth buttons for mobile -->
-                    {% if not user.is_authenticated %}
-                    <div class="pt-2 border-t border-gray-700">
-                        <a href="{% url 'login' %}" class="flex items-center px-3 py-2.5 text-white hover:bg-gray-700 rounded-md transition-colors">
-                            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />
-                            </svg>
-                            <span>{% trans "შესვლა" %}</span>
-                        </a>
-                        <a href="{% url 'register' %}" class="flex items-center px-3 py-2.5 bg-teal-600 text-white hover:bg-teal-700 rounded-md mt-2 transition-colors">
-                            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
-                            </svg>
-                            <span>{% trans "რეგისტრაცია" %}</span>
-                        </a>
-                    </div>
-                    {% endif %}
-                    
-                    <!-- Additional mobile menu items for authenticated users -->
-                    
+                <!-- Language Switcher in top right (replacing hamburger) -->
+                <div class="language-switcher-top">
+                    {% include "core/components/mobile/language_switcher.html" %}
                 </div>
             </div>
         </div>
     </nav>
 </div>
 
+<style>
+.language-switcher-top {
+    display: flex;
+    align-items: center;
+}
+</style>
+
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // Mobile menu toggle
-    const mobileMenuButton = document.getElementById('mobile-menu-button');
-    const mobileMenuDropdown = document.getElementById('mobile-menu-dropdown');
-    
-    if (mobileMenuButton && mobileMenuDropdown) {
-        mobileMenuButton.addEventListener('click', function() {
-            mobileMenuDropdown.classList.toggle('hidden');
-        });
-        
-        // Close mobile menu when clicking outside
-        document.addEventListener('click', function(e) {
-            if (mobileMenuDropdown && !mobileMenuDropdown.classList.contains('hidden') && 
-                !mobileMenuDropdown.contains(e.target) && !mobileMenuButton.contains(e.target)) {
-                mobileMenuDropdown.classList.add('hidden');
-            }
-        });
-    }
+    // All previous hamburger menu related code removed since the button no longer exists
 });
 </script> 

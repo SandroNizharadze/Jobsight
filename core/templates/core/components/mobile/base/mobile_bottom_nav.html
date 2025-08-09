@@ -35,14 +35,6 @@
             <span class="text-2xs">{% trans "ბლოგი" %}</span>
         </a>
 
-        <!-- Language Switcher -->
-        <div class="flex flex-col items-center space-y-0.5 px-2 py-1.5">
-            <div class="rounded-full bg-teal-600 p-1 flex items-center justify-center">
-                {% include "core/components/mobile/language_switcher.html" %}
-            </div>
-            <span class="text-2xs text-gray-600">{% trans "ენა" %}</span>
-        </div>
-
         <!-- Profile Button -->
         {% if user.is_authenticated %}
             <!-- Authenticated user profile button with dropdown -->
