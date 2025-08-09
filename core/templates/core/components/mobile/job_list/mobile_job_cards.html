@@ -325,7 +325,7 @@
   {% endif %}
   
   <!-- Scroll to top button -->
-  <button id="scrollToTopBtn" class="fixed bottom-16 right-6 bg-gray-800 hover:bg-blue-700 text-white rounded-full p-3 shadow-lg opacity-0 transition-opacity duration-300 z-50">
+  <button id="scrollToTopBtn" class="fixed bottom-24 right-6 bg-gray-800 hover:bg-blue-700 text-white rounded-full p-3 shadow-lg opacity-0 transition-opacity duration-300 z-50">
     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18" />
     </svg>
@@ -337,6 +337,13 @@
 .text-2xs {
     font-size: 0.65rem;
     line-height: 0.85rem;
+}
+
+/* Scroll to top button positioning */
+@media (max-width: 767px) {
+  #scrollToTopBtn {
+    bottom: calc(var(--mobile-navbar-height) + 16px);
+  }
 }
 
 /* Enhanced card animations */
