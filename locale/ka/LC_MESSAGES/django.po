@@ -1,0 +1,318 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-08-09 00:29+0400\n"
+"PO-Revision-Date: 2025-08-09 01:15+0400\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: ka\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n!=1);\n"
+
+#: core/admin.py:242 core/models/job.py:63
+msgid "კი"
+msgstr "Yes"
+
+#: core/admin.py:244 core/models/job.py:64
+msgid "არა"
+msgstr "No"
+
+#: core/admin.py:245
+msgid "სტუდენტური"
+msgstr "Student"
+
+#: core/forms.py:15
+msgid "სამუშაოს მაძიებელი"
+msgstr "Job Seeker"
+
+#: core/forms.py:15
+msgid "დამსაქმებელი"
+msgstr "Employer"
+
+#: core/forms.py:22
+msgid "I agree to receive email notifications about news"
+msgstr "თანახმა ვარ მივიღო ახალი ამბების შეტყობინებები"
+
+#: core/forms.py:29
+msgid "I agree to the Terms & Conditions and Privacy Policy"
+msgstr "ვეთანხმები წესებსა და პირობებს და კონფიდენციალურობის პოლიტიკას"
+
+#: core/forms.py:32
+msgid "You must agree to the Terms & Conditions and Privacy Policy to register."
+msgstr "რეგისტრაციისთვის უნდა დაეთანხმოთ წესებსა და პირობებს და კონფიდენციალურობის პოლიტიკას."
+
+#: core/forms.py:43
+msgid "Email"
+msgstr "ელ-ფოსტა"
+
+#: core/forms.py:44
+msgid "Name"
+msgstr "სახელი"
+
+#: core/forms.py:45
+msgid "Password"
+msgstr "პაროლი"
+
+#: core/forms.py:56
+msgid "Please enter your password."
+msgstr "გთხოვთ შეიყვანოთ თქვენი პაროლი."
+
+#: core/forms.py:64
+msgid "A user with that email already exists."
+msgstr "მომხმარებელი ამ ელ-ფოსტით უკვე არსებობს."
+
+#: core/forms.py:72
+msgid "Password must be at least 4 characters long."
+msgstr "პაროლი უნდა შეიცავდეს მინიმუმ 4 სიმბოლოს."
+
+#: core/forms.py:94
+msgid "Company Name"
+msgstr "კომპანიის სახელი"
+
+#: core/forms.py:98
+msgid "Identification Code"
+msgstr "საიდენტიფიკაციო კოდი"
+
+#: core/forms.py:102
+msgid "Mobile Number"
+msgstr "მობილურის ნომერი"
+
+#: core/forms.py:146 core/templates/core/user_profile_settings.html:30 core/templates/core/user_profile.html:283
+msgid "Enter your phone number"
+msgstr "შეიყვანეთ თქვენი ტელეფონის ნომერი"
+
+#: core/forms.py:150
+msgid "Upload your CV (PDF, DOC, DOCX)."
+msgstr "ატვირთეთ თქვენი CV (PDF, DOC, DOCX)."
+
+#: core/forms.py:151
+msgid "Allow employers to view your CV in the database."
+msgstr "მიეცით დამსაქმებლებს თქვენი CV-ის ნახვის უფლება ბაზაში."
+
+#: core/forms.py:172 core/forms.py:240
+msgid "Image file too large ( > 5MB )"
+msgstr "გამოსახულების ფაილი ძალიან დიდია ( > 5MB )"
+
+#: core/forms.py:174 core/forms.py:242
+msgid "File is not an image"
+msgstr "ფაილი არ არის გამოსახულება"
+
+#: core/forms.py:202
+msgid "Enter your company name"
+msgstr "შეიყვანეთ თქვენი კომპანიის სახელი"
+
+#: core/forms.py:206
+msgid "Enter identification code"
+msgstr "შეიყვანეთ საიდენტიფიკაციო კოდი"
+
+#: core/forms.py:210
+msgid "Enter phone number"
+msgstr "შეიყვანეთ ტელეფონის ნომერი"
+
+#: core/forms.py:214
+msgid "https://www.example.com"
+msgstr "https://www.example.com"
+
+#: core/forms.py:226
+msgid "E.g., Technology, Healthcare, Finance"
+msgstr "მაგ., ტექნოლოგიები, ჯანდაცვა, ფინანსები"
+
+#: core/forms.py:231
+msgid "City, Country"
+msgstr "ქალაქი, ქვეყანა"
+
+#: core/forms.py:266
+msgid "ვაკანსია ატვირთულია გარე ლინკით"
+msgstr "Job is uploaded with external link"
+
+#: core/forms.py:267
+msgid "მონიშნეთ თუ გსურთ კანდიდატები გადამისამართდნენ გარე ვებ-გვერდზე."
+msgstr "Check if you want candidates to be redirected to an external website."
+
+#: core/forms.py:272 core/models/job.py:99
+msgid "External Link"
+msgstr "გარე ბმული"
+
+#: core/forms.py:273
+msgid "ჩასვით ვაკანსიის გარე ბმული."
+msgstr "Insert the external link for the job."
+
+#: core/forms.py:285
+msgid "Job Title"
+msgstr "სამუშაოს დასახელება"
+
+#: core/forms.py:291
+msgid "Minimum Salary"
+msgstr "მინიმალური ხელფასი"
+
+#: core/forms.py:292
+msgid "Maximum Salary"
+msgstr "მაქსიმალური ხელფასი"
+
+#: core/forms.py:293
+msgid "Salary Type"
+msgstr "ხელფასის ტიპი"
+
+#: core/forms.py:294
+msgid "Category"
+msgstr "კატეგორია"
+
+#: core/forms.py:295
+msgid "Experience"
+msgstr "გამოცდილება"
+
+#: core/forms.py:296
+msgid "Job Preferences"
+msgstr "სამუშაო გრაფიკი"
+
+#: core/forms.py:297
+msgid "Considers Students"
+msgstr "განიხილავს სტუდენტებს"
+
+#: core/forms.py:298
+msgid "Premium Level"
+msgstr "პრემიუმ დონე"
+
+#: core/forms.py:319
+msgid "გთხოვთ ჩასვათ გარე ბმული"
+msgstr "Please insert the external link"
+
+#: core/models/user.py:25
+msgid "ელ-ფოსტა დადასტურებულია"
+msgstr "Email is confirmed"
+
+#: core/models/user.py:28
+msgid "თანახმა ვარ მივიღო ელ-ფოსტის შეტყობინებები"
+msgstr "I agree to receive email notifications"
+
+#: core/models/user.py:40 core/models/user.py:47
+#: core/templates/core/employer_edit_profile.html:85
+msgid "პროფილის სურათი"
+msgstr "Profile picture"
+
+#: core/models/user.py:59 core/models/user.py:66
+#: core/templates/core/employer_applications.html:309
+#: core/templates/core/employer_applications.html:479
+#: core/templates/core/job_applications.html:144
+#: core/templates/core/job_applications.html:316
+msgid "CV"
+msgstr "CV"
+
+#: core/models/user.py:75 core/templates/core/user_profile.html:212
+#: core/templates/core/user_profile_cv.html:98
+msgid "სასურველი სფერო"
+msgstr "Desired field"
+
+#: core/models/user.py:86 core/templates/core/user_profile.html:244
+#: core/templates/core/user_profile_cv.html:127
+msgid "ხილვადია დამსაქმებლებისთვის"
+msgstr "Visible to employers"
+
+#: core/models/user.py:113
+msgid "მომხმარებლების პროფილები"
+msgstr "User profiles"
+
+#: core/templates/admin/historical_data.html:71
+msgid "Home"
+msgstr "მთავარი"
+
+#: core/templates/core/components/job_detail/apply_modal.html:13
+msgid "Submit Application"
+msgstr "განაცხადის გაგზავნა"
+
+#: core/templates/core/components/job_detail/apply_modal.html:35
+msgid "Login or register for a better experience"
+msgstr "რეკომენდებულია შესვლა ან რეგისტრაცია უკეთესი გამოცდილებისთვის"
+
+#: core/templates/core/components/job_detail/apply_modal.html:50
+msgid "Full Name"
+msgstr "სახელი და გვარი"
+
+#: core/templates/core/components/job_detail/apply_modal.html:66
+msgid "Cover Letter"
+msgstr "სამოტივაციო წერილი"
+
+#: core/templates/core/components/job_detail/apply_modal.html:68
+msgid "Why do you want to work in this position?"
+msgstr "რატომ გსურთ ამ პოზიციაზე მუშაობა?"
+
+#: core/templates/core/components/job_detail/apply_modal.html:73
+msgid "Resume/CV"
+msgstr "რეზიუმე/CV"
+
+#: core/templates/core/components/job_detail/apply_modal.html:85
+msgid "Your CV is already uploaded to your profile and will be used automatically"
+msgstr "თქვენი CV უკვე ატვირთულია პროფილზე და ავტომატურად გამოიყენება"
+
+#: core/templates/core/components/job_detail/apply_modal.html:90
+msgid "Only PDF, DOC, or DOCX formats. Max 5MB"
+msgstr "მხოლოდ PDF, DOC, ან DOCX ფორმატები. მაქს 5MB"
+
+#: core/templates/core/components/job_detail/job_detail_js.html:87
+msgid "Link copied to clipboard!"
+msgstr "ბმული დაკოპირებულია!"
+
+#: core/templates/core/components/job_list/filter_modal.html:118
+msgid "Student Positions"
+msgstr "სტუდენტური პოზიციები"
+
+#: core/templates/core/components/job_list/filters_section.html:118
+msgid "Georgian Language Only"
+msgstr "მხოლოდ ქართულენოვანი"
+
+#: core/templates/core/user_profile.html:116
+msgid "Job Seeker"
+msgstr "სამუშაოს მაძიებელი"
+
+#: core/templates/core/user_profile.html:164
+msgid "Upload Resume"
+msgstr "ატვირთვა რეზიუმე"
+
+#: core/templates/core/user_profile.html:167
+msgid "Upload your resume (PDF, DOC, DOCX)."
+msgstr "ატვირთეთ თქვენი რეზიუმე (PDF, DOC, DOCX)."
+
+#: core/templates/core/user_profile.html:215
+msgid "Choose field"
+msgstr "აირჩიეთ სფერო"
+
+#: core/templates/core/user_profile.html:229
+msgid "Choose experience"
+msgstr "აირჩიეთ გამოცდილება"
+
+#: core/templates/core/user_profile.html:245
+msgid "Employers can view your resume in the resume database"
+msgstr "დამსაქმებლებს შეუძლიათ იხილონ თქვენი რეზიუმე რეზიუმეების ბაზაში"
+
+#: core/templates/core/user_profile.html:259
+msgid "Account Settings"
+msgstr "ანგარიშის პარამეტრები"
+
+#: core/templates/core/user_profile.html:263
+msgid "Personal Information"
+msgstr "პერსონალური ინფორმაცია"
+
+#: core/templates/core/user_profile.html:268
+msgid "Enter your first name"
+msgstr "შეიყვანეთ თქვენი სახელი"
+
+#: core/templates/core/user_profile.html:273
+msgid "Enter your last name"
+msgstr "შეიყვანეთ თქვენი გვარი"
+
+#: core/templates/core/user_profile.html:278
+msgid "Enter your email"
+msgstr "შეიყვანეთ თქვენი ელ-ფოსტა"
+
+#: core/templates/core/user_profile.html:291
+msgid "Save Changes"
+msgstr "შენახვა ცვლილებები"

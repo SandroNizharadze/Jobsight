@@ -89,18 +89,18 @@ def register(request):
     if request.user.is_authenticated:
         return redirect('job_list')
     
-    # Check for user_type in the query parameters and set default form values
-    default_user_type = request.GET.get('user_type', 'candidate')
+    # Check for role in the query parameters and set default form values
+    default_role = request.GET.get('role', 'candidate')
     
     if request.method == 'POST':
-        # Get user_type directly from POST data 
-        user_type = request.POST.get('user_type', 'candidate')
-        logger.info(f"Registration attempt with user_type: {user_type}")
+        # Get role directly from POST data 
+        role = request.POST.get('role', 'candidate')
+        logger.info(f"Registration attempt with role: {role}")
         
         # Override ROLE based on user selection - this is crucial
-        if user_type not in ['candidate', 'employer']:
-            user_type = 'candidate'  # Default to candidate if invalid value
-            logger.warning(f"Invalid user_type detected, defaulting to candidate")
+        if role not in ['candidate', 'employer']:
+            role = 'candidate'  # Default to candidate if invalid value
+            logger.warning(f"Invalid role detected, defaulting to candidate")
         
         # We'll use a transaction to ensure everything happens atomically
         from django.db import transaction
@@ -108,7 +108,7 @@ def register(request):
         form = RegistrationForm(request.POST)
         employer_form = None
         
-        if user_type == 'employer':
+        if role == 'employer':
             employer_form = EmployerRegistrationForm(request.POST)
             
             logger.info(f"Processing employer registration")
@@ -232,7 +232,8 @@ def register(request):
             else:
                 messages.error(request, _("Please correct the errors below."))
     else:
-        form = RegistrationForm()
+        initial_data = {'role': default_role}
+        form = RegistrationForm(initial=initial_data)
         employer_form = EmployerRegistrationForm()
     
     return render(request, 'core/register.html', {'form': form, 'employer_form': employer_form})

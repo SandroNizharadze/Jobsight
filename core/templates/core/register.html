@@ -100,16 +100,8 @@
             </div>
           </div>
           
-          <!-- Username Field -->
-          <div>
-            <label for="{{ form.username.id_for_label }}" class="block text-sm font-medium text-gray-700">{% trans "მომხმარებლის სახელი" %}</label>
-            <div class="mt-1">
-              <input type="text" name="username" id="{{ form.username.id_for_label }}" class="shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full sm:text-sm border-gray-300 rounded-md" value="{{ form.username.value|default:'' }}">
-            </div>
-            {% if form.username.errors %}
-            <p class="mt-2 text-sm text-red-600">{{ form.username.errors }}</p>
-            {% endif %}
-          </div>
+          <!-- Hidden Username Field (will be set by JavaScript) -->
+          <input type="hidden" name="username" id="{{ form.username.id_for_label }}" value="{{ form.email.value|default:'' }}">
           
           <!-- Email Field -->
           <div>
@@ -122,6 +114,39 @@
             {% endif %}
           </div>
           
+          <!-- Employer-specific fields -->
+          <div id="employer_fields" class="{% if form.role.value != 'employer' %}hidden{% endif %} space-y-4">
+            <div>
+              <label for="{{ employer_form.company_name.id_for_label }}" class="block text-sm font-medium text-gray-700">{% trans "კომპანიის სახელი" %}</label>
+              <div class="mt-1">
+                <input type="text" name="company_name" id="{{ employer_form.company_name.id_for_label }}" class="shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full sm:text-sm border-gray-300 rounded-md" value="{{ employer_form.company_name.value|default:'' }}">
+              </div>
+              {% if employer_form.company_name.errors %}
+              <p class="mt-2 text-sm text-red-600">{{ employer_form.company_name.errors }}</p>
+              {% endif %}
+            </div>
+
+            <div>
+              <label for="{{ employer_form.company_id.id_for_label }}" class="block text-sm font-medium text-gray-700">{% trans "საიდენტიფიკაციო კოდი" %}</label>
+              <div class="mt-1">
+                <input type="text" name="company_id" id="{{ employer_form.company_id.id_for_label }}" class="shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full sm:text-sm border-gray-300 rounded-md" value="{{ employer_form.company_id.value|default:'' }}">
+              </div>
+              {% if employer_form.company_id.errors %}
+              <p class="mt-2 text-sm text-red-600">{{ employer_form.company_id.errors }}</p>
+              {% endif %}
+            </div>
+
+            <div>
+              <label for="{{ employer_form.phone_number.id_for_label }}" class="block text-sm font-medium text-gray-700">{% trans "მობილურის ნომერი" %}</label>
+              <div class="mt-1">
+                <input type="text" name="phone_number" id="{{ employer_form.phone_number.id_for_label }}" class="shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full sm:text-sm border-gray-300 rounded-md" value="{{ employer_form.phone_number.value|default:'' }}">
+              </div>
+              {% if employer_form.phone_number.errors %}
+              <p class="mt-2 text-sm text-red-600">{{ employer_form.phone_number.errors }}</p>
+              {% endif %}
+            </div>
+          </div>
+          
           <!-- Password Fields -->
           <div>
             <label for="{{ form.password1.id_for_label }}" class="block text-sm font-medium text-gray-700">{% trans "პაროლი" %}</label>
@@ -131,7 +156,7 @@
             {% if form.password1.errors %}
             <p class="mt-2 text-sm text-red-600">{{ form.password1.errors }}</p>
             {% endif %}
-            <p class="mt-1 text-xs text-gray-500">{% trans "პაროლი უნდა შეიცავდეს მინიმუმ 8 სიმბოლოს" %}</p>
+            <p class="mt-1 text-xs text-gray-500">{% trans "პაროლი უნდა შეიცავდეს მინიმუმ 4 სიმბოლოს" %}</p>
           </div>
           
           <div>
@@ -141,6 +166,37 @@
             </div>
             {% if form.password2.errors %}
             <p class="mt-2 text-sm text-red-600">{{ form.password2.errors }}</p>
+            {% endif %}
+          </div>
+          
+          <!-- Agreement checkboxes -->
+          <div class="space-y-3">
+            <div class="flex items-start">
+              <div class="flex items-center h-5">
+                <input id="email_notifications" name="email_notifications" type="checkbox" class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded" {% if form.email_notifications.value %}checked{% endif %}>
+              </div>
+              <div class="ml-3 text-sm">
+                <label for="email_notifications" class="font-medium text-gray-700">
+                  {% trans "I agree to receive email notifications about news" %}
+                </label>
+              </div>
+            </div>
+            {% if form.email_notifications.errors %}
+              <p class="mt-1 text-sm text-red-600">{{ form.email_notifications.errors }}</p>
+            {% endif %}
+            
+            <div class="flex items-start">
+              <div class="flex items-center h-5">
+                <input id="terms_agreement" name="terms_agreement" type="checkbox" class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded" required>
+              </div>
+              <div class="ml-3 text-sm">
+                <label for="terms_agreement" class="font-medium text-gray-700">
+                  {% trans "I agree to the Terms & Conditions and Privacy Policy" %}
+                </label>
+              </div>
+            </div>
+            {% if form.terms_agreement.errors %}
+              <p class="mt-1 text-sm text-red-600">{{ form.terms_agreement.errors }}</p>
             {% endif %}
           </div>
           
@@ -168,34 +224,53 @@
 {% block extra_js %}
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        const userTypeRadios = document.querySelectorAll('input[name="user_type"]');
+        const roleRadios = document.querySelectorAll('input[name="role"]');
         const employerFields = document.getElementById('employer_fields');
         const socialLoginSection = document.getElementById('social-login-section');
+        const emailInput = document.getElementById('{{ form.email.id_for_label }}');
+        const usernameInput = document.getElementById('{{ form.username.id_for_label }}');
+        
+        // Set username to email on change
+        if (emailInput && usernameInput) {
+            emailInput.addEventListener('change', function() {
+                usernameInput.value = emailInput.value;
+            });
+            
+            // Initialize on page load
+            usernameInput.value = emailInput.value;
+        }
         
         function toggleFields() {
-            const selectedValue = document.querySelector('input[name="user_type"]:checked').value;
+            const selectedValue = document.querySelector('input[name="role"]:checked').value;
             if (selectedValue === 'employer') {
                 employerFields.classList.remove('hidden');
-                socialLoginSection.classList.add('hidden');
+                if (socialLoginSection) {
+                    socialLoginSection.classList.add('hidden');
+                }
                 document.querySelectorAll('#employer_fields input').forEach(input => {
-                    if (!input.name.includes('company_id')) {
+                    if (input.name === 'company_name' || input.name === 'phone_number') {
                         input.setAttribute('required', 'required');
                     }
                 });
             } else {
                 employerFields.classList.add('hidden');
-                socialLoginSection.classList.remove('hidden');
+                if (socialLoginSection) {
+                    socialLoginSection.classList.remove('hidden');
+                }
                 document.querySelectorAll('#employer_fields input').forEach(input => {
                     input.removeAttribute('required');
                 });
             }
         }
         
-        userTypeRadios.forEach(radio => {
+        roleRadios.forEach(radio => {
             radio.addEventListener('change', toggleFields);
         });
         
-        toggleFields();
+        // Call once on page load to set initial state
+        if (roleRadios.length > 0) {
+            toggleFields();
+        }
     });
 </script>
 {% endblock %} 

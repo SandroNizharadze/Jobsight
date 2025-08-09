@@ -713,8 +713,6 @@ msgstr "Every CV matters"
 msgid "კანდიდატი"
 msgstr "Candidate"
 
-# Removed duplicate entry for კომპანია (Company)
-
 msgid "გჭირდებათ თანამშრომელი?"
 msgstr "Need an employee?"
 
@@ -892,3 +890,42 @@ msgstr "Please enter your email."
 
 msgid "გთხოვთ შეიყვანოთ თქვენი პაროლი."
 msgstr "Please enter your password." 
+
+msgid "პრემიუმ+"
+msgstr "Premium+"
+
+msgid "სტუდენტ-ფრენდლი"
+msgstr "Student-friendly"
+
+msgid "თბილისი, საქართველო"
+msgstr "Tbilisi, Georgia"
+
+msgid "პოპულარული - განახლებული"
+msgstr "Popular - Updated"
+
+msgid "თბილისანური"
+msgstr "Tbilisani"
+
+msgid "ცვლადი განაკვეთი"
+msgstr "Flexible Schedule"
+
+msgid "სამუშაო დრო"
+msgstr "Working Hours"
+
+msgid "React ფრონტენდ სპეციალისტი"
+msgstr "React Frontend Specialist"
+
+msgid "დღეიდან შენი სივი არ დაიკარგება - იპოვე შენზე მორგებული სამსახური"
+msgstr "Your CV will never be lost - Find a job tailored for you"
+
+msgid "პოსტ ჯობ"
+msgstr "Post Job"
+
+msgid "წესები და პირობები"
+msgstr "Terms and Conditions"
+
+msgid "კონფიდენციალურობის პოლიტიკა"
+msgstr "Privacy Policy"
+
+msgid "ყველა უფლება დაცულია"
+msgstr "All Rights Reserved" 

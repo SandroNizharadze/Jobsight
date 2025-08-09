@@ -10,8 +10,9 @@ import re
 class RegistrationForm(UserCreationForm):
     email = forms.EmailField(required=True)
     first_name = forms.CharField(required=True)
-    # Define user_type as a separate field - not a model field
-    user_type = forms.ChoiceField(
+    last_name = forms.CharField(required=False)
+    # Define role as a separate field - not a model field
+    role = forms.ChoiceField(
         choices=[('candidate', _('სამუშაოს მაძიებელი')), ('employer', _('დამსაქმებელი'))],
         widget=forms.RadioSelect,
         initial='candidate',
@@ -36,40 +37,40 @@ class RegistrationForm(UserCreationForm):
     
     class Meta:
         model = User
-        fields = ['username', 'email', 'first_name', 'password1', 'email_notifications', 'terms_agreement']  # Include the new fields
+        fields = ['username', 'email', 'first_name', 'last_name', 'password1', 'password2', 'email_notifications', 'terms_agreement']
         widgets = {
             'username': forms.HiddenInput(),
-            'email': forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'Email'}),
-            'first_name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Name'}),
-            'password1': forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Password'}),
+            'email': forms.EmailInput(attrs={'class': 'form-control', 'placeholder': _('Email')}),
+            'first_name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': _('Name')}),
+            'last_name': forms.TextInput(attrs={'class': 'form-control'}),
         }
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         # Make username field hidden and populate it with email value
         self.fields['username'].required = False
-        # Remove password2 field
-        del self.fields['password2']
+        # Keep password2 field but no need for help text
+        self.fields['password2'].help_text = None
         # Remove password validation messages
         self.fields['password1'].help_text = None
         self.fields['password1'].error_messages = {
-            'required': 'Please enter your password.',
+            'required': _('Please enter your password.'),
         }
-        # Make user_type field more prominent
-        self.fields['user_type'].widget.attrs.update({'class': 'form-check-input'})
+        # Make role field more prominent
+        self.fields['role'].widget.attrs.update({'class': 'form-check-input'})
 
     def clean_email(self):
         email = self.cleaned_data.get('email')
         if User.objects.filter(email=email).exists():
-            raise forms.ValidationError("A user with that email already exists.")
+            raise forms.ValidationError(_("A user with that email already exists."))
         if User.objects.filter(username=email).exists():
-            raise forms.ValidationError("A user with that email already exists.")
+            raise forms.ValidationError(_("A user with that email already exists."))
         return email
 
     def clean_password1(self):
         password = self.cleaned_data.get('password1')
         if len(password) < 4:
-            raise forms.ValidationError("Password must be at least 4 characters long.")
+            raise forms.ValidationError(_("Password must be at least 4 characters long."))
         return password
 
     def clean(self):
@@ -79,11 +80,11 @@ class RegistrationForm(UserCreationForm):
             # Set username to be the same as email
             cleaned_data['username'] = email
         
-        # Explicitly capture user_type for later use in the view
-        user_type = cleaned_data.get('user_type')
-        if user_type not in ['candidate', 'employer']:
+        # Explicitly capture role for later use in the view
+        role = cleaned_data.get('role')
+        if role not in ['candidate', 'employer']:
             # Default to candidate if invalid value
-            cleaned_data['user_type'] = 'candidate'
+            cleaned_data['role'] = 'candidate'
         
         return cleaned_data
 
