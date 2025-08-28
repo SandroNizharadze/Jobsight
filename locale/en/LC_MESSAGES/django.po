@@ -924,8 +924,116 @@ msgstr "Post Job"
 msgid "წესები და პირობები"
 msgstr "Terms and Conditions"
 
+msgid "ბმულები"
+msgstr "Links"
+
+msgid "კონტაქტი" 
+msgstr "Contact"
+
 msgid "კონფიდენციალურობის პოლიტიკა"
 msgstr "Privacy Policy"
 
-msgid "ყველა უფლება დაცულია"
-msgstr "All Rights Reserved" 
+msgid "ყველა უფლება დაცულია."
+msgstr "All Rights Reserved." 
+
+msgid "ჩვენთან შენი სივი არ დაიკარგება - იპოვე შენზე მორგებული სამსახური"
+msgstr "Your CV won't be lost - find a job that suits you."
+
+# Pricing FAQ
+msgid "როგორ შევქმნა ვაკანსია Jobsight-ზე?"
+msgstr "How do I create a job listing on Jobsight?"
+
+msgid "ვაკანსიის შესაქმნელად საჭიროა დარეგისტრირდეთ როგორც დამსაქმებელი, აირჩიოთ სასურველი პაკეტი და შეავსოთ ვაკანსიის ფორმა. ვაკანსია გამოქვეყნდება ადმინისტრაციის მიერ დადასტურების შემდეგ."
+msgstr "To create a job listing, register as an employer, choose a package, and fill out the job form. The job will be published after it is approved by the admin team."
+
+msgid "რა განსხვავებაა პაკეტებს შორის?"
+msgstr "What is the difference between the packages?"
+
+msgid "პაკეტები განსხვავდება ვაკანსიის გამოჩენის პრიორიტეტულობით, მთავარ გვერდზე განთავსებით და დამატებითი სერვისებით. პრემიუმ და პრემიუმ+ პაკეტები უზრუნველყოფენ უფრო მეტ ხილვადობას და მეტ კანდიდატს."
+msgstr "Packages differ by listing priority, homepage placement, and additional services. Premium and Premium+ provide higher visibility and more candidates."
+
+msgid "რამდენ ხანს რჩება ვაკანსია აქტიური?"
+msgstr "How long does a job listing stay active?"
+
+msgid "ყველა პაკეტის შემთხვევაში ვაკანსია რჩება აქტიური 30 დღის განმავლობაში. ამ პერიოდის გასვლის შემდეგ, შეგიძლიათ განაახლოთ ვაკანსია ან შექმნათ ახალი."
+msgstr "With all packages, a job listing remains active for 30 days. After that, you can extend the listing or create a new one."
+
+msgid "როგორ ვნახო აპლიკანტების სივები?"
+msgstr "How can I view applicants' CVs?"
+
+msgid "თქვენს მიერ ატვირთულ ვაკანსიაზე შემოსული სივების ნახვა დამსაქმებლის პანელიდან შეგიძლიათ, ხოლო თუ შესაბამისი პაკეტი გაქვთ შეძენილი, სივების ნახვას სივების ბაზიდანაც შეძლებთ. ჩვენს ბაზაში სივები სფეროსა და გამოცდილების დონის მიხედვით შეგიძლიათ გაფილტროთ, რაც სასურველი კადრის მარტივად მოძიების საშუალებას იძლევა."
+msgstr "You can view CVs submitted to your job listing from the employer dashboard. If you have the appropriate package, you can also access CVs from the CV database. You can filter CVs by field and experience level to quickly find suitable candidates."
+
+msgid "რამდენ ხანს უნდა ველოდო დამსაქმებლისგან უკუკავშირს?"
+msgstr "How long should I wait for a response from the employer?"
+
+msgid "გაითვალისწინეთ, რომ დამსაქმებელს ერთ ვაკანსიაზე ხშირად 100 და მეტი სივის განხილვა უწევს, რასაც ხშირად კვირაზე მეტი სჭირდება. თქვენი პროფილიდან შეგიძლიათ პერიოდულად შეამოწმოთ თქვენი სივის სტატუსი და ნახოთ განიხილა თუ არა ის დამსაქმებელმა."
+msgstr "Please note that employers may need to review 100+ CVs for a single job, which can take more than a week. You can periodically check your application status from your profile to see whether it has been reviewed."
+
+msgid "რა ვქნა თუ გასაუბრებაზე მისულს ვაკანსიისგან განსხვავებული (უარესი) პირობები დამხვდა?"
+msgstr "What should I do if the interview conditions are worse than stated in the job listing?"
+
+msgid "როგორც წესი, ასეთი შემთხვევები ხშირი არაა, რადგან ჩვენ ვცდილობთ თავი ავარიდოთ არაკეთილსინდისიერ დამსაქმებლებს. თუ მაინც მსგავსი რამ შეგემთხვათ, დაგვიკავშირდით ელფოსტის საშუალებით info@jobsight.ge -ზე და ჩვენ აუცილებლად მოვახდენთ შესაბამის რეაგირებას."
+msgstr "Such cases are rare as we strive to avoid dishonest employers. If this happens, please contact us at info@jobsight.ge and we will take appropriate action." 
+
+# Mobile Pricing Comparison
+msgid "განცხადების რაოდენობა"
+msgstr "Number of job postings"
+
+msgid "პერიოდი"
+msgstr "Period"
+
+msgid "დღე"
+msgstr "days"
+
+msgid "მეორე სექცია"
+msgstr "Second section"
+
+msgid "პირველი სექცია"
+msgstr "First section"
+
+msgid "ჯგუფური პოსტი"
+msgstr "Group post"
+
+msgid "ინდ. და ჯგუფური"
+msgstr "Individual and group"
+
+msgid "პაკეტების შედარება"
+msgstr "Package comparison"
+
+msgid "პაკეტის მახასიათებლები"
+msgstr "Package features" 
+
+# Pricing comparison additional terms
+msgid "მთავარ გვერდზე გამოჩენა"
+msgstr "Featured on homepage"
+
+msgid "პრემიუმის ნიშანი"
+msgstr "Premium badge"
+
+msgid "ძიებისას პრიორიტეტულობა"
+msgstr "Search priority"
+
+msgid "დაბალი"
+msgstr "Low"
+
+msgid "საშუალო"
+msgstr "Medium"
+
+msgid "მაღალი"
+msgstr "High"
+
+msgid "ლოგოს გამოჩენა"
+msgstr "Logo display"
+
+msgid "დამსაქმებლის პროფილი"
+msgstr "Employer profile"
+
+msgid "სივების ანალიტიკა"
+msgstr "CV analytics"
+
+msgid "სოც. ქსელებში გაზიარება"
+msgstr "Social media sharing"
+
+msgid "ინდივიდუალური და ჯგუფური პოსტი"
+msgstr "Individual and group post"

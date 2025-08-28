@@ -1,5 +1,5 @@
 from django import template
-from django.utils.translation import get_language
+from django.utils.translation import get_language, gettext as _
 from core.models import (
     PricingPackage, PricingFeature, ComparisonTable, ComparisonRow
 )
@@ -89,3 +89,8 @@ def get_translated_row_value(row, package_type, language_code=None):
             return getattr(row, f'{package_type}_value', '')
     except:
         return getattr(row, f'{package_type}_value', '')
+
+@register.filter
+def translate_feature(text):
+    """Translate feature text directly using gettext"""
+    return _(text)
