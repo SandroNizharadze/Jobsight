@@ -1047,6 +1047,12 @@ msgstr "Logo display"
 msgid "დამსაქმებლის პროფილი"
 msgstr "Employer profile"
 
+msgid "კომპანიის დასახელება"
+msgstr "Company name"
+
+msgid "კომპანიის ზომა"
+msgstr "Company size"
+
 msgid "სივების ანალიტიკა"
 msgstr "CV analytics"
 

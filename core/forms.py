@@ -210,7 +210,7 @@ class EmployerProfileForm(forms.ModelForm):
                 'class': 'form-control',
                 'placeholder': _('Enter phone number')
             }),
-            'company_website': forms.URLInput(attrs={
+            'company_website': forms.TextInput(attrs={
                 'class': 'form-control',
                 'placeholder': 'https://www.example.com'
             }),
