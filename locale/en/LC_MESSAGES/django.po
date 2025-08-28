@@ -1037,3 +1037,173 @@ msgstr "Social media sharing"
 
 msgid "ინდივიდუალური და ჯგუფური პოსტი"
 msgstr "Individual and group post"
+
+msgid "პრემიუმ+ ნიშანი"
+msgstr "Premium+ badge"
+
+msgid "უფასო"
+msgstr "Free"
+
+msgid "საშუალო ხილვადობა"
+msgstr "Medium visibility"
+
+msgid "მაღალი ხილვადობა"
+msgstr "High visibility"
+
+msgid "მაქსიმალური ხილვადობა"
+msgstr "Maximum visibility"
+
+msgid "1 განცხადება - პერიოდი 30 დღე"
+msgstr "1 job posting - 30 days period"
+
+msgid "ძიებისას პრიორიტეტულობა: დაბალი"
+msgstr "Search priority: Low"
+
+msgid "ძიებისას პრიორიტეტულობა: საშუალო"
+msgstr "Search priority: Medium"
+
+msgid "ძიებისას პრიორიტეტულობა: მაღალი"
+msgstr "Search priority: High"
+
+msgid "დამსაქმებლის პროფილი და სივების ანალიტიკა"
+msgstr "Employer profile and CV analytics"
+
+msgid "კანდიდატებისთვის უკუკავშირის დაბრუნების სისტემა"
+msgstr "Candidate feedback system"
+
+msgid "მთავარ გვერდზე ყოფნა"
+msgstr "Featured on homepage"
+
+msgid "მთავარი გვერდის მეორე სექცია"
+msgstr "Second section of homepage"
+
+msgid "მთავარი გვერდის პირველი სექცია"
+msgstr "First section of homepage"
+
+msgid "განმასხვავებელი ნიშანი"
+msgstr "Distinctive badge"
+
+msgid "სოც. ქსელებში გაზიარება ჯგუფური პოსტის სახით"
+msgstr "Social media sharing as group post"
+
+msgid "სოც. ქსელებში გაზიარება ინდივიდუალური პოსტის სახით"
+msgstr "Social media sharing as individual post"
+
+msgid "ინდივიდუალური პოსტი"
+msgstr "Individual post"
+
+msgid "სივების ბაზაზე წვდომა"
+msgstr "CV database access"
+
+msgid "სივების ბაზაზე წვდომა (მალე)"
+msgstr "CV database access (coming soon)"
+
+msgid "სივების ბაზა (მალე)"
+msgstr "CV database (coming soon)"
+
+msgid "აირჩიე"
+msgstr "Choose"
+
+msgid "პოპულარული"
+msgstr "Popular"
+
+msgid "სტანდარტული"
+msgstr "Standard"
+
+msgid "კარიერული რჩევები და სიახლეები"
+msgstr ""
+
+msgid "ბლოგის პოსტები ჯერ არ არის დამატებული."
+msgstr ""
+
+msgid "პაროლი უნდა შეიცავდეს მინიმუმ 4 სიმბოლოს"
+msgstr ""
+
+msgid "კომპანიის სახელი"
+msgstr ""
+
+msgid "საიდენტიფიკაციო კოდი"
+msgstr ""
+
+msgid "მობილურის ნომერი"
+msgstr ""
+
+msgid "აქტიური ვაკანსიები"    
+msgstr ""
+
+msgid "ყველა ვაკანსია"    
+msgstr ""
+
+msgid "ყველა აპლიკანტი"    
+msgstr ""
+
+msgid "წაუკითხავი აპლიკანტები"    
+msgstr ""
+
+msgid "ბოლო აპლიკაციები "    
+msgstr ""
+
+msgid "თარიღი"    
+msgstr ""
+
+msgid "სტატუსი"    
+msgstr ""
+
+msgid "დამსაქმებლის პანელი"    
+msgstr ""
+
+msgid "ვაკანსიის დამატება"    
+msgstr ""
+
+msgid "Premium+ ფუნქცია"    
+msgstr ""
+
+msgid "სივების ბაზა ჩანს მხოლოდ Premium+ დამსაქმებლებისთვის
+
+როცა თქვენი ბოლო Premium+ ვაკანსიის მოქმედების ვადა ამოიწურება, თქვენ დაკარგავთ წვდომას ამ ფუნქციაზე."    
+msgstr ""
+
+msgid "გაასუფთავე ფილტრები"    
+msgstr ""
+
+msgid "გაფილტვრა"    
+msgstr ""
+
+msgid "სივების ფილტრები"    
+msgstr ""
+
+msgid "სივის ნახვა"    
+msgstr ""
+
+msgid "სასურველი სფერო: "    
+msgstr ""
+
+msgid "გამოცდილება: "    
+msgstr ""
+
+msgid "სფერო"    
+msgstr ""
+
+msgid ""    
+msgstr ""
+
+msgid ""    
+msgstr ""
+
+msgid ""    
+msgstr ""
+
+msgid ""    
+msgstr ""
+
+msgid ""    
+msgstr ""
+
+msgid ""    
+msgstr ""
+
+msgid ""    
+msgstr ""
+
+msgid ""    
+msgstr ""
