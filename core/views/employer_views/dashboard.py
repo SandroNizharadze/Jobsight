@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.db.models import Count, Q
-from core.models import JobApplication, RejectionReason
+from core.models import JobApplication, RejectionReason, JobListing
 from core.services.employer_service import EmployerService
 import json
 import logging
@@ -256,12 +256,19 @@ def employer_dashboard(request):
             
         all_jobs.append(job)
     
+    # Get deleted jobs count for the template
+    deleted_jobs_count = JobListing.all_objects.filter(
+        employer=employer_profile,
+        deleted_at__isnull=False
+    ).count()
+    
     context = {
         'employer_profile': employer_profile,
         'all_jobs': all_jobs,
         'search_query': search_query,
         'sort_option': sort_option,
         'unread_notification_count': unread_notification_count,
+        'deleted_jobs_count': deleted_jobs_count,
     }
     
     # If this is an AJAX request, only return the jobs container

@@ -199,16 +199,7 @@ def employer_home(request):
 
 @login_required
 @user_passes_test(is_employer)
-def employer_dashboard(request):
-    """
-    Display the employer dashboard with detailed analytics
-    """
-    employer_profile = request.user.userprofile.employer_profile
 
-    # Get all jobs for this employer, excluding deleted ones
-    jobs_query = JobListing.objects.filter(
-        employer=employer_profile
-    )
     
     # Apply search filter if provided
     search_query = request.GET.get('search', '')
@@ -332,8 +323,6 @@ def employer_dashboard(request):
     if request.GET.get('ajax') == 'true' or request.headers.get('X-Requested-With') == 'XMLHttpRequest':
         return render(request, 'core/partials/job_listings.html', context)
     
-    return render(request, 'core/employer_profile.html', context)
-
 @login_required
 @user_passes_test(is_employer)
 def deleted_jobs(request):

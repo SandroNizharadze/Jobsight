@@ -1,0 +1,189 @@
+{% extends "core/base.html" %}
+{% load i18n %}
+{% load static %}
+
+{% block title %}{% trans "წაშლილი ვაკანსიები" %} | Jobsight{% endblock %}
+
+{% block content %}
+<div class="bg-gray-50 min-h-screen py-8">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="mb-8">
+      <a href="{% url 'employer_dashboard' %}" class="inline-flex items-center text-sm text-blue-600 hover:text-blue-800">
+        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+        </svg>
+        {% trans "დაბრუნება დაფაზე" %}
+      </a>
+    </div>
+    
+    <!-- Page Title -->
+    <div class="mb-8">
+      <h1 class="text-3xl font-bold text-gray-900">{% trans "წაშლილი ვაკანსიები" %}</h1>
+      <p class="mt-2 text-gray-600">
+        {% trans "აქ შეგიძლიათ ნახოთ თქვენი წაშლილი ვაკანსიები და მათზე შემოსული განაცხადები." %}
+      </p>
+    </div>
+
+    <!-- Job Listings Card -->
+    <div class="bg-white rounded-xl shadow-md overflow-hidden">
+      <div class="px-6 py-4 bg-gray-50 border-b border-gray-200">
+        <h2 class="text-lg font-semibold text-gray-900">{% trans "წაშლილი ვაკანსიები" %}</h2>
+      </div>
+      
+      <div class="p-6">
+        <!-- Mobile filter button -->
+        <div class="flex justify-between items-center mb-4 sm:hidden">
+          <h3 class="text-sm font-medium text-gray-700">{{ deleted_jobs.count }} {% trans "ვაკანსია" %}</h3>
+          <button type="button" id="mobileFilterButton" class="inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
+            <svg class="w-4 h-4 mr-2 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"></path>
+            </svg>
+            {% trans "ფილტრი" %}
+          </button>
+        </div>
+
+        <!-- Filtering section - Hidden on mobile by default but can be toggled -->
+        <div id="filterSection" class="bg-gray-50 rounded-lg p-5 mb-6 hidden">
+          <div class="flex items-center justify-between mb-4">
+            <h3 class="text-sm font-medium text-gray-700 flex items-center">
+              <svg class="w-4 h-4 mr-2 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"></path>
+              </svg>
+              {% trans "ძებნა და დალაგება" %}
+            </h3>
+            <a href="{% url 'deleted_jobs' %}" class="text-xs text-blue-600 hover:text-blue-800 flex items-center">
+              <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+              </svg>
+              {% trans "გასუფთავება" %}
+            </a>
+          </div>
+          
+          <form id="jobFilterForm" method="get">
+            <!-- Search -->
+            <div class="mb-4">
+              <label for="search" class="block text-sm font-medium text-gray-700 mb-2">{% trans "ძებნა" %}</label>
+              <input type="text" name="search" id="search" value="{{ search_query }}" 
+                class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                placeholder="{% trans 'ვაკანსიის სახელი, კომპანია, ლოკაცია...' %}">
+            </div>
+            
+            <!-- Sorting -->
+            
+            
+            <!-- Apply Filters Button -->
+            <div class="flex justify-end">
+              <button type="submit" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                {% trans "ფილტრის გამოყენება" %}
+              </button>
+            </div>
+          </form>
+        </div>
+        
+        
+        
+        <!-- Job Results Section -->
+        {% if deleted_jobs %}
+          <div id="jobsContainer" class="grid gap-4">
+            {% for job in deleted_jobs %}
+              <div class="bg-white border border-gray-200 hover:border-red-500 rounded-lg p-4 transition-all duration-200 hover:shadow-md">
+                <div class="flex justify-between items-start">
+                  <div class="flex-grow">
+                    <div class="flex items-center mb-2">
+                      <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800 mr-2">
+                        {% trans "წაშლილი" %}
+                      </span>
+                      <h3 class="font-medium text-lg text-gray-900">{{ job.title }}</h3>
+                    </div>
+                    <div class="flex flex-wrap items-center mt-2 text-sm text-gray-600">
+                      {% if job.location %}
+                        <span class="flex items-center mr-4 mb-2">
+                          <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                          </svg>
+                          {{ job.get_location_display }}
+                        </span>
+                      {% endif %}
+                      {% if job.job_type %}
+                        <span class="flex items-center mr-4 mb-2">
+                          <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                          </svg>
+                          {{ job.get_job_type_display }}
+                        </span>
+                      {% endif %}
+                      <span class="flex items-center mb-2">
+                        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                        {{ job.created_at|date:"M d, Y" }}
+                      </span>
+                      <span class="flex items-center mb-2 text-red-600">
+                        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                        </svg>
+                        {% trans "წაშლილია" %} {{ job.deleted_at|date:"M d, Y" }}
+                      </span>
+                    </div>
+                  </div>
+                  <div class="flex items-start space-x-2">
+                    <a href="{% url 'job_applications' job.id %}" class="text-green-600 hover:text-green-800 focus:outline-none" title="{% trans 'View Applications' %}">
+                      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a1.994 1.994 0 01-1.414-.586m0 0L11 14h4a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2v4l.586-.586z"></path>
+                      </svg>
+                    </a>
+                    <form action="{% url 'restore_job' job.id %}" method="post" class="inline-block" onsubmit="return confirm('{% trans "Are you sure you want to restore this job?" %}');">
+                      {% csrf_token %}
+                      <button type="submit" class="text-blue-600 hover:text-blue-800 focus:outline-none" title="{% trans 'Restore Job' %}">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+                        </svg>
+                      </button>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            {% endfor %}
+          </div>
+        {% else %}
+          <div id="jobsContainer" class="bg-white border border-gray-200 rounded-lg p-8 text-center">
+            <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
+            </svg>
+            {% if request.GET.search %}
+              <h3 class="mt-2 text-sm font-medium text-gray-900">{% trans "არცერთი წაშლილი ვაკანსია არ მოიძებნა" %}</h3>
+              <p class="mt-1 text-sm text-gray-500">{% trans "შეცვალეთ ძებნის ტექსტი" %}</p>
+            {% else %}
+              <h3 class="mt-2 text-sm font-medium text-gray-900">{% trans "წაშლილი ვაკანსიები არ გაქვთ" %}</h3>
+              <p class="mt-1 text-sm text-gray-500">{% trans "თქვენ არ გაქვთ წაშლილი ვაკანსიები" %}</p>
+            {% endif %}
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+
+{% block extra_js %}
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Mobile filter toggle
+    const mobileFilterButton = document.getElementById('mobileFilterButton');
+    const filterSection = document.getElementById('filterSection');
+    
+    if (mobileFilterButton && filterSection) {
+      mobileFilterButton.addEventListener('click', function() {
+        filterSection.classList.toggle('hidden');
+      });
+    }
+    
+    // Sorting functionality
+    window.setSorting = function(sortOption) {
+      document.getElementById('sort_by').value = sortOption;
+      document.getElementById('jobFilterForm').submit();
+    };
+  });
+</script>
+{% endblock %}
+{% endblock %}
