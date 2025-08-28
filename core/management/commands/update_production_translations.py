@@ -14,6 +14,7 @@ class Command(BaseCommand):
                 translations = {
                     'მთავარ გვერდზე გამოჩენა': 'Featured on homepage',
                     'პრემიუმის ნიშანი': 'Premium badge',
+                    'პრემიუმ+ ნიშანი': 'Premium+ badge',
                     'განმასხვავებელი ნიშანი': 'Distinctive badge',
                     'ძიებისას პრიორიტეტულობა': 'Search priority',
                     'ლოგოს გამოჩენა': 'Logo display',
@@ -23,6 +24,16 @@ class Command(BaseCommand):
                     'სოც. ქსელებში გაზიარება': 'Social media sharing',
                     'მთავარ გვერდზე ყოფნა': 'Featured on homepage',
                     'სივების ბაზა (მალე)': 'CV database (coming soon)',
+                    'სივების ბაზაზე წვდომა': 'CV database access',
+                    'სივების ბაზაზე წვდომა (მალე)': 'CV database access (coming soon)',
+                    'კანდიდატებისთვის უკუკავშირის დაბრუნების სისტემა': 'Candidate feedback system',
+                    'ძიებისას პრიორიტეტულობა: დაბალი': 'Search priority: Low',
+                    'ძიებისას პრიორიტეტულობა: საშუალო': 'Search priority: Medium',
+                    'ძიებისას პრიორიტეტულობა: მაღალი': 'Search priority: High',
+                    'სოც. ქსელებში გაზიარება ჯგუფური პოსტის სახით': 'Social media sharing as group post',
+                    'სოც. ქსელებში გაზიარება ინდივიდუალური პოსტის სახით': 'Social media sharing as individual post',
+                    'მთავარი გვერდის პირველი სექცია': 'First section of homepage',
+                    'მთავარი გვერდის მეორე სექცია': 'Second section of homepage',
                 }
                 
                 # Dictionary mapping Georgian values to English translations
@@ -39,6 +50,16 @@ class Command(BaseCommand):
                     'ინდივიდუალური პოსტი': 'Individual post',
                     'ინდივიდუალური და ჯგუფური პოსტი': 'Individual and group post',
                     'უფასო': 'Free',
+                    'საშუალო ხილვადობა': 'Medium visibility',
+                    'მაღალი ხილვადობა': 'High visibility',
+                    'მაქსიმალური ხილვადობა': 'Maximum visibility',
+                    'აირჩიე': 'Choose',
+                    'პოპულარული': 'Popular',
+                    '1 განცხადება - პერიოდი 30 დღე': '1 job posting - 30 days period',
+                    '1 job posting - 30 days period': '1 job posting - 30 days period',
+                    'დღე': 'days',
+                    'განცხადება': 'job posting',
+                    'პერიოდი': 'period',
                 }
                 
                 # First, ensure all rows have translation records
