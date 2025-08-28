@@ -41,7 +41,8 @@
       {% endif %}
     </div>
     
-    <h3 class="text-2xl font-bold text-gray-900 mb-2">{{ package.name }}</h3>
+    <h3 class="text-2xl font-bold text-gray-900 mb-1">{% get_translated_package_name package %}</h3>
+    <p class="text-gray-600 text-sm mb-3">{% get_translated_package_description package %}</p>
     
     <div class="flex items-baseline mb-2">
       {% if package.has_discount %}
@@ -53,16 +54,6 @@
       {% else %}
         <span class="text-3xl font-bold text-gray-900">{{ package.current_price }}<span class="text-xl">₾</span></span>
       {% endif %}
-    </div>
-    
-    <!-- Package Name and Description -->
-    <div class="mb-6">
-      <h3 class="text-xl font-bold text-gray-900 mb-2">
-        {% get_translated_package_name package %}
-      </h3>
-      <p class="text-gray-600 text-sm">
-        {% get_translated_package_description package %}
-      </p>
     </div>
     
     <!-- Features List -->
