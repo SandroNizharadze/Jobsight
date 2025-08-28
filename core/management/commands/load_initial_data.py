@@ -264,29 +264,19 @@ class Command(BaseCommand):
             )
     
     def _create_rejection_reasons(self):
-        """Create standard rejection reasons for job applications"""
         self.stdout.write(self.style.SUCCESS('Creating rejection reasons...'))
         
-        reasons = [
-            {'name': 'ენის_ცოდნის_ნაკლებობა'},
-            {'name': 'არასაკმარისი_გამოცდილება'},
-            {'name': 'უნარების_ნაკლებობა'},
-            {'name': 'შეუსაბამო_საცხოვრებელი_ადგილი'},
-            {'name': 'სივიში_არ_არის_საკმარისი_ინფორმაცია'},
-            {'name': 'განათლების_შეუსაბამობა'},
-            {'name': 'კარიერული_მიზნების_შეუსაბამობა'},
-            {'name': 'სივის_ფორმატის_სტრუქტურის_ხარვეზები'},
-            {'name': 'სერთიფიკატების_ლიცენზიების_ნაკლებობა'},
-            {'name': 'არარელევანტური_სამუშაო_ისტორია'},
-            {'name': 'სხვა'},
+        rejection_reasons = [
+            _('კანდიდატის გამოცდილება არ შეესაბამება ვაკანსიის მოთხოვნებს'),
+            _('კანდიდატის განათლება არ შეესაბამება ვაკანსიის მოთხოვნებს'),
+            _('კანდიდატის უნარები არ შეესაბამება ვაკანსიის მოთხოვნებს'),
+            _('კანდიდატის მოლოდინები არ შეესაბამება კომპანიის შესაძლებლობებს'),
+            _('კანდიდატის ხელფასის მოლოდინები არ შეესაბამება ბიუჯეტს'),
+            _('კანდიდატის ხელმოწერის ხელმოწერა არ შეესაბამება ვაკანსიის მოთხოვნებს'),
+            _('სხვა მიზეზით'),
         ]
         
-        for reason_data in reasons:
-            reason, created = RejectionReason.objects.get_or_create(
-                name=reason_data['name']
-            )
-            
-            if created:
-                self.stdout.write(self.style.SUCCESS(f'Created rejection reason: {reason.get_name_display()}'))
-            else:
-                self.stdout.write(self.style.SUCCESS(f'Rejection reason already exists: {reason.get_name_display()}')) 
+        for reason_text in rejection_reasons:
+            RejectionReason.objects.get_or_create(
+                name=reason_text
+            ) 

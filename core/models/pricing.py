@@ -33,6 +33,44 @@ class PricingPackage(models.Model):
     
     def get_absolute_url(self):
         return reverse('pricing')
+    
+    def get_translated_name(self, language_code='ka'):
+        """Get translated name for the package"""
+        try:
+            translation = self.translations.get(language_code=language_code)
+            return translation.name if translation.name else self.name
+        except PricingPackageTranslation.DoesNotExist:
+            return self.name
+    
+    def get_translated_description(self, language_code='ka'):
+        """Get translated description for the package"""
+        try:
+            translation = self.translations.get(language_code=language_code)
+            return translation.description if translation.description else self.description
+        except PricingPackageTranslation.DoesNotExist:
+            return self.description
+
+
+class PricingPackageTranslation(models.Model):
+    """Admin-controlled translations for pricing packages"""
+    LANGUAGE_CHOICES = [
+        ('ka', _('Georgian')),
+        ('en', _('English')),
+    ]
+    
+    package = models.ForeignKey(PricingPackage, on_delete=models.CASCADE, related_name='translations', verbose_name=_("Package"))
+    language_code = models.CharField(max_length=2, choices=LANGUAGE_CHOICES, verbose_name=_("Language"))
+    name = models.CharField(max_length=100, blank=True, verbose_name=_("Translated Name"))
+    description = models.CharField(max_length=255, blank=True, verbose_name=_("Translated Description"))
+    
+    class Meta:
+        verbose_name = _("Pricing Package Translation")
+        verbose_name_plural = _("Pricing Package Translations")
+        unique_together = ('package', 'language_code')
+        ordering = ['package__display_order', 'language_code']
+    
+    def __str__(self):
+        return f"{self.package.name} - {self.get_language_code_display()}"
 
 
 class PricingFeature(models.Model):
@@ -48,6 +86,35 @@ class PricingFeature(models.Model):
     
     def __str__(self):
         return f"{self.package.name} - {self.text}"
+    
+    def get_translated_text(self, language_code='ka'):
+        """Get translated text for the feature"""
+        try:
+            translation = self.translations.get(language_code=language_code)
+            return translation.text if translation.text else self.text
+        except PricingFeatureTranslation.DoesNotExist:
+            return self.text
+
+
+class PricingFeatureTranslation(models.Model):
+    """Admin-controlled translations for pricing features"""
+    LANGUAGE_CHOICES = [
+        ('ka', _('Georgian')),
+        ('en', _('English')),
+    ]
+    
+    feature = models.ForeignKey(PricingFeature, on_delete=models.CASCADE, related_name='translations', verbose_name=_("Feature"))
+    language_code = models.CharField(max_length=2, choices=LANGUAGE_CHOICES, verbose_name=_("Language"))
+    text = models.CharField(max_length=255, blank=True, verbose_name=_("Translated Text"))
+    
+    class Meta:
+        verbose_name = _("Pricing Feature Translation")
+        verbose_name_plural = _("Pricing Feature Translations")
+        unique_together = ('feature', 'language_code')
+        ordering = ['feature__display_order', 'language_code']
+    
+    def __str__(self):
+        return f"{self.feature.text} - {self.get_language_code_display()}"
 
 
 class ComparisonTable(models.Model):
@@ -63,6 +130,44 @@ class ComparisonTable(models.Model):
     
     def __str__(self):
         return self.title
+    
+    def get_translated_title(self, language_code='ka'):
+        """Get translated title for the comparison table"""
+        try:
+            translation = self.translations.get(language_code=language_code)
+            return translation.title if translation.title else self.title
+        except ComparisonTableTranslation.DoesNotExist:
+            return self.title
+    
+    def get_translated_subtitle(self, language_code='ka'):
+        """Get translated subtitle for the comparison table"""
+        try:
+            translation = self.translations.get(language_code=language_code)
+            return translation.subtitle if translation.subtitle else self.subtitle
+        except ComparisonTableTranslation.DoesNotExist:
+            return self.subtitle
+
+
+class ComparisonTableTranslation(models.Model):
+    """Admin-controlled translations for comparison table"""
+    LANGUAGE_CHOICES = [
+        ('ka', _('Georgian')),
+        ('en', _('English')),
+    ]
+    
+    table = models.ForeignKey(ComparisonTable, on_delete=models.CASCADE, related_name='translations', verbose_name=_("Table"))
+    language_code = models.CharField(max_length=2, choices=LANGUAGE_CHOICES, verbose_name=_("Language"))
+    title = models.CharField(max_length=255, blank=True, verbose_name=_("Translated Title"))
+    subtitle = models.CharField(max_length=255, blank=True, verbose_name=_("Translated Subtitle"))
+    
+    class Meta:
+        verbose_name = _("Comparison Table Translation")
+        verbose_name_plural = _("Comparison Table Translations")
+        unique_together = ('table', 'language_code')
+        ordering = ['table__id', 'language_code']
+    
+    def __str__(self):
+        return f"{self.table.title} - {self.get_language_code_display()}"
 
 
 class ComparisonRow(models.Model):
@@ -96,4 +201,60 @@ class ComparisonRow(models.Model):
         ordering = ['display_order', 'id']
     
     def __str__(self):
-        return f"{self.table.title} - {self.feature_name}" 
+        return f"{self.table.title} - {self.feature_name}"
+    
+    def get_translated_feature_name(self, language_code='ka'):
+        """Get translated feature name"""
+        try:
+            translation = self.translations.get(language_code=language_code)
+            return translation.feature_name if translation.feature_name else self.feature_name
+        except ComparisonRowTranslation.DoesNotExist:
+            return self.feature_name
+    
+    def get_translated_standard_value(self, language_code='ka'):
+        """Get translated standard value"""
+        try:
+            translation = self.translations.get(language_code=language_code)
+            return translation.standard_value if translation.standard_value else self.standard_value
+        except ComparisonRowTranslation.DoesNotExist:
+            return self.standard_value
+    
+    def get_translated_premium_value(self, language_code='ka'):
+        """Get translated premium value"""
+        try:
+            translation = self.translations.get(language_code=language_code)
+            return translation.premium_value if translation.premium_value else self.premium_value
+        except ComparisonRowTranslation.DoesNotExist:
+            return self.premium_value
+    
+    def get_translated_premium_plus_value(self, language_code='ka'):
+        """Get translated premium plus value"""
+        try:
+            translation = self.translations.get(language_code=language_code)
+            return translation.premium_plus_value if translation.premium_plus_value else self.premium_plus_value
+        except ComparisonRowTranslation.DoesNotExist:
+            return self.premium_plus_value
+
+
+class ComparisonRowTranslation(models.Model):
+    """Admin-controlled translations for comparison row values"""
+    LANGUAGE_CHOICES = [
+        ('ka', _('Georgian')),
+        ('en', _('English')),
+    ]
+    
+    row = models.ForeignKey(ComparisonRow, on_delete=models.CASCADE, related_name='translations', verbose_name=_("Row"))
+    language_code = models.CharField(max_length=2, choices=LANGUAGE_CHOICES, verbose_name=_("Language"))
+    feature_name = models.CharField(max_length=255, blank=True, verbose_name=_("Translated Feature Name"))
+    standard_value = models.CharField(max_length=255, blank=True, verbose_name=_("Translated Standard Value"))
+    premium_value = models.CharField(max_length=255, blank=True, verbose_name=_("Translated Premium Value"))
+    premium_plus_value = models.CharField(max_length=255, blank=True, verbose_name=_("Translated Premium Plus Value"))
+    
+    class Meta:
+        verbose_name = _("Comparison Row Translation")
+        verbose_name_plural = _("Comparison Row Translations")
+        unique_together = ('row', 'language_code')
+        ordering = ['row__display_order', 'language_code']
+    
+    def __str__(self):
+        return f"{self.row.feature_name} - {self.get_language_code_display()}" 

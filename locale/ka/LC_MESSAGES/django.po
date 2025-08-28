@@ -316,3 +316,27 @@ msgstr "შეიყვანეთ თქვენი ელ-ფოსტა"
 #: core/templates/core/user_profile.html:291
 msgid "Save Changes"
 msgstr "შენახვა ცვლილებები"
+
+#: core/views/file_views.py:35
+msgid "Profile not found"
+msgstr "პროფილი ვერ მოიძებნა"
+
+#: core/views/file_views.py:42
+msgid "You don't have permission to access this CV"
+msgstr "თქვენ არ გაქვთ ამ რეზიუმეზე წვდომის უფლება"
+
+#: core/views/file_views.py:69
+msgid "Target user profile not found"
+msgstr "მიზნობრივი მომხმარებლის პროფილი ვერ მოიძებნა"
+
+#: core/views/file_views.py:75
+msgid "No CV found for this user"
+msgstr "ამ მომხმარებლისთვის CV ვერ მოიძებნა"
+
+#: core/views/file_views.py:162
+msgid "Error accessing the file"
+msgstr "ფაილზე წვდომის შეცდომა"
+
+#: core/templates/core/components/job_detail/job_detail_js.html:76
+msgid "Error sharing:"
+msgstr "გაზიარების შეცდომა:"

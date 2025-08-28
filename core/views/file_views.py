@@ -8,6 +8,7 @@ from django.contrib.auth.decorators import login_required
 from django.conf import settings
 from ..models import UserProfile, JobApplication
 from django.core.files.storage import default_storage
+from django.utils.translation import gettext_lazy as _
 
 logger = logging.getLogger(__name__)
 
@@ -32,14 +33,14 @@ def serve_cv_file(request, user_id=None):
                 user_profile = request.user.userprofile
             except UserProfile.DoesNotExist:
                 logger.error(f"User {request.user.username} has no profile")
-                return HttpResponseNotFound("Profile not found")
+                return HttpResponseNotFound(_("Profile not found"))
         else:
             # User wants to see someone else's CV - must be an employer with a job application
             try:
                 # Check if the requesting user is an employer
                 if not hasattr(request.user, 'userprofile') or request.user.userprofile.role != 'employer':
                     logger.warning(f"Non-employer user {request.user.username} attempted to access another user's CV")
-                    return HttpResponseForbidden("You don't have permission to access this CV")
+                    return HttpResponseForbidden(_("You don't have permission to access this CV"))
                 
                 # Get the target user's profile
                 target_profile = UserProfile.objects.get(user_id=user_id)
@@ -55,7 +56,7 @@ def serve_cv_file(request, user_id=None):
                 
                 if not has_application:
                     logger.warning(f"Employer {request.user.username} attempted to access CV for user {user_id} without an application")
-                    return HttpResponseForbidden("You don't have permission to access this CV")
+                    return HttpResponseForbidden(_("You don't have permission to access this CV"))
                 
                 # Update application status to "ნანახი" if currently in "განხილვის_პროცესში" state
                 for application in applications:
@@ -67,12 +68,12 @@ def serve_cv_file(request, user_id=None):
                 user_profile = target_profile
             except UserProfile.DoesNotExist:
                 logger.error(f"Target user {user_id} profile not found")
-                return HttpResponseNotFound("Target user profile not found")
+                return HttpResponseNotFound(_("Target user profile not found"))
         
         # Check if the user has a CV
         if not user_profile.cv:
             logger.warning(f"User {user_profile.user.username} has no CV")
-            return HttpResponseNotFound("No CV found for this user")
+            return HttpResponseNotFound(_("No CV found for this user"))
         
         # Get the file name for Content-Disposition header
         file_name = os.path.basename(user_profile.cv.name)
@@ -159,8 +160,8 @@ def serve_cv_file(request, user_id=None):
             
         except ClientError as e:
             logger.error(f"Error generating presigned URL: {str(e)}")
-            return HttpResponseNotFound("Error accessing the file")
+            return HttpResponseNotFound(_("Error accessing the file"))
             
     except Exception as e:
         logger.error(f"Error serving CV file: {str(e)}")
-        return HttpResponseNotFound("Error accessing the file") 
+        return HttpResponseNotFound(_("Error accessing the file")) 

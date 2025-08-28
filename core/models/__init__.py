@@ -4,7 +4,11 @@ from core.models.user import UserProfile
 from core.models.employer import EmployerProfile
 from core.models.application import JobApplication, SavedJob, CVAccess
 from core.models.blog import BlogPost, BlogCategory, BlogPostCategory
-from core.models.pricing import PricingPackage, PricingFeature, ComparisonTable, ComparisonRow
+from core.models.pricing import (
+    PricingPackage, PricingFeature, ComparisonTable, ComparisonRow,
+    PricingPackageTranslation, PricingFeatureTranslation, 
+    ComparisonTableTranslation, ComparisonRowTranslation
+)
 from core.models.auth import EmailVerificationToken
 from core.models.static_pages import StaticPage
 from core.models.notification import EmployerNotification, CandidateNotification
@@ -28,6 +32,10 @@ __all__ = [
     'PricingFeature',
     'ComparisonTable',
     'ComparisonRow',
+    'PricingPackageTranslation',
+    'PricingFeatureTranslation',
+    'ComparisonTableTranslation',
+    'ComparisonRowTranslation',
     'EmailVerificationToken',
     'StaticPage',
     'EmployerNotification',

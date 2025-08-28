@@ -19,6 +19,7 @@ from django_ckeditor_5.widgets import CKEditor5Widget
 from core.models import StaticPage
 from datetime import timedelta
 from django.utils import timezone
+from .models import PricingPackageTranslation, PricingFeatureTranslation, ComparisonTableTranslation, ComparisonRowTranslation
 
 # Add a custom form for BlogPost with explicit CKEditorWidget
 class BlogPostAdminForm(forms.ModelForm):
@@ -404,13 +405,20 @@ class PricingFeatureInline(admin.TabularInline):
     extra = 1
     fields = ('text', 'is_included', 'display_order')
 
+class PricingPackageTranslationInline(admin.TabularInline):
+    model = PricingPackageTranslation
+    extra = 1
+    fields = ('language_code', 'name', 'description')
+    verbose_name = _("Translation")
+    verbose_name_plural = _("Translations")
+
 @admin.register(PricingPackage)
 class PricingPackageAdmin(admin.ModelAdmin):
     list_display = ('name', 'package_type', 'get_price_display', 'is_popular', 'is_free', 'has_discount_badge', 'is_active', 'display_order')
     list_filter = ('package_type', 'is_active', 'is_popular', 'is_free', 'has_discount_badge')
     search_fields = ('name', 'description')
     ordering = ('display_order', 'package_type')
-    inlines = [PricingFeatureInline]
+    inlines = [PricingFeatureInline, PricingPackageTranslationInline]
     fieldsets = (
         (None, {
             'fields': ('package_type', 'name', 'description', 'display_order')
@@ -431,6 +439,22 @@ class PricingPackageAdmin(admin.ModelAdmin):
         return f"{obj.current_price}"
     get_price_display.short_description = _("Price")
 
+class PricingFeatureTranslationInline(admin.TabularInline):
+    model = PricingFeatureTranslation
+    extra = 1
+    fields = ('language_code', 'text')
+    verbose_name = _("Translation")
+    verbose_name_plural = _("Translations")
+
+class PricingFeatureAdmin(admin.ModelAdmin):
+    list_display = ('package', 'text', 'is_included', 'display_order')
+    list_filter = ('package__package_type', 'is_included')
+    search_fields = ('text', 'package__name')
+    ordering = ('package__display_order', 'display_order')
+    inlines = [PricingFeatureTranslationInline]
+
+admin.site.register(PricingFeature, PricingFeatureAdmin)
+
 class ComparisonRowInline(admin.TabularInline):
     model = ComparisonRow
     extra = 1
@@ -439,16 +463,39 @@ class ComparisonRowInline(admin.TabularInline):
               'premium_value', 'premium_included', 
               'premium_plus_value', 'premium_plus_included')
 
+class ComparisonTableTranslationInline(admin.TabularInline):
+    model = ComparisonTableTranslation
+    extra = 1
+    fields = ('language_code', 'title', 'subtitle')
+    verbose_name = _("Translation")
+    verbose_name_plural = _("Translations")
+
 @admin.register(ComparisonTable)
 class ComparisonTableAdmin(admin.ModelAdmin):
     list_display = ('title', 'is_active')
     search_fields = ('title', 'subtitle')
-    inlines = [ComparisonRowInline]
+    inlines = [ComparisonRowInline, ComparisonTableTranslationInline]
     fieldsets = (
         (None, {
             'fields': ('title', 'subtitle', 'is_active')
         }),
     )
+
+class ComparisonRowTranslationInline(admin.TabularInline):
+    model = ComparisonRowTranslation
+    extra = 1
+    fields = ('language_code', 'feature_name', 'standard_value', 'premium_value', 'premium_plus_value')
+    verbose_name = _("Translation")
+    verbose_name_plural = _("Translations")
+
+class ComparisonRowAdmin(admin.ModelAdmin):
+    list_display = ('table', 'feature_name', 'display_type', 'display_order')
+    list_filter = ('table__is_active', 'display_type')
+    search_fields = ('feature_name', 'table__title')
+    ordering = ('table__id', 'display_order')
+    inlines = [ComparisonRowTranslationInline]
+
+admin.site.register(ComparisonRow, ComparisonRowAdmin)
 
 @admin.register(UserProfile)
 class UserProfileAdmin(admin.ModelAdmin):

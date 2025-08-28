@@ -1,4 +1,5 @@
 {% load i18n %}
+{% load pricing_tags %}
 
 <div class="relative flex flex-col bg-white rounded-2xl shadow-lg transition-all duration-300 hover:shadow-xl hover:-translate-y-1 overflow-hidden
     {% if package.is_popular %}border-2 border-blue-500 transform scale-[1.02] z-10{% endif %}">
@@ -54,27 +55,35 @@
       {% endif %}
     </div>
     
-    <p class="text-gray-600 mb-6">{{ package.description }}</p>
-  </div>
-  
-  <div class="flex-grow p-6 pt-0">
-    <ul class="space-y-3 mb-6">
+    <!-- Package Name and Description -->
+    <div class="mb-6">
+      <h3 class="text-xl font-bold text-gray-900 mb-2">
+        {% get_translated_package_name package %}
+      </h3>
+      <p class="text-gray-600 text-sm">
+        {% get_translated_package_description package %}
+      </p>
+    </div>
+    
+    <!-- Features List -->
+    <div class="space-y-3 mb-6">
       {% for feature in package.features.all %}
-        <li class="flex items-start">
+        <div class="flex items-start">
           {% if feature.is_included %}
-            <svg class="h-5 w-5 text-green-500 mr-2 mt-0.5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+            <svg class="h-5 w-5 text-green-500 mr-3 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
             </svg>
-            <span class="text-gray-700">{{ feature.text }}</span>
           {% else %}
-            <svg class="h-5 w-5 text-red-500 mr-2 mt-0.5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+            <svg class="h-5 w-5 text-gray-400 mr-3 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
             </svg>
-            <span class="text-gray-500">{{ feature.text }}</span>
           {% endif %}
-        </li>
+          <span class="text-sm {% if feature.is_included %}text-gray-700{% else %}text-gray-400 line-through{% endif %}">
+            {% get_translated_feature_text feature %}
+          </span>
+        </div>
       {% endfor %}
-    </ul>
+    </div>
   </div>
   
   <div class="px-6 pb-6">

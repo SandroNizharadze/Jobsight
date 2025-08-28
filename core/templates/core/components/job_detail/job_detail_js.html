@@ -73,7 +73,7 @@
             title: jobTitle,
             url: jobUrl
           })
-          .catch(error => console.log('Error sharing:', error));
+          .catch(error => console.log('{% trans "Error sharing:" %}', error));
         } else {
           // Fallback for browsers that don't support navigator.share
           const tempInput = document.createElement('input');
