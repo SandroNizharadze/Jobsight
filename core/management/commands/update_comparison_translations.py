@@ -11,11 +11,15 @@ class Command(BaseCommand):
             translations = {
                 'მთავარ გვერდზე გამოჩენა': 'Featured on homepage',
                 'პრემიუმის ნიშანი': 'Premium badge',
+                'განმასხვავებელი ნიშანი': 'Distinctive badge',
                 'ძიებისას პრიორიტეტულობა': 'Search priority',
                 'ლოგოს გამოჩენა': 'Logo display',
                 'დამსაქმებლის პროფილი': 'Employer profile',
                 'სივების ანალიტიკა': 'CV analytics',
+                'დამსაქმებლის პროფილი და სივების ანალიტიკა': 'Employer profile and CV analytics',
                 'სოც. ქსელებში გაზიარება': 'Social media sharing',
+                'მთავარ გვერდზე ყოფნა': 'Featured on homepage',
+                'სივების ბაზა (მალე)': 'CV database (coming soon)',
             }
             
             # Dictionary mapping Georgian values to English translations
@@ -25,9 +29,11 @@ class Command(BaseCommand):
                 'მაღალი': 'High',
                 'პრემიუმი': 'Premium',
                 'პრემიუმ+': 'Premium+',
+                'სტანდარტული': 'Standard',
                 'მეორე სექცია': 'Second section',
                 'პირველი სექცია': 'First section',
                 'ჯგუფური პოსტი': 'Group post',
+                'ინდივიდუალური პოსტი': 'Individual post',
                 'ინდივიდუალური და ჯგუფური პოსტი': 'Individual and group post',
                 'უფასო': 'Free',
             }
@@ -35,6 +41,21 @@ class Command(BaseCommand):
             # Get all English translations
             en_translations = ComparisonRowTranslation.objects.filter(language_code='en')
             updated_count = 0
+            
+            # Create translations for any missing rows
+            from core.models import ComparisonRow
+            rows = ComparisonRow.objects.all()
+            for row in rows:
+                ComparisonRowTranslation.objects.get_or_create(
+                    row=row,
+                    language_code='en',
+                    defaults={
+                        'feature_name': translations.get(row.feature_name, row.feature_name),
+                        'standard_value': value_translations.get(row.standard_value, row.standard_value),
+                        'premium_value': value_translations.get(row.premium_value, row.premium_value),
+                        'premium_plus_value': value_translations.get(row.premium_plus_value, row.premium_plus_value),
+                    }
+                )
             
             for translation in en_translations:
                 # Update feature name if it's in our dictionary
