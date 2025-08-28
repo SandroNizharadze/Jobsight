@@ -1037,3 +1037,711 @@ msgstr "Social media sharing"
 
 msgid "ინდივიდუალური და ჯგუფური პოსტი"
 msgstr "Individual and group post"
+
+msgid "პრემიუმ+ ნიშანი"
+msgstr "Premium+ badge"
+
+msgid "უფასო"
+msgstr "Free"
+
+msgid "საშუალო ხილვადობა"
+msgstr "Medium visibility"
+
+msgid "მაღალი ხილვადობა"
+msgstr "High visibility"
+
+msgid "მაქსიმალური ხილვადობა"
+msgstr "Maximum visibility"
+
+msgid "1 განცხადება - პერიოდი 30 დღე"
+msgstr "1 job posting - 30 days period"
+
+msgid "ძიებისას პრიორიტეტულობა: დაბალი"
+msgstr "Search priority: Low"
+
+msgid "ძიებისას პრიორიტეტულობა: საშუალო"
+msgstr "Search priority: Medium"
+
+msgid "ძიებისას პრიორიტეტულობა: მაღალი"
+msgstr "Search priority: High"
+
+msgid "დამსაქმებლის პროფილი და სივების ანალიტიკა"
+msgstr "Employer profile and CV analytics"
+
+msgid "კანდიდატებისთვის უკუკავშირის დაბრუნების სისტემა"
+msgstr "Candidate feedback system"
+
+msgid "მთავარ გვერდზე ყოფნა"
+msgstr "Featured on homepage"
+
+msgid "მთავარი გვერდის მეორე სექცია"
+msgstr "Second section of homepage"
+
+msgid "მთავარი გვერდის პირველი სექცია"
+msgstr "First section of homepage"
+
+msgid "განმასხვავებელი ნიშანი"
+msgstr "Distinctive badge"
+
+msgid "სოც. ქსელებში გაზიარება ჯგუფური პოსტის სახით"
+msgstr "Social media sharing as group post"
+
+msgid "სოც. ქსელებში გაზიარება ინდივიდუალური პოსტის სახით"
+msgstr "Social media sharing as individual post"
+
+msgid "ინდივიდუალური პოსტი"
+msgstr "Individual post"
+
+msgid "სივების ბაზაზე წვდომა"
+msgstr "CV database access"
+
+msgid "სივების ბაზაზე წვდომა (მალე)"
+msgstr "CV database access (coming soon)"
+
+msgid "სივების ბაზა (მალე)"
+msgstr "CV database (coming soon)"
+
+msgid "აირჩიე"
+msgstr "Choose"
+
+msgid "პოპულარული"
+msgstr "Popular"
+
+msgid "სტანდარტული"
+msgstr "Standard"
+
+msgid "კარიერული რჩევები და სიახლეები"
+msgstr "Career advice and news"
+
+msgid "ბლოგის პოსტები ჯერ არ არის დამატებული."
+msgstr "Blog posts have not been added yet."
+
+msgid "პაროლი უნდა შეიცავდეს მინიმუმ 4 სიმბოლოს"
+msgstr "Password must contain at least 4 characters"
+
+msgid "კატეგორიები"
+msgstr "Categories"
+
+msgid "ამ კატეგორიაში ბლოგის პოსტები ჯერ არ არის დამატებული."
+msgstr "No blog posts have been added to this category yet."
+
+msgid "კომპანიის სახელი"
+msgstr "Company name"
+
+msgid "საიდენტიფიკაციო კოდი"
+msgstr "Identification code"
+
+msgid "მობილურის ნომერი"
+msgstr "Mobile number"
+
+msgid "აქტიური ვაკანსიები"    
+msgstr "Active jobs"
+
+msgid "ყველა ვაკანსია"    
+msgstr "All jobs"
+
+msgid "ყველა აპლიკანტი"    
+msgstr "All applicants"
+
+msgid "წაუკითხავი აპლიკანტები"    
+msgstr "Unread applicants"
+
+msgid "ბოლო აპლიკაციები "    
+msgstr "Recent applications"
+
+msgid "თარიღი"    
+msgstr "Date"
+
+msgid "სტატუსი"    
+msgstr "Status"
+
+msgid "დამსაქმებლის პანელი"    
+msgstr "Employer panel"
+
+msgid "ვაკანსიის დამატება"    
+msgstr "Add vacancy"
+
+msgid "Premium+ ფუნქცია"    
+msgstr "Premium+ feature"
+
+msgid "სივების ბაზა ჩანს მხოლოდ Premium+ დამსაქმებლებისთვის"
+msgstr "CV database is visible only to Premium+ employers"
+
+msgid "როცა თქვენი ბოლო Premium+ ვაკანსიის მოქმედების ვადა ამოიწურება, თქვენ დაკარგავთ წვდომას ამ ფუნქციაზე."
+msgstr "When your last Premium+ vacancy expires, you will lose access to this feature."
+
+msgid "გაასუფთავე ფილტრები"    
+msgstr "Clear filters"
+
+msgid "გაფილტვრა"    
+msgstr "Filter"
+
+msgid "სივების ფილტრები"    
+msgstr "CV filters"
+
+msgid "სივის ნახვა"    
+msgstr "View CV"
+
+msgid "სასურველი სფერო:"    
+msgstr "Desired field:"
+
+msgid "გამოცდილება:"    
+msgstr "Experience:"
+
+msgid "სფერო"    
+msgstr "Field"
+
+# Job Categories
+msgid "მენეჯმენტი/ ადმინისტრირება"
+msgstr "Management/Administration"
+
+msgid "ფინანსები"
+msgstr "Finance"
+
+msgid "IT/პროგრამირება"
+msgstr "IT/Programming"
+
+msgid "დიზაინი"
+msgstr "Design"
+
+msgid "ჰორეკა/კვება"
+msgstr "HORECA/Food"
+
+msgid "დაცვა"
+msgstr "Security"
+
+msgid "სილამაზე/მოდა"
+msgstr "Beauty/Fashion"
+
+msgid "მშენებლობა"
+msgstr "Construction"
+
+msgid "მედიცინა"
+msgstr "Medicine"
+
+msgid "განათლება"
+msgstr "Education"
+
+msgid "სამართალი"
+msgstr "Law"
+
+msgid "ტურიზმი"
+msgstr "Tourism"
+
+msgid "ლოჯისტიკა/დისტრიბუცია"
+msgstr "Logistics/Distribution"
+
+msgid "საბანკო საქმე"
+msgstr "Banking"
+
+msgid "აზარტული"
+msgstr "Gambling"
+
+# Additional Locations
+msgid "აჭარა"
+msgstr "Adjara"
+
+msgid "აფხაზეთი"
+msgstr "Abkhazia"
+
+msgid "სვანეთი"
+msgstr "Svaneti"
+
+msgid "სამეგრელო"
+msgstr "Samegrelo"
+
+msgid "კახეთი"
+msgstr "Kakheti"
+
+msgid "ლეჩხუმი"
+msgstr "Lechkhumi"
+
+msgid "რაჭა"
+msgstr "Racha"
+
+msgid "გურია"
+msgstr "Guria"
+
+msgid "ქვემო ქართლი"
+msgstr "Kvemo Kartli"
+
+msgid "სამცხე-ჯავახეთი"
+msgstr "Samtskhe-Javakheti"
+
+msgid "შიდა ქართლი"
+msgstr "Shida Kartli"
+
+msgid "მცხეთა-მთიანეთი"
+msgstr "Mtskheta-Mtianeti"
+
+msgid "იმერეთი"
+msgstr "Imereti"
+
+msgid "დისტანციური"
+msgstr "Remote"
+
+msgid "სხვა"
+msgstr "Elsewhere"
+
+msgid "გაყიდვები/მომხმარებელთან ურთიერთობა"
+msgstr "Sales/Customer Relations"
+
+msgid "ექსკლუზიური"
+msgstr "Exclusive"
+
+msgid "ყველა სფერო"
+msgstr "-"
+
+msgid "ყველა დონე"
+msgstr "-"
+
+msgid "CV-ები არ მოიძებნა"
+msgstr "No CV's were found"
+
+msgid "არცერთი კანდიდატი არ არის ხელმისაწვდომი მოცემული ფილტრებით."
+msgstr "No candidates are available with the given filters."
+
+msgid "კანდიდატებმა უნდა ატვირთონ CV და ჩართონ 'ხილვადია დამსაქმებლისთვის' პარამეტრი მათ პროფილზე."
+msgstr "Candidates must upload a CV and enable the 'visible to employers' setting on their profile."
+
+# Employer panel
+
+msgid "მართეთ თქვენი ვაკანსიები და კომპანიის პროფილი"
+msgstr "Manage your jobs and company profile"
+
+msgid "ჩემი ვაკანსიები"
+msgstr "My jobs"
+
+msgid "ძებნა და დალაგება"
+msgstr "Search and sort"
+
+msgid "გასუფთავება"
+msgstr "Clear sort"
+
+msgid "დალაგება:"
+msgstr "Sort"
+
+msgid "პროფილის რედაქტირება"
+msgstr "Edit Profile"
+
+msgid "ახალი ვაკანსია"
+msgstr "Add new job"
+
+msgid "აირჩიეთ პაკეტი ახალი ვაკანსიის გამოსაქვეყნებლად"
+msgstr "Select a package to post a new job"
+
+msgid "ახალი დამატებული"
+msgstr "Newly added"
+
+msgid "ძველი დამატებული"
+msgstr "Old added"
+
+msgid "მეტი ნახვით"
+msgstr "More viewers"
+
+msgid "მეტი აპლიკანტით"
+msgstr "More applicants"
+
+msgid "აქტიური"
+msgstr "Active"
+
+msgid "განხილვის მოლოდინში"
+msgstr "Pending approval" 
+
+msgid "შეადარეთ პაკეტები"
+msgstr "Compare packages"
+
+msgid "ძირითადი ფუნქციები"
+msgstr "Most of the features"
+
+msgid "მეტი ხილვადობა"
+msgstr "Increased visibility"
+
+msgid "პრემიუმი"
+msgstr "Premium"
+
+# Application Details
+
+msgid "ნიშნავს რომ განიხილეთ კანდიდატურა, თვლით რომ შეესაბამება პოზიციას და დაუკავშირდებით გასაუბრებაზე დასაბარებლად"
+msgstr "It means that you have considered the candidate, believe that he/she is suitable for the position, and will contact you to invite him/her for an interview."
+
+msgid "ნიშნავს, რომ განიხილეთ კანდიდატურა, თვლით რომ არ შეესაბამება პოზიციას და ამ ეტაპზე ვერ აიყვანთ, თუმცა მისი სივი შეინახება ბაზაში მომავალში დაინტერესების შემთვევაში დასაკონტაქტებლად"
+msgstr "It means that you have considered the candidate, believe that he/she is not suitable for the position and cannot be hired at this stage, however, his/her CV will be saved in the database for future contact in case of interest."
+
+msgid "ნიშნავს რომ კანდიდატურა ჯერ არ განგიხილავთ"
+msgstr "It means that application has not yet been considered yet."
+
+msgid "სრული რაოდენობა"
+msgstr "Total"
+
+
+# Profile
+
+msgid "კომპანიის ინფორმაცია"
+msgstr "Company information"
+
+msgid "კომპანიის ვებ-გვერდი"
+msgstr "Company's web-page"
+
+msgid "გამოჩნდეს ტელეფონის ნომერი პროფილზე"
+msgstr "Display phone number on profile"
+
+msgid "ინდუსტრია"
+msgstr "Industry"
+
+msgid "მდებარეობა"
+msgstr "Location"
+
+msgid "კომპანიის აღწერა"
+msgstr "Company description"
+
+msgid "აირჩიეთ ლოგო"
+msgstr "Choose logo"
+
+msgid "პროფილის შენახვა"
+msgstr "Save changes"
+
+msgid "ექაუნთის წაშლა"
+msgstr "Delete account"
+
+msgid "გაფრთხილება: ექაუნთის წაშლა შეუქცევადია. ყველა თქვენი პერსონალური ინფორმაცია, მათ შორის ელფოსტა და კომპანიის მონაცემები, სამუდამოდ წაიშლება."
+msgstr "Warning: Deleting your account is irreversible. All your personal information, including email and company details, will be permanently deleted."
+
+msgid "ეს ქმედება შეუქცევადია. ყველა თქვენი პერსონალური ინფორმაცია წაიშლება. თქვენი ვაკანსიები და აპლიკაციები დარჩება სისტემაში, მაგრამ ანონიმიზებული სახით."
+msgstr "This action is irreversible. All your personal information will be deleted. Your jobs and applications will remain in the system, but in an anonymized form."
+
+# Experience Levels
+msgid "გამოცდილების გარეშე"
+msgstr "No experience"
+
+msgid "დამწყები"
+msgstr "Beginner"
+
+msgid "საშუალო დონე"
+msgstr "Intermediate"
+
+msgid "პროფესიონალი"
+msgstr "Professional"
+
+# Work Schedule
+
+msgid "ნახევარი განაკვეთი"
+msgstr "Part-time"
+
+msgid "ცვლები"
+msgstr "Shifts"
+
+# Salary Types
+msgid "თვეში"
+msgstr "Per month"
+
+msgid "კვირაში"
+msgstr "Per week"
+
+msgid "დღეში"
+msgstr "Per day"
+
+msgid "საათში"
+msgstr "Per hour"
+
+# Job Model Fields
+
+msgid "გამოქვეყნების თარიღი"
+msgstr "Posted date"
+
+msgid "განახლების თარიღი"
+msgstr "Updated date"
+
+msgid "ვადის გასვლის თარიღი"
+msgstr "Expiration date"
+
+msgid "განიხილავს სტუდენტებს"
+msgstr "Considers students"
+
+msgid "პრემიუმ დონე"
+msgstr "Premium level"
+
+msgid "ნახვების რაოდენობა"
+msgstr "View count"
+
+msgid "ატვირთულია გარე ლინკით"
+msgstr "Uploaded with external link"
+
+msgid "ბოლო გაგრძელების თარიღი"
+msgstr "Last extension date"
+
+msgid "ადმინის უკუკავშირი"
+msgstr "Admin feedback"
+
+# Application Model Fields
+
+msgid "ვაკანსიის სათაური"
+msgstr "Job title"
+
+msgid "მომხმარებელი"
+msgstr "User"
+
+msgid "სტუმრის სახელი"
+msgstr "Guest name"
+
+msgid "სტუმრის ელ-ფოსტა"
+msgstr "Guest email"
+
+msgid "მოტივაციის წერილი"
+msgstr "Cover letter"
+
+
+msgid "აპლიკაციის თარიღი"
+msgstr "Application date"
+
+
+msgid "წაკითხულია"
+msgstr "Read"
+
+msgid "ნანახია"
+msgstr "Viewed"
+
+msgid "უარის მიზეზები"
+msgstr "Rejection reasons"
+
+msgid "უკუკავშირი"
+msgstr "Feedback"
+
+msgid "აპლიკაცია"
+msgstr "Application"
+
+
+msgid "შენახული ვაკანსია"
+msgstr "Saved job"
+
+
+# User Profile Fields
+msgid "როლი"
+msgstr "Role"
+
+msgid "ელ-ფოსტა დადასტურებულია"
+msgstr "Email verified"
+
+msgid "თანახმა ვარ მივიღო ელ-ფოსტის შეტყობინებები"
+msgstr "I agree to receive email notifications"
+
+
+# Blog Model Fields
+msgid "სათაური"
+msgstr "Title"
+
+msgid "სლაგი"
+msgstr "Slug"
+
+msgid "კონტენტი"
+msgstr "Content"
+
+msgid "მოკლე აღწერა"
+msgstr "Short description"
+
+msgid "მეტა აღწერა"
+msgstr "Meta description"
+
+msgid "მეტა საკვანძო სიტყვები"
+msgstr "Meta keywords"
+
+msgid "მთავარი სურათი"
+msgstr "Featured image"
+
+
+# Form Fields
+
+msgid "You must agree to the Terms & Conditions and Privacy Policy to register."
+msgstr "You must agree to the Terms & Conditions and Privacy Policy to register."
+
+# Blog Status
+msgid "Draft"
+msgstr "Draft"
+
+msgid "Published"
+msgstr "Published"
+
+# Pricing Model Fields
+msgid "Package Type"
+msgstr "Package Type"
+
+msgid "Package Name"
+msgstr "Package Name"
+
+msgid "Original Price"
+msgstr "Original Price"
+
+msgid "Current Price"
+msgstr "Current Price"
+
+msgid "Description"
+msgstr "Description"
+
+msgid "Is Popular"
+msgstr "Is Popular"
+
+msgid "Is Free"
+msgstr "Is Free"
+
+msgid "Active"
+msgstr "Active"
+
+msgid "Display Order"
+msgstr "Display Order"
+
+msgid "Show Discount Badge"
+msgstr "Show Discount Badge"
+
+msgid "Pricing Package"
+msgstr "Pricing Package"
+
+msgid "Pricing Packages"
+msgstr "Pricing Packages"
+
+# Comparison Table Fields
+msgid "Table"
+msgstr "Table"
+
+msgid "Language"
+msgstr "Language"
+
+msgid "Translated Title"
+msgstr "Translated Title"
+
+msgid "Translated Subtitle"
+msgstr "Translated Subtitle"
+
+msgid "Comparison Table Translation"
+msgstr "Comparison Table Translation"
+
+msgid "Comparison Table Translations"
+msgstr "Comparison Table Translations"
+
+msgid "Row"
+msgstr "Row"
+
+msgid "Translated Feature Name"
+msgstr "Translated Feature Name"
+
+msgid "Translated Standard Value"
+msgstr "Translated Standard Value"
+
+msgid "Translated Premium Value"
+msgstr "Translated Premium Value"
+
+msgid "Translated Premium Plus Value"
+msgstr "Translated Premium Plus Value"
+
+msgid "Comparison Row Translation"
+msgstr "Comparison Row Translation"
+
+msgid "Comparison Row Translations"
+msgstr "Comparison Row Translations"
+
+# Rejection Reason Fields
+
+msgid "Rejection Reasons"
+msgstr "Rejection Reasons"
+
+msgid "ვაკანსიის გამოქვეყნება"
+msgstr "Publish job"
+
+msgid "ვაკანსიის დასახელება"
+msgstr "Job title"
+
+msgid "ვაკანსიის აღწერა"
+msgstr "Job description"
+
+msgid "ვაკანსია ატვირთულია გარე ლინკით"
+msgstr "Job uploaded with external link"
+
+msgid "მონიშნეთ თუ გსურთ კანდიდატები გადამისამართდნენ გარე ვებ-გვერდზე."
+msgstr "Check if you want candidates to be redirected to external website."
+
+msgid "External Link"
+msgstr "External Link"
+
+msgid "ჩასვით ვაკანსიის გარე ბმული."
+msgstr "Enter the external link for the job."
+
+msgid "ლოკაცია"
+msgstr "Location"
+
+msgid "Category"
+msgstr "Category"
+
+msgid "ანაზღაურება"
+msgstr "Salary"
+
+msgid "მიუთითეთ მხოლოდ ხელზე ასაღები (ნეტ) ანაზღაურება, თუ არ გსურთ ანაზღაურების მითითება, დატოვეთ ცარიელი."
+msgstr "Specify only take-home (net) salary, if you don't want to specify salary, leave empty."
+
+msgid "მინიმალური ხელფასი"
+msgstr "Minimum salary"
+
+msgid "მაქსიმალური ხელფასი"
+msgstr "Maximum salary"
+
+msgid "ხელფასის ტიპი"
+msgstr "Salary type"
+
+msgid "გამოცდილების სტატუსი"
+msgstr "Experience status"
+
+msgid "სამუშაო გრაფიკი"
+msgstr "Work schedule"
+
+msgid "განიხილავთ სტუდენტის აყვანას?"
+msgstr "Are you considering hiring a student?"
+
+msgid "პოზიციაზე მოთხოვნილია მხოლოდ ქართული ენის ცოდნა"
+msgstr "Only Georgian language knowledge is required for this position"
+
+msgid "კი"
+msgstr "Yes"
+
+msgid "არა"
+msgstr "No"
+
+msgid "შეცვალეთ პაკეტი"
+msgstr "Change package"
+
+# Deleted Jobs Page
+msgid "წაშლილი ვაკანსიები"
+msgstr "Deleted Jobs"
+
+msgid "დაბრუნება დაფაზე"
+msgstr "Back to Dashboard"
+
+msgid "აქ შეგიძლიათ ნახოთ თქვენი წაშლილი ვაკანსიები და მათზე შემოსული განაცხადები."
+msgstr "Here you can view your deleted jobs and applications submitted to them."
+
+msgid "ფილტრი"
+msgstr "Filter"
+
+msgid "ძებნა სათაურით, ლოკაციით..."
+msgstr "Search by title, location..."
+
+msgid "ახალი"
+msgstr "New"
+
+msgid "ძველი"
+msgstr "Old"
+
+msgid "ნახვები"
+msgstr "Views"
+
+msgid "აპლიკანტები"
+msgstr "Applicants"
+
+msgid "არცერთი წაშლილი ვაკანსია არ მოიძებნა"
+msgstr "No deleted jobs found"
+
+msgid "შეცვალეთ ძებნის ტექსტი"
+msgstr "Change search text"
+
+msgid "წაშლილი ვაკანსიები არ გაქვთ"
+msgstr "You don't have deleted jobs"
+
+msgid "თქვენ არ გაქვთ წაშლილი ვაკანსიები"
+msgstr "You don't have deleted jobs"

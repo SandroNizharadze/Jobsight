@@ -360,13 +360,13 @@
                 <svg class="w-4 h-4 mr-2 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"></path>
                 </svg>
-                ძებნა და დალაგება
+                {% trans "ძებნა და დალაგება" %}
               </h3>
               <a href="{% url 'employer_dashboard' %}" class="text-xs text-blue-600 hover:text-blue-800 flex items-center">
                 <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
                 </svg>
-                გასუფთავება
+                {% trans "გასუფთავება" %}
               </a>
             </div>
             
@@ -374,7 +374,7 @@
               <div class="flex flex-col gap-4">
                 <!-- Search bar -->
                 <div class="relative flex-grow">
-                  <input type="text" name="search" id="search" placeholder="ძებნა სათაურით, ლოკაციით..." value="{{ request.GET.search }}" 
+                  <input type="text" name="search" id="search" placeholder="{% trans "ძებნა სათაურით, ლოკაციით..." %}" value="{{ request.GET.search }}" 
                         class="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50 text-sm pl-10 py-2">
                   <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                     <svg class="h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
@@ -385,7 +385,7 @@
                 
                 <!-- Sorting options as icon buttons -->
                 <div>
-                  <p class="text-xs text-gray-500 mb-2">დალაგება:</p>
+                  <p class="text-xs text-gray-500 mb-2">{% trans "დალაგება:" %}</p>
                   <div class="flex flex-wrap gap-2">
                     <input type="hidden" name="sort_by" id="sort_by" value="{{ request.GET.sort_by|default:'date_desc' }}">
                     
@@ -397,8 +397,8 @@
                       <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                       </svg>
-                      <span class="hidden sm:inline">ახალი დამატებული</span>
-                      <span class="sm:hidden">ახალი</span>
+                      <span class="hidden sm:inline">{% trans "ახალი დამატებული" %}</span>
+                      <span class="sm:hidden">{% trans "ახალი" %}</span>
                     </button>
                     
                     <!-- Oldest First -->
@@ -408,8 +408,8 @@
                       <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
                       </svg>
-                      <span class="hidden sm:inline">ძველი დამატებული</span>
-                      <span class="sm:hidden">ძველი</span>
+                      <span class="hidden sm:inline">{% trans "ძველი დამატებული" %}</span>
+                      <span class="sm:hidden">{% trans "ძველი" %}</span>
                     </button>
                     
                     <!-- Most Views -->
@@ -420,8 +420,8 @@
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
                       </svg>
-                      <span class="hidden sm:inline">მეტი ნახვით</span>
-                      <span class="sm:hidden">ნახვები</span>
+                      <span class="hidden sm:inline">{% trans "მეტი ნახვით" %}</span>
+                      <span class="sm:hidden">{% trans "ნახვები" %}</span>
                     </button>
                     
                     <!-- Most Applicants -->
@@ -431,8 +431,8 @@
                       <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
                       </svg>
-                      <span class="hidden sm:inline">მეტი აპლიკანტით</span>
-                      <span class="sm:hidden">აპლიკანტები</span>
+                      <span class="hidden sm:inline">{% trans "მეტი აპლიკანტით" %}</span>
+                      <span class="sm:hidden">{% trans "აპლიკანტები" %}</span>
                     </button>
                     
                     <!-- Active/Status First -->
@@ -442,8 +442,8 @@
                       <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                       </svg>
-                      <span class="hidden sm:inline">აქტიური</span>
-                      <span class="sm:hidden">აქტიური</span>
+                      <span class="hidden sm:inline">{% trans "აქტიური" %}</span>
+                      <span class="sm:hidden">{% trans "აქტიური" %}</span>
                     </button>
                   </div>
                 </div>
@@ -462,17 +462,14 @@
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
               </svg>
               {% if request.GET.search %}
-                <h3 class="mt-2 text-sm font-medium text-gray-900">არცერთი ვაკანსია არ მოიძებნა</h3>
-                <p class="mt-1 text-sm text-gray-500">შეცვალეთ ძებნის ტექსტი</p>
-              {% else %}
-              <h3 class="mt-2 text-sm font-medium text-gray-900">{% trans "No job listings yet" %}</h3>
-              <p class="mt-1 text-sm text-gray-500">{% trans "Get started by posting your first job" %}</p>
+                <h3 class="mt-2 text-sm font-medium text-gray-900">{% trans "არცერთი ვაკანსია არ მოიძებნა" %}</h3>
+                <p class="mt-1 text-sm text-gray-500">{% trans "შეცვალეთ ძებნის ტექსტი" %}</p>
               <div class="mt-6">
                 <a href="{% url 'pricing' %}" class="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700">
                   <svg class="-ml-1 mr-2 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
                   </svg>
-                  {% trans "Post a Job" %}
+                  {% trans "დაამატეთ ვაკანსია" %}
                 </a>
               </div>
               {% endif %}
