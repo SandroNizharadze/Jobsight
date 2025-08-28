@@ -1,6 +1,7 @@
 {% load i18n %}
 {% load static %}
 {% load core_extras %}
+{% load pricing_tags %}
 
 <!-- Mobile Pricing Section -->
 <div class="md:hidden">
@@ -54,7 +55,7 @@
               {% endif %}
               
               {% if package.is_free %}
-                <span class="text-2xl font-bold text-green-400">{% trans "უფასო" %}</span>
+                <span class="text-2xl font-bold text-green-400">{% get_value_translation "უფასო" %}</span>
               {% else %}
                 <span class="text-2xl font-bold text-gray-900">{{ package.current_price }}<span class="text-lg">₾</span></span>
               {% endif %}
@@ -127,7 +128,7 @@
               <span class="block text-xs font-medium text-gray-900">{{ package.name }}</span>
               <span class="block text-sm font-bold text-gray-900 mt-1">
                 {% if package.is_free %}
-                  {% trans "უფასო" %}
+                  {% get_value_translation "უფასო" %}
                 {% else %}
                   {{ package.current_price }}₾
                 {% endif %}

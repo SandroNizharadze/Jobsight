@@ -1,7 +1,8 @@
 from django import template
 from django.utils.translation import get_language, gettext as _
+from django.db.models import Q
 from core.models import (
-    PricingPackage, PricingFeature, ComparisonTable, ComparisonRow
+    PricingPackage, PricingFeature, ComparisonTable, ComparisonRow, ComparisonRowTranslation
 )
 
 register = template.Library()
@@ -94,3 +95,61 @@ def get_translated_row_value(row, package_type, language_code=None):
 def translate_feature(text):
     """Translate feature text directly using gettext"""
     return _(text)
+
+@register.simple_tag
+def get_feature_translation(feature_name, language_code=None):
+    """Get translation for a feature name from ComparisonRowTranslation"""
+    if not language_code:
+        language_code = get_language()
+    
+    if language_code == 'ka':
+        return feature_name
+    
+    try:
+        # Find a row with this feature name
+        row = ComparisonRow.objects.filter(feature_name=feature_name).first()
+        if row:
+            translation = ComparisonRowTranslation.objects.filter(
+                row=row, 
+                language_code=language_code
+            ).first()
+            if translation and translation.feature_name:
+                return translation.feature_name
+    except:
+        pass
+    
+    # Fallback to gettext translation
+    return _(feature_name)
+
+@register.simple_tag
+def get_value_translation(value, feature_name=None, language_code=None):
+    """Get translation for a value from ComparisonRowTranslation"""
+    if not language_code:
+        language_code = get_language()
+    
+    if language_code == 'ka' or not value:
+        return value
+    
+    try:
+        # Try to find a translation for this value
+        translations = ComparisonRowTranslation.objects.filter(
+            Q(standard_value=value) | 
+            Q(premium_value=value) | 
+            Q(premium_plus_value=value),
+            language_code=language_code
+        )
+        
+        if translations.exists():
+            for translation in translations:
+                # Check which field matches
+                if translation.row.standard_value == value:
+                    return translation.standard_value
+                elif translation.row.premium_value == value:
+                    return translation.premium_value
+                elif translation.row.premium_plus_value == value:
+                    return translation.premium_plus_value
+    except:
+        pass
+    
+    # Fallback to gettext translation
+    return _(value)
