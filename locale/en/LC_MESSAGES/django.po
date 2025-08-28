@@ -1111,99 +1111,139 @@ msgid "სტანდარტული"
 msgstr "Standard"
 
 msgid "კარიერული რჩევები და სიახლეები"
-msgstr ""
+msgstr "Career advice and news"
 
 msgid "ბლოგის პოსტები ჯერ არ არის დამატებული."
-msgstr ""
+msgstr "Blog posts have not been added yet."
 
 msgid "პაროლი უნდა შეიცავდეს მინიმუმ 4 სიმბოლოს"
-msgstr ""
+msgstr "Password must contain at least 4 characters"
 
 msgid "კომპანიის სახელი"
-msgstr ""
+msgstr "Company name"
 
 msgid "საიდენტიფიკაციო კოდი"
-msgstr ""
+msgstr "Identification code"
 
 msgid "მობილურის ნომერი"
-msgstr ""
+msgstr "Mobile number"
 
 msgid "აქტიური ვაკანსიები"    
-msgstr ""
+msgstr "Active jobs"
 
 msgid "ყველა ვაკანსია"    
-msgstr ""
+msgstr "All jobs"
 
 msgid "ყველა აპლიკანტი"    
-msgstr ""
+msgstr "All applicants"
 
 msgid "წაუკითხავი აპლიკანტები"    
-msgstr ""
+msgstr "Unread applicants"
 
 msgid "ბოლო აპლიკაციები "    
-msgstr ""
+msgstr "Recent applications"
 
 msgid "თარიღი"    
-msgstr ""
+msgstr "Date"
 
 msgid "სტატუსი"    
-msgstr ""
+msgstr "Status"
 
 msgid "დამსაქმებლის პანელი"    
-msgstr ""
+msgstr "Employer panel"
 
 msgid "ვაკანსიის დამატება"    
-msgstr ""
+msgstr "Add vacancy"
 
 msgid "Premium+ ფუნქცია"    
-msgstr ""
+msgstr "Premium+ feature"
 
-msgid "სივების ბაზა ჩანს მხოლოდ Premium+ დამსაქმებლებისთვის
+msgid "სივების ბაზა ჩანს მხოლოდ Premium+ დამსაქმებლებისთვის"
+msgstr "CV database is visible only to Premium+ employers"
 
-როცა თქვენი ბოლო Premium+ ვაკანსიის მოქმედების ვადა ამოიწურება, თქვენ დაკარგავთ წვდომას ამ ფუნქციაზე."    
-msgstr ""
+msgid "როცა თქვენი ბოლო Premium+ ვაკანსიის მოქმედების ვადა ამოიწურება, თქვენ დაკარგავთ წვდომას ამ ფუნქციაზე."
+msgstr "When your last Premium+ vacancy expires, you will lose access to this feature."
 
 msgid "გაასუფთავე ფილტრები"    
-msgstr ""
+msgstr "Clear filters"
 
 msgid "გაფილტვრა"    
-msgstr ""
+msgstr "Filter"
 
 msgid "სივების ფილტრები"    
-msgstr ""
+msgstr "CV filters"
 
 msgid "სივის ნახვა"    
-msgstr ""
+msgstr "View CV"
 
-msgid "სასურველი სფერო: "    
-msgstr ""
+msgid "სასურველი სფერო:"    
+msgstr "Desired field:"
 
-msgid "გამოცდილება: "    
-msgstr ""
+msgid "გამოცდილება:"    
+msgstr "Experience:"
 
 msgid "სფერო"    
-msgstr ""
+msgstr "Field"
 
-msgid ""    
-msgstr ""
+msgid "ვაკანსიის გამოქვეყნება"
+msgstr "Publish job"
 
-msgid ""    
-msgstr ""
+msgid "ვაკანსიის დასახელება"
+msgstr "Job title"
 
-msgid ""    
-msgstr ""
+msgid "ვაკანსიის აღწერა"
+msgstr "Job description"
 
-msgid ""    
-msgstr ""
+msgid "ვაკანსია ატვირთულია გარე ლინკით"
+msgstr "Job uploaded with external link"
 
-msgid ""    
-msgstr ""
+msgid "მონიშნეთ თუ გსურთ კანდიდატები გადამისამართდნენ გარე ვებ-გვერდზე."
+msgstr "Check if you want candidates to be redirected to external website."
 
-msgid ""    
-msgstr ""
+msgid "External Link"
+msgstr "External Link"
 
-msgid ""    
-msgstr ""
+msgid "ჩასვით ვაკანსიის გარე ბმული."
+msgstr "Enter the external link for the job."
 
-msgid ""    
-msgstr ""
+msgid "ლოკაცია"
+msgstr "Location"
+
+msgid "Category"
+msgstr "Category"
+
+msgid "ანაზღაურება"
+msgstr "Salary"
+
+msgid "მიუთითეთ მხოლოდ ხელზე ასაღები (ნეტ) ანაზღაურება, თუ არ გსურთ ანაზღაურების მითითება, დატოვეთ ცარიელი."
+msgstr "Specify only take-home (net) salary, if you don't want to specify salary, leave empty."
+
+msgid "მინიმალური ხელფასი"
+msgstr "Minimum salary"
+
+msgid "მაქსიმალური ხელფასი"
+msgstr "Maximum salary"
+
+msgid "ხელფასის ტიპი"
+msgstr "Salary type"
+
+msgid "გამოცდილების სტატუსი"
+msgstr "Experience status"
+
+msgid "სამუშაო გრაფიკი"
+msgstr "Work schedule"
+
+msgid "განიხილავთ სტუდენტის აყვანას?"
+msgstr "Are you considering hiring a student?"
+
+msgid "პოზიციაზე მოთხოვნილია მხოლოდ ქართული ენის ცოდნა"
+msgstr "Only Georgian language knowledge is required for this position"
+
+msgid "კი"
+msgstr "Yes"
+
+msgid "არა"
+msgstr "No"
+
+msgid "შეცვალეთ პაკეტი"
+msgstr "Change package"
