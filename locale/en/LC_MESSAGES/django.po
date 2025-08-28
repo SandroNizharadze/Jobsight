@@ -105,8 +105,6 @@ msgstr "Saved Jobs"
 msgid "Change Photo"
 msgstr "Change Photo"
 
-msgid "Job Seeker"
-msgstr "Job Seeker"
 
 msgid "დაადასტურეთ ექაუნთის წაშლა"
 msgstr "Confirm Account Deletion"
@@ -867,8 +865,6 @@ msgstr "Warning! Account deletion is an irreversible process. All your personal 
 msgid "წაშალე ანგარიში"
 msgstr "Delete Account"
 
-msgid "სამუშაოსწავლეს"
-msgstr "Job Seeker"
 
 # Registration and Login
 msgid "ანგარიშის შექმნა"
@@ -1767,3 +1763,16 @@ msgstr "You don't have deleted jobs"
 
 msgid "თქვენ არ გაქვთ წაშლილი ვაკანსიები"
 msgstr "You don't have deleted jobs"
+
+# Registration Form Links
+msgid "ვეთანხმები"
+msgstr "I agree to"
+
+msgid "წესებსა და პირობებს"
+msgstr "Terms & Conditions"
+
+msgid "და"
+msgstr "and"
+
+msgid "კონფიდენციალურობის პოლიტიკას"
+msgstr "Privacy Policy"

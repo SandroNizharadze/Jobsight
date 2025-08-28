@@ -191,7 +191,10 @@
               </div>
               <div class="ml-3 text-sm">
                 <label for="terms_agreement" class="font-medium text-gray-700">
-                  {% trans "I agree to the Terms & Conditions and Privacy Policy" %}
+                  {% trans "ვეთანხმები" %} 
+                  <a href="{% url 'terms_conditions' %}" target="_blank" class="text-blue-600 hover:text-blue-800 underline">{% trans "წესებსა და პირობებს" %}</a> 
+                  {% trans "და" %} 
+                  <a href="{% url 'privacy_policy' %}" target="_blank" class="text-blue-600 hover:text-blue-800 underline">{% trans "კონფიდენციალურობის პოლიტიკას" %}</a>
                 </label>
               </div>
             </div>

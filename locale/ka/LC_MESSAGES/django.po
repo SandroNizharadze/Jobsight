@@ -29,12 +29,8 @@ msgstr "No"
 #: core/admin.py:245
 
 #: core/forms.py:15
-msgid "სამუშაოს მაძიებელი"
-msgstr "Job Seeker"
 
 #: core/forms.py:15
-msgid "დამსაქმებელი"
-msgstr "Employer"
 
 #: core/forms.py:22
 msgid "I agree to receive email notifications about news"
@@ -263,13 +259,14 @@ msgstr "ბმული დაკოპირებულია!"
 msgid "Student Positions"
 msgstr "სტუდენტური პოზიციები"
 
+msgid "სტუდენტური"
+msgstr "სტუდენტური"
+
 #: core/templates/core/components/job_list/filters_section.html:118
 msgid "Georgian Language Only"
 msgstr "მხოლოდ ქართულენოვანი"
 
 #: core/templates/core/user_profile.html:116
-msgid "Job Seeker"
-msgstr "სამუშაოს მაძიებელი"
 
 #: core/templates/core/user_profile.html:164
 msgid "Upload Resume"
@@ -338,3 +335,16 @@ msgstr "ფაილზე წვდომის შეცდომა"
 #: core/templates/core/components/job_detail/job_detail_js.html:76
 msgid "Error sharing:"
 msgstr "გაზიარების შეცდომა:"
+
+# Registration Form Links
+msgid "ვეთანხმები"
+msgstr "ვეთანხმები"
+
+msgid "წესებსა და პირობებს"
+msgstr "წესებსა და პირობებს"
+
+msgid "და"
+msgstr "და"
+
+msgid "კონფიდენციალურობის პოლიტიკას"
+msgstr "კონფიდენციალურობის პოლიტიკას"

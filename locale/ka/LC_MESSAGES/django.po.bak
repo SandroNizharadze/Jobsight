@@ -43,14 +43,10 @@ msgstr ""
 #: core/templates/core/profile_tabs.html:57
 #: core/templates/core/profile_view.html:59
 #: core/templates/core/register.html:68
-msgid "სამუშაოს მაძიებელი"
-msgstr "Job Seeker"
 
 #: core/forms.py:15 core/models/job.py:82 core/models/notification.py:14
 #: core/templates/core/employer_edit_profile.html:109
 #: core/templates/core/register.html:72
-msgid "დამსაქმებელი"
-msgstr "Employer"
 
 #: core/forms.py:22
 msgid "I agree to receive email notifications about news"
@@ -292,8 +288,6 @@ msgid "Georgian Language Only"
 msgstr "მხოლოდ ქართულენოვანი"
 
 #: core/templates/core/user_profile.html:116
-msgid "Job Seeker"
-msgstr "სამუშაოს მაძიებელი"
 
 #: core/templates/core/user_profile.html:164
 msgid "Upload Resume"
