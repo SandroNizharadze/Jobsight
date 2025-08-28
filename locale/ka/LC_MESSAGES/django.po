@@ -27,8 +27,6 @@ msgid "არა"
 msgstr "No"
 
 #: core/admin.py:245
-msgid "სტუდენტური"
-msgstr "Student"
 
 #: core/forms.py:15
 msgid "სამუშაოს მაძიებელი"

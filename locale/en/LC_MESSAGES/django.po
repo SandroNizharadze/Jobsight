@@ -564,8 +564,6 @@ msgstr "Jobsight"
 msgid "Remote"
 msgstr "Remote"
 
-msgid "სტუდენტური"
-msgstr "Student-friendly"
 
 msgid "მხოლოდ ქართულენოვანი"
 msgstr "Georgian language only"
@@ -737,6 +735,30 @@ msgstr "Try adjusting your search filters"
 msgid "Clear filters"
 msgstr "Clear filters"
 
+msgid "ყველა კატეგორია"
+msgstr "All categories"
+
+msgid "ფილტრები"
+msgstr "Filters"
+
+msgid "მოძებნა" 
+msgstr "Search"
+
+msgid "ყველა ლოკაცია"
+msgstr "All locations"
+
+msgid "ნებისმიერი გამოცდილება"
+msgstr "All experiences"
+
+msgid "მინიმალური ანაზღაურება"
+msgstr "Minimum wage"
+
+msgid "სტუდენტური პოზიციები"
+msgstr "Student-friendly"
+
+msgid "გაფილტრე"
+msgstr "Filter"
+
 # Job Categories
 msgid "პრემიუმ+ ვაკანსიები"
 msgstr "Premium+ Jobs"
@@ -894,7 +916,7 @@ msgstr "Please enter your password."
 msgid "პრემიუმ+"
 msgstr "Premium+"
 
-msgid "სტუდენტ-ფრენდლი"
+msgid "სტუდენტური"
 msgstr "Student-friendly"
 
 msgid "თბილისი, საქართველო"
@@ -1290,10 +1312,10 @@ msgid "ექსკლუზიური"
 msgstr "Exclusive"
 
 msgid "ყველა სფერო"
-msgstr "-"
+msgstr "All fields"
 
 msgid "ყველა დონე"
-msgstr "-"
+msgstr "All experiences"
 
 msgid "CV-ები არ მოიძებნა"
 msgstr "No CV's were found"
