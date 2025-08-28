@@ -5,7 +5,7 @@ msgstr ""
 "Project-Id-Version: 1.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-06-05 12:00+0000\n"
-"PO-Revision-Date: 2024-08-28 17:30+0000\n"
+"PO-Revision-Date: 2024-06-05 12:00+0000\n"
 "Last-Translator: Jobsight Team\n"
 "Language-Team: English\n"
 "Language: en\n"
@@ -18,31 +18,965 @@ msgstr ""
 msgid "ენა"
 msgstr "Language"
 
-# Pricing packages
-msgid "სტანდარტული"
-msgstr "Standard"
+# Language Demo
+msgid "Language Demo"
+msgstr "Language Demo"
 
-msgid "პრემიუმი"
+msgid "Language Switching Demo"
+msgstr "Language Switching Demo"
+
+msgid "Current Language"
+msgstr "Current Language"
+
+msgid "Language Switcher"
+msgstr "Language Switcher"
+
+msgid "Sample Translations"
+msgstr "Sample Translations"
+
+msgid "Navigation"
+msgstr "Navigation"
+
+msgid "User Profile"
+msgstr "User Profile"
+
+msgid "Applications"
+msgstr "Applications"
+
+msgid "Pricing"
+msgstr "Pricing"
+
+# Navigation
+msgid "მთავარი"
+msgstr "Home"
+
+msgid "გამოქვეყნება"
+msgstr "Post Job"
+
+msgid "ბლოგი"
+msgstr "Blog"
+
+msgid "პროფილი"
+msgstr "Profile"
+
+msgid "მეტრიკები"
+msgstr "Metrics"
+
+msgid "თქვენი ვაკანსიები"
+msgstr "Your Jobs"
+
+msgid "სივების ბაზა"
+msgstr "CV Database"
+
+msgid "პარამეტრები"
+msgstr "Settings"
+
+msgid "განაცხადები"
+msgstr "Applications"
+
+msgid "შენახული"
+msgstr "Saved"
+
+msgid "გასვლა"
+msgstr "Logout"
+
+msgid "შესვლა"
+msgstr "Login"
+
+msgid "რეგისტრაცია"
+msgstr "Register"
+
+msgid "ვაკანსიების მართვა"
+msgstr "Manage Jobs"
+
+# User Profile
+msgid "Your Profile"
+msgstr "Your Profile"
+
+msgid "ვაკანსიები"
+msgstr "Jobs"
+
+msgid "აპლიკაციები"
+msgstr "Applications"
+
+msgid "შენახული ვაკანსიები"
+msgstr "Saved Jobs"
+
+msgid "Change Photo"
+msgstr "Change Photo"
+
+msgid "Job Seeker"
+msgstr "Job Seeker"
+
+msgid "დაადასტურეთ ექაუნთის წაშლა"
+msgstr "Confirm Account Deletion"
+
+msgid "ეს ქმედება შეუქცევადია. ყველა თქვენი პერსონალური ინფორმაცია წაიშლება."
+msgstr "This action is irreversible. All your personal information will be deleted."
+
+msgid "დასადასტურებლად ჩაწერეთ სიტყვა"
+msgstr "Type the word to confirm"
+
+msgid "გაუქმება"
+msgstr "Cancel"
+
+msgid "წაშალე ექაუნთი"
+msgstr "Delete Account"
+
+# CV Page
+msgid "თქვენი CV"
+msgstr "Your CV"
+
+msgid "ნახვა"
+msgstr "View"
+
+msgid "წაშლა"
+msgstr "Delete"
+
+msgid "დამატება/გამოსატანი CV"
+msgstr "Add/Upload CV"
+
+msgid "Upload CV"
+msgstr "Upload CV"
+
+msgid "ატვირთე თქვენი CV (PDF, DOC, DOCX)."
+msgstr "Upload your CV (PDF, DOC, DOCX)."
+
+msgid "შენახვა"
+msgstr "Save"
+
+msgid "CV-ის ბაზების პარამეტრები"
+msgstr "CV Database Settings"
+
+msgid "თქვენი CV-ის დამატებით CV-ების ბაზაში, დამსაქმებლებს შესაძლებლობა ექნებათ მოძებნონ თქვენი პროფილი ძიების სისტემით სფეროებისა და გამოცდილების მიხედვით. ეს გაზრდის თქვენი დასაქმების შანსებს, რადგან დამსაქმებლები ხშირად ეძებენ კანდიდატებს ვაკანსიის გამოქვეყნებამდე."
+msgstr "By adding your CV to the CV database, employers will be able to find your profile using the search system by fields and experience. This will increase your employment chances, as employers often search for candidates before posting a job."
+
+msgid "სასურველი სფერო"
+msgstr "Desired Field"
+
+msgid "აირჩიეთ სფერო"
+msgstr "Select Field"
+
+msgid "გამოცდილება"
+msgstr "Experience"
+
+msgid "აირჩიეთ გამოცდილება"
+msgstr "Select Experience"
+
+msgid "ხილვადია დამსაქმებლებისთვის"
+msgstr "Visible to Employers"
+
+msgid "დამსაქმებლებს შეუძლიათ იხილონ თქვენი CV CV-ების ბაზაში"
+msgstr "Employers can view your CV in the CV database"
+
+msgid "Toggle visibility"
+msgstr "Toggle visibility"
+
+# Applications
+msgid "Your Applications"
+msgstr "Your Applications"
+
+msgid "განხილვის პროცესში"
+msgstr "In Review"
+
+msgid "ნიშნავს რომ თქვენი კანდიდატურა ჯერ არ განუხილავთ"
+msgstr "Means that your application has not been reviewed yet"
+
+msgid "ნანახი"
+msgstr "Viewed"
+
+msgid "ნიშნავს, რომ დამსაქმებელმა ნახა თქვენი სივი მაგრამ გადაწყვეტილება ჯერ არ მიუღია"
+msgstr "Means that the employer has viewed your CV but has not made a decision yet"
+
+msgid "გასაუბრება"
+msgstr "Interview"
+
+msgid "ნიშნავს რომ კომპანიამ განიხილა თქვენი კანდიდატურა, თვლის რომ შეესაბამებით პოზიციას და დაგიკავშირდებიან გასაუბრებაზე დასაბარებლად"
+msgstr "Means that the company has reviewed your application, considers you suitable for the position and will contact you to schedule an interview"
+
+msgid "რეზერვი"
+msgstr "Reserve"
+
+msgid "ნიშნავს, რომ კომპანიამ განიხილა თქვენი კანდიდატურა, თვლის რომ არ შეესაბამებით პოზიციას და ამ ეტაპზე ვერ აგიყვანენ, თუმცა თქვენი სივი შეინახება ბაზაში მომავალში დაინტერესების შემთვევაში დასაკონტ"
+msgstr "Means that the company has reviewed your application, considers that you do not match the position and cannot hire you at this stage, but your CV will be stored in the database for future reference"
+
+msgid "Position"
+msgstr "Position"
+
+msgid "Company"
+msgstr "Company"
+
+msgid "Applied On"
+msgstr "Applied On"
+
+msgid "Status"
+msgstr "Status"
+
+msgid "Action"
+msgstr "Action"
+
+msgid "მიზეზის ნახვა"
+msgstr "View Reason"
+
+msgid "Pending"
+msgstr "Pending"
+
+msgid "Reviewed"
+msgstr "Reviewed"
+
+msgid "Interviewed"
+msgstr "Interviewed"
+
+msgid "Offer Extended"
+msgstr "Offer Extended"
+
+msgid "View Job"
+msgstr "View Job"
+
+msgid "No Applications Yet"
+msgstr "No Applications Yet"
+
+msgid "You haven't applied to any jobs yet."
+msgstr "You haven't applied to any jobs yet."
+
+# Pricing
+msgid "Jobsight - სატარიფო პაკეტები"
+msgstr "Jobsight - Pricing Packages"
+
+msgid "ჩვენი პაკეტები"
+msgstr "Our Packages"
+
+msgid "აირჩიეთ თქვენთვის შესაფერისი პაკეტი"
+msgstr "Choose the package that suits you"
+
+msgid "ვაკანსიის გამოქვეყნება Jobsight-ზე არის მარტივი და ეფექტური გზა კარგი კანდიდატების მოსაზიდად"
+msgstr "Posting a job on Jobsight is a simple and effective way to attract good candidates"
+
+msgid "No pricing packages available at the moment. Please check back later."
+msgstr "No pricing packages available at the moment. Please check back later."
+
+msgid "შეადარე პაკეტები სრულად"
+msgstr "Compare packages in detail"
+
+msgid "ხშირად დასმული კითხვები"
+msgstr "Frequently Asked Questions"
+
+msgid "გაეცანით პასუხებს ხშირად დასმულ კითხვებზე"
+msgstr "Read answers to frequently asked questions"
+
+msgid "ვაკანსიის გამოსაქვეყნებლად საჭიროა იყოთ დარეგისტრირებული, როგორც დამსაქმებელი"
+msgstr "To post a job, you need to be registered as an employer"
+
+# Static Pages
+msgid "Privacy Policy"
+msgstr "Privacy Policy"
+
+msgid "Terms and Conditions"
+msgstr "Terms and Conditions"
+
+# Company Profile
+msgid "Company Profile"
+msgstr "Company Profile"
+
+msgid "Open Positions"
+msgstr "Open Positions"
+
+msgid "About"
+msgstr "About"
+
+msgid "No company description available."
+msgstr "No company description available."
+
+msgid "Are you sure you want to delete this job?"
+msgstr "Are you sure you want to delete this job?"
+
+msgid "No open positions at the moment."
+msgstr "No open positions at the moment."
+
+msgid "Contact Information"
+msgstr "Contact Information"
+
+msgid "Website"
+msgstr "Website"
+
+msgid "Phone"
+msgstr "Phone"
+
+msgid "Company ID"
+msgstr "Company ID"
+
+msgid "Company Details"
+msgstr "Company Details"
+
+msgid "Industry"
+msgstr "Industry"
+
+msgid "Company Size"
+msgstr "Company Size"
+
+msgid "Location"
+msgstr "Location"
+
+# Job Applications
+msgid "Applications for"
+msgstr "Applications for"
+
+msgid "Back to Dashboard"
+msgstr "Back to Dashboard"
+
+msgid "Note"
+msgstr "Note"
+
+msgid "This job listing is deleted. You can still view applications but cannot make changes to the job post."
+msgstr "This job listing is deleted. You can still view applications but cannot make changes to the job post."
+
+msgid "Job Applications"
+msgstr "Job Applications"
+
+msgid "All"
+msgstr "All"
+
+msgid "Reviewing"
+msgstr "Reviewing"
+
+msgid "Interview"
+msgstr "Interview"
+
+msgid "Reserve"
+msgstr "Reserve"
+
+msgid "Applicant"
+msgstr "Applicant"
+
+msgid "Applied"
+msgstr "Applied"
+
+msgid "CV"
+msgstr "CV"
+
+msgid "Actions"
+msgstr "Actions"
+
+msgid "Guest"
+msgstr "Guest"
+
+msgid "New"
+msgstr "New"
+
+msgid "No CV"
+msgstr "No CV"
+
+msgid "View Details"
+msgstr "View Details"
+
+msgid "No applications found"
+msgstr "No applications found"
+
+msgid "No one has applied to this job yet."
+msgstr "No one has applied to this job yet."
+
+msgid "View CV"
+msgstr "View CV"
+
+msgid "No applications yet"
+msgstr "No applications yet"
+
+msgid "There are no applications for this job yet."
+msgstr "There are no applications for this job yet."
+
+msgid "Check back later or consider promoting your job listing."
+msgstr "Check back later or consider promoting your job listing."
+
+msgid "არჩეული"
+msgstr "Selected"
+
+# Saved Jobs
+msgid "ვაკანსია"
+msgstr "Job"
+
+msgid "კომპანია"
+msgstr "Company"
+
+msgid "შენახვის თარიღი"
+msgstr "Saved Date"
+
+msgid "ქმედებები"
+msgstr "Actions"
+
+msgid "No Saved Jobs"
+msgstr "No Saved Jobs"
+
+msgid "You haven't saved any jobs yet."
+msgstr "You haven't saved any jobs yet."
+
+msgid "Browse Job Listings"
+msgstr "Browse Job Listings"
+
+# Form Fields
+msgid "Enter your first name"
+msgstr "Enter your first name"
+
+msgid "Enter your last name"
+msgstr "Enter your last name"
+
+msgid "Enter your phone number"
+msgstr "Enter your phone number"
+
+msgid "Search applications..."
+msgstr "Search applications..."
+
+msgid "სამსახურის დასახელება"
+msgstr "Job Title"
+
+msgid "ძიება"
+msgstr "Search"
+
+msgid "რატომ გსურთ ამ პოზიციაზე მუშაობა?"
+msgstr "Why do you want to work in this position?"
+
+msgid "ძიება პოზიციის მიხედვით..."
+msgstr "Search by position..."
+
+msgid "ლოკაცია..."
+msgstr "Location..."
+
+msgid "გარე ვებ-გვერდზე გადამისამართება"
+msgstr "Redirect to external website"
+
+msgid "ადგილმდებარეობა"
+msgstr "Location"
+
+msgid "თბილისი"
+msgstr "Tbilisi"
+
+msgid "ბათუმი"
+msgstr "Batumi"
+
+msgid "ქუთაისი"
+msgstr "Kutaisi"
+
+msgid "კატეგორია"
+msgstr "Category"
+
+msgid "ინფორმაციული ტექნოლოგიები"
+msgstr "Information Technology"
+
+msgid "გაყიდვები"
+msgstr "Sales"
+
+msgid "მარკეტინგი"
+msgstr "Marketing"
+
+msgid "Search reasons..."
+msgstr "Search reasons..."
+
+msgid "ძიება..."
+msgstr "Search..."
+
+msgid "View Applications"
+msgstr "View Applications"
+
+msgid "Delete Job"
+msgstr "Delete Job"
+
+msgid "შეიყვანეთ თქვენი სახელი"
+msgstr "Enter your first name"
+
+msgid "შეიყვანეთ თქვენი გვარი"
+msgstr "Enter your last name"
+
+msgid "შეიყვანეთ თქვენი ელ-ფოსტა"
+msgstr "Enter your email"
+
+msgid "შეიყვანეთ თქვენი ტელეფონის ნომერი"
+msgstr "Enter your phone number"
+
+msgid "ვაკანსიის აღწერა..."
+msgstr "Job description..."
+
+msgid "პროფილის სურათი"
+msgstr "Profile picture"
+
+msgid "კომპანიის ლოგო"
+msgstr "Company logo"
+
+# Job Listings
+msgid "new"
+msgstr "new"
+
+msgid "Rejection Reason"
+msgstr "Rejection Reason"
+
+msgid "No job listings yet"
+msgstr "No job listings yet"
+
+msgid "Get started by posting your first job"
+msgstr "Get started by posting your first job"
+
+msgid "Post a Job"
+msgstr "Post a Job"
+
+# CV Database
+msgid "CV Database Access"
+msgstr "CV Database Access"
+
+msgid "Dashboard"
+msgstr "Dashboard"
+
+msgid "Access to CV Database"
+msgstr "Access to CV Database"
+
+msgid "The CV database allows you to search and review candidate profiles directly. Access is included with Premium+ package or can be purchased separately."
+msgstr "The CV database allows you to search and review candidate profiles directly. Access is included with Premium+ package or can be purchased separately."
+
+msgid "Why upgrade to CV Database access?"
+msgstr "Why upgrade to CV Database access?"
+
+msgid "Access profiles of job seekers who have opted to be visible in our database"
+msgstr "Access profiles of job seekers who have opted to be visible in our database"
+
+msgid "Proactively search for candidates based on skills, experience, and qualifications"
+msgstr "Proactively search for candidates based on skills, experience, and qualifications"
+
+msgid "Contact candidates directly through our platform"
+msgstr "Contact candidates directly through our platform"
+
+msgid "Find potential candidates even before they apply to your job listings"
+msgstr "Find potential candidates even before they apply to your job listings"
+
+msgid "Upgrade to Premium+"
+msgstr "Upgrade to Premium+"
+
+msgid "Already have an access code? Please contact us at support@jobsight.ge"
+msgstr "Already have an access code? Please contact us at support@jobsight.ge"
+
+# Admin
+msgid "Home"
+msgstr "Home"
+
+msgid "Historical Data"
+msgstr "Historical Data"
+
+# Job Detail
+msgid "Jobsight"
+msgstr "Jobsight"
+
+msgid "Remote"
+msgstr "Remote"
+
+msgid "სტუდენტური"
+msgstr "Student-friendly"
+
+msgid "მხოლოდ ქართულენოვანი"
+msgstr "Georgian language only"
+
+msgid "Premium+"
+msgstr "Premium+"
+
+msgid "Premium"
 msgstr "Premium"
+
+msgid "გამოქვეყნებულია"
+msgstr "Published"
+
+msgid "View Company Profile"
+msgstr "View Company Profile"
+
+msgid "ვაკანსიის დეტალები"
+msgstr "Job Details"
+
+msgid "ანაზღაურება შეთანხმებით"
+msgstr "Salary negotiable"
+
+msgid "განიხილავენ სტუდენტებს"
+msgstr "Students are considered"
+
+msgid "მხოლოდ ქართული ენის ცოდნა"
+msgstr "Only Georgian language knowledge required"
+
+msgid "ამ ვაკანსიის ვადა გასულია და აღარ მიმდინარეობს განაცხადების მიღება."
+msgstr "This job has expired and applications are no longer being accepted."
+
+msgid "ვადა გაუვიდა:"
+msgstr "Expired on:"
+
+msgid "გაგრძელება 30 დღით"
+msgstr "Extend for 30 days"
+
+msgid "აღწერა"
+msgstr "Description"
+
+msgid "მოთხოვნები"
+msgstr "Requirements"
+
+msgid "პასუხისმგებლობები"
+msgstr "Responsibilities"
+
+msgid "შეთავაზება"
+msgstr "Offer"
+
+msgid "გაგზავნა"
+msgstr "Apply"
+
+msgid "განაცხადის გაგზავნა"
+msgstr "Submit Application"
+
+msgid "შენახულია"
+msgstr "Saved"
+
+msgid "კომპანიის შესახებ"
+msgstr "About the Company"
+
+msgid "კომპანიის პროფილი"
+msgstr "Company Profile"
+
+msgid "მსგავსი ვაკანსიები"
+msgstr "Similar Jobs"
+
+msgid "წინ"
+msgstr "ago"
+
+msgid "Extend Job Listing"
+msgstr "Extend Job Listing"
+
+msgid "This job has expired. Extending it will submit it for admin review."
+msgstr "This job has expired. Extending it will submit it for admin review."
+
+msgid "Package Information"
+msgstr "Package Information"
+
+msgid "Standard Package"
+msgstr "Standard Package"
+
+msgid "Basic visibility with standard features"
+msgstr "Basic visibility with standard features"
+
+msgid "Price:"
+msgstr "Price:"
+
+msgid "Premium Package"
+msgstr "Premium Package"
+
+msgid "Enhanced visibility with premium features"
+msgstr "Enhanced visibility with premium features"
+
+msgid "Premium+ Package"
+msgstr "Premium+ Package"
+
+msgid "Maximum visibility with all premium features"
+msgstr "Maximum visibility with all premium features"
+
+msgid "Extending this job will keep it active for an additional 30 days."
+msgstr "Extending this job will keep it active for an additional 30 days."
+
+msgid "Extend Job"
+msgstr "Extend Job"
+
+msgid "Link copied to clipboard!"
+msgstr "Link copied to clipboard!"
+
+msgid "ბმული დაკოპირებულია!"
+msgstr "Link copied!"
+
+msgid "გაზიარება"
+msgstr "Share"
+
+# Application Form
+msgid "რეკომენდებულია შესვლა ან რეგისტრაცია უკეთესი გამოცდილებისთვის"
+msgstr "Login or registration is recommended for a better experience"
+
+msgid "სახელი და გვარი"
+msgstr "Full Name"
+
+msgid "ელ-ფოსტა"
+msgstr "Email"
+
+msgid "სამოტივაციო წერილი"
+msgstr "Cover Letter"
+
+msgid "რეზიუმე/CV"
+msgstr "Resume/CV"
+
+msgid "თქვენი CV უკვე ატვირთულია პროფილზე და ავტომატურად გამოიყენება"
+msgstr "Your CV is already uploaded to your profile and will be used automatically"
+
+msgid "მხოლოდ PDF, DOC, ან DOCX ფორმატები. მაქს 5MB"
+msgstr "Only PDF, DOC, or DOCX formats. Max 5MB"
+
+# Homepage
+msgid "იპოვე საშენო ვაკანსიები!"
+msgstr "Find jobs that suit you!"
+
+msgid "ყველა სივი მნიშვნელოვანია"
+msgstr "Every CV matters"
+
+msgid "კანდიდატი"
+msgstr "Candidate"
+
+msgid "გჭირდებათ თანამშრომელი?"
+msgstr "Need an employee?"
+
+msgid "გამოაქვეყნეთ ვაკანსია ჯობსიზე და იპოვეთ საუკეთესო კანდიდატები თქვენი კომპანიისთვის."
+msgstr "Post a job on Jobsight and find the best candidates for your company."
+
+msgid "ათასობით პროფესიონალი ეძებს ახალ შესაძლებლობებს ყოველდღე."
+msgstr "Thousands of professionals are looking for new opportunities every day."
+
+msgid "შეიტყვეთ მეტი"
+msgstr "Learn More"
+
+msgid "შეთანხმებით"
+msgstr "Negotiable"
+
+msgid "No jobs found"
+msgstr "No jobs found"
+
+msgid "Try adjusting your search filters"
+msgstr "Try adjusting your search filters"
+
+msgid "Clear filters"
+msgstr "Clear filters"
+
+# Job Categories
+msgid "პრემიუმ+ ვაკანსიები"
+msgstr "Premium+ Jobs"
+
+msgid "პრემიუმ ვაკანსიები"
+msgstr "Premium Jobs"
+
+msgid "სტანდარტული ვაკანსიები"
+msgstr "Standard Jobs"
+
+# Job Detail Additional
+msgid "IT / კომპიუტერები"
+msgstr "IT / Computers"
+
+msgid "სრული განაკვეთი"
+msgstr "Full Time"
+
+msgid "IT სფერო"
+msgstr "IT Industry"
+
+msgid "კომპანიის აღწერა არ არის მითითებული."
+msgstr "No company description available."
+
+msgid "Cancel"
+msgstr "Cancel"
+
+# User Profile Additional
+msgid "თქვენი პროფილი"
+msgstr "Your Profile"
+
+msgid "ვაკანსიების ნახვა"
+msgstr "View Jobs"
+
+msgid "თქვენი აქტივობა"
+msgstr "Your Activity"
+
+msgid "რეზიუმე"
+msgstr "Resume"
+
+msgid "ცვლილება"
+msgstr "Change"
+
+msgid "თქვენი რეზიუმე"
+msgstr "Your Resume"
+
+msgid "მიმდინარე რეზიუმის ნახვა"
+msgstr "View Current Resume"
+
+msgid "რეზიუმის წაშლა"
+msgstr "Delete Resume"
+
+msgid "დამატება/ატვირთვა რეზიუმე"
+msgstr "Add/Upload Resume"
+
+msgid "ატვირთვა რეზიუმე"
+msgstr "Upload Resume"
+
+msgid "ატვირთეთ თქვენი რეზიუმე (PDF, DOC, DOCX)."
+msgstr "Upload your resume (PDF, DOC, DOCX)."
+
+msgid "რეზიუმე ბაზის პარამეტრები"
+msgstr "Resume Database Settings"
+
+msgid "თქვენი რეზიუმის დამატებით რეზიუმეების ბაზაში, დამსაქმებლებს შესაძლებლობა ექნებათ მოძებნონ თქვენი პროფილი ძიების სისტემით სფეროებისა და გამოცდილების მიხედვით. ეს გაზრდის თქვენი დასაქმების შანსებს, რადგან დამსაქმებლები ხშირად ეძებენ კანდიდატებს ვაკანსიის გამოქვეყნებამდე."
+msgstr "By adding your resume to the resume database, employers will be able to find your profile using the search system by fields and experience. This will increase your employment chances, as employers often search for candidates before posting a job."
+
+msgid "დამსაქმებლებს შეუძლიათ იხილონ თქვენი რეზიუმე რეზიუმეების ბაზაში"
+msgstr "Employers can view your resume in the resume database"
+
+msgid "ანგარიშის პარამეტრები"
+msgstr "Account Settings"
+
+msgid "პერსონალური ინფორმაცია"
+msgstr "Personal Information"
+
+msgid "სახელი"
+msgstr "First Name"
+
+msgid "გვარი"
+msgstr "Last Name"
+
+msgid "ტელეფონის ნომერი"
+msgstr "Phone Number"
+
+msgid "შენახვა ცვლილებები"
+msgstr "Save Changes"
+
+msgid "პაროლის ცვლილება"
+msgstr "Change Password"
+
+msgid "მიმდინარე პაროლი"
+msgstr "Current Password"
+
+msgid "ახალი პაროლი"
+msgstr "New Password"
+
+msgid "ახალი პაროლის დადასტურება"
+msgstr "Confirm New Password"
+
+msgid "ანგარიშის წაშლა"
+msgstr "Delete Account"
+
+msgid "ყურადღება! ანგარიშის წაშლა შეუქცევადი პროცესია. ყველა თქვენი პერსონალური ინფორმაცია წაიშლება."
+msgstr "Warning! Account deletion is an irreversible process. All your personal information will be deleted."
+
+msgid "წაშალე ანგარიში"
+msgstr "Delete Account"
+
+msgid "სამუშაოსწავლეს"
+msgstr "Job Seeker"
+
+# Registration and Login
+msgid "ანგარიშის შექმნა"
+msgstr "Create Account"
+
+msgid "ანგარიშის ტიპი"
+msgstr "Account Type"
+
+msgid "სამუშაოს მაძიებელი"
+msgstr "Job Seeker"
+
+msgid "დამსაქმებელი"
+msgstr "Employer"
+
+msgid "მომხმარებლის სახელი"
+msgstr "Username"
+
+msgid "პაროლი"
+msgstr "Password"
+
+msgid "პაროლი უნდა შეიცავდეს მინიმუმ 8 სიმბოლოს"
+msgstr "Password must contain at least 8 characters"
+
+msgid "გაიმეორეთ პაროლი"
+msgstr "Confirm Password"
+
+msgid "უკვე გაქვთ ანგარიში?"
+msgstr "Already have an account?"
+
+msgid "ან"
+msgstr "or"
+
+msgid "Google-ით შესვლა"
+msgstr "Sign in with Google"
+
+msgid "არ გაქვთ ანგარიში?"
+msgstr "Don't have an account?"
+
+msgid "გთხოვთ შეიყვანოთ თქვენი ელ-ფოსტა."
+msgstr "Please enter your email."
+
+msgid "გთხოვთ შეიყვანოთ თქვენი პაროლი."
+msgstr "Please enter your password." 
 
 msgid "პრემიუმ+"
 msgstr "Premium+"
 
-msgid "უფასო"
-msgstr "Free"
+msgid "სტუდენტ-ფრენდლი"
+msgstr "Student-friendly"
 
-msgid "საშუალო ხილვადობა"
-msgstr "Medium visibility"
+msgid "თბილისი, საქართველო"
+msgstr "Tbilisi, Georgia"
 
-msgid "მაღალი ხილვადობა"
-msgstr "High visibility"
+msgid "პოპულარული - განახლებული"
+msgstr "Popular - Updated"
 
-msgid "მაქსიმალური ხილვადობა"
-msgstr "Maximum visibility"
+msgid "თბილისანური"
+msgstr "Tbilisani"
 
-msgid "1 განცხადება - პერიოდი 30 დღე"
-msgstr "1 job posting - 30 days period"
+msgid "ცვლადი განაკვეთი"
+msgstr "Flexible Schedule"
 
+msgid "სამუშაო დრო"
+msgstr "Working Hours"
+
+msgid "React ფრონტენდ სპეციალისტი"
+msgstr "React Frontend Specialist"
+
+msgid "დღეიდან შენი სივი არ დაიკარგება - იპოვე შენზე მორგებული სამსახური"
+msgstr "Your CV will never be lost - Find a job tailored for you"
+
+msgid "პოსტ ჯობ"
+msgstr "Post Job"
+
+msgid "წესები და პირობები"
+msgstr "Terms and Conditions"
+
+msgid "ბმულები"
+msgstr "Links"
+
+msgid "კონტაქტი" 
+msgstr "Contact"
+
+msgid "კონფიდენციალურობის პოლიტიკა"
+msgstr "Privacy Policy"
+
+msgid "ყველა უფლება დაცულია."
+msgstr "All Rights Reserved." 
+
+msgid "ჩვენთან შენი სივი არ დაიკარგება - იპოვე შენზე მორგებული სამსახური"
+msgstr "Your CV won't be lost - find a job that suits you."
+
+# Pricing FAQ
+msgid "როგორ შევქმნა ვაკანსია Jobsight-ზე?"
+msgstr "How do I create a job listing on Jobsight?"
+
+msgid "ვაკანსიის შესაქმნელად საჭიროა დარეგისტრირდეთ როგორც დამსაქმებელი, აირჩიოთ სასურველი პაკეტი და შეავსოთ ვაკანსიის ფორმა. ვაკანსია გამოქვეყნდება ადმინისტრაციის მიერ დადასტურების შემდეგ."
+msgstr "To create a job listing, register as an employer, choose a package, and fill out the job form. The job will be published after it is approved by the admin team."
+
+msgid "რა განსხვავებაა პაკეტებს შორის?"
+msgstr "What is the difference between the packages?"
+
+msgid "პაკეტები განსხვავდება ვაკანსიის გამოჩენის პრიორიტეტულობით, მთავარ გვერდზე განთავსებით და დამატებითი სერვისებით. პრემიუმ და პრემიუმ+ პაკეტები უზრუნველყოფენ უფრო მეტ ხილვადობას და მეტ კანდიდატს."
+msgstr "Packages differ by listing priority, homepage placement, and additional services. Premium and Premium+ provide higher visibility and more candidates."
+
+msgid "რამდენ ხანს რჩება ვაკანსია აქტიური?"
+msgstr "How long does a job listing stay active?"
+
+msgid "ყველა პაკეტის შემთხვევაში ვაკანსია რჩება აქტიური 30 დღის განმავლობაში. ამ პერიოდის გასვლის შემდეგ, შეგიძლიათ განაახლოთ ვაკანსია ან შექმნათ ახალი."
+msgstr "With all packages, a job listing remains active for 30 days. After that, you can extend the listing or create a new one."
+
+msgid "როგორ ვნახო აპლიკანტების სივები?"
+msgstr "How can I view applicants' CVs?"
+
+msgid "თქვენს მიერ ატვირთულ ვაკანსიაზე შემოსული სივების ნახვა დამსაქმებლის პანელიდან შეგიძლიათ, ხოლო თუ შესაბამისი პაკეტი გაქვთ შეძენილი, სივების ნახვას სივების ბაზიდანაც შეძლებთ. ჩვენს ბაზაში სივები სფეროსა და გამოცდილების დონის მიხედვით შეგიძლიათ გაფილტროთ, რაც სასურველი კადრის მარტივად მოძიების საშუალებას იძლევა."
+msgstr "You can view CVs submitted to your job listing from the employer dashboard. If you have the appropriate package, you can also access CVs from the CV database. You can filter CVs by field and experience level to quickly find suitable candidates."
+
+msgid "რამდენ ხანს უნდა ველოდო დამსაქმებლისგან უკუკავშირს?"
+msgstr "How long should I wait for a response from the employer?"
+
+msgid "გაითვალისწინეთ, რომ დამსაქმებელს ერთ ვაკანსიაზე ხშირად 100 და მეტი სივის განხილვა უწევს, რასაც ხშირად კვირაზე მეტი სჭირდება. თქვენი პროფილიდან შეგიძლიათ პერიოდულად შეამოწმოთ თქვენი სივის სტატუსი და ნახოთ განიხილა თუ არა ის დამსაქმებელმა."
+msgstr "Please note that employers may need to review 100+ CVs for a single job, which can take more than a week. You can periodically check your application status from your profile to see whether it has been reviewed."
+
+msgid "რა ვქნა თუ გასაუბრებაზე მისულს ვაკანსიისგან განსხვავებული (უარესი) პირობები დამხვდა?"
+msgstr "What should I do if the interview conditions are worse than stated in the job listing?"
+
+msgid "როგორც წესი, ასეთი შემთხვევები ხშირი არაა, რადგან ჩვენ ვცდილობთ თავი ავარიდოთ არაკეთილსინდისიერ დამსაქმებლებს. თუ მაინც მსგავსი რამ შეგემთხვათ, დაგვიკავშირდით ელფოსტის საშუალებით info@jobsight.ge -ზე და ჩვენ აუცილებლად მოვახდენთ შესაბამის რეაგირებას."
+msgstr "Such cases are rare as we strive to avoid dishonest employers. If this happens, please contact us at info@jobsight.ge and we will take appropriate action." 
+
+# Mobile Pricing Comparison
 msgid "განცხადების რაოდენობა"
 msgstr "Number of job postings"
 
@@ -52,17 +986,33 @@ msgstr "Period"
 msgid "დღე"
 msgstr "days"
 
+msgid "მეორე სექცია"
+msgstr "Second section"
+
+msgid "პირველი სექცია"
+msgstr "First section"
+
+msgid "ჯგუფური პოსტი"
+msgstr "Group post"
+
+msgid "ინდ. და ჯგუფური"
+msgstr "Individual and group"
+
+msgid "პაკეტების შედარება"
+msgstr "Package comparison"
+
+msgid "პაკეტის მახასიათებლები"
+msgstr "Package features" 
+
+# Pricing comparison additional terms
+msgid "მთავარ გვერდზე გამოჩენა"
+msgstr "Featured on homepage"
+
+msgid "პრემიუმის ნიშანი"
+msgstr "Premium badge"
+
 msgid "ძიებისას პრიორიტეტულობა"
 msgstr "Search priority"
-
-msgid "ძიებისას პრიორიტეტულობა: დაბალი"
-msgstr "Search priority: Low"
-
-msgid "ძიებისას პრიორიტეტულობა: საშუალო"
-msgstr "Search priority: Medium"
-
-msgid "ძიებისას პრიორიტეტულობა: მაღალი"
-msgstr "Search priority: High"
 
 msgid "დაბალი"
 msgstr "Low"
@@ -79,161 +1029,11 @@ msgstr "Logo display"
 msgid "დამსაქმებლის პროფილი"
 msgstr "Employer profile"
 
-msgid "დამსაქმებლის პროფილი და სივების ანალიტიკა"
-msgstr "Employer profile and CV analytics"
-
-msgid "კანდიდატებისთვის უკუკავშირის დაბრუნების სისტემა"
-msgstr "Candidate feedback system"
-
-msgid "მთავარ გვერდზე ყოფნა"
-msgstr "Featured on homepage"
-
-msgid "მთავარი გვერდის მეორე სექცია"
-msgstr "Second section of homepage"
-
-msgid "მთავარი გვერდის პირველი სექცია"
-msgstr "First section of homepage"
-
-msgid "მეორე სექცია"
-msgstr "Second section"
-
-msgid "პირველი სექცია"
-msgstr "First section"
-
-msgid "პრემიუმის ნიშანი"
-msgstr "Premium badge"
-
-msgid "პრემიუმ+ ნიშანი"
-msgstr "Premium+ badge"
-
-msgid "განმასხვავებელი ნიშანი"
-msgstr "Distinctive badge"
+msgid "სივების ანალიტიკა"
+msgstr "CV analytics"
 
 msgid "სოც. ქსელებში გაზიარება"
 msgstr "Social media sharing"
 
-msgid "სოც. ქსელებში გაზიარება ჯგუფური პოსტის სახით"
-msgstr "Social media sharing as group post"
-
-msgid "სოც. ქსელებში გაზიარება ინდივიდუალური პოსტის სახით"
-msgstr "Social media sharing as individual post"
-
-msgid "ჯგუფური პოსტი"
-msgstr "Group post"
-
-msgid "ინდივიდუალური პოსტი"
-msgstr "Individual post"
-
 msgid "ინდივიდუალური და ჯგუფური პოსტი"
 msgstr "Individual and group post"
-
-msgid "სივების ბაზაზე წვდომა"
-msgstr "CV database access"
-
-msgid "სივების ბაზაზე წვდომა (მალე)"
-msgstr "CV database access (coming soon)"
-
-msgid "სივების ბაზა (მალე)"
-msgstr "CV database (coming soon)"
-
-msgid "აირჩიე"
-msgstr "Choose"
-
-msgid "პოპულარული"
-msgstr "Popular"
-
-msgid "ჩვენი პაკეტები"
-msgstr "Our Packages"
-
-msgid "აირჩიეთ თქვენთვის შესაფერისი პაკეტი"
-msgstr "Choose the package that suits you"
-
-msgid "ვაკანსიის გამოქვეყნება Jobsight-ზე არის მარტივი და ეფექტური გზა კარგი კანდიდატების მოსაზიდად"
-msgstr "Posting a job on Jobsight is a simple and effective way to attract good candidates"
-
-msgid "პაკეტების შედარება"
-msgstr "Package Comparison"
-
-msgid "პაკეტის მახასიათებლები"
-msgstr "Package Features"
-
-msgid "Detailed comparison to choose the right package for your business"
-msgstr "Detailed comparison to choose the right package for your business"
-
-# Error messages
-msgid "Profile not found"
-msgstr "Profile not found"
-
-msgid "You don't have permission to access this CV"
-msgstr "You don't have permission to access this CV"
-
-msgid "Target user profile not found"
-msgstr "Target user profile not found"
-
-msgid "No CV found for this user"
-msgstr "No CV found for this user"
-
-msgid "Error accessing the file"
-msgstr "Error accessing the file"
-
-msgid "Error sharing:"
-msgstr "Error sharing:"
-
-# Footer
-msgid "Links"
-msgstr "Links"
-
-msgid "Contact"
-msgstr "Contact"
-
-msgid "All Rights Reserved."
-msgstr "All Rights Reserved."
-
-msgid "Your CV won't be lost - find a job that suits you."
-msgstr "Your CV won't be lost - find a job that suits you."
-
-# FAQ
-msgid "ხშირად დასმული კითხვები"
-msgstr "Frequently Asked Questions"
-
-msgid "რა განსხვავებაა პაკეტებს შორის?"
-msgstr "What is the difference between packages?"
-
-msgid "პაკეტები განსხვავდება ვაკანსიის გამოჩენის პრიორიტეტულობით, მთავარ გვერდზე განთავსებით და დამატებითი სერვისებით. პრემიუმ და პრემიუმ+ პაკეტები უზრუნველყოფენ უფრო მეტ ხილვადობას და მეტ კანდიდატს."
-msgstr "Packages differ in job posting priority, homepage placement, and additional services. Premium and Premium+ packages provide more visibility and more candidates."
-
-msgid "რა არის პრემიუმის ნიშანი?"
-msgstr "What is a Premium badge?"
-
-msgid "პრემიუმის ნიშანი არის სპეციალური აღნიშვნა, რომელიც გამოჩნდება თქვენი ვაკანსიის გვერდზე და ძიების შედეგებში. ის ხაზს უსვამს თქვენი ვაკანსიის მნიშვნელობას და იზიდავს მეტ კანდიდატს."
-msgstr "A Premium badge is a special mark that appears on your job page and in search results. It highlights the importance of your vacancy and attracts more candidates."
-
-msgid "როგორ მუშაობს ძიებისას პრიორიტეტულობა?"
-msgstr "How does search priority work?"
-
-msgid "ძიებისას პრიორიტეტულობა განსაზღვრავს თქვენი ვაკანსიის პოზიციას ძიების შედეგებში. მაღალი პრიორიტეტის მქონე ვაკანსიები უფრო მაღლა გამოჩნდება, რაც ზრდის მათი ნახვის ალბათობას."
-msgstr "Search priority determines the position of your vacancy in search results. Vacancies with high priority will appear higher, which increases the likelihood of them being viewed."
-
-msgid "რა არის სივების ანალიტიკა?"
-msgstr "What is CV analytics?"
-
-msgid "სივების ანალიტიკა საშუალებას გაძლევთ ნახოთ სტატისტიკა თქვენი ვაკანსიისთვის: რამდენმა კანდიდატმა ნახა, რამდენმა გამოაგზავნა სივი, და სხვა მნიშვნელოვანი მონაცემები."
-msgstr "CV analytics allows you to see statistics for your vacancy: how many candidates viewed it, how many sent CVs, and other important data."
-
-msgid "შემიძლია პაკეტის შეცვლა გამოქვეყნების შემდეგ?"
-msgstr "Can I change the package after publication?"
-
-msgid "არა, პაკეტის შეცვლა გამოქვეყნების შემდეგ არ არის შესაძლებელი. თუ გსურთ სხვა პაკეტის გამოყენება, უნდა შექმნათ ახალი ვაკანსია."
-msgstr "No, changing the package after publication is not possible. If you want to use a different package, you need to create a new vacancy."
-
-msgid "რა არის სოც. ქსელებში გაზიარება?"
-msgstr "What is social media sharing?"
-
-msgid "ჩვენ გავაზიარებთ თქვენს ვაკანსიას ჩვენს სოციალურ ქსელებში, რაც ზრდის მის ხილვადობას და პოტენციური კანდიდატების რაოდენობას. პრემიუმ+ პაკეტის შემთხვევაში, თქვენი ვაკანსია გაზიარდება ინდივიდუალური პოსტის სახით."
-msgstr "We will share your vacancy on our social networks, which increases its visibility and the number of potential candidates. With the Premium+ package, your vacancy will be shared as an individual post."
-
-msgid "რა არის სივების ბაზაზე წვდომა?"
-msgstr "What is CV database access?"
-
-msgid "სივების ბაზაზე წვდომა საშუალებას გაძლევთ ნახოთ და მოძებნოთ კანდიდატები ჩვენს მონაცემთა ბაზაში, მაშინაც კი, როცა მათ არ გამოუგზავნიათ სივი თქვენს ვაკანსიაზე."
-msgstr "CV database access allows you to view and search for candidates in our database, even when they haven't sent a CV for your vacancy."
