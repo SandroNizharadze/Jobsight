@@ -170,5 +170,16 @@ cython_debug/
 *credentials*
 *.pem
 *.key
-# Temporary backup files
+*.env*
+aws_credentials.txt
+db.sqlite3
+backup/
 tmp_backup/
+logs/
+s3_tools/export_s3_env.sh
+node_modules/
+media/
+venv/
+staticfiles/
+# Already included above
+# tmp_backup/

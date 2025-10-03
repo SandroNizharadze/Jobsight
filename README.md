@@ -1,76 +1,70 @@
-# Jobsight - Job Listing Platform
+# [Jobsight.ge](https://jobsight.ge) - Job Listing Platform
 
-Jobsight is a comprehensive job listing platform built with Django.
+Jobsight is a comprehensive job listing platform built with Django, designed to connect employers and job seekers in Georgia. The platform features a modern, responsive interface with multi-language support and specialized tools for both employers and job seekers.
 
-## Environment Variables and Security
-
-To run this application securely, you need to set up the following environment variables. Create a `.env` file in the project root with these variables:
-
-```
-# Django Settings
-DEBUG=True
-DJANGO_SECRET_KEY=your-secure-secret-key-here
-
-# Database Settings
-DB_NAME=jobsy_db
-DB_USER=admin
-DB_PASSWORD=your-secure-db-password
-DB_HOST=localhost
-DB_PORT=5432
-
-# Supabase Settings (Render deployment)
-USE_SUPABASE=False
-SUPABASE_POOLER_CONNECTION_STRING=postgres://username:password@host:port/database
-
-# S3 Configuration
-USE_S3=False
-AWS_ACCESS_KEY_ID=your-aws-access-key
-AWS_SECRET_ACCESS_KEY=your-aws-secret-key
-AWS_STORAGE_BUCKET_NAME=your-bucket-name
-AWS_S3_REGION_NAME=us-east-1
-
-# Google OAuth2 Settings
-GOOGLE_OAUTH2_KEY=your-google-client-id
-GOOGLE_OAUTH2_SECRET=your-google-client-secret
-
-# Admin Creation Settings
-ADMIN_CREATION_KEY=your-secure-admin-creation-key
-
-# Demo Data Settings (Optional)
-DEMO_ADMIN_EMAIL=admin@example.com
-DEMO_ADMIN_PASSWORD=secure-admin-password
-DEMO_EMPLOYER_PASSWORD=secure-employer-password
-```
-
-### Security Best Practices
-
-1. Never commit your `.env` file or any file containing secrets to version control
-2. Generate a strong, random Django secret key
-3. Use environment-specific settings files that load variables from the environment
-4. Set restrictive permissions on files containing secrets
-5. Rotate your secrets regularly
-6. Use a secret management service in production environments
+> **Note:** The site is currently hosted on Render's free plan. When visiting for the first time, it may take 1-2 minutes to load as the application spins up from idle state.
 
 ## Features
 
 - Job listing creation and management
 - Employer profiles with company information
 - Job seeker profiles with CV upload
-- Premium job listings with enhanced visibility
+- Premium job listings with enhanced visibility and user database access
 - Search and filter jobs by various criteria
 - Responsive design for mobile and desktop
 - Multi-language support (English and Georgian)
+- Many other tools and metrics for Employers.
 
-## Installation
+## Technology Stack
 
-1. Clone the repository
-2. Create and activate a virtual environment
-3. Install dependencies: `pip install -r requirements.txt`
-4. Set up environment variables as described above
-5. Run migrations: `python manage.py migrate`
-6. Create a superuser: `python manage.py createsuperuser`
-7. Run the server: `python manage.py runserver`
+### Backend
+- **Django**: Python web framework for rapid development
+- **PostgreSQL**: Primary database for data storage
+- **Django REST Framework**: For API endpoints
+- **AWS S3**: For storing and serving media files
+- **Social Auth**: Integration with Google OAuth for authentication
 
-## Deployment
+### Frontend
+- **Tailwind CSS**: For responsive and modern UI design
+- **JavaScript**: For interactive elements and enhanced user experience
+- **CKEditor 5**: Rich text editor for job descriptions
+- **Responsive Design**: Mobile-first approach for all device compatibility
 
-For deployment to Render with Supabase, refer to the [render_deployment.md](render_deployment.md) document. 
+**Why not React/Angular?** I chose vanilla JavaScript with Django templates over modern frontend frameworks because:
+- **SEO Optimization**: Server-side rendering ensures job listings are properly indexed by search engines
+- **Performance**: Faster initial page loads without large JavaScript bundles
+- **Simplicity**: Easier to maintain and debug with a smaller, focused tech stack (I'm not frontend dev)
+- **Django Integration**: Seamless integration with Django's form handling and template system
+- **Content-Focused**: Job platforms benefit from static HTML delivery rather than complex client-side interactions
+
+### Deployment
+- **Render**: Cloud hosting platform
+- **Supabase**: PostgreSQL database hosting with connection pooling for production
+- **WhiteNoise**: Static file serving
+- **Boto3**: AWS S3 integration for media storage
+
+## Project Structure
+
+The application follows a modular architecture:
+
+- **core/**: Main Django app containing all business logic
+  - **models/**: Database models for jobs, employers, users, etc.
+  - **views/**: View functions organized by feature area
+  - **templates/**: HTML templates with Tailwind CSS styling
+  - **services/**: Business logic layer for complex operations
+  - **repositories/**: Data access layer for database operations
+
+- **jobsy/**: Project configuration and settings
+  - **settings.py**: Main settings file
+  - **s3_settings.py**: AWS S3 configuration
+  - **render_settings.py**: Production deployment settings
+
+- **static/**: CSS, JavaScript, and image assets
+  - **css/**: Tailwind-compiled CSS files
+  - **js/**: JavaScript modules
+  - **images/**: Static images and icons
+
+## License
+
+This project is proprietary and is not licensed for public use, modification, or distribution. The source code is available for viewing purposes only. See the LICENSE file for details.
+
