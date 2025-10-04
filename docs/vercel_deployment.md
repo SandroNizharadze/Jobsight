@@ -29,6 +29,7 @@ The following files have been added/modified to support Vercel deployment:
 2. Specifying Python 3.9 in multiple places to ensure compatibility
 3. Custom settings file for Vercel deployment
 4. Simplified build process
+5. Proper Vercel configuration without invalid framework settings
 
 ## Environment Variables
 
@@ -58,13 +59,20 @@ Set the following environment variables in your Vercel project settings:
 
 ## Troubleshooting
 
+### Configuration Issues
+
+If you encounter configuration errors:
+
+1. Make sure the `vercel.json` file doesn't contain any invalid fields (like unsupported framework names)
+2. Check that the Vercel Python runtime is specified correctly in `vercel.json`
+3. Verify that `pyproject.toml` and `runtime.txt` specify the correct Python version
+
 ### Python Environment Issues
 
 If you encounter issues with Python commands not being found:
 
 1. Make sure the `vercel_build.sh` script is executable (`chmod +x vercel_build.sh`)
-2. Check that the Vercel Python runtime is specified correctly in `vercel.json`
-3. Verify that `pyproject.toml` and `runtime.txt` specify the correct Python version
+2. Try using explicit paths to Python executables in build scripts
 
 ### Database Connection Issues
 

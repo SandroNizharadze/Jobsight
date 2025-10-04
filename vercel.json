@@ -1,6 +1,5 @@
 {
     "version": 2,
-    "framework": "django",
     "builds": [
         {
             "src": "jobsy/vercel.app.py",
