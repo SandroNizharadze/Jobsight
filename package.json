@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Jobsight - Job Posting Platform",
   "scripts": {
-    "build": "pip install wheel && pip install -r requirements-vercel.txt && python manage.py collectstatic --noinput"
+    "build": "./vercel-build.sh"
   },
   "engines": {
     "node": ">=14.x"
