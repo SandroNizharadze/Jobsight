@@ -1,12 +1,14 @@
 {
     "version": 2,
+    "framework": "django",
     "builds": [
         {
             "src": "jobsy/vercel.app.py",
             "use": "@vercel/python",
             "config": {
                 "maxLambdaSize": "15mb",
-                "runtime": "python3.9"
+                "runtime": "python3.9",
+                "pythonVersion": "3.9"
             }
         }
     ],
@@ -26,6 +28,7 @@
     ],
     "env": {
         "DJANGO_SETTINGS_MODULE": "jobsy.vercel_settings",
-        "PYTHONPATH": "."
+        "PYTHONPATH": ".",
+        "PIP_TARGET": "${LAMBDA_TASK_ROOT}"
     }
 }

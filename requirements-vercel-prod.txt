@@ -5,6 +5,7 @@ django-rangefilter==0.9.0
 django-storages==1.13.2
 boto3==1.26.109
 djangorestframework==3.14.0
+# Use a pre-built wheel for Pillow
 pillow==9.2.0
 django-allauth==0.54.0
 social-auth-app-django==5.2.0

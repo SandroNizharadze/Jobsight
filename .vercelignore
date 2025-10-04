@@ -1,0 +1,28 @@
+# Directories
+__pycache__/
+venv/
+node_modules/
+staticfiles/
+media/
+logs/
+tmp_backup/
+backup/
+
+# Files
+*.pyc
+*.pyo
+*.mo
+*.db
+*.css.map
+*.egg-info
+*.egg
+.DS_Store
+.idea/
+.env
+.git/
+.gitignore
+
+# Keep requirements files
+!requirements.txt
+!requirements-vercel.txt
+!requirements-vercel-prod.txt

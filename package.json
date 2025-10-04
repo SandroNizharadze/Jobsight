@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Jobsight - Job Posting Platform",
   "scripts": {
-    "build": "./vercel-build.sh"
+    "build": "./vercel_build.sh"
   },
   "engines": {
     "node": ">=14.x"

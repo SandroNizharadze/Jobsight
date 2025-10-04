@@ -15,9 +15,13 @@ ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '.vercel.app', '.now.sh', '.jobsight.
 import dj_database_url
 DATABASE_URL = os.environ.get('DATABASE_URL')
 if DATABASE_URL:
+    # Configure to use pg8000 instead of psycopg2
     DATABASES = {
-        'default': dj_database_url.parse(DATABASE_URL)
+        'default': dj_database_url.parse(DATABASE_URL, engine='django_postgres')
     }
+    # Set the engine to use pg8000
+    DATABASES['default']['ENGINE'] = 'django.db.backends.postgresql'
+    DATABASES['default']['OPTIONS'] = {'engine': 'pg8000'}
 
 # Static files
 STATIC_URL = '/static/'
