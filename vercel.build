@@ -1,0 +1,13 @@
+#!/bin/bash
+
+# Install system dependencies
+apt-get update -y || true
+apt-get install -y libpq-dev python3-dev || true
+
+# Install Python dependencies with wheels
+pip install wheel
+pip install --only-binary=psycopg2-binary psycopg2-binary==2.9.3
+pip install -r requirements.txt
+
+# Collect static files
+python manage.py collectstatic --noinput
