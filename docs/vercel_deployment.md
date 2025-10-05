@@ -13,10 +13,8 @@ This document provides instructions for deploying the Jobsight application to Ve
 The following files have been added/modified to support Vercel deployment:
 
 - `vercel.json`: Configuration for Vercel deployment
-- `requirements-vercel.txt`: Dependencies with pre-built wheels for Vercel
-- `requirements-vercel-prod.txt`: Production dependencies for Vercel
-- `runtime.txt`: Specifies Python version (3.9)
-- `pyproject.toml`: Specifies Python version and project metadata
+- `requirements-minimal.txt`: Minimal dependencies for Vercel deployment
+- `runtime.txt`: Specifies Python version (3.12)
 - `package.json`: Defines build commands
 - `vercel_build.sh`: Script for building the application
 - `jobsy/vercel.app.py`: Entry point for Vercel
@@ -26,10 +24,12 @@ The following files have been added/modified to support Vercel deployment:
 ## Key Changes
 
 1. Using `pg8000` instead of `psycopg2-binary` to avoid compilation issues
-2. Specifying Python 3.9 in multiple places to ensure compatibility
+2. Using Python 3.12 (Vercel's default) for compatibility
 3. Custom settings file for Vercel deployment
 4. Simplified build process
 5. Proper Vercel configuration without invalid framework settings
+6. Removed pyproject.toml to avoid package discovery issues
+7. Added static build configuration for static files
 
 ## Environment Variables
 
@@ -65,7 +65,8 @@ If you encounter configuration errors:
 
 1. Make sure the `vercel.json` file doesn't contain any invalid fields (like unsupported framework names)
 2. Check that the Vercel Python runtime is specified correctly in `vercel.json`
-3. Verify that `pyproject.toml` and `runtime.txt` specify the correct Python version
+3. Verify that `runtime.txt` is properly formatted
+4. If you encounter package discovery issues, ensure that no `pyproject.toml` file exists in your project
 
 ### Python Environment Issues
 

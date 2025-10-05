@@ -21,8 +21,10 @@ backup/
 .env
 .git/
 .gitignore
+pyproject.toml
 
 # Keep requirements files
 !requirements.txt
 !requirements-vercel.txt
 !requirements-vercel-prod.txt
+!requirements-minimal.txt
