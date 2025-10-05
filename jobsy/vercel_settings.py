@@ -11,17 +11,41 @@ DEBUG = False
 # Update allowed hosts
 ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '.vercel.app', '.now.sh', '.jobsight.ge']
 
+# Disable features that require Pillow
+INSTALLED_APPS = [app for app in INSTALLED_APPS if app not in ['ckeditor', 'ckeditor_uploader', 'django_ckeditor_5']]
+
 # Use DATABASE_URL if provided
 import dj_database_url
 DATABASE_URL = os.environ.get('DATABASE_URL')
 if DATABASE_URL:
-    # Configure to use pg8000 instead of psycopg2
+    try:
+        # Configure to use pg8000 instead of psycopg2
+        DATABASES = {
+            'default': dj_database_url.parse(DATABASE_URL, engine='django_postgres')
+        }
+        # Set the engine to use pg8000
+        DATABASES['default']['ENGINE'] = 'django.db.backends.postgresql'
+        DATABASES['default']['OPTIONS'] = {'engine': 'pg8000'}
+        print("Using PostgreSQL database with pg8000")
+    except Exception as e:
+        print(f"Error configuring PostgreSQL: {e}")
+        # Fall back to SQLite
+        DATABASES = {
+            'default': {
+                'ENGINE': 'django.db.backends.sqlite3',
+                'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+            }
+        }
+        print("Falling back to SQLite database")
+else:
+    # If no DATABASE_URL is provided, use SQLite
     DATABASES = {
-        'default': dj_database_url.parse(DATABASE_URL, engine='django_postgres')
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        }
     }
-    # Set the engine to use pg8000
-    DATABASES['default']['ENGINE'] = 'django.db.backends.postgresql'
-    DATABASES['default']['OPTIONS'] = {'engine': 'pg8000'}
+    print("Using SQLite database (no DATABASE_URL provided)")
 
 # Static files
 STATIC_URL = '/static/'

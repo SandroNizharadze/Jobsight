@@ -1,0 +1,7 @@
+Django==3.2.9
+djangorestframework==3.14.0
+dj-database-url==2.1.0
+pg8000==1.29.4
+python-dotenv==1.0.1
+whitenoise==6.5.0
+gunicorn==21.2.0

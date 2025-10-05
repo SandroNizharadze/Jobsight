@@ -14,9 +14,10 @@ The following files have been added/modified to support Vercel deployment:
 
 - `vercel.json`: Configuration for Vercel deployment
 - `requirements-minimal.txt`: Minimal dependencies for Vercel deployment (uses pg8000 instead of psycopg2)
+- `requirements-vercel-min.txt`: Super minimal dependencies with only essential packages
 - `runtime.txt`: Specifies Python version (3.12)
 - `jobsy/vercel.app.py`: Entry point for Vercel that also handles dependency installation and static files collection
-- `jobsy/vercel_settings.py`: Vercel-specific Django settings
+- `jobsy/vercel_settings.py`: Vercel-specific Django settings with Pillow-free configuration and SQLite fallback
 - `.vercelignore`: Excludes unnecessary files from deployment
 - `.vercel-build`: Script that runs during the build process to help with configuration
 
@@ -30,7 +31,9 @@ The following files have been added/modified to support Vercel deployment:
 6. Removed pyproject.toml to avoid package discovery issues
 7. Moved dependency installation and static file collection to the app entry point
 8. Created a symbolic link from requirements.txt to requirements-minimal.txt
-9. Added fallback dependency installation in the app entry point
+9. Added direct package installation with --no-deps flag to avoid compilation issues
+10. Disabled features that require Pillow to avoid compilation issues
+11. Added SQLite fallback for database connection issues
 
 ## Environment Variables
 
@@ -68,6 +71,8 @@ If you encounter configuration errors:
 2. Check that the Vercel Python runtime is specified correctly in `vercel.json`
 3. Verify that `runtime.txt` is properly formatted
 4. If you encounter package discovery issues, ensure that no `pyproject.toml` file exists in your project
+5. For dependency issues, try using the `--no-deps` flag when installing packages
+6. Consider disabling features that require problematic dependencies (like Pillow)
 
 ### Deployment Process Issues
 
