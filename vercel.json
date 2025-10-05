@@ -8,13 +8,6 @@
                 "maxLambdaSize": "15mb",
                 "runtime": "python3.12"
             }
-        },
-        {
-            "src": "package.json",
-            "use": "@vercel/static-build",
-            "config": {
-                "distDir": "staticfiles"
-            }
         }
     ],
     "routes": [
@@ -33,7 +26,6 @@
     ],
     "env": {
         "DJANGO_SETTINGS_MODULE": "jobsy.vercel_settings",
-        "PYTHONPATH": ".",
-        "PIP_TARGET": "${LAMBDA_TASK_ROOT}"
+        "PYTHONPATH": "."
     }
 }

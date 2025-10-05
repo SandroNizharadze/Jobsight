@@ -15,9 +15,7 @@ The following files have been added/modified to support Vercel deployment:
 - `vercel.json`: Configuration for Vercel deployment
 - `requirements-minimal.txt`: Minimal dependencies for Vercel deployment
 - `runtime.txt`: Specifies Python version (3.12)
-- `package.json`: Defines build commands
-- `vercel_build.sh`: Script for building the application
-- `jobsy/vercel.app.py`: Entry point for Vercel
+- `jobsy/vercel.app.py`: Entry point for Vercel that also handles dependency installation and static files collection
 - `jobsy/vercel_settings.py`: Vercel-specific Django settings
 - `.vercelignore`: Excludes unnecessary files from deployment
 
@@ -26,10 +24,10 @@ The following files have been added/modified to support Vercel deployment:
 1. Using `pg8000` instead of `psycopg2-binary` to avoid compilation issues
 2. Using Python 3.12 (Vercel's default) for compatibility
 3. Custom settings file for Vercel deployment
-4. Simplified build process
+4. Simplified deployment process
 5. Proper Vercel configuration without invalid framework settings
 6. Removed pyproject.toml to avoid package discovery issues
-7. Added static build configuration for static files
+7. Moved dependency installation and static file collection to the app entry point
 
 ## Environment Variables
 
@@ -68,12 +66,13 @@ If you encounter configuration errors:
 3. Verify that `runtime.txt` is properly formatted
 4. If you encounter package discovery issues, ensure that no `pyproject.toml` file exists in your project
 
-### Python Environment Issues
+### Deployment Process Issues
 
-If you encounter issues with Python commands not being found:
+If you encounter issues with the deployment process:
 
-1. Make sure the `vercel_build.sh` script is executable (`chmod +x vercel_build.sh`)
-2. Try using explicit paths to Python executables in build scripts
+1. Check the Vercel build logs for specific error messages
+2. Ensure that the `vercel.app.py` file is correctly handling dependency installation
+3. Verify that the static files are being collected properly
 
 ### Database Connection Issues
 
