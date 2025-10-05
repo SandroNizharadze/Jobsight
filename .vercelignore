@@ -24,7 +24,7 @@ backup/
 pyproject.toml
 
 # Keep requirements files
-!requirements.txt
-!requirements-vercel.txt
-!requirements-vercel-prod.txt
 !requirements-minimal.txt
+
+# Ignore original requirements.txt (we'll use requirements-minimal.txt instead)
+requirements.txt

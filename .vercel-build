@@ -1,0 +1,14 @@
+#!/bin/bash
+
+# Create a symbolic link to requirements-minimal.txt
+ln -sf requirements-minimal.txt requirements.txt
+
+# Print information about the environment
+echo "Python version:"
+python --version
+echo "Pip version:"
+pip --version
+echo "Current directory:"
+pwd
+echo "Directory contents:"
+ls -la

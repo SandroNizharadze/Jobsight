@@ -13,11 +13,12 @@ This document provides instructions for deploying the Jobsight application to Ve
 The following files have been added/modified to support Vercel deployment:
 
 - `vercel.json`: Configuration for Vercel deployment
-- `requirements-minimal.txt`: Minimal dependencies for Vercel deployment
+- `requirements-minimal.txt`: Minimal dependencies for Vercel deployment (uses pg8000 instead of psycopg2)
 - `runtime.txt`: Specifies Python version (3.12)
 - `jobsy/vercel.app.py`: Entry point for Vercel that also handles dependency installation and static files collection
 - `jobsy/vercel_settings.py`: Vercel-specific Django settings
 - `.vercelignore`: Excludes unnecessary files from deployment
+- `.vercel-build`: Script that runs during the build process to help with configuration
 
 ## Key Changes
 
@@ -28,6 +29,8 @@ The following files have been added/modified to support Vercel deployment:
 5. Proper Vercel configuration without invalid framework settings
 6. Removed pyproject.toml to avoid package discovery issues
 7. Moved dependency installation and static file collection to the app entry point
+8. Created a symbolic link from requirements.txt to requirements-minimal.txt
+9. Added fallback dependency installation in the app entry point
 
 ## Environment Variables
 
