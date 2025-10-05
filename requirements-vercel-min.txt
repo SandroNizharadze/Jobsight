@@ -5,3 +5,4 @@ pg8000==1.29.4
 python-dotenv==1.0.1
 whitenoise==6.5.0
 gunicorn==21.2.0
+
